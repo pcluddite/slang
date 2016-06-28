@@ -7,6 +7,7 @@
 **/
 using Microsoft.Win32;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Tbasic.Components;
 using Tbasic.Errors;
@@ -14,6 +15,9 @@ using Tbasic.Runtime;
 
 namespace Tbasic.Libraries
 {
+    /// <summary>
+    /// Library for interacting with Windows registry.
+    /// </summary>
     internal class RegistryLibrary : Library
     {
         public RegistryLibrary()
@@ -28,162 +32,71 @@ namespace Tbasic.Libraries
             Add("RegRead", RegRead);
             Add("RegWrite", RegWrite);
         }
-
-        private static RegistryKey GetRootKey(string key)
-        {
-            key = key.ToUpper();
-            if (key.StartsWith("HKEY_CURRENT_USER")) {
-                return Registry.CurrentUser;
-            }
-            else if (key.StartsWith("HKEY_CLASSES_ROOT")) {
-                return Registry.ClassesRoot;
-            }
-            else if (key.StartsWith("HKEY_LOCAL_MACHINE")) {
-                return Registry.LocalMachine;
-            }
-            else if (key.StartsWith("HKEY_USERS")) {
-                return Registry.Users;
-            }
-            else if (key.StartsWith("HKEY_CURRENT_CONFIG")) {
-                return Registry.CurrentConfig;
-            }
-            return null;
-        }
-
-        private static string RemoveKeyRoot(string key)
-        {
-            int indexOfRoot = key.IndexOf('\\');
-            if (indexOfRoot < 0) {
-                return "";
-            }
-            string ret = key.Remove(0, indexOfRoot);
-            while (ret.StartsWith("\\")) {
-                ret = ret.Remove(0, 1);
-            }
-            return ret;
-        }
-
+        
         private void RegValueKind(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
-            using (RegistryKey key = OpenKey(_sframe.GetParameter<string>(1), false)) {
-                _sframe.Data = key.GetValueKind(_sframe.GetParameter<string>(2)).ToString();
-            }
-        }
-
-        private RegistryValueKind RegValueKind(string key, string value)
-        {
-            RegistryKey keyBase = GetRootKey(key);
-            using (keyBase = keyBase.OpenSubKey(RemoveKeyRoot(key))) {
-                RegistryValueKind kind = keyBase.GetValueKind(value);
-                return kind;
-            }
+            _sframe.Data = WinRegistry.GetValueKind(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2)).ToString();
         }
 
         private void RegRead(TFunctionData _sframe)
         {
-            _sframe.AssertParamCount(3);
+            _sframe.AssertParamCount(atLeast: 3, atMost: 4);
 
-            object ret = RegRead(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
-
-            if (ret == null) {
-                _sframe.Status = ErrorClient.NotFound;
-            }
-            else {
-                _sframe.Data = ret;
-            }
-        }
-
-        public object RegRead(string key, string value)
-        {
-            return RegistryUtilities.Read(GetRootKey(key), RemoveKeyRoot(key), value, null);
+            if (_sframe.ParameterCount == 3)
+                _sframe.AddParameter(null);
+            
+            _sframe.Data = WinRegistry.Read(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2), _sframe.GetParameter<string>(3));
         }
 
         private void RegDelete(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
-            RegistryKey key = GetRootKey(_sframe.GetParameter<string>(1));
-            using (key = key.OpenSubKey(RemoveKeyRoot(_sframe.GetParameter<string>(1)), true)) {
-                key.DeleteValue(_sframe.GetParameter<string>(2), true);
-            }
+            WinRegistry.Delete(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
         }
 
         private void RegRename(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(4);
-            RegistryKey key = GetRootKey(_sframe.GetParameter<string>(1));
-            using (key = key.OpenSubKey(RemoveKeyRoot(_sframe.GetParameter<string>(1)), true)) {
-                key.SetValue(_sframe.GetParameter<string>(3), key.GetValue(_sframe.GetParameter<string>(2)), key.GetValueKind(_sframe.GetParameter<string>(2)));
-                key.DeleteValue(_sframe.GetParameter<string>(2), true);
-            }
+            WinRegistry.Rename(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2), _sframe.GetParameter<string>(3));
         }
 
         private void RegDeleteKey(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
-            using (RegistryKey key = GetRootKey(_sframe.GetParameter<string>(1))) {
-                key.DeleteSubKeyTree(RemoveKeyRoot(_sframe.GetParameter<string>(1)));
-            }
+            WinRegistry.DeleteKey(_sframe.GetParameter<string>(1));
         }
 
         private void RegRenameKey(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
-            using (RegistryKey key = OpenParentKey(_sframe.GetParameter<string>(1), true)) {
-                RegistryUtilities.RenameSubKey(key, RemoveKeyRoot(_sframe.GetParameter<string>(1)), _sframe.GetParameter<string>(2));
-            }
+            WinRegistry.RenameKey(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
         }
 
         private void RegCreateKey(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
-            using (RegistryKey key = OpenKey(_sframe.GetParameter<string>(1), true)) {
-                key.CreateSubKey(_sframe.GetParameter<string>(2));
-                _sframe.Status = ErrorSuccess.Created;
-            }
+            WinRegistry.RenameKey(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
+            _sframe.Status = ErrorSuccess.Created;
         }
         
         private void RegEnumValues(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
 
-            List<object[]> values = new List<object[]>();
-
-            using (RegistryKey key = OpenKey(_sframe.GetParameter<string>(1), false)) {
-                foreach (string valueName in key.GetValueNames()) {
-                    values.Add(new object[] { valueName, key.GetValue(valueName) });
-                }
-            }
-            if (values.Count == 0) {
+            object[][] values = WinRegistry.EnumerateValues(_sframe.GetParameter<string>(1));
+            if (values.Length == 0) {
                 _sframe.Status = ErrorSuccess.NoContent;
             }
             else {
-                _sframe.Data = values.ToArray();
+                _sframe.Data = values;
             }
-        }
-
-        public static RegistryKey OpenKey(string path, bool write)
-        {
-            using (RegistryKey key = GetRootKey(path)) {
-                return key.OpenSubKey(RemoveKeyRoot(path), write);
-            }
-        }
-
-        public static RegistryKey OpenParentKey(string path, bool write)
-        {
-            int indexOfLast = path.LastIndexOf('\\');
-            if (indexOfLast > -1) {
-                path = path.Substring(0, indexOfLast);
-            }
-            return OpenKey(path, write);
         }
 
         private static void RegEnumKeys(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
-            using (RegistryKey key = OpenKey(_sframe.GetParameter<string>(1), false)) {
-                _sframe.Data = key.GetSubKeyNames();
-            }
+            _sframe.Data = WinRegistry.EnumeratKeys(_sframe.GetParameter<string>(1));
         }
 
         private void RegWrite(TFunctionData _sframe)
@@ -191,23 +104,14 @@ namespace Tbasic.Libraries
             _sframe.AssertParamCount(5);
 
             object value = _sframe.GetParameter(3);
+            RegistryValueKind kind = _sframe.GetParameter<RegistryValueKind>(4);
 
-            RegistryValueKind kind;
-            switch (_sframe.GetParameter<string>(4).ToLower()) {
-                case "binary":
-                    kind = RegistryValueKind.Binary;
-                    List<string> slist = new List<string>();
-                    slist.AddRange(_sframe.GetParameter<string>(3).Split(' '));
-                    value = slist.ConvertAll(s => Convert.ToByte(s, 16)).ToArray();
+            switch (kind) {
+                case RegistryValueKind.Binary:
+                    value = Convert.FromBase64String(_sframe.GetParameter<string>(3));
                     break;
-                case "dword":
-                    kind = RegistryValueKind.DWord;
-                    break;
-                case "expandstring":
-                    kind = RegistryValueKind.ExpandString;
-                    break;
-                case "multistring":
-                    kind = RegistryValueKind.MultiString;
+                case RegistryValueKind.MultiString:
+                    string strval = value as string;
                     if (value is string) {
                         value = _sframe.GetParameter<string>(3).Replace("\r\n", "\n").Split('\n');
                     }
@@ -218,19 +122,15 @@ namespace Tbasic.Libraries
                         throw new ArgumentException("Parameter is not a valid multi-string");
                     }
                     break;
-                case "qword":
-                    kind = RegistryValueKind.QWord;
-                    break;
-                case "string":
-                    kind = RegistryValueKind.String;
+                case RegistryValueKind.DWord:
+                case RegistryValueKind.QWord:
+                case RegistryValueKind.String:
+                    // natively supported
                     break;
                 default:
-                    throw new ArgumentException("Unknown registry type '" + _sframe.GetParameter(4) + "'");
+                    throw new ArgumentException("Registry value of type '" + kind + "' is unsupported");
             }
-
-            using (RegistryKey key = OpenKey(_sframe.GetParameter<string>(1), true)) {
-                key.SetValue(_sframe.GetParameter<string>(2), value, kind);
-            }
+            WinRegistry.Write(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2), value, kind);
         }
     }
 }

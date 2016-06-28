@@ -9,6 +9,3 @@ This project contains two parts:
 2. texecuter.exe is an executable that loads the standard library and runs a script to get started right away.
 
 A syntax file is available for Notepad++ in the "samples" directory.
-
-***Special thanks to:***
-- **drdandle** for registry operations located in RegistryUtilities.cs (http://www.codeproject.com/Articles/16343/Copy-and-Rename-Registry-Keys)

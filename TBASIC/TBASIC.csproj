@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Extensions.cs" />
+    <Compile Include="Components\WinRegistry.cs" />
     <Compile Include="Components\ScreenCapture.cs" />
     <Compile Include="Components\StringSegment.cs" />
     <Compile Include="Components\StructReference.cs" />
@@ -93,7 +94,6 @@
     <Compile Include="Blocks\CodeBlock.cs" />
     <Compile Include="Runtime\Parsing\Line.cs" />
     <Compile Include="Components\ImageCompression.cs" />
-    <Compile Include="Components\RegistryUtilities.cs" />
     <Compile Include="Components\Win32\UnmanagedTypes.cs" />
     <Compile Include="Components\Win32\User32.cs" />
     <Compile Include="Components\Win32\WindowEnums.cs" />

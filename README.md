@@ -12,4 +12,3 @@ A syntax file is available for Notepad++ in the "samples" directory.
 
 ***Special thanks to:***
 - **drdandle** for registry operations located in RegistryUtilities.cs (http://www.codeproject.com/Articles/16343/Copy-and-Rename-Registry-Keys)
-- **James Crowley** for ScreenCapture.cs (http://www.developerfusion.com/code/4630/capture-a-screen-shot/)

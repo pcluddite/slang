@@ -265,8 +265,7 @@ namespace Tbasic.Libraries
 
         public static byte[] GetScreen(int compression = 50)
         {
-            ScreenCapture sc = new ScreenCapture();
-            Image img = sc.CaptureScreen();
+            Image img = ScreenCapture.CaptureScreen();
             using (MemoryStream ms = Compress.DoIt(img, compression)) {
                 return ms.ToArray();
             }
@@ -274,8 +273,7 @@ namespace Tbasic.Libraries
 
         public static byte[] WinPicture(IntPtr hwnd, int compression = 50)
         {
-            ScreenCapture sc = new ScreenCapture();
-            Image pic = sc.CaptureWindow(hwnd);
+            Image pic = ScreenCapture.CaptureWindow(hwnd);
             using (MemoryStream ms = Compress.DoIt(pic, compression)) {
                 return ms.ToArray();
             }

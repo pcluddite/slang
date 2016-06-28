@@ -68,8 +68,9 @@ namespace Tbasic.Runtime
 
         #region Construction
         
-        public Function(StringSegment expr, StringSegment name, IList<object> parameters)
+        public Function(StringSegment expr, Executer exec, StringSegment name, IList<object> parameters)
         {
+            CurrentExecution = exec;
             _expression = expr;
             _params = parameters;
             _function = name;

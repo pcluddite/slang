@@ -224,7 +224,7 @@ namespace Tbasic.Parsing
                     if (Next("(")) {
                         IList<object> args;
                         position = GroupParser.ReadGroup(_buffer, position - 1, exec, out args) + 1;
-                        func = new Function(_buffer.Subsegment(originalPos, position - originalPos), name, args);
+                        func = new Function(_buffer.Subsegment(originalPos, position - originalPos), exec, name, args);
                         return true;
                     }
                 }

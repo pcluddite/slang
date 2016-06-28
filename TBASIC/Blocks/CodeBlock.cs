@@ -2,17 +2,15 @@
  * TBASIC
  * Copyright (c) 2013-2016 Timothy Baxendale
  *
- * This project is licensed under the Simplified BSD License for
- * non-commercial use.
- *
- **/
-
-using Tbasic.Runtime;
-using System;
+ * This project is licensed under the Simplified BSD License
+ * for non-commercial use.
+**/
 using Tbasic.Parsing;
+using Tbasic.Runtime;
 
-namespace Tbasic {
-    
+namespace Tbasic
+{
+
     /// <summary>
     /// Delegate for initializing a CodeBlock
     /// </summary>

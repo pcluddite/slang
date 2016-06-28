@@ -2,15 +2,13 @@
  * TBASIC
  * Copyright (c) 2013-2016 Timothy Baxendale
  *
- * This project is licensed under the Simplified BSD License for
- * non-commercial use.
- *
- **/
-
-using Tbasic.Runtime;
+ * This project is licensed under the Simplified BSD License
+ * for non-commercial use.
+**/
+using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Parsing;
-using Tbasic.Components;
+using Tbasic.Runtime;
 
 namespace Tbasic
 {

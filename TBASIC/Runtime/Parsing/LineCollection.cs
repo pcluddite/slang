@@ -2,14 +2,12 @@
  * TBASIC
  * Copyright (c) 2013-2016 Timothy Baxendale
  *
- * This project is licensed under the Simplified BSD License for
- * non-commercial use.
- *
- **/
-
+ * This project is licensed under the Simplified BSD License
+ * for non-commercial use.
+**/
 using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using Tbasic.Errors;
 
 namespace Tbasic.Parsing

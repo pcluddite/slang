@@ -44,7 +44,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Gets the current line in the script that the executer is processing
         /// </summary>
-        public uint CurrentLine { get; internal set; }
+        public int CurrentLine { get; internal set; }
 
         /// <summary>
         /// Gets or sets the ObjectContext in which the code is executed
@@ -194,9 +194,9 @@ namespace Tbasic.Runtime
         internal static LineCollection ScanLines(string[] lines, out CodeBlock[] userFunctions)
         {
             LineCollection allLines = new LineCollection();
-            List<uint> funLines = new List<uint>();
+            List<int> funLines = new List<int>();
 
-            for (uint lineNumber = 0; lineNumber < lines.Length; ++lineNumber) {
+            for (int lineNumber = 0; lineNumber < lines.Length; ++lineNumber) {
                 Line current = new Line(lineNumber + 1, lines[lineNumber]); // Tag all lines with its line number (index + 1)
 
                 if (string.IsNullOrEmpty(current.Text) || current.Text[0] == ';') {
@@ -224,7 +224,7 @@ namespace Tbasic.Runtime
             }
 
             List<CodeBlock> userFuncs = new List<CodeBlock>();
-            foreach (uint funcLine in funLines) {
+            foreach (int funcLine in funLines) {
                 FuncBlock func = new FuncBlock(allLines.IndexOf(funcLine), allLines);
                 userFuncs.Add(func);
                 allLines.Remove(func.Header);

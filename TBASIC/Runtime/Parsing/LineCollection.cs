@@ -17,7 +17,7 @@ namespace Tbasic.Parsing
     /// </summary>
     public class LineCollection : IList<Line>, ICollection<Line>, ICloneable
     {
-        private SortedList<uint, Line> allLines = new SortedList<uint, Line>();
+        private SortedList<int, Line> allLines = new SortedList<int, Line>();
 
         /// <summary>
         /// Initializes a new Tbasic.LineCollection
@@ -170,7 +170,7 @@ namespace Tbasic.Parsing
         /// </summary>
         /// <param name="lineNumber"></param>
         /// <returns></returns>
-        public int IndexOf(uint lineNumber)
+        public int IndexOf(int lineNumber)
         {
             return allLines.IndexOfKey(lineNumber);
         }
@@ -199,7 +199,7 @@ namespace Tbasic.Parsing
         /// </summary>
         /// <param name="lineNumber"></param>
         /// <returns></returns>
-        public Line LineAt(uint lineNumber)
+        public Line LineAt(int lineNumber)
         {
             return allLines[lineNumber];
         }

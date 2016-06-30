@@ -1,7 +1,7 @@
    THIS PROJECT IS DUALLY LICENSED FOR COMMERCIAL AND NON-COMMERCIAL USE
 
-                        NON-COMMERCIAL LICENSE
-						
+                         NON-COMMERCIAL LICENSE
+
 Copyright (c) 2013-2016, Timothy Baxendale
 All rights reserved.
 
@@ -13,7 +13,12 @@ modification, are permitted provided that the following conditions are met:
 2. Redistributions in binary form must reproduce the above copyright notice,
    this list of conditions and the following disclaimer in the documentation
    and/or other materials provided with the distribution.
-3. The redistributed source code or binary must be distributed at no cost.
+3. Redistributions in either source or binary form must be distributed for
+   non-commercial purposes only.
+4. Redistributions with or without modification for non-commercial must retain
+   this license.
+5. Redistributions with modifications may carry their own licenses or
+   restrictions so long as they do not conflict with the terms in this license.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -26,14 +31,15 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-                       END NON-COMMERCIAL LICENSE
+                        END NON-COMMERCIAL LICENSE
                        
-                           COMMERCIAL LICENSE
+                            COMMERCIAL LICENSE
 						   
 Copyright (c) 2013-2016, Timothy Baxendale
 All rights reserved.
+
+Redistributions and use in source and binary forms, with or without
+modification, are NOT permitted unless an agreement is reached with
+the copyright holder.
                             
-Redistribution and use in source and binary forms, with or without modification,
-are NOT permitted unless given the express written consent of the copyright holder.
-                            
-                          END COMMERCIAL LICENSE
+                           END COMMERCIAL LICENSE

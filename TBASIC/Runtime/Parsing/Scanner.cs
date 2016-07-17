@@ -363,7 +363,7 @@ namespace Tbasic.Parsing
             return true;
         }
 
-        private static bool MatchOperator<T>(StringSegment expr, int index, IDictionary<string, T> ops, out T foundOp) where T : IOperator
+        private static bool MatchOperator<T>(StringSegment expr, int index, OperatorDictionary<T> ops, out T foundOp) where T : IOperator
         {
             string foundStr = null;
             foundOp = default(T);

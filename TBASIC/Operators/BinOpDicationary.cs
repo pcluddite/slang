@@ -6,43 +6,37 @@
  * for non-commercial use.
 **/
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
-using System.Text.RegularExpressions;
-using Tbasic.Components;
 using Tbasic.Runtime;
 
 namespace Tbasic.Operators
 {
-    internal partial class BinOpDictionary
+    internal class BinOpDictionary : OperatorDictionary<BinaryOperator>
     {
-        private Dictionary<string, BinaryOperator> binaryOps = new Dictionary<string, BinaryOperator>(22 /* magic number of standard operators */, StringComparer.OrdinalIgnoreCase);
-
-        public void LoadStandardOperators()
+        public override void LoadStandardOperators()
         {
-            binaryOps.Add("*",   new BinaryOperator("*",   0, Multiply));
-            binaryOps.Add("/",   new BinaryOperator("/",   0, Divide));
-            binaryOps.Add("MOD", new BinaryOperator("MOD", 0, Modulo));
-            binaryOps.Add("+",   new BinaryOperator("+",   1, Add));
-            binaryOps.Add("-",   new BinaryOperator("-",   1, Subtract));
-            binaryOps.Add(">>",  new BinaryOperator(">>",  2, ShiftRight));
-            binaryOps.Add("<<",  new BinaryOperator("<<",  2, ShiftLeft));
-            binaryOps.Add("<",   new BinaryOperator("<",   3, LessThan));
-            binaryOps.Add("=<",  new BinaryOperator("=<",  3, LessThanOrEqual));
-            binaryOps.Add("<=",  new BinaryOperator("<=",  3, LessThanOrEqual));
-            binaryOps.Add(">",   new BinaryOperator(">",   3, GreaterThan));
-            binaryOps.Add("=>",  new BinaryOperator("=>",  3, GreaterThanOrEqual));
-            binaryOps.Add(">=",  new BinaryOperator(">=",  3, GreaterThanOrEqual));
-            binaryOps.Add("==",  new BinaryOperator("==",  4, EqualTo));
-            binaryOps.Add("=",   new BinaryOperator("=",   4, EqualTo));
-            binaryOps.Add("<>",  new BinaryOperator("<>",  4, NotEqualTo));
-            binaryOps.Add("!=",  new BinaryOperator("!=",  4, NotEqualTo));
-            binaryOps.Add("&",   new BinaryOperator("&",   5, BitAnd));
-            binaryOps.Add("^",   new BinaryOperator("^",   6, BitXor));
-            binaryOps.Add("|",   new BinaryOperator("|",   7, BitOr));
-            binaryOps.Add("AND", new BinaryOperator("AND", 8, NotImplemented)); // These are special cases that are evaluated with short circuit evalutaion 6/20/16
-            binaryOps.Add("OR",  new BinaryOperator("OR",  9, NotImplemented));
+            operators.Add("*",   new BinaryOperator("*",   0, Multiply));
+            operators.Add("/",   new BinaryOperator("/",   0, Divide));
+            operators.Add("MOD", new BinaryOperator("MOD", 0, Modulo));
+            operators.Add("+",   new BinaryOperator("+",   1, Add));
+            operators.Add("-",   new BinaryOperator("-",   1, Subtract));
+            operators.Add(">>",  new BinaryOperator(">>",  2, ShiftRight));
+            operators.Add("<<",  new BinaryOperator("<<",  2, ShiftLeft));
+            operators.Add("<",   new BinaryOperator("<",   3, LessThan));
+            operators.Add("=<",  new BinaryOperator("=<",  3, LessThanOrEqual));
+            operators.Add("<=",  new BinaryOperator("<=",  3, LessThanOrEqual));
+            operators.Add(">",   new BinaryOperator(">",   3, GreaterThan));
+            operators.Add("=>",  new BinaryOperator("=>",  3, GreaterThanOrEqual));
+            operators.Add(">=",  new BinaryOperator(">=",  3, GreaterThanOrEqual));
+            operators.Add("==",  new BinaryOperator("==",  4, EqualTo));
+            operators.Add("=",   new BinaryOperator("=",   4, EqualTo));
+            operators.Add("<>",  new BinaryOperator("<>",  4, NotEqualTo));
+            operators.Add("!=",  new BinaryOperator("!=",  4, NotEqualTo));
+            operators.Add("&",   new BinaryOperator("&",   5, BitAnd));
+            operators.Add("^",   new BinaryOperator("^",   6, BitXor));
+            operators.Add("|",   new BinaryOperator("|",   7, BitOr));
+            operators.Add("AND", new BinaryOperator("AND", 8, NotImplemented)); // These are special cases that are evaluated with short circuit evalutaion 6/20/16
+            operators.Add("OR",  new BinaryOperator("OR",  9, NotImplemented));
         }
 
         /// <summary>
@@ -52,7 +46,7 @@ namespace Tbasic.Operators
         /// <returns></returns>
         public int OperatorPrecedence(string strOp)
         {
-            return binaryOps[strOp].Precedence;
+            return operators[strOp].Precedence;
         }
 
         private static object Multiply(object left, object right)

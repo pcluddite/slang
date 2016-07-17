@@ -6,21 +6,18 @@
  * for non-commercial use.
 **/
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 
 namespace Tbasic.Operators
 {
-    internal partial class UnaryOpDictionary
+    internal class UnaryOpDictionary : OperatorDictionary<UnaryOperator>
     {
-        private Dictionary<string, UnaryOperator> unaryOps = new Dictionary<string, UnaryOperator>(22 /* magic number of standard operators */, StringComparer.OrdinalIgnoreCase);
-
-        public void LoadStandardOperators()
+        public override void LoadStandardOperators()
         {
-            unaryOps.Add("+", new UnaryOperator("+", Plus));
-            unaryOps.Add("-", new UnaryOperator("-", Minus));
-            unaryOps.Add("NOT ", new UnaryOperator("NOT ", Not));
-            unaryOps.Add("~", new UnaryOperator("~", BitNot));
+            operators.Add("+", new UnaryOperator("+", Plus));
+            operators.Add("-", new UnaryOperator("-", Minus));
+            operators.Add("NOT ", new UnaryOperator("NOT ", Not));
+            operators.Add("~", new UnaryOperator("~", BitNot));
         }
         
         private static object Plus(object value)

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0E00B454-68C8-4144-B1A5-8120B2740466}</ProjectGuid>
+    <ProjectGuid>{86EC7054-1D77-4DEE-854F-AD7377FC27AA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Tbasic</RootNamespace>
@@ -59,11 +59,10 @@
     <Compile Include="Libraries\SystemLibrary.cs" />
     <Compile Include="Operators\BinaryOperator.cs" />
     <Compile Include="Operators\BinOpDicationary.cs" />
-    <Compile Include="Operators\BinOpDictionary.IDictionary.cs" />
     <Compile Include="Operators\BinOpNodePair.cs" />
     <Compile Include="Operators\IOperator.cs" />
+    <Compile Include="Operators\OperatorDictionary.cs" />
     <Compile Include="Operators\UnaryOpDictionary.cs" />
-    <Compile Include="Operators\UnaryOpDictionary.IDictionary.cs" />
     <Compile Include="Operators\UnaryOperator.cs" />
     <Compile Include="Runtime\Parsing\GroupParser.cs" />
     <Compile Include="Runtime\Evaluator\Evaluator.cs" />

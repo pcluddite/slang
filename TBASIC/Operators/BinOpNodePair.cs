@@ -1,10 +1,8 @@
-﻿/**
- * TBASIC
- * Copyright (c) 2013-2016 Timothy Baxendale
- *
- * This project is licensed under the Simplified BSD License
- * for non-commercial use.
-**/
+﻿// ======
+//
+// Copyright (c) Timothy Baxendale. All Rights Reserved.
+//
+// ======
 using System.Collections.Generic;
 
 namespace Tbasic.Operators

@@ -81,7 +81,7 @@ namespace Tbasic.Libraries
             }
 
             StringSegment text = new StringSegment(stackFrame.Text);
-            Scanner scanner = new Scanner(text);
+            Scanner scanner = new DefaultScanner(text);
             scanner.IntPosition += stackFrame.Name.Length;
             scanner.SkipWhiteSpace();
 
@@ -155,7 +155,7 @@ namespace Tbasic.Libraries
 
             StringSegment text = new StringSegment(stackFrame.Text);
 
-            Scanner scanner = new Scanner(text);
+            Scanner scanner = new DefaultScanner(text);
             scanner.IntPosition += stackFrame.Name.Length;
             scanner.SkipWhiteSpace();
 

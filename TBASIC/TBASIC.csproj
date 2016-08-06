@@ -70,6 +70,7 @@
     <Compile Include="Runtime\Evaluator\Function.cs" />
     <Compile Include="Runtime\Evaluator\IEvaluator.cs" />
     <Compile Include="Runtime\Parsing\LineCollection.cs" />
+    <Compile Include="Runtime\Parsing\DefaultScanner.cs" />
     <Compile Include="Runtime\Parsing\Scanner.cs" />
     <Compile Include="Runtime\StackFrame\ObjectContext.cs" />
     <Compile Include="Runtime\Evaluator\Variable.cs" />

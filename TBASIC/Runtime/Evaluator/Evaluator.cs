@@ -70,15 +70,13 @@ namespace Tbasic.Runtime
 
         #endregion
         
-        #region Evaluate
-
         public object Evaluate()
         {
             if (StringSegment.IsNullOrEmpty(Expression)) 
                 return 0;
             
             if (!_parsed) {
-                Scanner scanner = new Scanner(_expression);
+                Scanner scanner = new DefaultScanner(_expression);
                 while (!scanner.EndOfStream)
                     NextToken(scanner);
                 _parsed = true;
@@ -86,33 +84,11 @@ namespace Tbasic.Runtime
 
             return ConvertToObject(EvaluateList());
         }
-        
+
         public bool EvaluateBool()
         {
             return Convert.ToBoolean(Evaluate());
         }
-        
-        public int EvaluateInt()
-        {
-            return Convert.ToInt32(Evaluate());
-        }
-
-        public double EvaluateDouble()
-        {
-            return Convert.ToDouble(Evaluate());
-        }
-        
-        public decimal EvaluateDecimal()
-        {
-            return Convert.ToDecimal(Evaluate());
-        }
-        
-        public long EvaluateLong()
-        {
-            return Convert.ToInt64(Evaluate());
-        }
-
-        #endregion
         
         private int NextToken(Scanner scanner)
         {

@@ -56,6 +56,25 @@ namespace Tbasic.Runtime
             return double.Parse(s);
         }
 
+        public static Number? AsNumber(object obj)
+        {
+            if (obj == null)
+                return null;
+            Number? n = obj as Number?;
+            if (n != null)
+                return n.Value;
+            double? d = obj as double?;
+            if (d != null)
+                return d.Value;
+            Number num;
+            if (TryParse(obj.ToString(), out num)) {
+                return num;
+            }
+            else {
+                return null;
+            }
+        }
+
         public static implicit operator Number(double d)
         {
             return new Number(d);

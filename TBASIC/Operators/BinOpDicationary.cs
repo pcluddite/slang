@@ -28,6 +28,7 @@ namespace Tbasic.Operators
             operators.Add(">=",  new BinaryOperator(">=",  3, GreaterThanOrEqual));
             operators.Add("==",  new BinaryOperator("==",  4, EqualTo));
             operators.Add("=",   new BinaryOperator("=",   4, EqualTo));
+            operators.Add("~=",  new BinaryOperator("~=",  4, SortaEquals));
             operators.Add("<>",  new BinaryOperator("<>",  4, NotEqualTo));
             operators.Add("!=",  new BinaryOperator("!=",  4, NotEqualTo));
             operators.Add("&",   new BinaryOperator("&",   5, BitAnd));
@@ -133,6 +134,44 @@ namespace Tbasic.Operators
                 str1 = Evaluator.ConvertToString(left);
             if (str2 == null)
                 str2 = Evaluator.ConvertToString(right);
+        }
+
+        private static object SortaEquals(object left, object right)
+        {
+            if (left == null ^ right == null) // exclusive or
+                return true;
+            if (left.GetType() == right.GetType())
+                return left == right;
+            
+            string str_left = left as string;
+            if (str_left != null)
+                return StrSortaEqualsObj(str_left, right);
+            string str_right = right as string;
+            if (str_right != null)
+                return StrSortaEqualsObj(str_right, left);
+
+            return false;
+        }
+
+        private static bool StrSortaEqualsObj(string str_left, object right)
+        {
+            Number? n_right = Number.AsNumber(right);
+            if (n_right != null) {
+                Number n_left;
+                if (Number.TryParse(str_left, out n_left)) {
+                    return n_left == n_right.Value;
+                }
+                return false;
+            }
+            bool b_right;
+            if (bool.TryParse(right.ToString(), out b_right)) {
+                bool b_left;
+                if (bool.TryParse(str_left, out b_left)) {
+                    return b_left == b_right;
+                }
+                return false;
+            }
+            return false;
         }
 
         private static object NotEqualTo(object left, object right)

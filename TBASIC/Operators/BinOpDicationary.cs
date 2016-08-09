@@ -114,18 +114,18 @@ namespace Tbasic.Operators
 
         private static object EqualTo(object left, object right)
         {
-            string str1 = left as string,
-                   str2 = right as string;
-            if (str1 != null || str2 != null)
-                return StrEquals(left, right, str1, str2);
-            return Convert.ToDouble(left, CultureInfo.CurrentCulture) ==
-                   Convert.ToDouble(right, CultureInfo.CurrentCulture);
+            return BoolEqualTo(left, right);
         }
 
-        private static bool StrEquals(object left, object right, string str1, string str2)
+        private static bool BoolEqualTo(object left, object right) // separate method so that it won't be boxed and unboxed unnecessarily 8/8/16
         {
-            InitializeStrings(left, right, ref str1, ref str2);
-            return str1 == str2;
+            if (left == right)
+                return true;
+
+            if (left == null || right == null)
+                return false;
+
+            return left.Equals(right);
         }
 
         private static void InitializeStrings(object left, object right, ref string str1, ref string str2)
@@ -176,8 +176,7 @@ namespace Tbasic.Operators
 
         private static object NotEqualTo(object left, object right)
         {
-            return Convert.ToDouble(left, CultureInfo.CurrentCulture) !=
-                   Convert.ToDouble(right, CultureInfo.CurrentCulture);
+            return !BoolEqualTo(left, right);
         }
 
         private static bool StrNotEqualTo(object left, object right, string str1, string str2)

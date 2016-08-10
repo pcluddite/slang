@@ -145,7 +145,7 @@ namespace Tbasic.Runtime
             // check numeric
             Number num;
             if (scanner.NextPositiveNumber(out num)) {
-                return AddObjectToExprList(num.ToObject(), startIndex, scanner);
+                return AddObjectToExprList(num, startIndex, scanner);
             }
 
             // check binary operator

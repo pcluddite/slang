@@ -1,4 +1,5 @@
    THIS PROJECT IS DUALLY LICENSED FOR COMMERCIAL AND NON-COMMERCIAL USE
+THIS LICENSE APPLIES TO ALL SOURCE CODE THAT IS NOT OTHERWISE EXPLICITLY LICENSED.
 
                          NON-COMMERCIAL LICENSE
 
@@ -14,8 +15,9 @@ modification, are permitted provided that the following conditions are met:
    this list of conditions and the following disclaimer in the documentation
    and/or other materials provided with the distribution.
 3. Redistributions in either source or binary form must be distributed for
-   non-commercial purposes only.
-4. Redistributions with or without modification for non-commercial must retain
+   non-commercial purposes only unless given the express written consent of
+   the copyright holder.
+4. Redistributions with or without modification for non-commercial use must retain
    this license.
 5. Redistributions with modifications may carry their own licenses or
    restrictions so long as they do not conflict with the terms in this license.
@@ -38,8 +40,31 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Copyright (c) 2013-2016, Timothy Baxendale
 All rights reserved.
 
-Redistributions and use in source and binary forms, with or without
-modification, are NOT permitted unless an agreement is reached with
-the copyright holder.
+Redistribution and use of this software, any work derived from this software in
+source and binary form, or any work which links to this software either at the
+time of compilation or at any other time during the program's execution are
+prohibited unless the following conditions are met:
+
+1. Permission is granted in a written form by the copyright holder under
+   previously agreed upon terms and conditions.
+2. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+3. Redistributions of source code containing modifications must contain a notice
+   of those modifications at the top of each modified source file unless technical
+   restrictions render this requirement unfeasable.
+4. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             
                            END COMMERCIAL LICENSE

@@ -13,29 +13,29 @@ namespace Tbasic.Operators
     {
         public override void LoadStandardOperators()
         {
-            operators.Add("*",   new BinaryOperator("*",   0, Multiply));
-            operators.Add("/",   new BinaryOperator("/",   0, Divide));
+            operators.Add("*", new BinaryOperator("*", 0, Multiply));
+            operators.Add("/", new BinaryOperator("/", 0, Divide));
             operators.Add("MOD", new BinaryOperator("MOD", 0, Modulo));
-            operators.Add("+",   new BinaryOperator("+",   1, Add));
-            operators.Add("-",   new BinaryOperator("-",   1, Subtract));
-            operators.Add(">>",  new BinaryOperator(">>",  2, ShiftRight));
-            operators.Add("<<",  new BinaryOperator("<<",  2, ShiftLeft));
-            operators.Add("<",   new BinaryOperator("<",   3, LessThan));
-            operators.Add("=<",  new BinaryOperator("=<",  3, LessThanOrEqual));
-            operators.Add("<=",  new BinaryOperator("<=",  3, LessThanOrEqual));
-            operators.Add(">",   new BinaryOperator(">",   3, GreaterThan));
-            operators.Add("=>",  new BinaryOperator("=>",  3, GreaterThanOrEqual));
-            operators.Add(">=",  new BinaryOperator(">=",  3, GreaterThanOrEqual));
-            operators.Add("==",  new BinaryOperator("==",  4, EqualTo));
-            operators.Add("=",   new BinaryOperator("=",   4, EqualTo));
-            operators.Add("~=",  new BinaryOperator("~=",  4, SortaEquals));
-            operators.Add("<>",  new BinaryOperator("<>",  4, NotEqualTo));
-            operators.Add("!=",  new BinaryOperator("!=",  4, NotEqualTo));
-            operators.Add("&",   new BinaryOperator("&",   5, BitAnd));
-            operators.Add("^",   new BinaryOperator("^",   6, BitXor));
-            operators.Add("|",   new BinaryOperator("|",   7, BitOr));
+            operators.Add("+", new BinaryOperator("+", 1, Add));
+            operators.Add("-", new BinaryOperator("-", 1, Subtract));
+            operators.Add(">>", new BinaryOperator(">>", 2, ShiftRight));
+            operators.Add("<<", new BinaryOperator("<<", 2, ShiftLeft));
+            operators.Add("<", new BinaryOperator("<", 3, LessThan));
+            operators.Add("=<", new BinaryOperator("=<", 3, LessThanOrEqual));
+            operators.Add("<=", new BinaryOperator("<=", 3, LessThanOrEqual));
+            operators.Add(">", new BinaryOperator(">", 3, GreaterThan));
+            operators.Add("=>", new BinaryOperator("=>", 3, GreaterThanOrEqual));
+            operators.Add(">=", new BinaryOperator(">=", 3, GreaterThanOrEqual));
+            operators.Add("==", new BinaryOperator("==", 4, EqualTo));
+            operators.Add("=", new BinaryOperator("=", 4, EqualTo));
+            operators.Add("~=", new BinaryOperator("~=", 4, SortaEquals));
+            operators.Add("<>", new BinaryOperator("<>", 4, NotEqualTo));
+            operators.Add("!=", new BinaryOperator("!=", 4, NotEqualTo));
+            operators.Add("&", new BinaryOperator("&", 5, BitAnd));
+            operators.Add("^", new BinaryOperator("^", 6, BitXor));
+            operators.Add("|", new BinaryOperator("|", 7, BitOr));
             operators.Add("AND", new BinaryOperator("AND", 8, NotImplemented)); // These are special cases that are evaluated with short circuit evalutaion 6/20/16
-            operators.Add("OR",  new BinaryOperator("OR",  9, NotImplemented));
+            operators.Add("OR", new BinaryOperator("OR", 9, NotImplemented));
         }
 
         /// <summary>
@@ -139,10 +139,10 @@ namespace Tbasic.Operators
         private static object SortaEquals(object left, object right)
         {
             if (left == null ^ right == null) // exclusive or
-                return true;
+                return false;
             if (left.GetType() == right.GetType())
-                return left == right;
-            
+                return EqualTo(left, right);
+
             string str_left = left as string;
             if (str_left != null)
                 return StrSortaEqualsObj(str_left, right);
@@ -161,7 +161,10 @@ namespace Tbasic.Operators
                 if (Number.TryParse(str_left, out n_left)) {
                     return n_left == n_right.Value;
                 }
-                return false;
+                bool b_left;
+                if (bool.TryParse(str_left, out b_left)) {
+                    return (n_right != 0) == b_left;
+                }
             }
             bool b_right;
             if (bool.TryParse(right.ToString(), out b_right)) {
@@ -169,7 +172,10 @@ namespace Tbasic.Operators
                 if (bool.TryParse(str_left, out b_left)) {
                     return b_left == b_right;
                 }
-                return false;
+                Number n_left;
+                if (Number.TryParse(str_left, out n_left)) {
+                    return (n_left != 0) == b_right;
+                }
             }
             return false;
         }

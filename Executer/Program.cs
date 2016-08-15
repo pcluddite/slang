@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using Tbasic.Runtime;
 using Tbasic.Errors;
 
-namespace texecute
+namespace Tbasic.Runner
 {
     public class Program
     {
@@ -25,7 +25,7 @@ namespace texecute
                 dialog.Title = "Open";
                 dialog.FileName = "";
                 dialog.Multiselect = false;
-                dialog.Filter = "Tbasic 2.0 Script (*.tba)|*.tba|All Files (*.*)|*.*";
+                dialog.Filter = "Tbasic Script (*.tba)|*.tba|All Files (*.*)|*.*";
                 if (dialog.ShowDialog() == DialogResult.OK) {
                     file = dialog.FileName;
                 }

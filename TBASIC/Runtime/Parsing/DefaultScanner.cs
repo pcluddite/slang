@@ -25,6 +25,7 @@ namespace Tbasic.Parsing
         public override bool NextPositiveInt(out int integer)
         {
             integer = 0;
+            SkipWhiteSpace();
             if (EndOfStream)
                 return false;
             int newPos = FindConsecutiveDigits(InternalBuffer, IntPosition);
@@ -39,6 +40,7 @@ namespace Tbasic.Parsing
         public override bool NextPositiveNumber(out Number num)
         {
             num = default(Number);
+            SkipWhiteSpace();
             if (EndOfStream)
                 return false;
             int endPos = FindConsecutiveDigits(InternalBuffer, IntPosition);
@@ -63,6 +65,7 @@ namespace Tbasic.Parsing
         public override bool NextHexadecimal(out int number)
         {
             number = 0;
+            SkipWhiteSpace();
             if (EndOfStream)
                 return false;
 
@@ -116,6 +119,7 @@ namespace Tbasic.Parsing
 
         public override bool Next(string pattern, bool ignoreCase = true)
         {
+            SkipWhiteSpace();
             if (EndOfStream)
                 return false;
             if (!InternalBuffer.Subsegment(IntPosition).StartsWith(pattern, ignoreCase))
@@ -126,6 +130,7 @@ namespace Tbasic.Parsing
 
         public override bool NextString(out string parsed)
         {
+            SkipWhiteSpace();
             if (EndOfStream || (InternalBuffer[IntPosition] != '\"' && InternalBuffer[IntPosition] != '\'')) {
                 parsed = null;
                 return false;
@@ -137,6 +142,7 @@ namespace Tbasic.Parsing
 
         public override bool NextFunction(Executer exec, out Function func)
         {
+            SkipWhiteSpace();
             func = null;
             if (EndOfStream)
                 return false;
@@ -160,6 +166,7 @@ namespace Tbasic.Parsing
 
         public override bool NextVariable(Executer exec, out Variable variable)
         {
+            SkipWhiteSpace();
             variable = null;
             if (EndOfStream)
                 return false;
@@ -191,6 +198,7 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         private bool NextMacro(Executer exec, out Variable variable)
         {
+            SkipWhiteSpace();
             int originalPos = IntPosition;
             if (++IntPosition < InternalBuffer.Length) {
                 IntPosition = FindAcceptableFuncChars(InternalBuffer, IntPosition);
@@ -209,6 +217,7 @@ namespace Tbasic.Parsing
 
         public override bool NextIndices(Executer exec, out int[] indices)
         {
+            SkipWhiteSpace();
             indices = null;
             int originalPos = IntPosition;
             if (!EndOfStream && InternalBuffer[IntPosition] == '[') {
@@ -248,6 +257,7 @@ namespace Tbasic.Parsing
 
         public override bool NextBool(out bool b)
         {
+            SkipWhiteSpace();
             if (EndOfStream) {
                 b = false;
                 return false;
@@ -270,6 +280,7 @@ namespace Tbasic.Parsing
 
         public override bool NextBinaryOp(BinOpDictionary _binOps, out BinaryOperator foundOp)
         {
+            SkipWhiteSpace();
             if (EndOfStream || !MatchOperator(InternalBuffer, IntPosition, _binOps, out foundOp)) {
                 foundOp = default(BinaryOperator);
                 return false;
@@ -280,6 +291,7 @@ namespace Tbasic.Parsing
 
         public override bool NextUnaryOp(UnaryOpDictionary _unOps, object last, out UnaryOperator foundOp)
         {
+            SkipWhiteSpace();
             if (EndOfStream || (last != null && !(last is BinaryOperator))) {
                 foundOp = default(UnaryOperator);
                 return false;

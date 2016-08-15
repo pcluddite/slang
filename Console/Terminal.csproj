@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\other\Json80r3\Bin\Net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\MEGA\OneDrive\My Apps\Desktop\TCPSERVR\TCPSERVR\bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

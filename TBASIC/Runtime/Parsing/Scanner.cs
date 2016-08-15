@@ -66,7 +66,7 @@ namespace Tbasic.Parsing
 
         public int IntPosition { get; set; }
         
-        public virtual void SkipWhiteSpace()
+        protected virtual void SkipWhiteSpace()
         {
             if (EndOfStream)
                 return;
@@ -76,6 +76,24 @@ namespace Tbasic.Parsing
                 }
                 while (char.IsWhiteSpace(InternalBuffer[IntPosition]));
             }
+        }
+
+        public virtual string Next()
+        {
+            return NextSegment().ToString();
+        }
+
+        internal virtual StringSegment NextSegment()
+        {
+            SkipWhiteSpace();
+
+            int last = IntPosition;
+            while (!EndOfStream && !char.IsWhiteSpace(InternalBuffer[last]))
+                ++last;
+
+            StringSegment seg = InternalBuffer.Subsegment(IntPosition, last - IntPosition + 1);
+            IntPosition = last; // advance the stream
+            return seg;
         }
 
         public abstract bool NextPositiveInt(out int integer);

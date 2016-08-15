@@ -92,8 +92,6 @@ namespace Tbasic.Runtime
         
         private int NextToken(Scanner scanner)
         {
-            scanner.SkipWhiteSpace();
-
             int startIndex = scanner.IntPosition;
 
             // check group

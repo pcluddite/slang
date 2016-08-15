@@ -83,7 +83,6 @@ namespace Tbasic.Libraries
             StringSegment text = new StringSegment(stackFrame.Text);
             Scanner scanner = new DefaultScanner(text);
             scanner.IntPosition += stackFrame.Name.Length;
-            scanner.SkipWhiteSpace();
 
             Variable v;
             if (!scanner.NextVariable(stackFrame.StackExecuter, out v))
@@ -157,7 +156,6 @@ namespace Tbasic.Libraries
 
             Scanner scanner = new DefaultScanner(text);
             scanner.IntPosition += stackFrame.Name.Length;
-            scanner.SkipWhiteSpace();
 
             Variable v;
             if (!scanner.NextVariable(stackFrame.StackExecuter, out v))
@@ -165,8 +163,6 @@ namespace Tbasic.Libraries
 
             if (v.IsMacro)
                 throw ThrowHelper.MacroRedefined();
-
-            scanner.SkipWhiteSpace();
 
             if (!scanner.Next("="))
                 throw ThrowHelper.InvalidDefinitionOperator();

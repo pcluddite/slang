@@ -93,6 +93,13 @@ namespace Tbasic.Runtime
             return System.Convert.ToInt32(n, CultureInfo.CurrentCulture);
         }
 
+        public override string ToString()
+        {
+            if (HasFraction())
+                return Value.ToString();
+            return ((long)Value).ToString();
+        }
+
         #region IComparable
 
         public int CompareTo(object obj)

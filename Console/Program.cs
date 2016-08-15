@@ -48,8 +48,9 @@ namespace Tbasic.Terminal
         {
             if (o is string)
                 return "\"" + ToCString(o.ToString(), '\"') + "\"";
-            if (o is int || o is double || o is decimal || o is char || o is long || o is bool)
-                return o.ToString(); // It's a supported type. Serialize it normally.
+
+            if (o.ToString() != o.GetType().ToString()) // checks if ToString() has been implemented
+                return o.ToString();
 
             return JsonConvert.SerializeObject(o, Formatting.Indented); // Maybe json has a way of representing this? (good for arrays)
         }

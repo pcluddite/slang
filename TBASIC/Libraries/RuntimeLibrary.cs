@@ -37,13 +37,43 @@ namespace Tbasic.Libraries
         private void CBool(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = stackFrame.GetParameter<bool>(1);
+            try {
+                bool b;
+                if (bool.TryParse(stackFrame.GetParameter<string>(1), out b)) {
+                    stackFrame.Data = b;
+                    return;
+                }
+                Number n;
+                if (Number.TryParse(stackFrame.GetParameter<string>(1), out n)) {
+                    stackFrame.Data = (n != 0); // non-zero is true, zero is false
+                    return;
+                }
+                throw new InvalidCastException();
+            }
+            catch(InvalidCastException) {
+                stackFrame.Data = Convert.ToBoolean(stackFrame.GetParameter(1));
+            }
         }
 
         private void CNum(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = stackFrame.GetParameter<Number>(1);
+            try {
+                Number n;
+                if (Number.TryParse(stackFrame.GetParameter<string>(1), out n)) {
+                    stackFrame.Data = n;
+                    return;
+                }
+                bool b;
+                if (bool.TryParse(stackFrame.GetParameter<string>(1), out b)) {
+                    stackFrame.Data = b ? 1 : 0;
+                    return;
+                }
+                throw new InvalidCastException();
+            }
+            catch (InvalidCastException) {
+                stackFrame.Data = Number.Convert(stackFrame.GetParameter(1));
+            }
         }
 
         private void SizeOf(TFunctionData stackFrame)

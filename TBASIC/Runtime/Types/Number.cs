@@ -4,6 +4,7 @@
 //
 // ======
 using System;
+using System.Globalization;
 
 namespace Tbasic.Runtime
 {
@@ -89,9 +90,7 @@ namespace Tbasic.Runtime
 
         public static implicit operator int(Number n)
         {
-            if (n.HasFraction())
-                throw new InvalidCastException();
-            return (int)n.Value;
+            return System.Convert.ToInt32(n, CultureInfo.CurrentCulture);
         }
 
         #region IComparable

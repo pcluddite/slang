@@ -17,7 +17,6 @@ namespace Tbasic.Libraries
     /// </summary>
     public class FileIOLibrary : Library
     {
-
         /// <summary>
         /// Initializes a new instance of this class
         /// </summary>
@@ -44,92 +43,105 @@ namespace Tbasic.Libraries
             Add("Shell", Shell);
         }
 
-        private void DirExists(TFunctionData _sframe)
+        private object DirExists(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
-            _sframe.Data = Directory.Exists(_sframe.GetParameter<string>(1));
+            return Directory.Exists(_sframe.GetParameter<string>(1));
         }
 
-        private void FileExists(TFunctionData _sframe)
+        private object FileExists(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
-            _sframe.Data = File.Exists(_sframe.GetParameter<string>(1));
+            return File.Exists(_sframe.GetParameter<string>(1));
         }
 
-        private void FileMove(TFunctionData _sframe)
+        private object FileMove(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             File.Move(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
+            return null;
         }
 
-        private void FileCopy(TFunctionData _sframe)
+        private object FileCopy(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             File.Copy(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
+            return null;
         }
 
-        private void FileDelete(TFunctionData _sframe)
+        private object FileDelete(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
             File.Delete(_sframe.GetParameter<string>(1));
+            return null;
         }
 
-        private void DirDelete(TFunctionData _sframe)
+        private object DirDelete(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
             Directory.Delete(_sframe.GetParameter<string>(1));
+            return null;
         }
 
-        private void DirMove(TFunctionData _sframe)
+        private object DirMove(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             Directory.Move(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
+            return null;
         }
 
-        private void DirCreate(TFunctionData _sframe)
+        private object DirCreate(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
             Directory.CreateDirectory(_sframe.GetParameter<string>(1));
+            return null;
         }
 
-        private void DirGetFileList(TFunctionData _sframe)
+        private object DirGetFileList(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
-            _sframe.Data = Directory.GetFiles(_sframe.GetParameter<string>(1));
+            return Directory.GetFiles(_sframe.GetParameter<string>(1));
         }
 
-        private void DirGetDirList(TFunctionData _sframe)
+        private object DirGetDirList(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
-            _sframe.Data = Directory.GetDirectories(_sframe.GetParameter<string>(1));
+            return Directory.GetDirectories(_sframe.GetParameter<string>(1));
         }
 
-        private void FileReadAll(TFunctionData _sframe)
+        private object FileReadAll(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
-            _sframe.Data = File.ReadAllText(_sframe.GetParameter<string>(1));
+            return File.ReadAllText(_sframe.GetParameter<string>(1));
         }
 
-        private void FileWriteAll(TFunctionData _sframe)
+        private object FileWriteAll(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             string path = _sframe.GetParameter<string>(1);
             object data = _sframe.GetParameter(2);
 
             string sData = data as string;
-            if (sData != null)
+            if (sData != null) {
                 File.WriteAllText(path, sData);
+                return null;
+            }
 
             string[] saData = data as string[];
-            if (saData != null)
+            if (saData != null) {
                 File.WriteAllLines(path, saData);
+                return null;
+            }
 
             byte[] bData = data as byte[];
-            if (bData != null)
+            if (bData != null) {
                 File.WriteAllBytes(path, bData);
+                return null;
+            }
 
             _sframe.Status = ErrorSuccess.Warnings; // data is written, but not necessarily useful
             File.WriteAllText(path, data + "");
+            return null;
         }
 
         /// <summary>
@@ -141,21 +153,22 @@ namespace Tbasic.Libraries
             FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
         }
 
-        private void Recycle(TFunctionData _sframe)
+        private object Recycle(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
             Recycle(_sframe.GetParameter<string>(1));
+            return null;
         }
 
-        private void FileGetAttributes(TFunctionData _sframe)
+        private object FileGetAttributes(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
             string path = _sframe.GetParameter<string>(1);
             FileAttributes current = File.GetAttributes(path);
-            _sframe.Data = GetStringFromAttributes(current);
+            return GetStringFromAttributes(current);
         }
 
-        private void FileSetAttributes(TFunctionData _sframe)
+        private object FileSetAttributes(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             string path = _sframe.GetParameter<string>(1);
@@ -165,7 +178,7 @@ namespace Tbasic.Libraries
             }
             FileAttributes attributes = GetAttributesFromString(_sframe.GetParameter<string>(2));
             File.SetAttributes(path, attributes);
-
+            return null;
         }
 
         private static string GetStringFromAttributes(FileAttributes attributes)
@@ -198,73 +211,77 @@ namespace Tbasic.Libraries
             return result;
         }
 
-        private void FileSetAccessDate(TFunctionData _sframe)
+        private object FileSetAccessDate(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             string path = _sframe.GetParameter<string>(1);
             try {
                 if (File.Exists(path)) {
                     File.SetLastAccessTime(path, DateTime.Parse(_sframe.GetParameter<string>(2)));
-                    _sframe.Data = File.GetLastAccessTime(path).ToString();
+                    return File.GetLastAccessTime(path).ToString();
                 }
                 else if (Directory.Exists(path)) {
                     Directory.SetLastAccessTime(path, DateTime.Parse(_sframe.GetParameter<string>(2)));
-                    _sframe.Data = Directory.GetLastAccessTime(path).ToString();
+                    return Directory.GetLastAccessTime(path).ToString();
                 }
+                throw new FileNotFoundException();
             }
             catch (Exception ex) when (ex is FileNotFoundException || ex is DirectoryNotFoundException) {
                 throw new TbasicException(ErrorClient.NotFound, path, ex);
             }
         }
 
-        private void FileSetModifiedDate(TFunctionData _sframe)
+        private object FileSetModifiedDate(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             string path = _sframe.GetParameter<string>(1);
             try {
                 if (File.Exists(path)) {
                     File.SetLastWriteTime(path, DateTime.Parse(_sframe.GetParameter<string>(2)));
-                    _sframe.Data = File.GetLastWriteTime(path).ToString();
+                    return File.GetLastWriteTime(path).ToString();
                 }
                 else if (Directory.Exists(path)) {
                     Directory.SetLastWriteTime(path, DateTime.Parse(_sframe.GetParameter<string>(2)));
-                    _sframe.Data = Directory.GetLastWriteTime(path).ToString();
+                    return Directory.GetLastWriteTime(path).ToString();
                 }
+                throw new FileNotFoundException();
             }
             catch (Exception ex) when (ex is FileNotFoundException || ex is DirectoryNotFoundException) {
                 throw new TbasicException(ErrorClient.NotFound, path, ex);
             }
         }
 
-        private void FileSetCreatedDate(TFunctionData _sframe)
+        private object FileSetCreatedDate(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             string path = _sframe.GetParameter<string>(1);
             try {
                 if (File.Exists(path)) {
                     File.SetCreationTime(path, DateTime.Parse(_sframe.GetParameter<string>(2)));
-                    _sframe.Data = File.GetCreationTime(path).ToString();
+                    return File.GetCreationTime(path).ToString();
                 }
                 else if (Directory.Exists(path)) {
                     Directory.SetCreationTime(path, DateTime.Parse(_sframe.GetParameter<string>(2)));
-                    _sframe.Data = Directory.GetCreationTime(path).ToString();
+                    return Directory.GetCreationTime(path).ToString();
                 }
+                throw new FileNotFoundException();
             }
             catch(Exception ex) when (ex is FileNotFoundException || ex is DirectoryNotFoundException) {
                 throw new TbasicException(ErrorClient.NotFound, path, ex);
             }
         }
 
-        private void DirectoryGetCurrent(TFunctionData _sframe)
+        private object DirectoryGetCurrent(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(1);
-            _sframe.Data = Directory.GetCurrentDirectory();
+            return Directory.GetCurrentDirectory();
         }
 
-        private void DirectorySetCurrent(TFunctionData _sframe)
+        private object DirectorySetCurrent(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
             Directory.SetCurrentDirectory(_sframe.GetParameter<string>(1));
+            return null;
         }
 
         /// <summary>
@@ -302,12 +319,12 @@ namespace Tbasic.Libraries
             return Shell(cmd, Directory.GetCurrentDirectory(), out output);
         }
 
-        private void Shell(TFunctionData _sframe)
+        private object Shell(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
             string output;
             _sframe.Status = Shell(_sframe.GetParameter<string>(1), out output);
-            _sframe.Data = output;
+            return output;
         }
     }
 }

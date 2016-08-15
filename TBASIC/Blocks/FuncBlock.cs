@@ -34,7 +34,7 @@ namespace Tbasic
             return new TBasicFunction(Execute);
         }
 
-        public void Execute(TFunctionData stackFrame)
+        public object Execute(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(Template.ParameterCount);
 
@@ -50,9 +50,10 @@ namespace Tbasic
             stackFrame.CopyFrom(exec.Execute(Body));
             exec.HonorBreak();
             exec.Context = exec.Context.Collect();
+            return stackFrame.Data;
         }
 
-        private void Return(TFunctionData stackFrame)
+        private object Return(TFunctionData stackFrame)
         {
             if (stackFrame.ParameterCount < 2) {
                 stackFrame.AssertParamCount(2);
@@ -60,14 +61,14 @@ namespace Tbasic
             Evaluator e = new Evaluator(
                 new StringSegment(stackFrame.Text, stackFrame.Name.Length),
                 stackFrame.StackExecuter);
-            stackFrame.Data = e.Evaluate();
             stackFrame.StackExecuter.RequestBreak();
+            return stackFrame.Data = e.Evaluate();
         }
 
-        private void SetStatus(TFunctionData stackFrame)
+        private object SetStatus(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Status = stackFrame.GetParameter<int>(1);
+            return stackFrame.Status = stackFrame.GetParameter<int>(1);
         }
 
         public override void Execute(Executer exec)

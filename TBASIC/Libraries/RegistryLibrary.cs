@@ -31,73 +31,79 @@ namespace Tbasic.Libraries
             Add("RegWrite", RegWrite);
         }
         
-        private void RegValueKind(TFunctionData _sframe)
+        private object RegValueKind(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
-            _sframe.Data = WinRegistry.GetValueKind(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2)).ToString();
+            return WinRegistry.GetValueKind(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2)).ToString();
         }
 
-        private void RegRead(TFunctionData _sframe)
+        private object RegRead(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(atLeast: 3, atMost: 4);
 
             if (_sframe.ParameterCount == 3)
                 _sframe.AddParameter(null);
             
-            _sframe.Data = WinRegistry.Read(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2), _sframe.GetParameter<string>(3));
+            return WinRegistry.Read(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2), _sframe.GetParameter<string>(3));
         }
 
-        private void RegDelete(TFunctionData _sframe)
+        private object RegDelete(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             WinRegistry.Delete(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
+            return null;
         }
 
-        private void RegRename(TFunctionData _sframe)
+        private object RegRename(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(4);
             WinRegistry.Rename(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2), _sframe.GetParameter<string>(3));
+            return null;
         }
 
-        private void RegDeleteKey(TFunctionData _sframe)
+        private object RegDeleteKey(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
             WinRegistry.DeleteKey(_sframe.GetParameter<string>(1));
+            return null;
         }
 
-        private void RegRenameKey(TFunctionData _sframe)
+        private object RegRenameKey(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             WinRegistry.RenameKey(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
+            return null;
         }
 
-        private void RegCreateKey(TFunctionData _sframe)
+        private object RegCreateKey(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             WinRegistry.RenameKey(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
             _sframe.Status = ErrorSuccess.Created;
+            return null;
         }
         
-        private void RegEnumValues(TFunctionData _sframe)
+        private object RegEnumValues(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
 
             object[][] values = WinRegistry.EnumerateValues(_sframe.GetParameter<string>(1));
             if (values.Length == 0) {
                 _sframe.Status = ErrorSuccess.NoContent;
+                return null;
             }
             else {
-                _sframe.Data = values;
+                return values;
             }
         }
 
-        private static void RegEnumKeys(TFunctionData _sframe)
+        private static object RegEnumKeys(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
-            _sframe.Data = WinRegistry.EnumeratKeys(_sframe.GetParameter<string>(1));
+            return WinRegistry.EnumeratKeys(_sframe.GetParameter<string>(1));
         }
 
-        private void RegWrite(TFunctionData _sframe)
+        private object RegWrite(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(5);
 
@@ -129,6 +135,7 @@ namespace Tbasic.Libraries
                     throw new ArgumentException("Registry value of type '" + kind + "' is unsupported");
             }
             WinRegistry.Write(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2), value, kind);
+            return null;
         }
     }
 }

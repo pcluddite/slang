@@ -22,52 +22,52 @@ namespace Tbasic.Libraries
             Add("GetMillisecond", GetMillisecond);
         }
 
-        private void GetMonth(TFunctionData _sframe)
+        private object GetMonth(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(1);
-            _sframe.Data = DateTime.Now.Month;
+            return DateTime.Now.Month;
         }
 
-        private void GetDay(TFunctionData _sframe)
+        private object GetDay(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(1);
-            _sframe.Data = DateTime.Now.Day;
+            return DateTime.Now.Day;
         }
 
-        private void GetDayOfWeek(TFunctionData _sframe)
+        private object GetDayOfWeek(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(1);
-            _sframe.Data = (int)DateTime.Now.DayOfWeek;
+            return (int)DateTime.Now.DayOfWeek;
         }
 
-        private void GetYear(TFunctionData _sframe)
+        private object GetYear(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(1);
-            _sframe.Data = DateTime.Now.Year;
+            return DateTime.Now.Year;
         }
 
-        private void GetHour(TFunctionData _sframe)
+        private object GetHour(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(1);
-            _sframe.Data = DateTime.Now.Hour;
+            return DateTime.Now.Hour;
         }
 
-        private void GetMinute(TFunctionData _sframe)
+        private object GetMinute(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(1);
-            _sframe.Data = DateTime.Now.Minute;
+            return DateTime.Now.Minute;
         }
 
-        private void GetSecond(TFunctionData _sframe)
+        private object GetSecond(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(1);
-            _sframe.Data = DateTime.Now.Second;
+            return DateTime.Now.Second;
         }
 
-        private void GetMillisecond(TFunctionData _sframe)
+        private object GetMillisecond(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(1);
-            _sframe.Data = DateTime.Now.Millisecond;
+            return DateTime.Now.Millisecond;
         }
     }
 }

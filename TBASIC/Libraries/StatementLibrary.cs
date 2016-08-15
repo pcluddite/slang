@@ -16,18 +16,18 @@ namespace Tbasic.Libraries
     {
         public StatementLibrary()
         {
-            Add("#include", Include);
             Add("LET", Let);
-            Add("EXIT", Exit);
-            Add("BREAK", Break);
             Add("DIM", DIM);
             Add("SLEEP", Sleep);
             Add("ELSE", UhOh);
             Add("END", UhOh);
             Add("WEND", UhOh);
+            Add("CONST", Const);
+            Add("EXIT", Exit);
+            Add("BREAK", Break);
         }
 
-        private void Include(TFunctionData stackFrame)
+        private object Include(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
             string path = Path.GetFullPath(stackFrame.GetParameter<string>(1));
@@ -40,41 +40,42 @@ namespace Tbasic.Libraries
 
 
 
-            NULL(stackFrame);
+            return NULL(stackFrame);
         }
 
-        private void Sleep(TFunctionData stackFrame)
+        private object Sleep(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
             System.Threading.Thread.Sleep(stackFrame.GetParameter<int>(1));
-            NULL(stackFrame);
+            return NULL(stackFrame);
         }
 
-        private void Break(TFunctionData stackFrame)
+        private object Break(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(1);
             stackFrame.StackExecuter.RequestBreak();
-            NULL(stackFrame);
+            return NULL(stackFrame);
         }
 
-        internal void Exit(TFunctionData stackFrame)
+        internal object Exit(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(1);
             stackFrame.StackExecuter.RequestExit();
-            NULL(stackFrame);
+            return NULL(stackFrame);
         }
 
-        internal static void NULL(TFunctionData stackFrame)
+        internal static object NULL(TFunctionData stackFrame)
         {
             stackFrame.Context.PersistReturns(stackFrame);
+            return stackFrame.Data;
         }
 
-        internal void UhOh(TFunctionData stackFrame)
+        internal object UhOh(TFunctionData stackFrame)
         {
             throw ThrowHelper.NoOpeningStatement(stackFrame.Text);
         }
 
-        internal void DIM(TFunctionData stackFrame)
+        internal object DIM(TFunctionData stackFrame)
         {
             stackFrame.AssertAtLeast(2);
 
@@ -96,7 +97,7 @@ namespace Tbasic.Libraries
                 array_realloc(ref obj, v.Indices, 0);
                 context.SetVariable(name, obj);
             }
-            NULL(stackFrame);
+            return NULL(stackFrame);
         }
 
         private object array_alloc(int[] sizes, int index)
@@ -134,17 +135,17 @@ namespace Tbasic.Libraries
             }
         }
 
-        private void Let(TFunctionData stackFrame)
+        private object Let(TFunctionData stackFrame)
         {
-            SetVariable(stackFrame, constant: false);
+            return SetVariable(stackFrame, constant: false);
         }
 
-        internal void Const(TFunctionData stackFrame)
+        internal object Const(TFunctionData stackFrame)
         {
-            SetVariable(stackFrame, constant: true);
+            return SetVariable(stackFrame, constant: true);
         }
 
-        private void SetVariable(TFunctionData stackFrame, bool constant)
+        private object SetVariable(TFunctionData stackFrame, bool constant)
         {
             stackFrame.AssertAtLeast(2);
             StringSegment text = new StringSegment(stackFrame.Text);
@@ -183,7 +184,7 @@ namespace Tbasic.Libraries
                 context.SetArrayAt(v.Name.ToString(), data, v.Indices);
             }
 
-            stackFrame.Data = data;
+            return data;
         }
     }
 }

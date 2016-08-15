@@ -163,7 +163,7 @@ namespace Tbasic.Runtime
             }
             else {
                 stackFrame.SetAll(codeLine.Text);
-                context.GetCommand(codeLine.Name).Invoke(stackFrame);
+                stackFrame.Data = context.GetCommand(codeLine.Name).Invoke(stackFrame);
             }
             stackFrame.Context.SetReturns(stackFrame);
         }

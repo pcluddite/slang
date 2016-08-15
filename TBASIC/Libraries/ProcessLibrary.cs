@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Tbasic.Runtime;
 using Tbasic.Errors;
@@ -18,7 +17,6 @@ namespace Tbasic.Libraries
 {
     internal class ProcessLibrary : Library
     {
-
         public ProcessLibrary()
         {
             Add("ProcStart", Run);
@@ -33,19 +31,18 @@ namespace Tbasic.Libraries
             Add("ProcList", ProcessList);
         }
 
-        private void ProcessExists(TFunctionData _sframe)
+        private object ProcessExists(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
-            _sframe.Data = false;
             foreach (Process p in Process.GetProcesses()) {
                 if (p.ProcessName.EqualsIgnoreCase(_sframe.GetParameter<string>(1))) {
-                    _sframe.Data = true;
-                    break;
+                    return true;
                 }
             }
+            return false;
         }
 
-        private void ProcessList(TFunctionData _sframe)
+        private object ProcessList(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(1);
             Process[] procs = Process.GetProcesses();
@@ -54,43 +51,47 @@ namespace Tbasic.Libraries
                 for (int index = 0; index < _ret.Length; index++) {
                     _ret[index] = new object[] { procs[index].Id, procs[index].ProcessName };
                 }
-                _sframe.Data = _ret;
+                return _ret;
             }
             else {
                 _sframe.Status = ErrorSuccess.NoContent;
+                return null;
             }
         }
 
-        private void ProcessKill(TFunctionData _sframe)
+        private object ProcessKill(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
             foreach (Process p in Process.GetProcesses()) {
                 if (p.ProcessName.EqualsIgnoreCase(_sframe.GetParameter<string>(1))) {
                     p.Kill();
-                    return;
+                    return null;
                 }
             }
             _sframe.Status = ErrorClient.NotFound;
+            return null;
         }
 
-        private void ProcessClose(TFunctionData _sframe)
+        private object ProcessClose(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
             foreach (Process p in Process.GetProcesses()) {
                 if (p.ProcessName.EqualsIgnoreCase(_sframe.GetParameter<string>(1))) {
                     p.Close();
-                    return;
+                    return null;
                 }
             }
             _sframe.Status = ErrorClient.NotFound;
+            return null;
         }
 
-        private void BlockedList(TFunctionData _sframe)
+        private object BlockedList(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(1);
             var list = BlockedList(); // dicts currently are not supported 2/24/15
             if (list.Count == 0) {
                 _sframe.Status = ErrorSuccess.NoContent;
+                return null;
             }
             else {
                 string[][] _array = new string[list.Count][];
@@ -98,7 +99,7 @@ namespace Tbasic.Libraries
                 foreach (var _kv in list) {
                     _array[index++] = new string[] { _kv.Key, _kv.Value }; // convert it to jagged array (like AutoIt) 2/23/15
                 }
-                _sframe.Data = _array;
+                return _array;
             }
         }
 
@@ -119,7 +120,7 @@ namespace Tbasic.Libraries
 
         private const string REG_EXEC_PATH = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\";
 
-        private void ProcessBlock(TFunctionData _sframe)
+        private object ProcessBlock(TFunctionData _sframe)
         {
             if (_sframe.ParameterCount == 2) {
                 _sframe.AddParameter(16);
@@ -135,9 +136,10 @@ namespace Tbasic.Libraries
             using (RegistryKey key = Registry.LocalMachine.CreateSubKey(Path.Combine(REG_EXEC_PATH, name))) {
                 key.SetValue("Debugger", "\"" + Application.ExecutablePath + "\" -m \"" + _sframe.GetParameter(2) + "\" \"" + _sframe.GetParameter(3) + "\" \"" + _sframe.GetParameter(4) + "\"");
             }
+            return null;
         }
 
-        private void ProcessRedirect(TFunctionData _sframe)
+        private object ProcessRedirect(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             string name = _sframe.GetParameter<string>(1);
@@ -151,9 +153,10 @@ namespace Tbasic.Libraries
             using (RegistryKey key = Registry.LocalMachine.CreateSubKey(Path.Combine(REG_EXEC_PATH, name))) {
                 key.SetValue("Debugger", "\"" + Application.ExecutablePath + "\" -r \"" + _sframe.GetParameter(2) + "\"");
             }
+            return null;
         }
 
-        private void ProcessSetDebugger(TFunctionData _sframe)
+        private object ProcessSetDebugger(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(3);
             string name = _sframe.GetParameter<string>(1);
@@ -167,9 +170,10 @@ namespace Tbasic.Libraries
             using (RegistryKey key = Registry.LocalMachine.CreateSubKey(Path.Combine(REG_EXEC_PATH, name))) {
                 key.SetValue("Debugger", _sframe.GetParameter<string>(2));
             }
+            return null;
         }
 
-        private void Unblock(TFunctionData _sframe)
+        private object Unblock(TFunctionData _sframe)
         {
             _sframe.AssertParamCount(2);
             string name = _sframe.GetParameter<string>(1);
@@ -185,9 +189,10 @@ namespace Tbasic.Libraries
             else {
                 _sframe.Status = -1; // -1 not found 2-24-15
             }
+            return null;
         }
 
-        private void Run(TFunctionData _sframe)
+        private object Run(TFunctionData _sframe)
         {
             if (_sframe.ParameterCount == 2) {
                 _sframe.AddParameter("");
@@ -204,6 +209,7 @@ namespace Tbasic.Libraries
             startInfo.Arguments = _sframe.GetParameter<string>(2);
             startInfo.WorkingDirectory = _sframe.GetParameter<string>(3);
             _sframe.Status = Run(startInfo, _sframe.GetParameter<bool>(4));
+            return null;
         }
 
         private int Run(ProcessStartInfo info, bool wait)

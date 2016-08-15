@@ -13,8 +13,8 @@ namespace Tbasic.Libraries
     /// <summary>
     /// Delegate for processing a TBasic function
     /// </summary>
-    /// <param name="stack">The StackFrame containing parameter and execution information</param>
-    public delegate void TBasicFunction(TFunctionData stack);
+    /// <param name="stack">The object containing parameter and execution information</param>
+    public delegate object TBasicFunction(TFunctionData stack);
 
     /// <summary>
     /// A library for storing and processing TBasic functions

@@ -43,81 +43,81 @@ namespace Tbasic.Libraries
             context.SetConstant("@E", Math.E); // euler's number
         }
 
-        private void Log(TFunctionData stackFrame)
+        private object Log(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(atLeast: 2, atMost: 3);
             if (stackFrame.ParameterCount == 2) {
-                stackFrame.Data = Math.Log10(stackFrame.GetParameter<Number>(1));
+                return Math.Log10(stackFrame.GetParameter<Number>(1));
             }
             else {
-                stackFrame.Data = Math.Log(stackFrame.GetParameter<Number>(1), stackFrame.GetParameter<Number>(2));
+                return Math.Log(stackFrame.GetParameter<Number>(1), stackFrame.GetParameter<Number>(2));
             }
         }
 
-        private void Ln(TFunctionData stackFrame)
+        private object Ln(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = Math.Log(stackFrame.GetParameter<Number>(1));
+            return Math.Log(stackFrame.GetParameter<Number>(1));
         }
 
-        private void Abs(TFunctionData stackFrame)
+        private object Abs(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = Math.Abs(stackFrame.GetParameter<Number>(1));
+            return Math.Abs(stackFrame.GetParameter<Number>(1));
         }
 
-        private void Sin(TFunctionData stackFrame)
+        private object Sin(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = Math.Sin(stackFrame.GetParameter<Number>(1));
+            return Math.Sin(stackFrame.GetParameter<Number>(1));
         }
 
-        private void Asin(TFunctionData stackFrame)
+        private object Asin(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = Math.Asin(stackFrame.GetParameter<Number>(1));
+            return Math.Asin(stackFrame.GetParameter<Number>(1));
         }
 
-        private void Sinh(TFunctionData stackFrame)
+        private object Sinh(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = Math.Sinh(stackFrame.GetParameter<Number>(1));
+            return Math.Sinh(stackFrame.GetParameter<Number>(1));
         }
 
-        private void Cos(TFunctionData stackFrame)
+        private object Cos(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = Math.Cos(stackFrame.GetParameter<Number>(1));
+            return Math.Cos(stackFrame.GetParameter<Number>(1));
         }
 
-        private void Acos(TFunctionData stackFrame)
+        private object Acos(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = Math.Acos(stackFrame.GetParameter<Number>(1));
+            return Math.Acos(stackFrame.GetParameter<Number>(1));
         }
 
-        private void Cosh(TFunctionData stackFrame)
+        private object Cosh(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = Math.Cosh(stackFrame.GetParameter<Number>(1));
+            return Math.Cosh(stackFrame.GetParameter<Number>(1));
         }
 
-        private void Tan(TFunctionData stackFrame)
+        private object Tan(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = Math.Tan(stackFrame.GetParameter<Number>(1));
+            return Math.Tan(stackFrame.GetParameter<Number>(1));
         }
 
-        private void Atan(TFunctionData stackFrame)
+        private object Atan(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = Math.Atan(stackFrame.GetParameter<Number>(1));
+            return Math.Atan(stackFrame.GetParameter<Number>(1));
         }
 
-        private void Tanh(TFunctionData stackFrame)
+        private object Tanh(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = Math.Tanh(stackFrame.GetParameter<Number>(1));
+            return Math.Tanh(stackFrame.GetParameter<Number>(1));
         }
 
         /// <summary>
@@ -150,17 +150,17 @@ namespace Tbasic.Libraries
             return Random(upperBound - lowerBound) + lowerBound;
         }
 
-        private void Random(TFunctionData stackFrame)
+        private object Random(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(atLeast: 1, atMost: 3);
             if (stackFrame.ParameterCount == 1) {
-                stackFrame.Data = Random();
+                return Random();
             }
             else if (stackFrame.ParameterCount == 2) {
-                stackFrame.Data = Random(stackFrame.GetParameter<int>(1));
+                return Random(stackFrame.GetParameter<int>(1));
             }
             else {
-                stackFrame.Data = Random(stackFrame.GetParameter<int>(1), stackFrame.GetParameter<int>(2));
+                return Random(stackFrame.GetParameter<int>(1), stackFrame.GetParameter<int>(2));
             }
         }
 
@@ -175,13 +175,13 @@ namespace Tbasic.Libraries
             return Math.Round(number, places);
         }
 
-        private void Round(TFunctionData stackFrame)
+        private object Round(TFunctionData stackFrame)
         {
             if (stackFrame.ParameterCount == 2) {
                 stackFrame.AddParameter(2);
             }
             stackFrame.AssertParamCount(3);
-            stackFrame.Data = Round(stackFrame.GetParameter<Number>(1), stackFrame.GetParameter<Number>(2));
+            return Round(stackFrame.GetParameter<Number>(1), stackFrame.GetParameter<Number>(2));
         }
 
         /// <summary>
@@ -194,10 +194,10 @@ namespace Tbasic.Libraries
             return (int)d;
         }
 
-        private void iPart(TFunctionData stackFrame)
+        private object iPart(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = iPart(stackFrame.GetParameter<Number>(1));
+            return iPart(stackFrame.GetParameter<Number>(1));
         }
 
         /// <summary>
@@ -210,10 +210,10 @@ namespace Tbasic.Libraries
             return d - (int)d;
         }
 
-        private void fPart(TFunctionData stackFrame)
+        private object fPart(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = fPart(stackFrame.GetParameter<Number>(1));
+            return fPart(stackFrame.GetParameter<Number>(1));
         }
 
         /// <summary>
@@ -229,21 +229,21 @@ namespace Tbasic.Libraries
             return Evaluator.Evaluate(new StringSegment(expr), e);
         }
 
-        private void Eval(TFunctionData stackFrame)
+        private object Eval(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
             try {
-                stackFrame.Data = Eval(stackFrame.GetParameter<string>(1));
+                return Eval(stackFrame.GetParameter<string>(1));
             }
             catch(Exception ex) {
                 throw TbasicException.WrapException(ex);
             }
         }
 
-        private static void Pow(TFunctionData stackFrame)
+        private static object Pow(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(3);
-            stackFrame.Data = Pow(stackFrame.GetParameter<Number>(1), stackFrame.GetParameter<Number>(2));
+            return Pow(stackFrame.GetParameter<Number>(1), stackFrame.GetParameter<Number>(2));
         }
 
         /// <summary>

@@ -28,104 +28,98 @@ namespace Tbasic.Libraries
             context.SetConstant("@osversion", Environment.OSVersion.VersionString);
         }
 
-        private void CStr(TFunctionData stackFrame)
+        private object CStr(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = stackFrame.GetParameter(1)?.ToString(); // return null if it is null
+            return stackFrame.GetParameter(1)?.ToString(); // return null if it is null
         }
 
-        private void CBool(TFunctionData stackFrame)
+        private object CBool(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
             try {
                 bool b;
                 if (bool.TryParse(stackFrame.GetParameter<string>(1), out b)) {
-                    stackFrame.Data = b;
-                    return;
+                    return b;
                 }
                 Number n;
                 if (Number.TryParse(stackFrame.GetParameter<string>(1), out n)) {
-                    stackFrame.Data = (n != 0); // non-zero is true, zero is false
-                    return;
+                    return (n != 0); // non-zero is true, zero is false
                 }
                 throw new InvalidCastException();
             }
             catch(InvalidCastException) {
-                stackFrame.Data = Convert.ToBoolean(stackFrame.GetParameter(1));
+                return Convert.ToBoolean(stackFrame.GetParameter(1));
             }
         }
 
-        private void CNum(TFunctionData stackFrame)
+        private object CNum(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
             try {
                 Number n;
                 if (Number.TryParse(stackFrame.GetParameter<string>(1), out n)) {
-                    stackFrame.Data = n;
-                    return;
+                    return n;
                 }
                 bool b;
                 if (bool.TryParse(stackFrame.GetParameter<string>(1), out b)) {
-                    stackFrame.Data = b ? 1 : 0;
-                    return;
+                    return b ? 1 : 0;
                 }
                 throw new InvalidCastException();
             }
             catch (InvalidCastException) {
-                stackFrame.Data = Number.Convert(stackFrame.GetParameter(1));
+                return Number.Convert(stackFrame.GetParameter(1));
             }
         }
 
-        private void SizeOf(TFunctionData stackFrame)
+        private object SizeOf(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
             object obj = stackFrame.GetParameter(1);
-            int len = -1;
             if (obj == null) {
-                len = 0;
+                return 0;
             }
             else if (obj is string) {
-                len = obj.ToString().Length;
+                return obj.ToString().Length;
             }
             else if (Number.IsNumber(obj)) {
-                len = Number.SIZE;
+                return Number.SIZE;
             }
             else if (obj is bool) {
-                len = sizeof(bool);
+                return sizeof(bool);
             }
             else if (obj.GetType().IsArray) {
-                len = ((object[])obj).Length;
+                return ((object[])obj).Length;
             }
             else {
                 throw new TbasicException(ErrorClient.Forbidden, "Object size cannot be determined");
             }
-            stackFrame.Data = len;
         }
 
-        private void IsNum(TFunctionData stackFrame)
+        private object IsNum(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = Number.IsNumber(stackFrame.GetParameter(1));
+            return Number.IsNumber(stackFrame.GetParameter(1));
         }
 
-        private void IsString(TFunctionData stackFrame)
+        private object IsString(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = stackFrame.GetParameter(1) is string;
+            return stackFrame.GetParameter(1) is string;
         }
 
-        private void IsBool(TFunctionData stackFrame)
+        private object IsBool(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = stackFrame.GetParameter(1) is bool;
+            return stackFrame.GetParameter(1) is bool;
         }
         
-        private void IsDefined(TFunctionData stackFrame)
+        private object IsDefined(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
             string name = stackFrame.GetParameter<string>(1);
             ObjectContext context = stackFrame.Context.FindContext(name);
-            stackFrame.Data = context != null;
+            return context != null;
         }
     }
 }

@@ -30,59 +30,59 @@ namespace Tbasic.Libraries
             Add("StrInStr", Substring);
         }
 
-        private void CharsToString(TFunctionData stackFrame)
+        private object CharsToString(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
             StringBuilder hanz = new StringBuilder();
             foreach (char c in stackFrame.GetParameter<char[]>(1)) {
                 hanz.Append(c);
             }
-            stackFrame.Data = hanz.ToString();
+            return hanz.ToString();
         }
 
-        private void ToCharArray(TFunctionData stackFrame)
+        private object ToCharArray(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = stackFrame.GetParameter<string>(1).ToCharArray();
+            return stackFrame.GetParameter<string>(1).ToCharArray();
         }
 
-        private void StringSplit(TFunctionData stackFrame)
+        private object StringSplit(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(3);
-            stackFrame.Data = Regex.Split(stackFrame.GetParameter(1).ToString(), stackFrame.GetParameter(2).ToString());
+            return Regex.Split(stackFrame.GetParameter(1).ToString(), stackFrame.GetParameter(2).ToString());
         }
 
-        private void Trim(TFunctionData stackFrame)
+        private object Trim(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = stackFrame.GetParameter(1).ToString().Trim();
+            return stackFrame.GetParameter(1).ToString().Trim();
         }
 
-        private void TrimStart(TFunctionData stackFrame)
+        private object TrimStart(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = stackFrame.GetParameter(1).ToString().TrimStart();
+            return stackFrame.GetParameter(1).ToString().TrimStart();
         }
 
-        private void TrimEnd(TFunctionData stackFrame)
+        private object TrimEnd(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = stackFrame.GetParameter(1).ToString().TrimEnd();
+            return stackFrame.GetParameter(1).ToString().TrimEnd();
         }
 
-        private void StringContains(TFunctionData stackFrame)
+        private object StringContains(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(3);
-            stackFrame.Data = stackFrame.GetParameter<string>(1).Contains(stackFrame.GetParameter<string>(2));
+            return stackFrame.GetParameter<string>(1).Contains(stackFrame.GetParameter<string>(2));
         }
 
-        private void StringCompare(TFunctionData stackFrame)
+        private object StringCompare(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(3);
-            stackFrame.Data = stackFrame.GetParameter<string>(1).CompareTo(stackFrame.GetParameter<string>(2));
+            return stackFrame.GetParameter<string>(1).CompareTo(stackFrame.GetParameter<string>(2));
         }
 
-        private void StringIndexOf(TFunctionData stackFrame)
+        private object StringIndexOf(TFunctionData stackFrame)
         {
             if (stackFrame.ParameterCount == 3) {
                 stackFrame.AddParameter(0);
@@ -93,14 +93,14 @@ namespace Tbasic.Libraries
             stackFrame.AssertParamCount(5);
             char? cObj = stackFrame.GetParameter(2) as char?;
             if (cObj == null) {
-                stackFrame.Data = stackFrame.GetParameter<string>(1).IndexOf(stackFrame.GetParameter<string>(2), stackFrame.GetParameter<int>(3), stackFrame.GetParameter<int>(4));
+                return stackFrame.GetParameter<string>(1).IndexOf(stackFrame.GetParameter<string>(2), stackFrame.GetParameter<int>(3), stackFrame.GetParameter<int>(4));
             }
             else {
-                stackFrame.Data = stackFrame.GetParameter<string>(1).IndexOf(cObj.Value, stackFrame.GetParameter<int>(3), stackFrame.GetParameter<int>(4));
+                return stackFrame.GetParameter<string>(1).IndexOf(cObj.Value, stackFrame.GetParameter<int>(3), stackFrame.GetParameter<int>(4));
             }
         }
 
-        private void StringLastIndexOf(TFunctionData stackFrame)
+        private object StringLastIndexOf(TFunctionData stackFrame)
         {
             if (stackFrame.ParameterCount == 3) {
                 stackFrame.AddParameter(0);
@@ -111,47 +111,47 @@ namespace Tbasic.Libraries
             stackFrame.AssertParamCount(5);
             char? cObj = stackFrame.GetParameter(2) as char?;
             if (cObj == null) {
-                stackFrame.Data = stackFrame.GetParameter<string>(1).LastIndexOf(stackFrame.GetParameter<string>(2), stackFrame.GetParameter<int>(3), stackFrame.GetParameter<int>(4));
+                return stackFrame.GetParameter<string>(1).LastIndexOf(stackFrame.GetParameter<string>(2), stackFrame.GetParameter<int>(3), stackFrame.GetParameter<int>(4));
             }
             else {
-                stackFrame.Data = stackFrame.GetParameter<string>(1).LastIndexOf(cObj.Value, stackFrame.GetParameter<int>(3), stackFrame.GetParameter<int>(4));
+                return stackFrame.GetParameter<string>(1).LastIndexOf(cObj.Value, stackFrame.GetParameter<int>(3), stackFrame.GetParameter<int>(4));
             }
         }
 
-        private void StringUpper(TFunctionData stackFrame)
+        private object StringUpper(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = stackFrame.GetParameter<string>(1).ToUpper();
+            return stackFrame.GetParameter<string>(1).ToUpper();
         }
 
-        private void StringLower(TFunctionData stackFrame)
+        private object StringLower(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(2);
-            stackFrame.Data = stackFrame.GetParameter<string>(1).ToLower();
+            return stackFrame.GetParameter<string>(1).ToLower();
         }
 
-        private void StringLeft(TFunctionData stackFrame)
+        private object StringLeft(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(3);
-            stackFrame.Data = stackFrame.GetParameter<string>(1).Substring(stackFrame.GetParameter<int>(2));
+            return stackFrame.GetParameter<string>(1).Substring(stackFrame.GetParameter<int>(2));
         }
 
-        private void StringRight(TFunctionData stackFrame)
+        private object StringRight(TFunctionData stackFrame)
         {
             stackFrame.AssertParamCount(3);
-            stackFrame.Data = stackFrame.GetParameter<string>(1).Remove(stackFrame.GetParameter<int>(2));
+            return stackFrame.GetParameter<string>(1).Remove(stackFrame.GetParameter<int>(2));
         }
 
-        private void Substring(TFunctionData stackFrame)
+        private object Substring(TFunctionData stackFrame)
         {
             if (stackFrame.ParameterCount == 3) {
-                stackFrame.Data = stackFrame.GetParameter<string>(1).Substring(
+                return stackFrame.GetParameter<string>(1).Substring(
                                     stackFrame.GetParameter<int>(2)
                                     );
             }
             else {
                 stackFrame.AssertParamCount(4);
-                stackFrame.Data = stackFrame.GetParameter<string>(1).Substring(
+                return stackFrame.GetParameter<string>(1).Substring(
                                     stackFrame.GetParameter<int>(2), stackFrame.GetParameter<int>(3)
                                     );
             }

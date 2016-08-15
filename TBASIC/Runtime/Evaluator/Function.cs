@@ -109,7 +109,7 @@ namespace Tbasic.Runtime
                 TFunctionData _sframe = new TFunctionData(CurrentExecution);
                 _sframe.SetAll(a_evaluated);
                 _sframe.Name = name;
-                context.GetFunction(name).Invoke(_sframe);
+                _sframe.Data = context.GetFunction(name).Invoke(_sframe);
                 CurrentContext.SetReturns(_sframe);
                 return _sframe.Data;
             }

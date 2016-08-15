@@ -82,7 +82,7 @@ namespace Tbasic.Runtime
                 _parsed = true;
             }
 
-            return ConvertToObject(EvaluateList());
+            return ConvertToSimpleType(EvaluateList());
         }
 
         public bool EvaluateBool()
@@ -276,9 +276,8 @@ namespace Tbasic.Runtime
         {
             object operand = op.Side == UnaryOperator.OperandSide.Left ? left : right;
             IEvaluator tempv = operand as IEvaluator;
-            if (tempv != null) {
+            if (tempv != null)
                 operand = tempv.Evaluate();
-            }
 
             try {
                 return op.ExecuteOperator(operand);
@@ -301,9 +300,8 @@ namespace Tbasic.Runtime
         public static object PerformBinaryOp(BinaryOperator op, object left, object right)
         {
             IEvaluator tv = left as IEvaluator;
-            if (tv != null) {
+            if (tv != null) 
                 left = tv.Evaluate();
-            }
 
             try {
                 switch (op.OperatorString) { // short circuit evaluation 1/6/16
@@ -335,14 +333,14 @@ namespace Tbasic.Runtime
                 }
 
                 tv = right as IEvaluator;
-                if (tv != null) {
+                if (tv != null)
                     right = tv.Evaluate();
-                }
+                
                 return op.ExecuteOperator(left, right);
             }
             catch (Exception ex) when (ex is InvalidCastException || ex is FormatException || ex is ArgumentException || ex is OverflowException) {
                 throw new FormatException(string.Format(
-                        "Operator '{0}' cannot be applied to objects of type '{1}' and '{2}'",
+                        "Operator [{0}] cannot be applied to objects of type '{1}' and '{2}'",
                         op.OperatorString, GetTypeName(right), GetTypeName(left)
                     ));
             }
@@ -352,30 +350,35 @@ namespace Tbasic.Runtime
         {
             Type t = value.GetType();
             if (t.IsArray) {
-                return "object array";
+                return "array";
             }
             else {
                 return t.Name.ToLower();
             }
         }
 
-        public static string ConvertToString(object obj)
+        public static string GetStringRepresentation(object obj, bool escapeStrings = false)
         {
-            if (obj == null) {
+            if (obj == null)
                 return "";
-            }
+            
             string str_obj = obj as string;
             if (str_obj != null) {
-                return FormatString(str_obj);
+                if (escapeStrings) {
+                    return ToEscapedString(str_obj);
+                }
+                else {
+                    return str_obj;
+                }
             }
             else if (obj.GetType().IsArray) {
                 StringBuilder sb = new StringBuilder("{ ");
                 object[] _aObj = (object[])obj;
                 if (_aObj.Length > 0) {
                     for (int i = 0; i < _aObj.Length - 1; i++) {
-                        sb.AppendFormat("{0}, ", ConvertToString(_aObj[i]));
+                        sb.AppendFormat("{0}, ", GetStringRepresentation(_aObj[i], escapeStrings: true));
                     }
-                    sb.AppendFormat("{0} ", ConvertToString(_aObj[_aObj.Length - 1]));
+                    sb.AppendFormat("{0} ", GetStringRepresentation(_aObj[_aObj.Length - 1], escapeStrings: true));
                 }
                 sb.Append("}");
                 return sb.ToString();
@@ -383,9 +386,10 @@ namespace Tbasic.Runtime
             return obj.ToString();
         }
 
-        private static string FormatString(string str)
+        private static string ToEscapedString(string str)
         {
             StringBuilder sb = new StringBuilder();
+            sb.Append('\"');
             for (int index = 0; index < str.Length; index++) {
                 char c = str[index];
                 switch (c) {
@@ -408,10 +412,11 @@ namespace Tbasic.Runtime
                         break;
                 }
             }
-            return "\"" + sb + "\"";
+            sb.Append('\"');
+            return sb.ToString();
         }
 
-        public static object ConvertToObject(object _oObj)
+        public static object ConvertToSimpleType(object _oObj)
         {
             if (_oObj == null) {
                 return 0;
@@ -427,13 +432,13 @@ namespace Tbasic.Runtime
             
             IntPtr? _pObj = _oObj as IntPtr?;
             if (_pObj != null) {
-                return ConvertToObject(_pObj.Value);
+                return ConvertToSimpleType(_pObj.Value);
             }
 
             return _oObj;
         }
 
-        public static object ConvertToObject(IntPtr ptr)
+        public static object ConvertToSimpleType(IntPtr ptr)
         {
             if (IntPtr.Size == sizeof(long)) { // 64-bit
                 return ptr.ToInt64();

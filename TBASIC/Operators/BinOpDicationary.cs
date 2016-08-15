@@ -131,9 +131,9 @@ namespace Tbasic.Operators
         private static void InitializeStrings(object left, object right, ref string str1, ref string str2)
         {
             if (str1 == null)
-                str1 = Evaluator.ConvertToString(left);
+                str1 = Evaluator.GetStringRepresentation(left);
             if (str2 == null)
-                str2 = Evaluator.ConvertToString(right);
+                str2 = Evaluator.GetStringRepresentation(right);
         }
 
         private static object SortaEquals(object left, object right)

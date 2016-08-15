@@ -250,7 +250,7 @@ namespace Tbasic.Libraries
                 object[][] windows = new object[hwnds.Length][];
                 for (int index = 0; index < windows.Length; index++) {
                     windows[index] = new object[] {
-                        Evaluator.ConvertToObject(hwnds[index]),
+                        Evaluator.ConvertToSimpleType(hwnds[index]),
                         WinGetTitle(hwnds[index])
                     };
                 }

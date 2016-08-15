@@ -227,6 +227,19 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
+        /// Throws an ArgumentException if the number of parameters is not at least a certain value
+        /// </summary>
+        /// <param name="atLeast">the least number of arguments this function takes</param>
+        /// <exception cref="ArgumentException">thrown if argument count is not at least a certain number</exception>
+        public void AssertAtLeast(int atLeast)
+        {
+            if (_params.Count < atLeast) {
+                throw new ArgumentException(string.Format("{0} must have at least {1} parameter{2}", Name.ToUpper(), atLeast,
+                atLeast == 2 ? "" : "s"));
+            }
+        }
+
+        /// <summary>
         /// Returns the parameter at an index
         /// </summary>
         /// <param name="index">The index of the argument</param>

@@ -76,9 +76,7 @@ namespace Tbasic.Libraries
 
         internal void DIM(TFunctionData stackFrame)
         {
-            if (stackFrame.ParameterCount < 2) {
-                stackFrame.AssertParamCount(2);
-            }
+            stackFrame.AssertAtLeast(2);
 
             StringSegment text = new StringSegment(stackFrame.Text);
             Scanner scanner = new DefaultScanner(text);
@@ -148,10 +146,7 @@ namespace Tbasic.Libraries
 
         private void SetVariable(TFunctionData stackFrame, bool constant)
         {
-            if (stackFrame.ParameterCount < 4) {
-                stackFrame.AssertParamCount(4);
-            }
-
+            stackFrame.AssertAtLeast(2);
             StringSegment text = new StringSegment(stackFrame.Text);
 
             Scanner scanner = new DefaultScanner(text);
@@ -188,7 +183,7 @@ namespace Tbasic.Libraries
                 context.SetArrayAt(v.Name.ToString(), data, v.Indices);
             }
 
-            NULL(stackFrame);
+            stackFrame.Data = data;
         }
     }
 }

@@ -10,12 +10,8 @@ namespace Tbasic.Runtime
     internal struct Number : IConvertible, IComparable, IComparable<Number>, IComparable<double>, IEquatable<Number>, IEquatable<double>
     {
         public double Value;
-
-        public Number(decimal value)
-        {
-            Value = (double)value;
-        }
-
+        public const int SIZE = sizeof(double);
+        
         public Number(double value)
         {
             Value = value;
@@ -56,23 +52,29 @@ namespace Tbasic.Runtime
             return double.Parse(s);
         }
 
-        public static Number? AsNumber(object obj)
+        public static bool IsNumber(object o)
         {
-            if (obj == null)
-                return null;
-            Number? n = obj as Number?;
-            if (n != null)
-                return n.Value;
-            double? d = obj as double?;
-            if (d != null)
-                return d.Value;
-            Number num;
-            if (TryParse(obj.ToString(), out num)) {
-                return num;
+            Number n;
+            return Evaluator.TryParse(o, out n);
+        }
+
+        public static Number? AsNumber(object o)
+        {
+            Number n;
+            if (Evaluator.TryParse(o, out n)) {
+                return n;
             }
             else {
                 return null;
             }
+        }
+
+        public static Number Convert(object o)
+        {
+            Number n;
+            if (!Evaluator.TryParse(o, out n))
+                throw new InvalidCastException();
+            return n;
         }
 
         public static implicit operator Number(double d)
@@ -83,6 +85,13 @@ namespace Tbasic.Runtime
         public static implicit operator double(Number n)
         {
             return n.Value;
+        }
+
+        public static implicit operator int(Number n)
+        {
+            if (n.HasFraction())
+                throw new InvalidCastException();
+            return (int)n.Value;
         }
 
         #region IComparable

@@ -50,14 +50,14 @@ namespace Tbasic.Operators
 
         private static object Multiply(object left, object right)
         {
-            return Convert.ToDouble(left, CultureInfo.CurrentCulture) *
-                   Convert.ToDouble(right, CultureInfo.CurrentCulture);
+            return Number.Convert(left) *
+                   Number.Convert(right);
         }
 
         private static object Divide(object left, object right)
         {
-            return Convert.ToDouble(left, CultureInfo.CurrentCulture) /
-                   Convert.ToDouble(right, CultureInfo.CurrentCulture);
+            return Number.Convert(left) /
+                   Number.Convert(right);
         }
 
         private static object Modulo(object left, object right)
@@ -72,8 +72,8 @@ namespace Tbasic.Operators
                    str2 = right as string;
             if (str1 != null || str2 != null)
                 return StringAdd(left, right, str1, str2);
-            return Convert.ToDouble(left, CultureInfo.CurrentCulture) +
-                   Convert.ToDouble(right, CultureInfo.CurrentCulture);
+            return Number.Convert(left) +
+                   Number.Convert(right);
         }
 
         private static string StringAdd(object left, object right, string str1, string str2)
@@ -84,32 +84,32 @@ namespace Tbasic.Operators
 
         private static object Subtract(object left, object right)
         {
-            return Convert.ToDouble(left, CultureInfo.CurrentCulture) -
-                   Convert.ToDouble(right, CultureInfo.CurrentCulture);
+            return Number.Convert(left) -
+                   Number.Convert(right);
         }
 
         private static object LessThan(object left, object right)
         {
-            return Convert.ToDouble(left, CultureInfo.CurrentCulture) <
-                   Convert.ToDouble(right, CultureInfo.CurrentCulture);
+            return Number.Convert(left) <
+                   Number.Convert(right);
         }
 
         private static object LessThanOrEqual(object left, object right)
         {
-            return Convert.ToDouble(left, CultureInfo.CurrentCulture) <=
-                   Convert.ToDouble(right, CultureInfo.CurrentCulture);
+            return Number.Convert(left) <=
+                   Number.Convert(right);
         }
 
         private static object GreaterThan(object left, object right)
         {
-            return Convert.ToDouble(left, CultureInfo.CurrentCulture) >
-                   Convert.ToDouble(right, CultureInfo.CurrentCulture);
+            return Number.Convert(left) >
+                   Number.Convert(right);
         }
 
         private static object GreaterThanOrEqual(object left, object right)
         {
-            return Convert.ToDouble(left, CultureInfo.CurrentCulture) >=
-                   Convert.ToDouble(right, CultureInfo.CurrentCulture);
+            return Number.Convert(left) >=
+                   Number.Convert(right);
         }
 
         private static object EqualTo(object left, object right)

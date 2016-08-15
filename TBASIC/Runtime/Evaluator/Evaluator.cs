@@ -162,12 +162,6 @@ namespace Tbasic.Runtime
             else {
                 throw new FormatException("Poorly formed function call");
             }
-
-            /*if (mRet.Index != nIdx) {
-                throw new ArgumentException(
-                    "Invalid token in expression '" + expr.Substring(nIdx, mRet.Index - nIdx).Trim() + "'"
-                );
-            }*/
         }
 
         private int AddObjectToExprList(object val, int startIndex, Scanner scanner)
@@ -272,7 +266,7 @@ namespace Tbasic.Runtime
                         result = (T)convertible.ToType(typeof(T), CultureInfo.CurrentCulture);
                         return true;
                     }
-                    catch {
+                    catch (Exception) {
                         result = default(T);
                         return false;
                     }
@@ -424,24 +418,12 @@ namespace Tbasic.Runtime
             if (_oObj == null) {
                 return 0;
             }
-            int? _iObj = _oObj as int?;
-            if (_iObj != null)
-                return _iObj.Value;
 
-            double? _dObj = _oObj as double?;
-            if (_dObj != null) {
-                Number n = new Number(_dObj.Value);
-                if (!n.HasFraction())
-                    return n.ToInt();
+            Number? _nObj = Number.AsNumber(_oObj);
+            if (_nObj != null) {
+                return _nObj.Value;
             }
-
-            decimal? _mObj = _oObj as decimal?;
-            if (_mObj != null) {
-                Number n = new Number(_dObj.Value);
-                if (!n.HasFraction())
-                    return n.ToInt();
-            }
-
+            
             IntPtr? _pObj = _oObj as IntPtr?;
             if (_pObj != null) {
                 return ConvertToObject(_pObj.Value);

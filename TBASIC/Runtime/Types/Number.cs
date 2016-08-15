@@ -55,15 +55,15 @@ namespace Tbasic.Runtime
 
         public static bool IsNumber(object o)
         {
-            Number n;
-            return Evaluator.TryParse(o, out n);
+            double d;
+            return Evaluator.TryParse(o, out d);
         }
 
         public static Number? AsNumber(object o)
         {
-            Number n;
-            if (Evaluator.TryParse(o, out n)) {
-                return n;
+            double d;
+            if (Evaluator.TryParse(o, out d)) {
+                return d;
             }
             else {
                 return null;
@@ -72,10 +72,10 @@ namespace Tbasic.Runtime
 
         public static Number Convert(object o)
         {
-            Number n;
-            if (!Evaluator.TryParse(o, out n))
+            double d;
+            if (!Evaluator.TryParse(o, out d))
                 throw new InvalidCastException();
-            return n;
+            return d;
         }
 
         public static implicit operator Number(double d)

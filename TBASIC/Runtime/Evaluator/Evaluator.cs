@@ -417,6 +417,9 @@ namespace Tbasic.Runtime
                 return 0;
             }
 
+            if (_oObj is bool)
+                return _oObj;
+
             Number? _nObj = Number.AsNumber(_oObj);
             if (_nObj != null) {
                 return _nObj.Value;

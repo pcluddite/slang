@@ -11,7 +11,7 @@ namespace Tbasic.Errors
     /// <summary>
     /// Represents a parsing exception that occoured on a specific line
     /// </summary>
-    public class LineException : ScriptParsingException
+    public class LineException : TbasicRuntimeException
     {
         /// <summary>
         /// The line at which the error occoured

@@ -236,7 +236,13 @@ namespace Tbasic.Libraries
                 return Eval(stackFrame.GetAt<string>(1));
             }
             catch(Exception ex) {
-                throw TbasicException.WrapException(ex);
+                ex = FunctionException.FromException(ex);
+                if (ex == null) {
+                    throw;
+                }
+                else {
+                    throw ex;
+                }
             }
         }
 

@@ -122,7 +122,7 @@ namespace Tbasic.Errors
 
         public static Exception IndexOutOfRange(string _sName, int index)
         {
-            return new UnauthorizedAccessException(string.Format("Index '{0}' of object '{1}' is out of range", index, _sName));
+            return new InvalidOperationException(string.Format("Index '{0}' of object '{1}' is out of range", index, _sName));
         }
 
         public static Exception InvalidExpression(string expr)

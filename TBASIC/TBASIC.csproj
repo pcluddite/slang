@@ -52,7 +52,8 @@
     <Compile Include="Components\Win32\Impersonate.cs" />
     <Compile Include="Errors\ErrorCodes.cs" />
     <Compile Include="Errors\ScriptParsingException.cs" />
-    <Compile Include="Errors\TbasicException.cs" />
+    <Compile Include="Errors\FunctionException.cs" />
+    <Compile Include="Errors\TbasicRuntimeException.cs" />
     <Compile Include="Errors\ThrowHelper.cs" />
     <Compile Include="Libraries\ArrayLibrary.cs" />
     <Compile Include="Libraries\StringLibrary.cs" />

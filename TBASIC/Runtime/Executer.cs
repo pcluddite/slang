@@ -116,7 +116,15 @@ namespace Tbasic.Runtime
         public FuncData Execute(Line codeLine)
         {
             FuncData data = new FuncData(this);
-            Execute(data, codeLine);
+            try {
+                Execute(data, codeLine);
+            }
+            catch(Exception ex) {
+                TbasicRuntimeException runEx = TbasicRuntimeException.WrapException(ex);
+                if (runEx == null)
+                    throw;
+                throw runEx;
+            }
             return data;
         }
 
@@ -143,7 +151,10 @@ namespace Tbasic.Runtime
                     }
                 }
                 catch (Exception ex) {
-                    HandleError(current, stackFrame, ex);
+                    TbasicRuntimeException runEx = TbasicRuntimeException.WrapException(ex);
+                    if (ex == null) // only catch errors that we understand 8/16/16
+                        throw;
+                    HandleError(current, stackFrame, runEx);
                 }
             }
             return stackFrame;
@@ -169,9 +180,9 @@ namespace Tbasic.Runtime
             stackFrame.Context.SetReturns(stackFrame);
         }
 
-        private void HandleError(Line current, FuncData stackFrame, Exception ex)
+        private void HandleError(Line current, FuncData stackFrame, TbasicRuntimeException ex)
         {
-            TbasicException cEx = ex as TbasicException;
+            FunctionException cEx = ex as FunctionException;
             if (cEx != null) {
                 int status = cEx.Status;
                 string msg = stackFrame.Data as string;
@@ -181,12 +192,12 @@ namespace Tbasic.Runtime
                 stackFrame.Status = status;
                 stackFrame.Data = msg;
                 stackFrame.Context.SetReturns(stackFrame);
-                if (ThrowError) {
+                if (ThrowError) { // only actually throw anything if we understand the error
                     throw new LineException(current.LineNumber, current.VisibleName, cEx);
                 }
             }
             else {
-                throw new LineException(current.LineNumber, current.VisibleName, ex);
+                throw new LineException(current.LineNumber, current.VisibleName, ex.InnerException);
             }
         }
 

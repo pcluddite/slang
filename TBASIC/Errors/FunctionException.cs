@@ -10,9 +10,9 @@ using System.Security;
 namespace Tbasic.Errors
 {
     /// <summary>
-    /// An exception that has been associated with a status code
+    /// An exception that occours within a Tbasic function or subroutine and has an associated a status code
     /// </summary>
-    public class TbasicException : Exception
+    public class FunctionException : TbasicRuntimeException
     {
         /// <summary>
         /// Gets the status code for this exception
@@ -29,7 +29,7 @@ namespace Tbasic.Errors
         /// </summary>
         /// <param name="status">the status code for this exception</param>
         /// <param name="innerException">the inner exception</param>
-        public TbasicException(int status, Exception innerException = null)
+        public FunctionException(int status, Exception innerException = null)
             : this(status, GetGenericMessage(status), false, innerException)
         {
         }
@@ -40,7 +40,7 @@ namespace Tbasic.Errors
         /// <param name="status">the status code for this exception</param>
         /// <param name="msg">the message for this exception</param>
         /// /// <param name="innerException">the inner exception</param>
-        public TbasicException(int status, string msg, Exception innerException = null)
+        public FunctionException(int status, string msg, Exception innerException = null)
             : this(status, msg, true, innerException)
         {
         }
@@ -51,7 +51,7 @@ namespace Tbasic.Errors
         /// <param name="status">the status code for this exception</param>
         /// <param name="msg">the message for this exception</param>
         /// /// <param name="innerException">the inner exception</param>
-        public TbasicException(int status, string msg, TbasicException innerException)
+        public FunctionException(int status, string msg, FunctionException innerException)
             : this(status, msg, !innerException.GenericPrepended, innerException)
         {
         }
@@ -63,7 +63,7 @@ namespace Tbasic.Errors
         /// <param name="msg">the message for this exception</param>
         /// <param name="prependGeneric">true to add the generic message, false otherwise</param>
         /// <param name="innerException">the inner exception</param>
-        public TbasicException(int status, string msg, bool prependGeneric, Exception innerException = null)
+        public FunctionException(int status, string msg, bool prependGeneric, Exception innerException = null)
             : base(prependGeneric ? GetGenericMessage(status) + ": " + msg : msg, innerException)
         {
             Status = status;
@@ -118,28 +118,28 @@ namespace Tbasic.Errors
         }
 
         /// <summary>
-        /// Converts some common exceptions into a TbasicException. If it cannot be converted, the original exception is returned
+        /// Converts some common exceptions into a TbasicException. If it cannot be converted, null is returned.
         /// </summary>
         /// <param name="ex"></param>
         /// <returns></returns>
-        public static Exception WrapException(Exception ex)
+        public static FunctionException FromException(Exception ex)
         {
             if (ex is ArgumentException || ex is FormatException) {
-                return new TbasicException(ErrorClient.BadRequest, ex.Message, ex);
+                return new FunctionException(ErrorClient.BadRequest, ex.Message, ex);
             }
             else if (ex is FileNotFoundException || ex is DirectoryNotFoundException || ex is DriveNotFoundException) {
-                return new TbasicException(ErrorClient.NotFound, ex);
+                return new FunctionException(ErrorClient.NotFound, ex);
             }
             else if (ex is UnauthorizedAccessException || ex is SecurityException || ex is InvalidOperationException || ex is InvalidCastException) {
-                return new TbasicException(ErrorClient.Forbidden, ex.Message, ex);
+                return new FunctionException(ErrorClient.Forbidden, ex.Message, ex);
             }
             else if (ex is NotImplementedException) {
-                return new TbasicException(ErrorServer.NotImplemented, ex.Message, ex);
+                return new FunctionException(ErrorServer.NotImplemented, ex.Message, ex);
             }
             else if (ex is IOException) {
-                return new TbasicException(ErrorClient.Locked, ex.Message, ex);
+                return new FunctionException(ErrorClient.Locked, ex.Message, ex);
             }
-            return ex;
+            return null;
         }
     }
 }

@@ -92,7 +92,7 @@ namespace Tbasic.Libraries
                 return ((object[])obj).Length;
             }
             else {
-                throw new TbasicException(ErrorClient.Forbidden, "Object size cannot be determined");
+                throw new FunctionException(ErrorClient.Forbidden, "Object size cannot be determined");
             }
         }
 

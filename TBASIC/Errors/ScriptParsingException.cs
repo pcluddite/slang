@@ -10,7 +10,7 @@ namespace Tbasic.Errors
     /// <summary>
     /// Represents a generic script parsing error
     /// </summary>
-    public class ScriptParsingException : FormatException
+    public class ScriptParsingException : TbasicRuntimeException
     {
         /// <summary>
         /// Initializes a new exception

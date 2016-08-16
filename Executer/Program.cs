@@ -39,7 +39,7 @@ namespace Tbasic.Runner
                 exec.Global.LoadStandardLibrary();
                 exec.Execute(File.ReadAllLines(file));
             }
-            catch (ScriptParsingException ex) {
+            catch (TbasicRuntimeException ex) {
                 MessageBox.Show(ex.Message, "Tbasic Script Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

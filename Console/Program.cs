@@ -35,7 +35,7 @@ namespace Tbasic.Terminal
                     dat = exec.Execute(new Line(curr++, line));
                     Console.WriteLine(ObjectToString(dat.Data));
                 }
-                catch(Exception e) {
+                catch(TbasicRuntimeException e) {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(e.Message);
                     Console.ForegroundColor = ConsoleColor.Gray;

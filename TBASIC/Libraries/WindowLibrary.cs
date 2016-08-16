@@ -57,10 +57,10 @@ namespace Tbasic.Libraries
             return User32.RemoveMenu(hMenu, menuItemCount - 1, User32.MF_BYPOSITION);
         }
 
-        private object WinRemoveClose(TFunctionData parameters)
+        private object WinRemoveClose(FuncData parameters)
         {
-            parameters.AssertParamCount(2);
-            return WinRemoveClose(new IntPtr(parameters.GetParameter<long>(1)));
+            parameters.AssertCount(2);
+            return WinRemoveClose(new IntPtr(parameters.GetAt<long>(1)));
         }
 
         public static IntPtr WinGetHandle(string title, string sz_class = null)
@@ -68,16 +68,16 @@ namespace Tbasic.Libraries
             return User32.FindWindow(sz_class, title);
         }
 
-        private object WinGetHandle(TFunctionData parameters)
+        private object WinGetHandle(FuncData parameters)
         {
-            parameters.AssertParamCount(2);
-            return WinGetHandle(parameters.GetParameter<string>(1)).ToInt64();
+            parameters.AssertCount(2);
+            return WinGetHandle(parameters.GetAt<string>(1)).ToInt64();
         }
 
-        private object WinGetTitle(TFunctionData parameters)
+        private object WinGetTitle(FuncData parameters)
         {
-            parameters.AssertParamCount(2);
-            return WinGetTitle(new IntPtr(parameters.GetParameter<long>(1)));
+            parameters.AssertCount(2);
+            return WinGetTitle(new IntPtr(parameters.GetAt<long>(1)));
         }
 
         public static string WinGetTitle(IntPtr hwnd)
@@ -88,11 +88,11 @@ namespace Tbasic.Libraries
             return sb.ToString();
         }
 
-        private object WinSetTitle(TFunctionData parameters)
+        private object WinSetTitle(FuncData parameters)
         {
-            parameters.AssertParamCount(3);
-            IntPtr hwnd = new IntPtr(parameters.GetParameter<long>(1));
-            if (!User32.SetWindowText(hwnd, parameters.GetParameter<string>(2))) {
+            parameters.AssertCount(3);
+            IntPtr hwnd = new IntPtr(parameters.GetAt<long>(1));
+            if (!User32.SetWindowText(hwnd, parameters.GetAt<string>(2))) {
                 throw new TbasicException(ErrorServer.GenericError, "Unable to set window title");
             }
             return null;
@@ -103,10 +103,10 @@ namespace Tbasic.Libraries
             return User32.ShowWindow(hwnd, flag);
         }
 
-        private object WinGetState(TFunctionData parameters)
+        private object WinGetState(FuncData parameters)
         {
-            parameters.AssertParamCount(2);
-            return WinGetState(parameters.GetParameter<long>(1));
+            parameters.AssertCount(2);
+            return WinGetState(parameters.GetAt<long>(1));
         }
 
         public static int WinGetState(long hwnd)
@@ -119,11 +119,11 @@ namespace Tbasic.Libraries
             return Windows.GetState(hwnd);
         }
 
-        private object WinSetState(TFunctionData parameters)
+        private object WinSetState(FuncData parameters)
         {
-            parameters.AssertParamCount(3);
-            uint flag = parameters.GetParameter<uint>(2);
-            if (!WinSetState(new IntPtr(parameters.GetParameter<long>(1)), flag)) {
+            parameters.AssertCount(3);
+            uint flag = parameters.GetAt<uint>(2);
+            if (!WinSetState(new IntPtr(parameters.GetAt<long>(1)), flag)) {
                 throw new TbasicException(ErrorServer.GenericError, "Unable to set window state");
             }
             return null;
@@ -134,10 +134,10 @@ namespace Tbasic.Libraries
             return User32.SetForegroundWindow(hwnd);
         }
 
-        private object WinActivate(TFunctionData parameters)
+        private object WinActivate(FuncData parameters)
         {
-            parameters.AssertParamCount(2);
-            if (!WinActivate(new IntPtr(parameters.GetParameter<long>(1)))) {
+            parameters.AssertCount(2);
+            if (!WinActivate(new IntPtr(parameters.GetAt<long>(1)))) {
                 throw new TbasicException(ErrorServer.GenericError, "Unable to activate window");
             }
             return null;
@@ -154,11 +154,11 @@ namespace Tbasic.Libraries
                 (rect.Right - rect.Left), (rect.Bottom - rect.Top), SWP.NOACTIVATE);
         }
 
-        private object WinMove(TFunctionData parameters)
+        private object WinMove(FuncData parameters)
         {
-            parameters.AssertParamCount(4);
-            IntPtr hwnd = new IntPtr(parameters.GetParameter<long>(1));
-            if (!WinMove(hwnd, parameters.GetParameter<int>(2), parameters.GetParameter<int>(3))) {
+            parameters.AssertCount(4);
+            IntPtr hwnd = new IntPtr(parameters.GetAt<long>(1));
+            if (!WinMove(hwnd, parameters.GetAt<int>(2), parameters.GetAt<int>(3))) {
                 throw new TbasicException(ErrorServer.GenericError, "Unable to move window");
             }
             return null;
@@ -174,11 +174,11 @@ namespace Tbasic.Libraries
                 place.rcNormalPosition.X, place.rcNormalPosition.Y, width, height, SWP.NOACTIVATE);
         }
 
-        private object WinSize(TFunctionData parameters)
+        private object WinSize(FuncData parameters)
         {
-            parameters.AssertParamCount(4);
-            IntPtr hwnd = new IntPtr(parameters.GetParameter<long>(1));
-            if (!WinSize(hwnd, parameters.GetParameter<int>(2), parameters.GetParameter<int>(3))) {
+            parameters.AssertCount(4);
+            IntPtr hwnd = new IntPtr(parameters.GetAt<long>(1));
+            if (!WinSize(hwnd, parameters.GetAt<int>(2), parameters.GetAt<int>(3))) {
                 throw new TbasicException(ErrorServer.GenericError, "Unable to resize window");
             }
             return null;
@@ -189,10 +189,10 @@ namespace Tbasic.Libraries
             return User32.DestroyWindow(hwnd);
         }
 
-        private object WinKill(TFunctionData parameters)
+        private object WinKill(FuncData parameters)
         {
-            parameters.AssertParamCount(2);
-            long hwnd = parameters.GetParameter<long>(1);
+            parameters.AssertCount(2);
+            long hwnd = parameters.GetAt<long>(1);
             if (!WinKill(new IntPtr(hwnd))) {
                 throw new TbasicException(ErrorServer.GenericError, "Unable to kill window");
             }
@@ -204,10 +204,10 @@ namespace Tbasic.Libraries
             return User32.SendMessage(hwnd, SendMessages.WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
         }
 
-        private object WinClose(TFunctionData parameters)
+        private object WinClose(FuncData parameters)
         {
-            parameters.AssertParamCount(2);
-            return WinClose(new IntPtr(parameters.GetParameter<long>(1)));
+            parameters.AssertCount(2);
+            return WinClose(new IntPtr(parameters.GetAt<long>(1)));
         }
 
         public static bool WinSetTrans(IntPtr hwnd, byte trans)
@@ -216,11 +216,11 @@ namespace Tbasic.Libraries
             return User32.SetLayeredWindowAttributes(hwnd, 0, trans, User32.LWA_ALPHA);
         }
 
-        private object WinSetTrans(TFunctionData parameters)
+        private object WinSetTrans(FuncData parameters)
         {
-            parameters.AssertParamCount(3);
-            IntPtr hwnd = new IntPtr(parameters.GetParameter<long>(1));
-            if (!WinSetTrans(hwnd, parameters.GetParameter<byte>(2))) {
+            parameters.AssertCount(3);
+            IntPtr hwnd = new IntPtr(parameters.GetAt<long>(1));
+            if (!WinSetTrans(hwnd, parameters.GetAt<byte>(2))) {
                 throw new TbasicException(ErrorServer.GenericError, "Unable to set window transparency");
             }
             return null;
@@ -236,13 +236,13 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object WinList(TFunctionData parameters)
+        private object WinList(FuncData parameters)
         {
             if (parameters.ParameterCount == 1) {
-                parameters.AddParameter(WindowFlag.Existing);
+                parameters.Add(WindowFlag.Existing);
             }
-            parameters.AssertParamCount(2);
-            WindowFlag state = parameters.GetParameter<WindowFlag>(1);
+            parameters.AssertCount(2);
+            WindowFlag state = parameters.GetAt<WindowFlag>(1);
 
             IntPtr[] hwnds = WinList(state).ToArray();
 
@@ -262,10 +262,10 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object GetScreen(TFunctionData parameters)
+        private object GetScreen(FuncData parameters)
         {
-            parameters.AssertParamCount(2);
-            int compression = parameters.GetFromIntRange(1, 0, 100);
+            parameters.AssertCount(2);
+            int compression = parameters.GetFromRange(1, 0, 100);
             return GetScreen(compression);
         }
 
@@ -285,11 +285,11 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object WinPicture(TFunctionData parameters)
+        private object WinPicture(FuncData parameters)
         {
-            parameters.AssertParamCount(3);
-            int compression = parameters.GetFromIntRange(2, 0, 100);
-            IntPtr hwnd = new IntPtr(parameters.GetParameter<long>(1));
+            parameters.AssertCount(3);
+            int compression = parameters.GetFromRange(2, 0, 100);
+            IntPtr hwnd = new IntPtr(parameters.GetAt<long>(1));
             return WinPicture(hwnd, compression);
         }
 
@@ -298,10 +298,10 @@ namespace Tbasic.Libraries
             return Windows.WinExists(hwnd);
         }
 
-        private object WinExists(TFunctionData parameters)
+        private object WinExists(FuncData parameters)
         {
-            parameters.AssertParamCount(2);
-            return Windows.WinExists(new IntPtr(parameters.GetParameter<long>(1)));
+            parameters.AssertCount(2);
+            return Windows.WinExists(new IntPtr(parameters.GetAt<long>(1)));
         }
     }
 }

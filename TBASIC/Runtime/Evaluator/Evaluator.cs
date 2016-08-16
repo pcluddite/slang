@@ -247,29 +247,27 @@ namespace Tbasic.Runtime
             return expression.Evaluate();
         }
 
-        internal static bool TryParse<T>(object input, out T result)
+        internal static bool TryConvert<T>(object o, out T result)
         {
             try {
-                result = (T)input;
+                result = (T)o;
                 return true;
             }
             catch (InvalidCastException) {
-                IConvertible convertible = input as IConvertible;
-                if (convertible == null) {
-                    result = default(T);
-                    return false;
-                }
-                else {
+                IConvertible convertible = o as IConvertible;
+                if (convertible != null) {
                     try {
                         result = (T)convertible.ToType(typeof(T), CultureInfo.CurrentCulture);
                         return true;
                     }
-                    catch (Exception) {
+                    catch (Exception ex) when (ex is FormatException || ex is InvalidCastException || ex is OverflowException) {
                         result = default(T);
                         return false;
                     }
                 }
             }
+            result = default(T);
+            return false;
         }
 
         public static object PerformUnaryOp(UnaryOperator op, object left, object right)

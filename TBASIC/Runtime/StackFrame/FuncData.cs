@@ -5,7 +5,6 @@
 // ======
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 
@@ -14,7 +13,7 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Manages parameters and other data passed to a function or subroutine
     /// </summary>
-    public class TFunctionData : ICloneable
+    public class FuncData : ICloneable
     {
         private List<object> _params = new List<object>();
 
@@ -58,7 +57,7 @@ namespace Tbasic.Runtime
         {
             get {
                 if (_params.Count > 0) {
-                    return _params[0].ToString();
+                    return (_params[0] ?? string.Empty).ToString();
                 }
                 else {
                     return string.Empty;
@@ -83,8 +82,7 @@ namespace Tbasic.Runtime
                 return _params.Count;
             }
         }
-
-
+        
         /// <summary>
         /// Gets or sets the status that the function returned. Default is ErrorSuccess.OK
         /// </summary>
@@ -96,95 +94,36 @@ namespace Tbasic.Runtime
         public object Data { get; set; } = null;
 
         /// <summary>
-        /// Constructs a StackFrame object
+        /// Constructs this object
         /// </summary>
         /// <param name="exec">the execution that called the function</param>
-        public TFunctionData(Executer exec)
+        public FuncData(Executer exec)
         {
             StackExecuter = exec;
         }
 
         /// <summary>
-        /// Constructs a StackFrame object
+        /// Constructs this object
         /// </summary>
-        /// <param name="text">the text to be processed (formatted as a shell command)</param>
+        /// <param name="parameters">the parameters of the function</param>
         /// <param name="exec">the execution that called the function</param>
-        public TFunctionData(Executer exec, string text)
+        public FuncData(Executer exec, IEnumerable<object> parameters)
             : this(exec)
         {
-            SetAll(text);
+            _params.AddRange(parameters);
         }
 
         /// <summary>
-        /// Sets the data for this StackFrame object
+        /// Constructs this object
         /// </summary>
-        /// <param name="parameters">parameters to manage</param>
-        public void SetAll(params object[] parameters)
+        /// <param name="text">the line that executed this function, this will be parsed like the Windows Command Prompt</param>
+        /// <param name="exec">the execution that called the function</param>
+        public FuncData(Executer exec, string text)
+            : this(exec)
         {
-            if (parameters == null) {
-                _params = new List<object>();
-            }
-            else {
-                _params = new List<object>(parameters);
-            }
-        }
-
-        internal void SetAll(List<object> parameters)
-        {
-            if (parameters == null) {
-                _params = new List<object>();
-            }
-            else {
-                _params = new List<object>(parameters);
-            }
-        }
-
-        /// <summary>
-        ///  Sets the data for this StackFrame object
-        /// </summary>
-        /// <param name="message">the text to be processed (formatted as a shell command)</param>
-        public void SetAll(string message)
-        {
-            Text = message;
-            _params = new List<object>(ParseArguments(message));
-        }
-
-        private string[] ParseArguments(string commandLine)
-        {
-            commandLine = commandLine.Trim(); // just a precaution
-            List<string> args = new List<string>();
-            StringBuilder sb = new StringBuilder();
-            for (int index = 0; index < commandLine.Length; index++) {
-                switch (commandLine[index]) {
-                    case ' ':
-                        if (index > 0 && commandLine[index - 1] == ' ') {
-                            continue; // ignore extra whitespace
-                        }
-                        else {
-                            args.Add(sb.ToString());
-                            sb = new StringBuilder();
-                        }
-                        break;
-                    case '\'':
-                    case '"':
-                        string parsed;
-                        index = GroupParser.ReadString(commandLine, index, out parsed);
-                        if (parsed.Length == 0) {
-                            args.Add(parsed);
-                        }
-                        else {
-                            sb.Append(parsed);
-                        }
-                        break;
-                    default:
-                        sb.Append(commandLine[index]);
-                        break;
-                }
-            }
-            if (sb.Length > 0) {
-                args.Add(sb.ToString()); // Don't forget about me!
-            }
-            return args.ToArray();
+            CmdLine line = new CmdLine(text);
+            Text = text;
+            _params.AddRange(line);
         }
 
         /// <summary>
@@ -192,7 +131,7 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="index">The index of the argument</param>
         /// <param name="data">The new string data to assign</param>
-        public void SetParameter(int index, object data)
+        public void SetAt(int index, object data)
         {
             if (index < _params.Count) {
                 _params[index] = data;
@@ -204,7 +143,7 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="count">the number of parameters expected</param>
         /// <exception cref="ArgumentException">thrown if argument count is not the same as the parameter</exception>
-        public void AssertParamCount(int count)
+        public void AssertCount(int count)
         {
             if (_params.Count != count) {
                 throw new ArgumentException(string.Format("{0} does not take {1} parameter{2}", Name.ToUpper(), _params.Count - 1,
@@ -218,7 +157,7 @@ namespace Tbasic.Runtime
         /// <param name="atLeast">the least number of arguments this function takes</param>
         /// <param name="atMost">the most number of arguments this function takes</param>
         /// <exception cref="ArgumentException">thrown if argument count is not the same as the parameter</exception>
-        public void AssertParamCount(int atLeast, int atMost)
+        public void AssertCount(int atLeast, int atMost)
         {
             if (_params.Count < atLeast || _params.Count > atMost) {
                 throw new ArgumentException(string.Format("{0} does not take {1} parameter{2}", Name.ToUpper(), _params.Count - 1,
@@ -245,7 +184,7 @@ namespace Tbasic.Runtime
         /// <param name="index">The index of the argument</param>
         /// <exception cref="IndexOutOfRangeException">thrown if the argument is out of range</exception>
         /// <returns></returns>
-        public object GetParameter(int index)
+        public object GetAt(int index)
         {
             try {
                 return _params[index];
@@ -263,9 +202,9 @@ namespace Tbasic.Runtime
         /// <param name="upper">the inclusive upper bound</param>
         /// <exception cref="ArgumentOutOfRangeException">thrown if the paramater is out of range</exception>
         /// <returns></returns>
-        public int GetFromIntRange(int index, int lower, int upper)
+        public int GetFromRange(int index, int lower, int upper)
         {
-            int n = GetParameter<int>(index);
+            int n = GetAt<int>(index);
             if (n < lower || n > upper) {
                 throw new ArgumentOutOfRangeException(string.Format("Parameter {0} expected to be integer between {1} and {2}", index, lower, upper));
             }
@@ -279,10 +218,10 @@ namespace Tbasic.Runtime
         /// <param name="index">the zero-based index of the parameter</param>
         /// <exception cref="InvalidCastException">object was not able to be converted to given type</exception>
         /// <returns></returns>
-        public T GetParameter<T>(int index)
+        public T GetAt<T>(int index)
         {
             T ret;
-            if (Evaluator.TryParse(GetParameter(index), out ret)) {
+            if (Evaluator.TryConvert(GetAt(index), out ret)) {
                 return ret;
             }
             throw new InvalidCastException(string.Format("Expected parameter {0} to be of type {1}", index, typeof(T).Name));
@@ -296,9 +235,9 @@ namespace Tbasic.Runtime
         /// <param name="values">Acceptable string values</param>
         /// <exception cref="ArgumentException">thrown if the argument is not in the acceptable list of values</exception>
         /// <returns></returns>
-        public string GetFromEnum(int index, string typeName, params string[] values)
+        public string GetEnum(int index, string typeName, params string[] values)
         {
-            string arg = GetParameter<string>(index);
+            string arg = GetAt<string>(index);
             foreach (string val in values) {
                 if (val.EqualsIgnoreCase(arg)) {
                     return arg;
@@ -311,18 +250,37 @@ namespace Tbasic.Runtime
         /// Adds a parameter to the end of this collection
         /// </summary>
         /// <param name="param"></param>
-        public void AddParameter(object param)
+        public void Add(object param)
         {
             _params.Add(param);
         }
 
         /// <summary>
-        /// Clones this StackFrame
+        /// Adds a number of parameters to this collection
         /// </summary>
-        /// <returns>A new StackFrame object with the same data</returns>
-        public TFunctionData Clone()
+        /// <param name="param"></param>
+        public void AddRange(params object[] param)
         {
-            TFunctionData clone = new TFunctionData(StackExecuter);
+            AddRange(param);
+        }
+
+        /// <summary>
+        /// Adds a number of parameters to this collection
+        /// </summary>
+        /// <param name="param"></param>
+        public void AddRange(IEnumerable<object> param)
+        {
+            foreach (object p in param)
+                Add(p);
+        }
+
+        /// <summary>
+        /// Clones this
+        /// </summary>
+        /// <returns>A new object with the same data</returns>
+        public FuncData Clone()
+        {
+            FuncData clone = new FuncData(StackExecuter);
             clone.Text = Text;
             if (_params == null) {
                 clone._params = new List<object>();
@@ -336,12 +294,12 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
-        /// Copies all properties of another StackFrame into this one
+        /// Copies all properties of another into this one
         /// </summary>
         /// <param name="other"></param>
-        public void CopyFrom(TFunctionData other)
+        public void CopyFrom(FuncData other)
         {
-            TFunctionData clone = other.Clone();
+            FuncData clone = other.Clone();
             StackExecuter = clone.StackExecuter;
             Text = clone.Text;
             _params = clone._params;

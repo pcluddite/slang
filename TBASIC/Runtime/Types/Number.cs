@@ -56,13 +56,13 @@ namespace Tbasic.Runtime
         public static bool IsNumber(object o)
         {
             double d;
-            return Evaluator.TryParse(o, out d);
+            return Evaluator.TryConvert(o, out d);
         }
 
         public static Number? AsNumber(object o)
         {
             double d;
-            if (Evaluator.TryParse(o, out d)) {
+            if (Evaluator.TryConvert(o, out d)) {
                 return d;
             }
             else {
@@ -73,7 +73,7 @@ namespace Tbasic.Runtime
         public static Number Convert(object o)
         {
             double d;
-            if (!Evaluator.TryParse(o, out d))
+            if (!Evaluator.TryConvert(o, out d))
                 throw new InvalidCastException();
             return d;
         }

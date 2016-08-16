@@ -113,16 +113,16 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="codeLine"></param>
         /// <returns></returns>
-        public TFunctionData Execute(Line codeLine)
+        public FuncData Execute(Line codeLine)
         {
-            TFunctionData data = new TFunctionData(this);
+            FuncData data = new FuncData(this);
             Execute(data, codeLine);
             return data;
         }
 
-        internal TFunctionData Execute(LineCollection lines)
+        internal FuncData Execute(LineCollection lines)
         {
-            TFunctionData stackFrame = new TFunctionData(this);
+            FuncData stackFrame = new FuncData(this);
             for (int index = 0; index < lines.Count; index++) {
                 if (BreakRequest) {
                     break;
@@ -149,7 +149,7 @@ namespace Tbasic.Runtime
             return stackFrame;
         }
 
-        internal static void Execute(TFunctionData stackFrame, Line codeLine)
+        internal static void Execute(FuncData stackFrame, Line codeLine)
         {
             ObjectContext context = stackFrame.Context.FindCommandContext(codeLine.Name);
             if (context == null) {
@@ -162,13 +162,14 @@ namespace Tbasic.Runtime
                 throw ThrowHelper.ExpectedSpaceAfterCommand();
             }
             else {
-                stackFrame.SetAll(codeLine.Text);
+                CmdLine cmd = new CmdLine(codeLine.Text);
+                stackFrame.AddRange(cmd);
                 stackFrame.Data = context.GetCommand(codeLine.Name).Invoke(stackFrame);
             }
             stackFrame.Context.SetReturns(stackFrame);
         }
 
-        private void HandleError(Line current, TFunctionData stackFrame, Exception ex)
+        private void HandleError(Line current, FuncData stackFrame, Exception ex)
         {
             TbasicException cEx = ex as TbasicException;
             if (cEx != null) {

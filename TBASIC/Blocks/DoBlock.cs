@@ -24,7 +24,7 @@ namespace Tbasic
 
         public override void Execute(Executer exec)
         {
-            TFunctionData parameters = new TFunctionData(exec, Header.Text);
+            FuncData parameters = new FuncData(exec, Header.Text);
 
             if (parameters.ParameterCount < 3) {
                 throw ThrowHelper.NoCondition();
@@ -32,10 +32,10 @@ namespace Tbasic
 
             StringSegment condition = new StringSegment(Header.Text, Header.Text.IndexOf(' ', 3));
 
-            if (parameters.GetParameter<string>(1).EqualsIgnoreCase("UNTIL")) {
+            if (parameters.GetAt<string>(1).EqualsIgnoreCase("UNTIL")) {
                 condition = new StringSegment(string.Format("NOT ({0})", condition)); // Until means inverted
             }
-            else if (parameters.GetParameter<string>(1).EqualsIgnoreCase("WHILE")) {
+            else if (parameters.GetAt<string>(1).EqualsIgnoreCase("WHILE")) {
                 // don't do anything, you're golden
             }
             else {

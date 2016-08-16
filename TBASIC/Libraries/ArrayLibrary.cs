@@ -18,25 +18,25 @@ namespace Tbasic.Libraries
             //Add("ArrayResize", ArrayResize);
         }
 
-        private object ArrayContains(TFunctionData stackFrame)
+        private object ArrayContains(FuncData stackFrame)
         {
-            stackFrame.AssertParamCount(2);
-            return stackFrame.GetParameter<object[]>(1).Contains(stackFrame.GetParameter(2));
+            stackFrame.AssertCount(2);
+            return stackFrame.GetAt<object[]>(1).Contains(stackFrame.GetAt(2));
         }
 
-        private object ArrayIndexOf(TFunctionData stackFrame)
+        private object ArrayIndexOf(FuncData stackFrame)
         {
-            object[] arr = stackFrame.GetParameter<object[]>(1);
+            object[] arr = stackFrame.GetAt<object[]>(1);
             if (stackFrame.ParameterCount == 3) {
-                stackFrame.AddParameter(0);
+                stackFrame.Add(0);
             }
             if (stackFrame.ParameterCount == 4) {
-                stackFrame.AddParameter(arr.Length);
+                stackFrame.Add(arr.Length);
             }
-            stackFrame.AssertParamCount(5);
-            object o = stackFrame.GetParameter(2);
-            int i = stackFrame.GetParameter<int>(3);
-            int count = stackFrame.GetParameter<int>(5);
+            stackFrame.AssertCount(5);
+            object o = stackFrame.GetAt(2);
+            int i = stackFrame.GetAt<int>(3);
+            int count = stackFrame.GetAt<int>(5);
             for (; i < arr.Length && i < count; i++) {
                 if (arr[i] == o) {
                     return i;
@@ -45,19 +45,19 @@ namespace Tbasic.Libraries
             return -1;
         }
 
-        private object ArrayLastIndexOf(TFunctionData stackFrame)
+        private object ArrayLastIndexOf(FuncData stackFrame)
         {
-            object[] arr = stackFrame.GetParameter<object[]>(1);
+            object[] arr = stackFrame.GetAt<object[]>(1);
             if (stackFrame.ParameterCount == 3) {
-                stackFrame.AddParameter(0);
+                stackFrame.Add(0);
             }
             if (stackFrame.ParameterCount == 4) {
-                stackFrame.AddParameter(arr.Length);
+                stackFrame.Add(arr.Length);
             }
-            stackFrame.AssertParamCount(5);
-            int i = stackFrame.GetParameter<int>(3);
-            object o = stackFrame.GetParameter(2);
-            int count = stackFrame.GetParameter<int>(5);
+            stackFrame.AssertCount(5);
+            int i = stackFrame.GetAt<int>(3);
+            object o = stackFrame.GetAt(2);
+            int count = stackFrame.GetAt<int>(5);
             for (; i >= 0 && i > count; i--) {
                 if (arr[i] == o) {
                     return i;

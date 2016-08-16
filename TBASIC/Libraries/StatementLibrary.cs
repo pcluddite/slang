@@ -27,10 +27,10 @@ namespace Tbasic.Libraries
             Add("BREAK", Break);
         }
 
-        private object Include(TFunctionData stackFrame)
+        private object Include(FuncData stackFrame)
         {
-            stackFrame.AssertParamCount(2);
-            string path = Path.GetFullPath(stackFrame.GetParameter<string>(1));
+            stackFrame.AssertCount(2);
+            string path = Path.GetFullPath(stackFrame.GetAt<string>(1));
             if (!File.Exists(path)) {
                 throw new FileNotFoundException();
             }
@@ -43,39 +43,39 @@ namespace Tbasic.Libraries
             return NULL(stackFrame);
         }
 
-        private object Sleep(TFunctionData stackFrame)
+        private object Sleep(FuncData stackFrame)
         {
-            stackFrame.AssertParamCount(2);
-            System.Threading.Thread.Sleep(stackFrame.GetParameter<int>(1));
+            stackFrame.AssertCount(2);
+            System.Threading.Thread.Sleep(stackFrame.GetAt<int>(1));
             return NULL(stackFrame);
         }
 
-        private object Break(TFunctionData stackFrame)
+        private object Break(FuncData stackFrame)
         {
-            stackFrame.AssertParamCount(1);
+            stackFrame.AssertCount(1);
             stackFrame.StackExecuter.RequestBreak();
             return NULL(stackFrame);
         }
 
-        internal object Exit(TFunctionData stackFrame)
+        internal object Exit(FuncData stackFrame)
         {
-            stackFrame.AssertParamCount(1);
+            stackFrame.AssertCount(1);
             stackFrame.StackExecuter.RequestExit();
             return NULL(stackFrame);
         }
 
-        internal static object NULL(TFunctionData stackFrame)
+        internal static object NULL(FuncData stackFrame)
         {
             stackFrame.Context.PersistReturns(stackFrame);
             return stackFrame.Data;
         }
 
-        internal object UhOh(TFunctionData stackFrame)
+        internal object UhOh(FuncData stackFrame)
         {
             throw ThrowHelper.NoOpeningStatement(stackFrame.Text);
         }
 
-        internal object DIM(TFunctionData stackFrame)
+        internal object DIM(FuncData stackFrame)
         {
             stackFrame.AssertAtLeast(2);
 
@@ -135,17 +135,17 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object Let(TFunctionData stackFrame)
+        private object Let(FuncData stackFrame)
         {
             return SetVariable(stackFrame, constant: false);
         }
 
-        internal object Const(TFunctionData stackFrame)
+        internal object Const(FuncData stackFrame)
         {
             return SetVariable(stackFrame, constant: true);
         }
 
-        private object SetVariable(TFunctionData stackFrame, bool constant)
+        private object SetVariable(FuncData stackFrame, bool constant)
         {
             stackFrame.AssertAtLeast(2);
             StringSegment text = new StringSegment(stackFrame.Text);

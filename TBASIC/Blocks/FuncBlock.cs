@@ -15,7 +15,7 @@ namespace Tbasic
 {
     internal class FuncBlock : CodeBlock
     {
-        public TFunctionData Template { get; private set; }
+        public FuncData Template { get; private set; }
 
         public FuncBlock(int index, LineCollection code)
         {
@@ -25,8 +25,7 @@ namespace Tbasic
                     c => c.Name.EqualsIgnoreCase("FUNCTION"),
                     c => c.Text.EqualsIgnoreCase("END FUNCTION")
                 ));
-            Template = new TFunctionData(null);
-            Template.SetAll(ParseFunction(Header.Text.Substring(Header.Name.Length)));
+            Template = new FuncData(null, ParseFunction(Header.Text.Substring(Header.Name.Length)));
         }
 
         public TBasicFunction CreateDelegate()
@@ -34,15 +33,15 @@ namespace Tbasic
             return new TBasicFunction(Execute);
         }
 
-        public object Execute(TFunctionData stackFrame)
+        public object Execute(FuncData stackFrame)
         {
-            stackFrame.AssertParamCount(Template.ParameterCount);
+            stackFrame.AssertCount(Template.ParameterCount);
 
             Executer exec = stackFrame.StackExecuter;
             exec.Context = exec.Context.CreateSubContext();
 
             for (int index = 1; index < Template.ParameterCount; index++) {
-                exec.Context.SetVariable(Template.GetParameter<string>(index), stackFrame.GetParameter(index));
+                exec.Context.SetVariable(Template.GetAt<string>(index), stackFrame.GetAt(index));
             }
             exec.Context.SetCommand("return", Return);
             exec.Context.SetFunction("SetStatus", SetStatus);
@@ -53,10 +52,10 @@ namespace Tbasic
             return stackFrame.Data;
         }
 
-        private object Return(TFunctionData stackFrame)
+        private object Return(FuncData stackFrame)
         {
             if (stackFrame.ParameterCount < 2) {
-                stackFrame.AssertParamCount(2);
+                stackFrame.AssertCount(2);
             }
             Evaluator e = new Evaluator(
                 new StringSegment(stackFrame.Text, stackFrame.Name.Length),
@@ -65,10 +64,10 @@ namespace Tbasic
             return stackFrame.Data = e.Evaluate();
         }
 
-        private object SetStatus(TFunctionData stackFrame)
+        private object SetStatus(FuncData stackFrame)
         {
-            stackFrame.AssertParamCount(2);
-            return stackFrame.Status = stackFrame.GetParameter<int>(1);
+            stackFrame.AssertCount(2);
+            return stackFrame.Status = stackFrame.GetAt<int>(1);
         }
 
         public override void Execute(Executer exec)

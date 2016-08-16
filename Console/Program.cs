@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Text;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
+using Tbasic.Errors;
 
 namespace Tbasic.Terminal
 {
@@ -29,7 +30,7 @@ namespace Tbasic.Terminal
             do {
                 Console.Write(">");
                 line = Console.ReadLine();
-                TFunctionData dat;
+                FuncData dat;
                 try {
                     dat = exec.Execute(new Line(curr++, line));
                     Console.WriteLine(ObjectToString(dat.Data));
@@ -46,6 +47,9 @@ namespace Tbasic.Terminal
         
         private static string ObjectToString(object o)
         {
+            if (o == null)
+                return "null";
+
             if (o is string)
                 return "\"" + ToCString(o.ToString(), '\"') + "\"";
 

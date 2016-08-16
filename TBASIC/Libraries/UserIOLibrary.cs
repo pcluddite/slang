@@ -35,41 +35,41 @@ namespace Tbasic.Libraries
             Add("StdPause", ConsolePause);
         }
 
-        private object ConsoleWriteline(TFunctionData _sframe)
+        private object ConsoleWriteline(FuncData _sframe)
         {
-            _sframe.AssertParamCount(2);
-            Console.WriteLine(_sframe.GetParameter(1));
+            _sframe.AssertCount(2);
+            Console.WriteLine(_sframe.GetAt(1));
             return null;
         }
 
-        private object ConsoleWrite(TFunctionData _sframe)
+        private object ConsoleWrite(FuncData _sframe)
         {
-            _sframe.AssertParamCount(2);
-            Console.Write(_sframe.GetParameter(1));
+            _sframe.AssertCount(2);
+            Console.Write(_sframe.GetAt(1));
             return null;
         }
 
-        private object ConsoleRead(TFunctionData _sframe)
+        private object ConsoleRead(FuncData _sframe)
         {
-            _sframe.AssertParamCount(1);
+            _sframe.AssertCount(1);
             return Console.Read();
         }
 
-        private object ConsoleReadLine(TFunctionData _sframe)
+        private object ConsoleReadLine(FuncData _sframe)
         {
-            _sframe.AssertParamCount(1);
+            _sframe.AssertCount(1);
             return Console.ReadLine();
         }
 
-        private object ConsoleReadKey(TFunctionData _sframe)
+        private object ConsoleReadKey(FuncData _sframe)
         {
-            _sframe.AssertParamCount(1);
+            _sframe.AssertCount(1);
             return Console.ReadKey().KeyChar;
         }
 
-        private object ConsolePause(TFunctionData _sframe)
+        private object ConsolePause(FuncData _sframe)
         {
-            _sframe.AssertParamCount(1);
+            _sframe.AssertCount(1);
             return Console.ReadKey(true).KeyChar;
         }
 
@@ -87,30 +87,23 @@ namespace Tbasic.Libraries
             return Interaction.InputBox(prompt, title, defaultResponse, x, y);
         }
 
-        private object Input(TFunctionData _sframe)
+        private object Input(FuncData _sframe)
         {
             if (_sframe.ParameterCount == 2) {
-                _sframe.SetAll(
-                    _sframe.GetParameter(0), _sframe.GetParameter(1),
-                    "Input", -1, -1
-                    );
+                _sframe.AddRange("TBASIC", -1, -1);
             }
             if (_sframe.ParameterCount == 3) {
-                _sframe.SetAll(
-                    _sframe.GetParameter(0), _sframe.GetParameter(1),
-                    _sframe.GetParameter(2), -1, -1);
+                _sframe.AddRange(-1, -1);
             }
             if (_sframe.ParameterCount == 4) {
-                _sframe.SetAll(
-                    _sframe.GetParameter(0), _sframe.GetParameter(1),
-                    _sframe.GetParameter(2), _sframe.GetParameter(3), -1);
+                _sframe.AddRange(-1);
             }
-            _sframe.AssertParamCount(5);
+            _sframe.AssertCount(5);
 
-            int x = _sframe.GetParameter<int>(3),
-                y = _sframe.GetParameter<int>(4);
+            int x = _sframe.GetAt<int>(3),
+                y = _sframe.GetAt<int>(4);
 
-            string resp = InputBox(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2), "", x, y);
+            string resp = InputBox(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2), "", x, y);
 
             if (string.IsNullOrEmpty(resp)) { 
                 _sframe.Status = ErrorSuccess.NoContent; // -1 no input 2/24
@@ -134,22 +127,22 @@ namespace Tbasic.Libraries
             t.Start(new object[] { timeout, icon, text, title });
         }
 
-        private object TrayTip(TFunctionData _sframe)
+        private object TrayTip(FuncData _sframe)
         {
             if (_sframe.ParameterCount == 2) {
-                _sframe.AddParameter(""); // title
-                _sframe.AddParameter(0); // icon
-                _sframe.AddParameter(5000); // timeout
+                _sframe.Add(""); // title
+                _sframe.Add(0); // icon
+                _sframe.Add(5000); // timeout
             }
             else if (_sframe.ParameterCount == 3) {
-                _sframe.AddParameter(0); // icon
-                _sframe.AddParameter(5000); // timeout
+                _sframe.Add(0); // icon
+                _sframe.Add(5000); // timeout
             }
             else if (_sframe.ParameterCount == 4) {
-                _sframe.AddParameter(5000); // timeout
+                _sframe.Add(5000); // timeout
             }
-            _sframe.AssertParamCount(5);
-            TrayTip(text: _sframe.GetParameter<string>(1), title: _sframe.GetParameter<string>(2), icon: _sframe.GetParameter<ToolTipIcon>(3), timeout: _sframe.GetParameter<int>(4));
+            _sframe.AssertCount(5);
+            TrayTip(text: _sframe.GetAt<string>(1), title: _sframe.GetAt<string>(2), icon: _sframe.GetAt<ToolTipIcon>(3), timeout: _sframe.GetAt<int>(4));
             return null;
         }
 
@@ -189,16 +182,16 @@ namespace Tbasic.Libraries
             return Interaction.MsgBox(prompt, (MsgBoxStyle)buttons, title).ToString();
         }
 
-        private object MsgBox(TFunctionData _sframe)
+        private object MsgBox(FuncData _sframe)
         {
             if (_sframe.ParameterCount == 3) {
-                _sframe.AddParameter("");
+                _sframe.Add("");
             }
-            _sframe.AssertParamCount(4);
+            _sframe.AssertCount(4);
 
-            int flag = _sframe.GetParameter<int>(1);
-            string text = _sframe.GetParameter<string>(2),
-                   title = _sframe.GetParameter<string>(3);
+            int flag = _sframe.GetAt<int>(1);
+            string text = _sframe.GetAt<string>(2),
+                   title = _sframe.GetAt<string>(3);
 
             return MsgBox(buttons: flag, prompt: text, title: title);
         }
@@ -213,10 +206,10 @@ namespace Tbasic.Libraries
             t.Start(text);
         }
 
-        private object Say(TFunctionData _sframe)
+        private object Say(FuncData _sframe)
         {
-            _sframe.AssertParamCount(2);
-            Say(_sframe.GetParameter<string>(1));
+            _sframe.AssertCount(2);
+            Say(_sframe.GetAt<string>(1));
             return null;
         }
 

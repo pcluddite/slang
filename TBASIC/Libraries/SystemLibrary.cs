@@ -22,51 +22,51 @@ namespace Tbasic.Libraries
             Add("GetMillisecond", GetMillisecond);
         }
 
-        private object GetMonth(TFunctionData _sframe)
+        private object GetMonth(FuncData _sframe)
         {
-            _sframe.AssertParamCount(1);
+            _sframe.AssertCount(1);
             return DateTime.Now.Month;
         }
 
-        private object GetDay(TFunctionData _sframe)
+        private object GetDay(FuncData _sframe)
         {
-            _sframe.AssertParamCount(1);
+            _sframe.AssertCount(1);
             return DateTime.Now.Day;
         }
 
-        private object GetDayOfWeek(TFunctionData _sframe)
+        private object GetDayOfWeek(FuncData _sframe)
         {
-            _sframe.AssertParamCount(1);
+            _sframe.AssertCount(1);
             return (int)DateTime.Now.DayOfWeek;
         }
 
-        private object GetYear(TFunctionData _sframe)
+        private object GetYear(FuncData _sframe)
         {
-            _sframe.AssertParamCount(1);
+            _sframe.AssertCount(1);
             return DateTime.Now.Year;
         }
 
-        private object GetHour(TFunctionData _sframe)
+        private object GetHour(FuncData _sframe)
         {
-            _sframe.AssertParamCount(1);
+            _sframe.AssertCount(1);
             return DateTime.Now.Hour;
         }
 
-        private object GetMinute(TFunctionData _sframe)
+        private object GetMinute(FuncData _sframe)
         {
-            _sframe.AssertParamCount(1);
+            _sframe.AssertCount(1);
             return DateTime.Now.Minute;
         }
 
-        private object GetSecond(TFunctionData _sframe)
+        private object GetSecond(FuncData _sframe)
         {
-            _sframe.AssertParamCount(1);
+            _sframe.AssertCount(1);
             return DateTime.Now.Second;
         }
 
-        private object GetMillisecond(TFunctionData _sframe)
+        private object GetMillisecond(FuncData _sframe)
         {
-            _sframe.AssertParamCount(1);
+            _sframe.AssertCount(1);
             return DateTime.Now.Millisecond;
         }
     }

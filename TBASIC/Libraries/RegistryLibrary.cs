@@ -31,63 +31,63 @@ namespace Tbasic.Libraries
             Add("RegWrite", RegWrite);
         }
         
-        private object RegValueKind(TFunctionData _sframe)
+        private object RegValueKind(FuncData _sframe)
         {
-            _sframe.AssertParamCount(3);
-            return WinRegistry.GetValueKind(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2)).ToString();
+            _sframe.AssertCount(3);
+            return WinRegistry.GetValueKind(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2)).ToString();
         }
 
-        private object RegRead(TFunctionData _sframe)
+        private object RegRead(FuncData _sframe)
         {
-            _sframe.AssertParamCount(atLeast: 3, atMost: 4);
+            _sframe.AssertCount(atLeast: 3, atMost: 4);
 
             if (_sframe.ParameterCount == 3)
-                _sframe.AddParameter(null);
+                _sframe.Add(null);
             
-            return WinRegistry.Read(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2), _sframe.GetParameter<string>(3));
+            return WinRegistry.Read(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2), _sframe.GetAt<string>(3));
         }
 
-        private object RegDelete(TFunctionData _sframe)
+        private object RegDelete(FuncData _sframe)
         {
-            _sframe.AssertParamCount(3);
-            WinRegistry.Delete(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
+            _sframe.AssertCount(3);
+            WinRegistry.Delete(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2));
             return null;
         }
 
-        private object RegRename(TFunctionData _sframe)
+        private object RegRename(FuncData _sframe)
         {
-            _sframe.AssertParamCount(4);
-            WinRegistry.Rename(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2), _sframe.GetParameter<string>(3));
+            _sframe.AssertCount(4);
+            WinRegistry.Rename(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2), _sframe.GetAt<string>(3));
             return null;
         }
 
-        private object RegDeleteKey(TFunctionData _sframe)
+        private object RegDeleteKey(FuncData _sframe)
         {
-            _sframe.AssertParamCount(2);
-            WinRegistry.DeleteKey(_sframe.GetParameter<string>(1));
+            _sframe.AssertCount(2);
+            WinRegistry.DeleteKey(_sframe.GetAt<string>(1));
             return null;
         }
 
-        private object RegRenameKey(TFunctionData _sframe)
+        private object RegRenameKey(FuncData _sframe)
         {
-            _sframe.AssertParamCount(3);
-            WinRegistry.RenameKey(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
+            _sframe.AssertCount(3);
+            WinRegistry.RenameKey(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2));
             return null;
         }
 
-        private object RegCreateKey(TFunctionData _sframe)
+        private object RegCreateKey(FuncData _sframe)
         {
-            _sframe.AssertParamCount(3);
-            WinRegistry.RenameKey(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2));
+            _sframe.AssertCount(3);
+            WinRegistry.RenameKey(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2));
             _sframe.Status = ErrorSuccess.Created;
             return null;
         }
         
-        private object RegEnumValues(TFunctionData _sframe)
+        private object RegEnumValues(FuncData _sframe)
         {
-            _sframe.AssertParamCount(2);
+            _sframe.AssertCount(2);
 
-            object[][] values = WinRegistry.EnumerateValues(_sframe.GetParameter<string>(1));
+            object[][] values = WinRegistry.EnumerateValues(_sframe.GetAt<string>(1));
             if (values.Length == 0) {
                 _sframe.Status = ErrorSuccess.NoContent;
                 return null;
@@ -97,30 +97,30 @@ namespace Tbasic.Libraries
             }
         }
 
-        private static object RegEnumKeys(TFunctionData _sframe)
+        private static object RegEnumKeys(FuncData _sframe)
         {
-            _sframe.AssertParamCount(2);
-            return WinRegistry.EnumeratKeys(_sframe.GetParameter<string>(1));
+            _sframe.AssertCount(2);
+            return WinRegistry.EnumeratKeys(_sframe.GetAt<string>(1));
         }
 
-        private object RegWrite(TFunctionData _sframe)
+        private object RegWrite(FuncData _sframe)
         {
-            _sframe.AssertParamCount(5);
+            _sframe.AssertCount(5);
 
-            object value = _sframe.GetParameter(3);
-            RegistryValueKind kind = _sframe.GetParameter<RegistryValueKind>(4);
+            object value = _sframe.GetAt(3);
+            RegistryValueKind kind = _sframe.GetAt<RegistryValueKind>(4);
 
             switch (kind) {
                 case RegistryValueKind.Binary:
-                    value = Convert.FromBase64String(_sframe.GetParameter<string>(3));
+                    value = Convert.FromBase64String(_sframe.GetAt<string>(3));
                     break;
                 case RegistryValueKind.MultiString:
                     string strval = value as string;
                     if (value is string) {
-                        value = _sframe.GetParameter<string>(3).Replace("\r\n", "\n").Split('\n');
+                        value = _sframe.GetAt<string>(3).Replace("\r\n", "\n").Split('\n');
                     }
                     else if (value is string[]) {
-                        value = _sframe.GetParameter<string[]>(3);
+                        value = _sframe.GetAt<string[]>(3);
                     }
                     else {
                         throw new ArgumentException("Parameter is not a valid multi-string");
@@ -134,7 +134,7 @@ namespace Tbasic.Libraries
                 default:
                     throw new ArgumentException("Registry value of type '" + kind + "' is unsupported");
             }
-            WinRegistry.Write(_sframe.GetParameter<string>(1), _sframe.GetParameter<string>(2), value, kind);
+            WinRegistry.Write(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2), value, kind);
             return null;
         }
     }

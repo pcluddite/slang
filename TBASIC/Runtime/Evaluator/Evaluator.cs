@@ -129,7 +129,7 @@ namespace Tbasic.Runtime
             }
 
             // check hexadecimal
-            int hex;
+            long hex;
             if (scanner.NextHexadecimal(out hex)) {
                 return AddObjectToExprList(hex, startIndex, scanner);
             }
@@ -142,7 +142,7 @@ namespace Tbasic.Runtime
 
             // check numeric
             Number num;
-            if (scanner.NextPositiveNumber(out num)) {
+            if (scanner.NextUnsignedNumber(out num)) {
                 return AddObjectToExprList(num, startIndex, scanner);
             }
 

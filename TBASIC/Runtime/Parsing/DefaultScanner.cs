@@ -21,63 +21,61 @@ namespace Tbasic.Parsing
         {
             InternalBuffer = buffer;
         }
-        
-        public override bool NextPositiveInt(out int integer)
+
+        public override bool NextUnsignedNumber(out Number num)
         {
-            integer = 0;
-            SkipWhiteSpace();
-            if (EndOfStream)
-                return false;
-            int newPos = FindConsecutiveDigits(InternalBuffer, IntPosition);
-            if (newPos > IntPosition) {
-                integer = int.Parse(InternalBuffer.Substring(IntPosition, newPos - IntPosition));
-                IntPosition = newPos;
+            int originalPos = IntPosition;
+            try {
+                num = default(Number);
+                SkipWhiteSpace();
+                if (EndOfStream)
+                    return false;
+                int endPos = FindConsecutiveDigits(InternalBuffer, IntPosition);
+                if (endPos > IntPosition) {
+                    if (endPos < InternalBuffer.Length && InternalBuffer[endPos] == '.') {
+                        endPos = FindConsecutiveDigits(InternalBuffer, endPos + 1);
+                    }
+                    if (endPos < InternalBuffer.Length && (InternalBuffer[endPos] == 'e' || InternalBuffer[endPos] == 'E')) {
+                        if (InternalBuffer[++endPos] == '-')
+                            ++endPos;
+                        endPos = FindConsecutiveDigits(InternalBuffer, endPos);
+                    }
+                }
+                else {
+                    return false;
+                }
+                num = Number.Parse(InternalBuffer.Substring(IntPosition, endPos - IntPosition));
+                IntPosition = endPos;
                 return true;
             }
-            return false;
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
         }
 
-        public override bool NextPositiveNumber(out Number num)
+        public override bool NextHexadecimal(out long number)
         {
-            num = default(Number);
-            SkipWhiteSpace();
-            if (EndOfStream)
-                return false;
-            int endPos = FindConsecutiveDigits(InternalBuffer, IntPosition);
-            if (endPos > IntPosition) {
-                if (endPos < InternalBuffer.Length && InternalBuffer[endPos] == '.') {
-                    endPos = FindConsecutiveDigits(InternalBuffer, endPos + 1);
-                }
-                if (endPos < InternalBuffer.Length && (InternalBuffer[endPos] == 'e' || InternalBuffer[endPos] == 'E')) {
-                    if (InternalBuffer[++endPos] == '-')
-                        ++endPos;
-                    endPos = FindConsecutiveDigits(InternalBuffer, endPos);
-                }
-            }
-            else {
-                return false;
-            }
-            num = Number.Parse(InternalBuffer.Substring(IntPosition, endPos - IntPosition));
-            IntPosition = endPos;
-            return true;
-        }
+            int originalPos = IntPosition;
+            try {
+                number = default(long);
+                SkipWhiteSpace();
 
-        public override bool NextHexadecimal(out int number)
-        {
-            number = 0;
-            SkipWhiteSpace();
-            if (EndOfStream)
-                return false;
-
-            int endPos = IntPosition;
-            if (InternalBuffer[endPos++] != '0')
-                return false;
-            if (endPos >= InternalBuffer.Length || InternalBuffer[endPos++] != 'x')
-                return false;
-            endPos = FindConsecutiveHex(InternalBuffer, endPos);
-            number = Convert.ToInt32(InternalBuffer.Substring(IntPosition, endPos - IntPosition));
-            IntPosition = endPos;
-            return true;
+                int endPos = IntPosition;
+                if (EndOfStream || InternalBuffer[endPos++] != '0' ||
+                    endPos >= InternalBuffer.Length || InternalBuffer[endPos++] != 'x') {
+                    IntPosition = originalPos;
+                    return false;
+                }
+                endPos = FindConsecutiveHex(InternalBuffer, endPos);
+                number = Convert.ToInt64(InternalBuffer.Substring(IntPosition, endPos - IntPosition), 16);
+                IntPosition = endPos;
+                return true;
+            }
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
         }
 
         private static unsafe int FindConsecutiveDigits(StringSegment expr, int start)
@@ -119,75 +117,102 @@ namespace Tbasic.Parsing
 
         public override bool Next(string pattern, bool ignoreCase = true)
         {
-            SkipWhiteSpace();
-            if (EndOfStream)
-                return false;
-            if (!InternalBuffer.Subsegment(IntPosition).StartsWith(pattern, ignoreCase))
-                return false;
-            IntPosition += pattern.Length;
-            return true;
+            int originalPos = IntPosition;
+            try {
+                SkipWhiteSpace();
+                if (EndOfStream || !InternalBuffer.Subsegment(IntPosition).StartsWith(pattern, ignoreCase)) {
+                    IntPosition = originalPos;
+                    return false;
+                }
+                IntPosition += pattern.Length;
+                return true;
+            }
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
         }
 
         public override bool NextString(out string parsed)
         {
-            SkipWhiteSpace();
-            if (EndOfStream || (InternalBuffer[IntPosition] != '\"' && InternalBuffer[IntPosition] != '\'')) {
-                parsed = null;
-                return false;
+            int originalPos = IntPosition;
+            try {
+                SkipWhiteSpace();
+                if (EndOfStream || (InternalBuffer[IntPosition] != '\"' && InternalBuffer[IntPosition] != '\'')) {
+                    parsed = null;
+                    IntPosition = originalPos;
+                    return false;
+                }
+                int endPos = GroupParser.ReadString(InternalBuffer, IntPosition, out parsed) + 1;
+                IntPosition = endPos;
+                return true;
             }
-            int endPos = GroupParser.ReadString(InternalBuffer, IntPosition, out parsed) + 1;
-            IntPosition = endPos;
-            return true;
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
         }
 
         public override bool NextFunction(Executer exec, out Function func)
         {
-            SkipWhiteSpace();
-            func = null;
-            if (EndOfStream)
-                return false;
             int originalPos = IntPosition;
-            if (char.IsLetter(InternalBuffer[IntPosition]) || InternalBuffer[IntPosition] == '_') {
-                IntPosition = FindAcceptableFuncChars(InternalBuffer, ++IntPosition);
-                if (IntPosition < InternalBuffer.Length) {
-                    StringSegment name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
-                    SkipWhiteSpace();
-                    if (Next("(")) {
-                        IList<object> args;
-                        IntPosition = GroupParser.ReadGroup(InternalBuffer, IntPosition - 1, exec, out args) + 1;
-                        func = new Function(InternalBuffer.Subsegment(originalPos, IntPosition - originalPos), exec, name, args);
-                        return true;
+            try {
+                SkipWhiteSpace();
+                func = null;
+                if (EndOfStream)
+                    return false;
+                if (char.IsLetter(InternalBuffer[IntPosition]) || InternalBuffer[IntPosition] == '_') {
+                    IntPosition = FindAcceptableFuncChars(InternalBuffer, ++IntPosition);
+                    if (IntPosition < InternalBuffer.Length) {
+                        StringSegment name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
+                        SkipWhiteSpace();
+                        if (Next("(")) {
+                            IList<object> args;
+                            IntPosition = GroupParser.ReadGroup(InternalBuffer, IntPosition - 1, exec, out args) + 1;
+                            func = new Function(InternalBuffer.Subsegment(originalPos, IntPosition - originalPos), exec, name, args);
+                            return true;
+                        }
                     }
                 }
+                IntPosition = originalPos;
+                return false;
             }
-            IntPosition = originalPos;
-            return false;
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
         }
 
         public override bool NextVariable(Executer exec, out Variable variable)
         {
-            SkipWhiteSpace();
-            variable = null;
-            if (EndOfStream)
-                return false;
             int originalPos = IntPosition;
-            if (char.IsLetter(InternalBuffer[IntPosition]) || InternalBuffer[IntPosition] == '_') {
-                IntPosition = FindAcceptableFuncChars(InternalBuffer, ++IntPosition);
-                if (!EndOfStream && InternalBuffer[IntPosition++] == '$') {
-                    StringSegment name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
-                    SkipWhiteSpace();
-                    int[] indices;
-                    if (!NextIndices(exec, out indices))
-                        indices = null;
-                    variable = new Variable(InternalBuffer, name, indices, exec);
-                    return true;
+            try {
+                SkipWhiteSpace();
+                variable = null;
+                if (EndOfStream)
+                    return false;
+                if (char.IsLetter(InternalBuffer[IntPosition]) || InternalBuffer[IntPosition] == '_') {
+                    IntPosition = FindAcceptableFuncChars(InternalBuffer, ++IntPosition);
+                    if (!EndOfStream && InternalBuffer[IntPosition++] == '$') {
+                        StringSegment name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
+                        SkipWhiteSpace();
+                        int[] indices;
+                        if (!NextIndices(exec, out indices))
+                            indices = null;
+                        variable = new Variable(InternalBuffer, name, indices, exec);
+                        return true;
+                    }
                 }
+                else if (InternalBuffer[IntPosition] == '@') { // it's a macro
+                    return NextMacro(exec, out variable);
+                }
+                IntPosition = originalPos;
+                return false;
             }
-            else if (InternalBuffer[IntPosition] == '@') { // it's a macro
-                return NextMacro(exec, out variable);
+            catch {
+                IntPosition = originalPos;
+                throw;
             }
-            IntPosition = originalPos;
-            return false;
         }
 
         /// <summary>
@@ -198,45 +223,57 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         private bool NextMacro(Executer exec, out Variable variable)
         {
-            SkipWhiteSpace();
             int originalPos = IntPosition;
-            if (++IntPosition < InternalBuffer.Length) {
-                IntPosition = FindAcceptableFuncChars(InternalBuffer, IntPosition);
-                StringSegment name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
+            try {
                 SkipWhiteSpace();
-                int[] indices;
-                if (!NextIndices(exec, out indices))
-                    indices = null;
-                variable = new Variable(InternalBuffer, name, indices, exec);
-                return true;
+                if (++IntPosition < InternalBuffer.Length) {
+                    IntPosition = FindAcceptableFuncChars(InternalBuffer, IntPosition);
+                    StringSegment name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
+                    SkipWhiteSpace();
+                    int[] indices;
+                    if (!NextIndices(exec, out indices))
+                        indices = null;
+                    variable = new Variable(InternalBuffer, name, indices, exec);
+                    return true;
+                }
+                variable = null;
+                IntPosition = originalPos;
+                return false;
             }
-            variable = null;
-            IntPosition = originalPos;
-            return false;
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
         }
 
         public override bool NextIndices(Executer exec, out int[] indices)
         {
-            SkipWhiteSpace();
-            indices = null;
             int originalPos = IntPosition;
-            if (!EndOfStream && InternalBuffer[IntPosition] == '[') {
-                IList<object> args;
-                IntPosition = GroupParser.ReadGroup(InternalBuffer, IntPosition, exec, out args) + 1;
-                indices = new int[args.Count];
-                for (int i = 0; i < args.Count; ++i) {
-                    int? index = args[i] as int?;
-                    if (index == null) {
-                        throw ThrowHelper.InvalidTypeInExpression(args[i].GetType().Name, typeof(int).Name);
+            try {
+                SkipWhiteSpace();
+                indices = null;
+                if (!EndOfStream && InternalBuffer[IntPosition] == '[') {
+                    IList<object> args;
+                    IntPosition = GroupParser.ReadGroup(InternalBuffer, IntPosition, exec, out args) + 1;
+                    indices = new int[args.Count];
+                    for (int i = 0; i < args.Count; ++i) {
+                        int? index = args[i] as int?;
+                        if (index == null) {
+                            throw ThrowHelper.InvalidTypeInExpression(args[i].GetType().Name, typeof(int).Name);
+                        }
+                        else {
+                            indices[i] = index.Value;
+                        }
                     }
-                    else {
-                        indices[i] = index.Value;
-                    }
+                    return true;
                 }
-                return true;
+                IntPosition = originalPos;
+                return false;
             }
-            IntPosition = originalPos;
-            return false;
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
         }
         
         private static unsafe int FindAcceptableFuncChars(StringSegment expr, int start)
@@ -257,49 +294,72 @@ namespace Tbasic.Parsing
 
         public override bool NextBool(out bool b)
         {
-            SkipWhiteSpace();
-            if (EndOfStream) {
-                b = false;
+            int originalPos = IntPosition;
+            try {
+                SkipWhiteSpace();
+                if (EndOfStream) {
+                    b = default(bool);
+                    return false;
+                }
+                int currPos = IntPosition;
+                if (Next(bool.TrueString)) {
+                    b = true;
+                    return true;
+                }
+                IntPosition = currPos; // reset the the pos when method was called
+                if (Next(bool.FalseString)) {
+                    b = false;
+                    return true;
+                }
+                b = default(bool);
+                IntPosition = originalPos;
                 return false;
             }
-            int currPos = IntPosition;
-            if (Next(bool.TrueString)) {
-                b = true;
-                IntPosition += bool.TrueString.Length;
-                return true;
+            catch {
+                IntPosition = originalPos;
+                throw;
             }
-            IntPosition = currPos; // reset the the pos when method was called
-            b = !Next(bool.FalseString);
-            if (!b) {
-                IntPosition += bool.FalseString.Length;
-                return true;
-            }
-            IntPosition = currPos;
-            return false;
         }
 
         public override bool NextBinaryOp(BinOpDictionary _binOps, out BinaryOperator foundOp)
         {
-            SkipWhiteSpace();
-            if (EndOfStream || !MatchOperator(InternalBuffer, IntPosition, _binOps, out foundOp)) {
-                foundOp = default(BinaryOperator);
-                return false;
+            int originalPos = IntPosition;
+            try {
+                SkipWhiteSpace();
+                if (EndOfStream || !MatchOperator(InternalBuffer, IntPosition, _binOps, out foundOp)) {
+                    foundOp = default(BinaryOperator);
+                    IntPosition = originalPos;
+                    return false;
+                }
+                IntPosition += foundOp.OperatorString.Length;
+                return true;
             }
-            IntPosition += foundOp.OperatorString.Length;
-            return true;
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
         }
 
         public override bool NextUnaryOp(UnaryOpDictionary _unOps, object last, out UnaryOperator foundOp)
         {
-            SkipWhiteSpace();
-            if (EndOfStream || (last != null && !(last is BinaryOperator))) {
-                foundOp = default(UnaryOperator);
-                return false;
+            int originalPos = IntPosition;
+            try {
+                SkipWhiteSpace();
+                if (EndOfStream || (last != null && !(last is BinaryOperator))) {
+                    foundOp = default(UnaryOperator);
+                    return false;
+                }
+                if (!MatchOperator(InternalBuffer, IntPosition, _unOps, out foundOp)) {
+                    IntPosition = originalPos;
+                    return false;
+                }
+                IntPosition += foundOp.OperatorString.Length;
+                return true;
             }
-            if (!MatchOperator(InternalBuffer, IntPosition, _unOps, out foundOp))
-                return false;
-            IntPosition += foundOp.OperatorString.Length;
-            return true;
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
         }
 
         private static bool MatchOperator<T>(StringSegment expr, int index, OperatorDictionary<T> ops, out T foundOp) where T : IOperator

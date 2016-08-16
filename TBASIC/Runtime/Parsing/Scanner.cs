@@ -95,10 +95,9 @@ namespace Tbasic.Parsing
             IntPosition = last; // advance the stream
             return seg;
         }
-
-        public abstract bool NextPositiveInt(out int integer);
-        public abstract bool NextPositiveNumber(out Number num);
-        public abstract bool NextHexadecimal(out int number);
+        
+        public abstract bool NextUnsignedNumber(out Number num);
+        public abstract bool NextHexadecimal(out long number);
         public abstract bool Next(string pattern, bool ignoreCase = true);
         public abstract bool NextString(out string parsed);
         public abstract bool NextFunction(Executer exec, out Function func);
@@ -143,7 +142,7 @@ namespace Tbasic.Parsing
         {
             if (Position + offset >= Length)
                 return 0;
-            return Encoding.Unicode.GetBytes(InternalBuffer.ToString(), Convert.ToInt32(Position), count, buffer, offset);
+            return Encoding.Unicode.GetBytes(InternalBuffer.ToString(), IntPosition, count, buffer, offset);
         }
     }
 }

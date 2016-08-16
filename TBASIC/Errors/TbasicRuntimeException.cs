@@ -4,9 +4,6 @@
 //
 // ======
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Tbasic.Errors
 {
@@ -47,6 +44,8 @@ namespace Tbasic.Errors
             if (ex is FormatException || ex is ArgumentException)
                 return new ScriptParsingException(ex.Message, ex);
             if (ex is NotImplementedException || ex is InvalidOperationException || ex is InvalidCastException)
+                return new TbasicRuntimeException(ex.Message, ex);
+            if (ex is OverflowException)
                 return new TbasicRuntimeException(ex.Message, ex);
 
             FunctionException funcEx = FunctionException.FromException(ex); // last resort, try to stuff it in a FunctionException

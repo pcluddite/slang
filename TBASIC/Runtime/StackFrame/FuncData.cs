@@ -173,7 +173,7 @@ namespace Tbasic.Runtime
         public void AssertAtLeast(int atLeast)
         {
             if (_params.Count < atLeast) {
-                throw new ArgumentException(string.Format("{0} must have at least {1} parameter{2}", Name.ToUpper(), atLeast,
+                throw new ArgumentException(string.Format("{0} must have at least {1} parameter{2}", Name.ToUpper(), atLeast - 1,
                 atLeast == 2 ? "" : "s"));
             }
         }

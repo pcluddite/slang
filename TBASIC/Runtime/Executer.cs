@@ -117,7 +117,7 @@ namespace Tbasic.Runtime
         {
             FuncData data = new FuncData(this);
             try {
-                Execute(data, codeLine);
+                Execute(ref data, codeLine);
             }
             catch(Exception ex) {
                 TbasicRuntimeException runEx = TbasicRuntimeException.WrapException(ex);
@@ -140,7 +140,7 @@ namespace Tbasic.Runtime
                 try {
                     ObjectContext blockContext = Context.FindBlockContext(current.Name);
                     if (blockContext == null) {
-                        Execute(stackFrame, current);
+                        Execute(ref stackFrame, current);
                     }
                     else {
                         CodeBlock block = blockContext.GetBlock(current.Name).Invoke(index, lines);
@@ -160,7 +160,7 @@ namespace Tbasic.Runtime
             return stackFrame;
         }
 
-        internal static void Execute(FuncData stackFrame, Line codeLine)
+        internal static void Execute(ref FuncData stackFrame, Line codeLine)
         {
             ObjectContext context = stackFrame.Context.FindCommandContext(codeLine.Name);
             if (context == null) {
@@ -173,8 +173,7 @@ namespace Tbasic.Runtime
                 throw ThrowHelper.ExpectedSpaceAfterCommand();
             }
             else {
-                CmdLine cmd = new CmdLine(codeLine.Text);
-                stackFrame.AddRange(cmd);
+                stackFrame = new FuncData(stackFrame.StackExecuter, codeLine.Text);
                 stackFrame.Data = context.GetCommand(codeLine.Name).Invoke(stackFrame);
             }
             stackFrame.Context.SetReturns(stackFrame);

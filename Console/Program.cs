@@ -10,6 +10,7 @@ using System.Text;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
 using Tbasic.Errors;
+using Tbasic.Libraries;
 
 namespace Tbasic.Terminal
 {
@@ -22,9 +23,17 @@ namespace Tbasic.Terminal
             Console.WriteLine("Copyright (c) Timothy Baxendale. All Rights Reserved.");
             Console.WriteLine();
 
+            Console.Write("Initializing standard library...");
+
             Executer exec = new Executer();
             exec.Global.LoadStandardLibrary();
-            
+
+            foreach (string name in exec.Global.ListAllFunctions()) {
+                exec.Global.SetCommand(name, exec.Global.GetFunction(name));
+            }
+
+            Console.WriteLine("Done.\n");
+
             int curr = 0;
             string line;
             do {

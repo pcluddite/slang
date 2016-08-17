@@ -5,6 +5,7 @@
 // ======
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Tbasic.Errors;
 using Tbasic.Libraries;
 using Tbasic.Operators;
@@ -278,6 +279,178 @@ namespace Tbasic.Runtime
             else {
                 return _super.FindConstantContext(name);
             }
+        }
+
+        #endregion
+
+        #region List
+        
+        /// <summary>
+        /// Lists all the functions currently defined
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListAllFunctions()
+        {
+            ObjectContext context = this;
+            while (context != null) {
+                foreach (string s in context.ListFunctions()) {
+                    yield return s;
+                }
+                context = context._super;
+            }
+        }
+
+        /// <summary>
+        /// Lists the functions defined in this context
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListFunctions()
+        {
+            return _functions.Keys;
+        }
+
+        /// <summary>
+        /// Lists all the commands currently defined
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListAllCommands()
+        {
+            ObjectContext context = this;
+            while (context != null) {
+                foreach (string s in context.ListCommands()) {
+                    yield return s;
+                }
+                context = context._super;
+            }
+        }
+
+        /// <summary>
+        /// Lists the commands defined in this context
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListCommands()
+        {
+            return _commands.Keys;
+        }
+
+        /// <summary>
+        /// Lists all the variables currently defined
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListAllVariables()
+        {
+            ObjectContext context = this;
+            while (context != null) {
+                foreach (string s in context.ListVariables()) {
+                    yield return s;
+                }
+                context = context._super;
+            }
+        }
+
+        /// <summary>
+        /// Lists the variables defined in this context
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListVariables()
+        {
+            return _variables.Keys;
+        }
+
+        /// <summary>
+        /// Lists all the constants currently defined
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListAllConstants()
+        {
+            ObjectContext context = this;
+            while (context != null) {
+                foreach (string s in context.ListConstants()) {
+                    yield return s;
+                }
+                context = context._super;
+            }
+        }
+
+        /// <summary>
+        /// Lists the constants defined in this context
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListConstants()
+        {
+            return _variables.Keys;
+        }
+
+        /// <summary>
+        /// Lists all the unary operators currently defined
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListAllUnaryOperators()
+        {
+            ObjectContext context = this;
+            while (context != null) {
+                foreach (string s in context.ListUnaryOperators()) {
+                    yield return s;
+                }
+                context = context._super;
+            }
+        }
+
+        /// <summary>
+        /// Lists the unary operators defined in this context
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListUnaryOperators()
+        {
+            return _unaryOps.Keys;
+        }
+
+        /// <summary>
+        /// Lists all the binary operators currently defined
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListAllBinaryOperators()
+        {
+            ObjectContext context = this;
+            while (context != null) {
+                foreach (string s in context.ListBinaryOperators()) {
+                    yield return s;
+                }
+                context = context._super;
+            }
+        }
+
+        /// <summary>
+        /// Lists the binary operators defined in this context
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListBinaryOperators()
+        {
+            return _binaryOps.Keys;
+        }
+
+        /// <summary>
+        /// Lists all the operators currently defined
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListAllOperators()
+        {
+            ObjectContext context = this;
+            while (context != null) {
+                foreach (string s in context.ListOperators()) {
+                    yield return s;
+                }
+                context = context._super;
+            }
+        }
+
+        /// <summary>
+        /// Lists the operators defined in this context
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> ListOperators()
+        {
+            return _unaryOps.Keys.Concat(_binaryOps.Keys).Distinct(StringComparer.OrdinalIgnoreCase);
         }
 
         #endregion

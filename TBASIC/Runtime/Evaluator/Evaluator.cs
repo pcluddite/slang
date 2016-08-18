@@ -247,27 +247,66 @@ namespace Tbasic.Runtime
             return expression.Evaluate();
         }
 
-        internal static bool TryConvert<T>(object o, out T result)
+        /// <summary>
+        /// Tries to convert an object to a given type. First this tries to do a straight up cast. If that doesn't work and strict is turned off, it will try to be converted with IConvertible. If the object is a string and parseStrings is turned on, it will try to parse that string.
+        /// </summary>
+        /// <typeparam name="T">the type to convert to</typeparam>
+        /// <param name="obj">the object to convert</param>
+        /// <param name="result">the result of the conversion</param>
+        /// <param name="strict">wether the type should attempt to be converted</param>
+        /// <param name="parseStrings">determines whether strings should try to be converted</param>
+        /// <returns></returns>
+        internal static bool TryConvert<T>(object obj, out T result, bool strict = false, bool parseStrings = true)
         {
             try {
-                result = (T)o;
+                result = (T)obj;
                 return true;
             }
             catch (InvalidCastException) {
-                IConvertible convertible = o as IConvertible;
-                if (convertible != null) {
-                    try {
-                        result = (T)convertible.ToType(typeof(T), CultureInfo.CurrentCulture);
-                        return true;
-                    }
-                    catch (Exception ex) when (ex is FormatException || ex is InvalidCastException || ex is OverflowException) {
-                        result = default(T);
+                if (!strict)
+                    return TryConvertNonStrict(obj, out result, parseStrings);
+                result = default(T);
+                return false;
+            }
+        }
+
+        internal static bool TryConvertNonStrict<T>(object obj, out T result, bool parseStrings = true)
+        {
+            result = default(T);
+            if (parseStrings) {
+                string str = obj as string; // maybe we can convert it from a string?
+                if (str != null) {
+                    obj = ConvertFromString(str);
+                    if (obj == null)
                         return false;
-                    }
+                    return TryConvert(obj, out result); // it's a good old fashion type now. try again.
                 }
             }
-            result = default(T);
-            return false;
+            IConvertible convertible = obj as IConvertible;
+            if (convertible != null) {
+                try {
+                    result = (T)convertible.ToType(typeof(T), CultureInfo.CurrentCulture);
+                    return true;
+                }
+                catch (Exception ex) when (ex is FormatException || ex is InvalidCastException || ex is OverflowException) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+
+        internal static object ConvertFromString(string str)
+        {
+            // now we've just got to parse the supported types until we find a match...
+            Number n;
+            if (Number.TryParse(str, out n))
+                return n;
+            bool b;
+            if (bool.TryParse(str, out b))
+                return b;
+            return null;
         }
 
         public static object PerformUnaryOp(UnaryOperator op, object left, object right)

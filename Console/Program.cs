@@ -10,7 +10,6 @@ using System.Text;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
 using Tbasic.Errors;
-using Tbasic.Libraries;
 
 namespace Tbasic.Terminal
 {
@@ -28,9 +27,11 @@ namespace Tbasic.Terminal
             Executer exec = new Executer();
             exec.Global.LoadStandardLibrary();
 
-            foreach (string name in exec.Global.ListAllFunctions()) {
-                exec.Global.SetCommand(name, exec.Global.GetFunction(name));
+            foreach (var kv in exec.Global.GetAllFunctions()) {
+                exec.Global.SetCommand(kv.Key, kv.Value);
             }
+
+            exec.Global.AddCommandLibrary(new ConsoleLibrary(exec));
 
             Console.WriteLine("Done.\n");
 

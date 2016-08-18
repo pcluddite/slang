@@ -39,6 +39,8 @@ namespace Tbasic.Libraries
             Add("ATAN", Atan);
             Add("LOG", Log);
             Add("LN", Ln);
+            Add("SQRT", Sqrt);
+            Add("ROOT", Root);
             context.SetConstant("@PI", Math.PI); // pi
             context.SetConstant("@E", Math.E); // euler's number
         }
@@ -118,6 +120,18 @@ namespace Tbasic.Libraries
         {
             stackFrame.AssertCount(2);
             return Math.Tanh(stackFrame.GetAt<Number>(1));
+        }
+
+        private static object Sqrt(FuncData fData)
+        {
+            fData.AssertCount(2);
+            return Math.Sqrt(fData.GetAt<Number>(1));
+        }
+
+        private static object Root(FuncData fData)
+        {
+            fData.AssertCount(3);
+            return Math.Pow(fData.GetAt<Number>(1), 1.0d / fData.GetAt<Number>(2));
         }
 
         /// <summary>

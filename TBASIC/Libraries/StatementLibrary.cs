@@ -25,6 +25,8 @@ namespace Tbasic.Libraries
             Add("CONST", Const);
             Add("EXIT", Exit);
             Add("BREAK", Break);
+            Add("OPTION", Option);
+            Add("OPT", Option);
         }
 
         private object Include(FuncData stackFrame)
@@ -41,6 +43,27 @@ namespace Tbasic.Libraries
 
 
             return NULL(stackFrame);
+        }
+
+        private static object Option(FuncData fData)
+        {
+            if (fData.ParameterCount == 2)
+                fData.Add(true);
+            fData.AssertCount(3);
+
+            string szOpt = fData.GetAt<string>(1);
+            ExecuterOption opt;
+            if (!Enum.TryParse(szOpt, out opt)) {
+                opt = fData.GetAt<ExecuterOption>(1); // this will throw an error if its not a valid flag
+            }
+
+            if (fData.EvaluateAt<bool>(2)) {
+                fData.StackExecuter.EnableOption(opt);
+            }
+            else {
+                fData.StackExecuter.DisableOption(opt);
+            }
+            return NULL(fData);
         }
 
         private object Sleep(FuncData stackFrame)

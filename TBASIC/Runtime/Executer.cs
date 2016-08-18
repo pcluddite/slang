@@ -35,6 +35,11 @@ namespace Tbasic.Runtime
         public ObjectContext Global { get; private set; }
 
         /// <summary>
+        /// Gets or sets the rules that the runtime should adhere to
+        /// </summary>
+        public ExecuterOption Options { get; set; } = ExecuterOption.None;
+
+        /// <summary>
         /// Gets if request to break has been petitioned
         /// </summary>
         public bool BreakRequest { get; internal set; }
@@ -53,11 +58,6 @@ namespace Tbasic.Runtime
         /// Gets if a request to exit has been petitioned. This should apply to the scope of the whole application.
         /// </summary>
         public static bool ExitRequest { get; internal set; }
-
-        /// <summary>
-        /// Gets or sets if minor errors should throw an exception instead of simply raising the error flag
-        /// </summary>
-        public bool ThrowError { get; set; }
 
         /// <summary>
         /// Raised when a user has requested to exit
@@ -188,7 +188,7 @@ namespace Tbasic.Runtime
                 stackFrame.Status = status;
                 stackFrame.Data = msg;
                 stackFrame.Context.SetReturns(stackFrame);
-                if (ThrowError) { // only actually throw anything if we understand the error
+                if (Options.HasFlag(ExecuterOption.ThrowErrors)) { // only actually throw anything if we understand the error
                     throw new LineException(current.LineNumber, current.VisibleName, cEx);
                 }
             }
@@ -269,9 +269,42 @@ namespace Tbasic.Runtime
             OnUserExit(EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Enables an executer option
+        /// </summary>
+        /// <param name="option"></param>
+        public void EnableOption(ExecuterOption option)
+        {
+            Options |= option;
+        }
+
+        /// <summary>
+        /// Disables an executer option
+        /// </summary>
+        /// <param name="option"></param>
+        public void DisableOption(ExecuterOption option)
+        {
+            Options &= ~option;
+        }
+
+        /// <summary>
+        /// Gets whether or not an option has been enabled
+        /// </summary>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        public bool IsEnforced(ExecuterOption option)
+        {
+            return Options.HasFlag(option);
+        }
+
         private void OnUserExit(EventArgs e)
         {
             OnUserExitRequest?.Invoke(this, e);
+        }
+
+        internal bool TryConvert<T>(object obj, out T result)
+        {
+            return Evaluator.TryConvert(obj, out result, IsEnforced(ExecuterOption.Strict), !IsEnforced(ExecuterOption.EnforceStrings));
         }
     }
 }

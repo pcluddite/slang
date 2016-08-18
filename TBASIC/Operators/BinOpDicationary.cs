@@ -153,9 +153,11 @@ namespace Tbasic.Operators
             return false;
         }
 
+        private const ExecuterOption SortaEqualsOptions = ExecuterOption.None;
+
         private static bool StrSortaEqualsObj(string str_left, object right)
         {
-            Number? n_right = Number.AsNumber(right);
+            Number? n_right = Number.AsNumber(right, SortaEqualsOptions);
             if (n_right != null) {
                 Number n_left;
                 if (Number.TryParse(str_left, out n_left)) {

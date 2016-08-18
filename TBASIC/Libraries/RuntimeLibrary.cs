@@ -82,7 +82,7 @@ namespace Tbasic.Libraries
             else if (obj is string) {
                 return obj.ToString().Length;
             }
-            else if (Number.IsNumber(obj)) {
+            else if (obj is Number) {
                 return Number.SIZE;
             }
             else if (obj is bool) {
@@ -90,6 +90,15 @@ namespace Tbasic.Libraries
             }
             else if (obj.GetType().IsArray) {
                 return ((object[])obj).Length;
+            }
+            else if (obj is int) {
+                return sizeof(int);
+            }
+            else if (obj is long) {
+                return sizeof(long);
+            }
+            else if (obj is byte) {
+                return sizeof(byte);
             }
             else {
                 throw new FunctionException(ErrorClient.Forbidden, "Object size cannot be determined");
@@ -99,7 +108,7 @@ namespace Tbasic.Libraries
         private object IsNum(FuncData stackFrame)
         {
             stackFrame.AssertCount(2);
-            return Number.IsNumber(stackFrame.GetAt(1));
+            return Number.IsNumber(stackFrame.GetAt(1), stackFrame.StackExecuter.Options);
         }
 
         private object IsString(FuncData stackFrame)

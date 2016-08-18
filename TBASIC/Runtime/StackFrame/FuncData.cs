@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using Tbasic.Errors;
 using Tbasic.Parsing;
+using Tbasic.Components;
 
 namespace Tbasic.Runtime
 {
@@ -221,7 +222,7 @@ namespace Tbasic.Runtime
         public T GetAt<T>(int index)
         {
             T ret;
-            if (Evaluator.TryConvert(GetAt(index), out ret)) {
+            if (StackExecuter.TryConvert(GetAt(index), out ret)) {
                 return ret;
             }
             throw new InvalidCastException(string.Format("Expected parameter {0} to be of type {1}", index, typeof(T).Name));
@@ -272,6 +273,28 @@ namespace Tbasic.Runtime
         {
             foreach (object p in param)
                 Add(p);
+        }
+
+        /// <summary>
+        /// Forces the (re-)evaluation of a string parameter. This is useful for statements, whose parameters don't get evaluated automatically.
+        /// </summary>
+        public object EvaluateAt(int index)
+        {
+            string param = GetAt(index) as string;
+            if (param != null)
+                _params[index] = Evaluator.Evaluate(new StringSegment(param), StackExecuter);
+            return _params[index];
+        }
+        
+        /// <summary>
+        /// Forces the (re-)evaluation of a string parameter. This is useful for statements, whose parameters don't get evaluated automatically. This will replace the old parameter value on success.
+        /// </summary>
+        public T EvaluateAt<T>(int index)
+        {
+            string param = GetAt(index) as string;
+            if (param != null)
+                _params[index] = Evaluator.Evaluate(new StringSegment(param), StackExecuter);
+            return GetAt<T>(index);
         }
 
         /// <summary>

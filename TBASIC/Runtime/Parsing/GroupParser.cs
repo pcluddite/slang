@@ -20,28 +20,28 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Indexes a string without parsing it (i.e. retreives the index of the terminating quote)
         /// </summary>
-        /// <param name="str_full">the full string containing the string to be checked</param>
+        /// <param name="fullstr">the full string containing the string to be checked</param>
         /// <param name="index">the index in the full string of the first quote of the string to be indexed</param>
         /// <returns>the index of the terminating quote in the full string</returns>
-        public static int IndexString(string str_full, int index)
+        public static int IndexString(string fullstr, int index)
         {
-            return IndexString(new StringSegment(str_full), index);
+            return IndexString(new StringSegment(fullstr), index);
         }
 
-        internal static int IndexString(StringSegment str_full, int index)
+        internal static int IndexString(StringSegment fullstr, int index)
         {
-            char quote = str_full[index++]; // The first character should be the quote
+            char quote = fullstr[index++]; // The first character should be the quote
 
-            for (; index < str_full.Length; index++) {
-                char cur = str_full[index];
+            for (; index < fullstr.Length; index++) {
+                char cur = fullstr[index];
                 switch (cur) {
                     case '\n':
                     case '\r':
                         throw ThrowHelper.UnterminatedString();
                     case '\\':
                         index++;
-                        cur = str_full[index];
-                        if (index >= str_full.Length) {
+                        cur = fullstr[index];
+                        if (index >= fullstr.Length) {
                             throw ThrowHelper.UnterminatedEscapeSequence();
                         }
                         switch (cur) {
@@ -55,7 +55,7 @@ namespace Tbasic.Parsing
                             case '\'': break; // you're golden
                             case 'u':
                                 index += 4;
-                                if (index >= str_full.Length) {
+                                if (index >= fullstr.Length) {
                                     throw ThrowHelper.UnterminatedUnicodeEscape();
                                 }
                                 break;
@@ -76,32 +76,32 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Indexes and builds a string, parsing any escape sequences properly
         /// </summary>
-        /// <param name="str_full">the full string containing the string to be parsed</param>
+        /// <param name="fullstr">the full string containing the string to be parsed</param>
         /// <param name="index">the index in the full string of the first quote of the string to be indexed</param>
         /// <param name="s_parsed">the parsed string (without quotes and escape sequences replaced)</param>
         /// <returns>the index of the terminating quote  in the full string</returns>
-        public static int ReadString(string str_full, int index, out string s_parsed)
+        public static int ReadString(string fullstr, int index, out string s_parsed)
         {
-            return ReadString(new StringSegment(str_full), index, out s_parsed);
+            return ReadString(new StringSegment(fullstr), index, out s_parsed);
         }
 
-        internal static int ReadString(StringSegment str_full, int index, out string s_parsed)
+        internal static int ReadString(StringSegment fullstr, int index, out string s_parsed)
         {
-            char quote = str_full[index++]; // The first character should be the quote
+            char quote = fullstr[index++]; // The first character should be the quote
 
             StringBuilder sb = new StringBuilder();
-            for (; index < str_full.Length; index++) {
-                char cur = str_full[index];
+            for (; index < fullstr.Length; index++) {
+                char cur = fullstr[index];
                 switch (cur) {
                     case '\n':
                     case '\r':
                         throw ThrowHelper.UnterminatedString();
                     case '\\':
                         index++;
-                        if (index >= str_full.Length) {
+                        if (index >= fullstr.Length) {
                             throw ThrowHelper.UnterminatedEscapeSequence();
                         }
-                        cur = str_full[index];
+                        cur = fullstr[index];
                         switch (cur) {
                             case 'b': sb.Append('\b'); break;
                             case 't': sb.Append('\t'); break;
@@ -113,10 +113,10 @@ namespace Tbasic.Parsing
                             case '\'': sb.Append('\''); break;
                             case 'u':
                                 index += 4;
-                                if (index >= str_full.Length) {
+                                if (index >= fullstr.Length) {
                                     throw ThrowHelper.UnterminatedUnicodeEscape();
                                 }
-                                sb.Append((char)ushort.Parse(str_full.Substring(index - 3, 4), NumberStyles.HexNumber));
+                                sb.Append((char)ushort.Parse(fullstr.Substring(index - 3, 4), NumberStyles.HexNumber));
                                 break;
                             default:
                                 throw ThrowHelper.UnknownEscapeSequence(cur);
@@ -139,29 +139,29 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Indexes a group (set off by parentheses or brackets) without evaluating its operators
         /// </summary>
-        /// <param name="s_full">the full string containing the group to be indexed</param>
-        /// <param name="firstIndex">the index in the full string of the character of the group to be indexed</param>
+        /// <param name="fullstr">the full string containing the group to be indexed</param>
+        /// <param name="index">the index in the full string of the character of the group to be indexed</param>
         /// <returns>the index of the terminating grouping character in the full string</returns>
-        public static int IndexGroup(string s_full, int firstIndex)
+        public static int IndexGroup(string fullstr, int index)
         {
-            return IndexGroup(new StringSegment(s_full), firstIndex);
+            return IndexGroup(new StringSegment(fullstr), index);
         }
         
-        internal static int IndexGroup(StringSegment s_full, int firstIndex)
+        internal static int IndexGroup(StringSegment fullstr, int index)
         {
-            char c_open = s_full[firstIndex]; // The first character should be the grouping character (i.e. '(' or '[')
+            char c_open = fullstr[index]; // The first character should be the grouping character (i.e. '(' or '[')
             char c_close = c_open == '(' ? ')' : ']';
 
             int expected = 1; // We are expecting one closing character
-            int c_index = firstIndex + 1; // We used the first character
-            for (; c_index < s_full.Length; c_index++) {
-                char cur = s_full[c_index];
+            int c_index = index + 1; // We used the first character
+            for (; c_index < fullstr.Length; c_index++) {
+                char cur = fullstr[c_index];
                 switch (cur) {
                     case ' ': // ignore spaces
                         continue;
                     case '\'':
                     case '\"': {
-                            c_index = IndexString(s_full, c_index);
+                            c_index = IndexString(fullstr, c_index);
                         }
                         break;
                     case '(':
@@ -170,7 +170,7 @@ namespace Tbasic.Parsing
                             expected++;
                         }
                         else {
-                            c_index = IndexGroup(s_full, c_index);
+                            c_index = IndexGroup(fullstr, c_index);
                         }
                         break;
                     default:
@@ -186,22 +186,26 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedGroup();
         }
 
-        internal static int ReadGroup(StringSegment s_full, int c_index, Executer _curExec, out IList<object> _oParams)
+        internal static int ReadGroup(StringSegment fullstr, int index, Executer exec, out IList<object> args)
+        {
+            return ReadGroup(fullstr, index, ',', exec, out args);
+        }
+
+        internal static int ReadGroup(StringSegment fullstr, int index, char separator, Executer exec, out IList<object> args)
         {
             List<object> result = new List<object>();
-            char c_open = s_full[c_index];
+            Evaluator eval = new Evaluator(exec);
+            char c_open = fullstr[index];
             char c_close = c_open == '(' ? ')' : ']';
             int expected = 0;
-            int last = c_index;
+            int last = index;
 
-            for (; c_index < s_full.Length; c_index++) {
-                char cur = s_full[c_index];
+            for (; index < fullstr.Length; index++) {
+                char cur = fullstr[index];
                 switch (cur) {
-                    case ' ': // ignore spaces
-                        continue;
                     case '\'':
                     case '\"': {
-                            c_index = IndexString(s_full, c_index);
+                            index = IndexString(fullstr, index);
                         }
                         break;
                     case '(':
@@ -210,7 +214,7 @@ namespace Tbasic.Parsing
                             expected++;
                         }
                         else {
-                            c_index = IndexGroup(s_full, c_index);
+                            index = IndexGroup(fullstr, index);
                         }
                         break;
                     default:
@@ -220,15 +224,15 @@ namespace Tbasic.Parsing
                         break;
                 }
 
-                if ((expected == 1 && cur == ',') // The commas in between other parentheses are not ours.
+                if ((expected == 1 && cur == separator) // The separators in between other parentheses are not ours.
                     || expected == 0) {
-                    StringSegment _param = s_full.Subsegment(last + 1, c_index - last - 1).Trim();
+                    StringSegment _param = fullstr.Subsegment(last + 1, index - last - 1).Trim();
                     if (!StringSegment.Equals(_param, "")) {
-                        result.Add(Evaluator.Evaluate(_param, _curExec));
+                        result.Add(eval.Evaluate(_param));
                     }
-                    last = c_index;
+                    last = index;
                     if (expected == 0) { // fin
-                        _oParams = result;
+                        args = result;
                         return last;
                     }
                 }

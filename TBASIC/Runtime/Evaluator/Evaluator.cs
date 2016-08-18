@@ -70,6 +70,12 @@ namespace Tbasic.Runtime
 
         #endregion
         
+        public object Evaluate(StringSegment expr)
+        {
+            Expression = expr;
+            return Evaluate();
+        }
+
         public object Evaluate()
         {
             if (StringSegment.IsNullOrEmpty(Expression)) 
@@ -82,7 +88,7 @@ namespace Tbasic.Runtime
                 _parsed = true;
             }
 
-            return ConvertToSimpleType(EvaluateList());
+            return ConvertToSimpleType(EvaluateList(), CurrentExecution.Options);
         }
 
         public bool EvaluateBool()
@@ -247,6 +253,11 @@ namespace Tbasic.Runtime
             return expression.Evaluate();
         }
 
+        internal static bool TryConvert<T>(object obj, out T result, ExecuterOption opts)
+        {
+            return TryConvert(obj, out result, opts.HasFlag(ExecuterOption.Strict), !opts.HasFlag(ExecuterOption.EnforceStrings));
+        }
+
         /// <summary>
         /// Tries to convert an object to a given type. First this tries to do a straight up cast. If that doesn't work and strict is turned off, it will try to be converted with IConvertible. If the object is a string and parseStrings is turned on, it will try to parse that string.
         /// </summary>
@@ -256,13 +267,13 @@ namespace Tbasic.Runtime
         /// <param name="strict">wether the type should attempt to be converted</param>
         /// <param name="parseStrings">determines whether strings should try to be converted</param>
         /// <returns></returns>
-        internal static bool TryConvert<T>(object obj, out T result, bool strict = false, bool parseStrings = true)
+        internal static bool TryConvert<T>(object obj, out T result, bool strict, bool parseStrings)
         {
-            try {
+            if (obj is T) {
                 result = (T)obj;
                 return true;
             }
-            catch (InvalidCastException) {
+            else {
                 if (!strict)
                     return TryConvertNonStrict(obj, out result, parseStrings);
                 result = default(T);
@@ -270,7 +281,7 @@ namespace Tbasic.Runtime
             }
         }
 
-        internal static bool TryConvertNonStrict<T>(object obj, out T result, bool parseStrings = true)
+        private static bool TryConvertNonStrict<T>(object obj, out T result, bool parseStrings = true)
         {
             result = default(T);
             if (parseStrings) {
@@ -279,13 +290,12 @@ namespace Tbasic.Runtime
                     obj = ConvertFromString(str);
                     if (obj == null)
                         return false;
-                    return TryConvert(obj, out result); // it's a good old fashion type now. try again.
+                    return TryConvert(obj, out result, strict: false, parseStrings: false); // it's a good old fashion type now. try again.
                 }
             }
-            IConvertible convertible = obj as IConvertible;
-            if (convertible != null) {
+            if (obj is IConvertible) {
                 try {
-                    result = (T)convertible.ToType(typeof(T), CultureInfo.CurrentCulture);
+                    result = (T)Convert.ChangeType(obj, typeof(T));
                     return true;
                 }
                 catch (Exception ex) when (ex is FormatException || ex is InvalidCastException || ex is OverflowException) {
@@ -453,7 +463,7 @@ namespace Tbasic.Runtime
             return sb.ToString();
         }
 
-        public static object ConvertToSimpleType(object _oObj)
+        public static object ConvertToSimpleType(object _oObj, ExecuterOption opts)
         {
             if (_oObj == null) {
                 return 0;
@@ -462,7 +472,7 @@ namespace Tbasic.Runtime
             if (_oObj is bool)
                 return _oObj;
 
-            Number? _nObj = Number.AsNumber(_oObj);
+            Number? _nObj = Number.AsNumber(_oObj, opts);
             if (_nObj != null) {
                 return _nObj.Value;
             }

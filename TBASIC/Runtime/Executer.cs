@@ -163,14 +163,11 @@ namespace Tbasic.Runtime
         internal static void Execute(ref FuncData stackFrame, Line codeLine)
         {
             ObjectContext context = stackFrame.Context.FindCommandContext(codeLine.Name);
-            if (context == null) {
+            if (context == null || codeLine.IsFunction) {
                 Evaluator eval = new Evaluator(new StringSegment(codeLine.Text), stackFrame.StackExecuter);
                 object result = eval.Evaluate();
                 stackFrame.Context.PersistReturns(stackFrame);
                 stackFrame.Data = result;
-            }
-            else if (codeLine.IsFunction) {
-                throw ThrowHelper.ExpectedSpaceAfterCommand();
             }
             else {
                 stackFrame = new FuncData(stackFrame.StackExecuter, codeLine.Text);

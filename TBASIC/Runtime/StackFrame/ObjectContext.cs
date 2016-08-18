@@ -23,8 +23,8 @@ namespace Tbasic.Runtime
         private Dictionary<string, object> _variables;
         private Dictionary<string, object> _constants;
         private Dictionary<string, BlockCreator> _blocks;
-        internal BinOpDictionary _binaryOps; // this is internal so it can be accessed by the evalutator
-        internal UnaryOpDictionary _unaryOps; // ^^^ dito
+        private BinOpDictionary _binaryOps;
+        private UnaryOpDictionary _unaryOps;
         private Library _functions;
         private Library _commands;
 
@@ -289,12 +289,12 @@ namespace Tbasic.Runtime
         /// Lists all the functions currently defined
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListAllFunctions()
+        public IEnumerable<KeyValuePair<string, TBasicFunction>> GetAllFunctions()
         {
             ObjectContext context = this;
             while (context != null) {
-                foreach (string s in context.ListFunctions()) {
-                    yield return s;
+                foreach (var func in context.GetLocalFunctions()) {
+                    yield return func;
                 }
                 context = context._super;
             }
@@ -304,21 +304,21 @@ namespace Tbasic.Runtime
         /// Lists the functions defined in this context
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListFunctions()
+        public IEnumerable<KeyValuePair<string, TBasicFunction>> GetLocalFunctions()
         {
-            return _functions.Keys;
+            return _functions;
         }
 
         /// <summary>
         /// Lists all the commands currently defined
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListAllCommands()
+        public IEnumerable<KeyValuePair<string, TBasicFunction>> GetAllCommands()
         {
             ObjectContext context = this;
             while (context != null) {
-                foreach (string s in context.ListCommands()) {
-                    yield return s;
+                foreach (var cmd in context.GetLocalCommands()) {
+                    yield return cmd;
                 }
                 context = context._super;
             }
@@ -328,21 +328,21 @@ namespace Tbasic.Runtime
         /// Lists the commands defined in this context
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListCommands()
+        public IEnumerable<KeyValuePair<string, TBasicFunction>> GetLocalCommands()
         {
-            return _commands.Keys;
+            return _commands;
         }
 
         /// <summary>
         /// Lists all the variables currently defined
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListAllVariables()
+        public IEnumerable<KeyValuePair<string, object>> GetAllVariables()
         {
             ObjectContext context = this;
             while (context != null) {
-                foreach (string s in context.ListVariables()) {
-                    yield return s;
+                foreach (var v in context.GetLocalVariables()) {
+                    yield return v;
                 }
                 context = context._super;
             }
@@ -352,21 +352,21 @@ namespace Tbasic.Runtime
         /// Lists the variables defined in this context
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListVariables()
+        public IEnumerable<KeyValuePair<string, object>> GetLocalVariables()
         {
-            return _variables.Keys;
+            return _variables;
         }
 
         /// <summary>
         /// Lists all the constants currently defined
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListAllConstants()
+        public IEnumerable<KeyValuePair<string, object>> ListAllConstants()
         {
             ObjectContext context = this;
             while (context != null) {
-                foreach (string s in context.ListConstants()) {
-                    yield return s;
+                foreach (var c in context.ListConstants()) {
+                    yield return c;
                 }
                 context = context._super;
             }
@@ -376,21 +376,21 @@ namespace Tbasic.Runtime
         /// Lists the constants defined in this context
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListConstants()
+        public IEnumerable<KeyValuePair<string, object>> ListConstants()
         {
-            return _variables.Keys;
+            return _variables;
         }
 
         /// <summary>
         /// Lists all the unary operators currently defined
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListAllUnaryOperators()
+        public IEnumerable<UnaryOperator> GetAllUnaryOperators()
         {
             ObjectContext context = this;
             while (context != null) {
-                foreach (string s in context.ListUnaryOperators()) {
-                    yield return s;
+                foreach (var unOp in context.GetLocalUnaryOperators()) {
+                    yield return unOp;
                 }
                 context = context._super;
             }
@@ -400,21 +400,21 @@ namespace Tbasic.Runtime
         /// Lists the unary operators defined in this context
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListUnaryOperators()
+        public IEnumerable<UnaryOperator> GetLocalUnaryOperators()
         {
-            return _unaryOps.Keys;
+            return _unaryOps.Values;
         }
 
         /// <summary>
         /// Lists all the binary operators currently defined
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListAllBinaryOperators()
+        public IEnumerable<BinaryOperator> GetAllBinaryOperators()
         {
             ObjectContext context = this;
             while (context != null) {
-                foreach (string s in context.ListBinaryOperators()) {
-                    yield return s;
+                foreach (var binOp in context.GetLocalBinaryOperators()) {
+                    yield return binOp;
                 }
                 context = context._super;
             }
@@ -424,21 +424,21 @@ namespace Tbasic.Runtime
         /// Lists the binary operators defined in this context
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListBinaryOperators()
+        public IEnumerable<BinaryOperator> GetLocalBinaryOperators()
         {
-            return _binaryOps.Keys;
+            return _binaryOps.Values;
         }
 
         /// <summary>
         /// Lists all the operators currently defined
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListAllOperators()
+        public IEnumerable<IOperator> GetAllOperators()
         {
             ObjectContext context = this;
             while (context != null) {
-                foreach (string s in context.ListOperators()) {
-                    yield return s;
+                foreach (var op in context.GetLocalOperators()) {
+                    yield return op;
                 }
                 context = context._super;
             }
@@ -448,9 +448,43 @@ namespace Tbasic.Runtime
         /// Lists the operators defined in this context
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> ListOperators()
+        public IEnumerable<IOperator> GetLocalOperators()
         {
-            return _unaryOps.Keys.Concat(_binaryOps.Keys).Distinct(StringComparer.OrdinalIgnoreCase);
+            foreach (var binop in _binaryOps.Values)
+                yield return binop;
+            foreach (var unop in _unaryOps.Values)
+                yield return unop;
+        }
+
+        /// <summary>
+        /// This is a workaround for some generic programming. I don't like it.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        internal IEnumerable<T> GetAllOperators<T>() where T : IOperator
+        {
+            ObjectContext context = this;
+            while (context != null) {
+                foreach (var op  in context.GetLocalOperators<T>()) {
+                    yield return op;
+                }
+                context = context._super;
+            }
+        }
+
+        /// <summary>
+        /// This is another workaround for generic programming. I still don't like it.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        internal IEnumerable<T> GetLocalOperators<T>() where T : IOperator
+        {
+            if (typeof(T) == typeof(BinaryOperator)) {
+                return (IEnumerable<T>)GetLocalBinaryOperators();
+            }
+            else {
+                return (IEnumerable<T>)GetLocalUnaryOperators();
+            }
         }
 
         #endregion

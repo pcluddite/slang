@@ -321,12 +321,12 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextBinaryOp(BinOpDictionary _binOps, out BinaryOperator foundOp)
+        public override bool NextBinaryOp(ObjectContext context, out BinaryOperator foundOp)
         {
             int originalPos = IntPosition;
             try {
                 SkipWhiteSpace();
-                if (EndOfStream || !MatchOperator(InternalBuffer, IntPosition, _binOps, out foundOp)) {
+                if (EndOfStream || !MatchOperator(InternalBuffer, IntPosition, context, out foundOp)) {
                     foundOp = default(BinaryOperator);
                     IntPosition = originalPos;
                     return false;
@@ -340,7 +340,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextUnaryOp(UnaryOpDictionary _unOps, object last, out UnaryOperator foundOp)
+        public override bool NextUnaryOp(ObjectContext context, object last, out UnaryOperator foundOp)
         {
             int originalPos = IntPosition;
             try {
@@ -349,7 +349,7 @@ namespace Tbasic.Parsing
                     foundOp = default(UnaryOperator);
                     return false;
                 }
-                if (!MatchOperator(InternalBuffer, IntPosition, _unOps, out foundOp)) {
+                if (!MatchOperator(InternalBuffer, IntPosition, context, out foundOp)) {
                     IntPosition = originalPos;
                     return false;
                 }
@@ -362,14 +362,14 @@ namespace Tbasic.Parsing
             }
         }
 
-        private static bool MatchOperator<T>(StringSegment expr, int index, OperatorDictionary<T> ops, out T foundOp) where T : IOperator
+        private static bool MatchOperator<T>(StringSegment expr, int index, ObjectContext context, out T foundOp) where T : IOperator
         {
             string foundStr = null;
             foundOp = default(T);
-            foreach (var op in ops) {
-                string opStr = op.Value.OperatorString;
+            foreach (var op in context.GetAllOperators<T>()) {
+                string opStr = op.OperatorString;
                 if (expr.StartsWith(opStr, index, ignoreCase: true)) {
-                    foundOp = op.Value;
+                    foundOp = op;
                     foundStr = opStr;
                 }
             }

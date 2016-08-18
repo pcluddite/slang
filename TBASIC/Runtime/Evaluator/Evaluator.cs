@@ -107,7 +107,7 @@ namespace Tbasic.Runtime
 
             // check unary op
             UnaryOperator unaryOp;
-            if (scanner.NextUnaryOp(CurrentContext._unaryOps, _tokens.Last?.Value, out unaryOp)) {
+            if (scanner.NextUnaryOp(CurrentContext, _tokens.Last?.Value, out unaryOp)) {
                 return AddObjectToExprList(unaryOp, startIndex, scanner);
             }
 
@@ -148,7 +148,7 @@ namespace Tbasic.Runtime
 
             // check binary operator
             BinaryOperator binOp;
-            if (scanner.NextBinaryOp(CurrentContext._binaryOps, out binOp)) {
+            if (scanner.NextBinaryOp(CurrentContext, out binOp)) {
                 return AddObjectToExprList(binOp, startIndex, scanner);
             }
 

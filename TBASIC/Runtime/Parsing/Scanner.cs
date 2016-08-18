@@ -104,8 +104,8 @@ namespace Tbasic.Parsing
         public abstract bool NextVariable(Executer exec, out Variable variable);
         public abstract bool NextIndices(Executer exec, out int[] indices);
         public abstract bool NextBool(out bool b);
-        public abstract bool NextBinaryOp(BinOpDictionary _binOps, out BinaryOperator foundOp);
-        public abstract bool NextUnaryOp(UnaryOpDictionary _unOps, object last, out UnaryOperator foundOp);
+        public abstract bool NextBinaryOp(ObjectContext context, out BinaryOperator foundOp);
+        public abstract bool NextUnaryOp(ObjectContext context, object last, out UnaryOperator foundOp);
 
         public override long Seek(long offset, SeekOrigin origin)
         {

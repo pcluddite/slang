@@ -37,7 +37,7 @@ namespace Tbasic.Terminal
 
             int curr = 0;
             string line;
-            do {
+            while(!Executer.ExitRequest) {
                 Console.Write(">");
                 line = Console.ReadLine();
                 FuncData dat;
@@ -52,7 +52,6 @@ namespace Tbasic.Terminal
                 }
                 Console.WriteLine();
             }
-            while (!line.Equals("EXIT", StringComparison.OrdinalIgnoreCase));
         }
         
         private static string ObjectToString(object o)

@@ -16,11 +16,18 @@ namespace Tbasic.Terminal
             _exec = exec;
             Add("CLS", ClearScreen);
             Add("CLEAR", ClearScreen);
+            Add("STOP", Exit);
         }
 
         public object ClearScreen(FuncData fData)
         {
             Console.Clear();
+            return string.Empty;
+        }
+
+        public object Exit(FuncData fData)
+        {
+            fData.StackExecuter.RequestExit();
             return null;
         }
     }

@@ -66,6 +66,8 @@ namespace Tbasic.Libraries
             TBasicFunction func = value as TBasicFunction;
             if (func != null)
                 Add(key, func);
+            if (value.Method.ReturnType == typeof(void))
+
             lib.Add(key, new CallData(value, CountParameters(value)));
         }
 

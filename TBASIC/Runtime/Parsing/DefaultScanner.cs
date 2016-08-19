@@ -188,13 +188,14 @@ namespace Tbasic.Parsing
             int originalPos = IntPosition;
             try {
                 SkipWhiteSpace();
+                int start = IntPosition;
                 variable = null;
                 if (EndOfStream)
                     return false;
                 if (char.IsLetter(InternalBuffer[IntPosition]) || InternalBuffer[IntPosition] == '_') {
                     IntPosition = FindAcceptableFuncChars(InternalBuffer, ++IntPosition);
                     if (!EndOfStream && InternalBuffer[IntPosition++] == '$') {
-                        StringSegment name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
+                        StringSegment name = InternalBuffer.Subsegment(start, IntPosition - start);
                         SkipWhiteSpace();
                         int[] indices;
                         if (!NextIndices(exec, out indices))
@@ -226,9 +227,10 @@ namespace Tbasic.Parsing
             int originalPos = IntPosition;
             try {
                 SkipWhiteSpace();
+                int start = IntPosition;
                 if (++IntPosition < InternalBuffer.Length) {
                     IntPosition = FindAcceptableFuncChars(InternalBuffer, IntPosition);
-                    StringSegment name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
+                    StringSegment name = InternalBuffer.Subsegment(start, IntPosition - start);
                     SkipWhiteSpace();
                     int[] indices;
                     if (!NextIndices(exec, out indices))

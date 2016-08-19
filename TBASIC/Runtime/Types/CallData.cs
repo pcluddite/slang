@@ -19,18 +19,21 @@ namespace Tbasic.Runtime
         public int ArgumentCount { get; set; }
         public TBasicFunction Function { get; set; }
         public Delegate CalledDelegate { get; set; }
+        public bool ReturnsType { get; private set; }
 
         public CallData(TBasicFunction func)
         {
             Function = func;
             CalledDelegate = null;
             ArgumentCount = -1;
+            ReturnsType = true;
         }
 
         public CallData(Delegate d, int args)
         {
             ArgumentCount = args;
             CalledDelegate = d;
+            ReturnsType = (d.Method.ReturnType != null);
             Function = null; // squelching error message about not all fields assigned 8/18/16
             Function = NativeFuncWrapper;
         }
@@ -45,7 +48,13 @@ namespace Tbasic.Runtime
             for (int index = 1; index < fData.ParameterCount; ++index) // make sure the types are correct for each parameter
                 args[index - 1] = fData.ConvertAt(index, expectedArgs[index - 1].ParameterType);
 
-            return CalledDelegate.DynamicInvoke(args);
+            if (ReturnsType) {
+                return CalledDelegate.DynamicInvoke(args);
+            }
+            else {
+                CalledDelegate.DynamicInvoke(args);
+                return null;
+            }
         }
     }
 }

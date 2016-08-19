@@ -27,29 +27,15 @@ namespace Tbasic.Runtime
             ArgumentCount = -1;
         }
 
-        public CallData(Delegate d)
+        public CallData(Delegate d, int args)
         {
-            ArgumentCount = GetArgCount(d);
+            ArgumentCount = args;
             CalledDelegate = d;
             Function = null; // squelching error message about not all fields assigned 8/18/16
-            Function = FuncWrapper;
+            Function = NativeFuncWrapper;
         }
 
-        private static int GetArgCount(Delegate d)
-        {
-            if (!typeof(IConvertible).IsAssignableFrom(d.Method.ReturnType) && d.Method.ReturnType != typeof(object)) {
-                throw new ArgumentException("Delegate must have an IConvertible return type");
-            }
-            ParameterInfo[] info = d.Method.GetParameters();
-            for (int index = 0; index < info.Length; ++index) {
-                if (!typeof(IConvertible).IsAssignableFrom(info[index].ParameterType)) {
-                    throw new ArgumentException(string.Format("{0} cannot be {1} because {1} does not implement IConvertible", info[index].Name, info[index].ParameterType.Name));
-                }
-            }
-            return info.Length;
-        }
-
-        private object FuncWrapper(FuncData fData)
+        private object NativeFuncWrapper(FuncData fData)
         {
             fData.AssertCount(ArgumentCount + 1); // plus 1 for the name
 
@@ -58,13 +44,8 @@ namespace Tbasic.Runtime
 
             for (int index = 1; index < fData.ParameterCount; ++index) // make sure the types are correct for each parameter
                 args[index - 1] = fData.ConvertAt(index, expectedArgs[index - 1].ParameterType);
-            try {
-                return CalledDelegate.DynamicInvoke(args);
-            }
-            catch (ArgumentException ex) {
-                //if (ex.TargetSite.)
-                throw;
-            }
+
+            return CalledDelegate.DynamicInvoke(args);
         }
     }
 }

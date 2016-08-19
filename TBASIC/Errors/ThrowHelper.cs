@@ -159,5 +159,10 @@ namespace Tbasic.Errors
                 )
             );
         }
+
+        public static Exception InvalidParamType(int index, string rightType)
+        {
+            return new InvalidCastException(string.Format("Expected parameter {0} to be of type {1}", index, rightType));
+        }
     }
 }

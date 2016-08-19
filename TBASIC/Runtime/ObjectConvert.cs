@@ -14,9 +14,9 @@ namespace Tbasic.Runtime
             return TryConvert(obj, out result, opts.HasFlag(ExecuterOption.Strict), !opts.HasFlag(ExecuterOption.EnforceStrings));
         }
 
-        internal static bool TryConvert(object obj, out object result, ExecuterOption opts, Type type)
+        internal static bool TryConvert(object obj, Type type, out object result, ExecuterOption opts)
         {
-            return TryConvert(obj, out result, type, opts.HasFlag(ExecuterOption.Strict), !opts.HasFlag(ExecuterOption.EnforceStrings));
+            return TryConvert(obj, type, out result, opts.HasFlag(ExecuterOption.Strict), !opts.HasFlag(ExecuterOption.EnforceStrings));
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Tbasic.Runtime
             }
         }
 
-        internal static bool TryConvert(object obj, out object result, Type type, bool strict, bool parseStrings)
+        internal static bool TryConvert(object obj, Type type, out object result, bool strict, bool parseStrings)
         {
             if (type.IsAssignableFrom(obj.GetType())) {
                 result = obj;
@@ -50,7 +50,7 @@ namespace Tbasic.Runtime
             }
             else {
                 if (!strict)
-                    return TryConvertNonStrict(obj, out result, type, parseStrings);
+                    return TryConvertNonStrict(obj, type, out result, parseStrings);
                 result = null;
                 return false;
             }
@@ -82,7 +82,7 @@ namespace Tbasic.Runtime
             }
         }
 
-        private static bool TryConvertNonStrict(object obj, out object result, Type type, bool parseStrings = true)
+        private static bool TryConvertNonStrict(object obj, Type type, out object result, bool parseStrings = true)
         {
             result = null;
             if (parseStrings) {

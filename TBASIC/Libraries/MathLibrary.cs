@@ -22,20 +22,20 @@ namespace Tbasic.Libraries
         /// </summary>
         public MathLibrary(ObjectContext context)
         {
-            Add<double, double>("ABS", Math.Abs);
-            Add<double, double>("SIN", Math.Sin);
-            Add<double, double>("ASIN", Math.Asin);
-            Add<double, double>("SINH", Math.Sinh);
-            Add<double, double>("COS", Math.Cos);
-            Add<double, double>("ACOS", Math.Acos);
-            Add<double, double>("COSH", Math.Cosh);
-            Add<double, double>("TAN", Math.Tan);
-            Add<double, double>("ATAN", Math.Atan);
-            Add<double, double>("TANH", Math.Tanh);
-            Add<double, double>("LOG", Math.Log10);
-            Add<double, double>("LN", Math.Log);
-            Add<double, double>("SQRT", Math.Sqrt);
-            Add<double, double>("FPART", fPart);
+            Add("ABS", Math.Abs);
+            Add("SIN", Math.Sin);
+            Add("ASIN", Math.Asin);
+            Add("SINH", Math.Sinh);
+            Add("COS", Math.Cos);
+            Add("ACOS", Math.Acos);
+            Add("COSH", Math.Cosh);
+            Add("TAN", Math.Tan);
+            Add("ATAN", Math.Atan);
+            Add("TANH", Math.Tanh);
+            Add("LOG", Math.Log10);
+            Add("LN", Math.Log);
+            Add("SQRT", Math.Sqrt);
+            Add("FPART", fPart);
             Add<double, int>("IPART", iPart);
             Add<string, object>("EVAL", Eval);
             Add<double, int, double>("ROUND", Math.Round);
@@ -44,6 +44,11 @@ namespace Tbasic.Libraries
             Add("RANDOM", Random);
             context.SetConstant("@PI", Math.PI); // pi
             context.SetConstant("@E", Math.E); // euler's number
+        }
+
+        private void Add(string key, Func<double, double> func)
+        {
+            base.Add(key, func); // send it on up
         }
 
         /// <summary>

@@ -113,9 +113,9 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="codeLine"></param>
         /// <returns></returns>
-        public FuncData Execute(Line codeLine)
+        public RuntimeData Execute(Line codeLine)
         {
-            FuncData data = new FuncData(this);
+            RuntimeData data = new RuntimeData(this);
             try {
                 Execute(ref data, codeLine);
             }
@@ -128,9 +128,9 @@ namespace Tbasic.Runtime
             return data;
         }
 
-        internal FuncData Execute(LineCollection lines)
+        internal RuntimeData Execute(LineCollection lines)
         {
-            FuncData stackFrame = new FuncData(this);
+            RuntimeData stackFrame = new RuntimeData(this);
             for (int index = 0; index < lines.Count; index++) {
                 if (BreakRequest) {
                     break;
@@ -160,7 +160,7 @@ namespace Tbasic.Runtime
             return stackFrame;
         }
 
-        internal static void Execute(ref FuncData stackFrame, Line codeLine)
+        internal static void Execute(ref RuntimeData stackFrame, Line codeLine)
         {
             ObjectContext context = stackFrame.Context.FindCommandContext(codeLine.Name);
             if (context == null || codeLine.IsFunction) {
@@ -170,13 +170,13 @@ namespace Tbasic.Runtime
                 stackFrame.Data = result;
             }
             else {
-                stackFrame = new FuncData(stackFrame.StackExecuter, codeLine.Text);
+                stackFrame = new RuntimeData(stackFrame.StackExecuter, codeLine.Text);
                 stackFrame.Data = context.GetCommand(codeLine.Name).Invoke(stackFrame);
             }
             stackFrame.Context.SetReturns(stackFrame);
         }
 
-        private void HandleError(Line current, FuncData stackFrame, TbasicRuntimeException ex)
+        private void HandleError(Line current, RuntimeData stackFrame, TbasicRuntimeException ex)
         {
             FunctionException cEx = ex as FunctionException;
             if (cEx != null) {

@@ -14,7 +14,7 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Manages parameters and other data passed to a function or subroutine
     /// </summary>
-    public class FuncData : ICloneable
+    public class RuntimeData : ICloneable
     {
         private List<object> _params = new List<object>();
 
@@ -98,7 +98,7 @@ namespace Tbasic.Runtime
         /// Constructs this object
         /// </summary>
         /// <param name="exec">the execution that called the function</param>
-        public FuncData(Executer exec)
+        public RuntimeData(Executer exec)
         {
             StackExecuter = exec;
         }
@@ -108,7 +108,7 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="parameters">the parameters of the function</param>
         /// <param name="exec">the execution that called the function</param>
-        public FuncData(Executer exec, IEnumerable<object> parameters)
+        public RuntimeData(Executer exec, IEnumerable<object> parameters)
             : this(exec)
         {
             _params.AddRange(parameters);
@@ -119,7 +119,7 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="text">the line that executed this function, this will be parsed like the Windows Command Prompt</param>
         /// <param name="exec">the execution that called the function</param>
-        public FuncData(Executer exec, string text)
+        public RuntimeData(Executer exec, string text)
             : this(exec)
         {
             CmdLine line = new CmdLine(text);
@@ -308,9 +308,9 @@ namespace Tbasic.Runtime
         /// Clones this
         /// </summary>
         /// <returns>A new object with the same data</returns>
-        public FuncData Clone()
+        public RuntimeData Clone()
         {
-            FuncData clone = new FuncData(StackExecuter);
+            RuntimeData clone = new RuntimeData(StackExecuter);
             clone.Text = Text;
             if (_params == null) {
                 clone._params = new List<object>();
@@ -327,9 +327,9 @@ namespace Tbasic.Runtime
         /// Copies all properties of another into this one
         /// </summary>
         /// <param name="other"></param>
-        public void CopyFrom(FuncData other)
+        public void CopyFrom(RuntimeData other)
         {
-            FuncData clone = other.Clone();
+            RuntimeData clone = other.Clone();
             StackExecuter = clone.StackExecuter;
             Text = clone.Text;
             _params = clone._params;

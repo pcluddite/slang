@@ -57,7 +57,7 @@ namespace Tbasic.Libraries
             return User32.RemoveMenu(hMenu, menuItemCount - 1, User32.MF_BYPOSITION);
         }
 
-        private object WinRemoveClose(FuncData parameters)
+        private object WinRemoveClose(RuntimeData parameters)
         {
             parameters.AssertCount(2);
             return WinRemoveClose(new IntPtr(parameters.GetAt<long>(1)));
@@ -68,13 +68,13 @@ namespace Tbasic.Libraries
             return User32.FindWindow(sz_class, title);
         }
 
-        private object WinGetHandle(FuncData parameters)
+        private object WinGetHandle(RuntimeData parameters)
         {
             parameters.AssertCount(2);
             return WinGetHandle(parameters.GetAt<string>(1)).ToInt64();
         }
 
-        private object WinGetTitle(FuncData parameters)
+        private object WinGetTitle(RuntimeData parameters)
         {
             parameters.AssertCount(2);
             return WinGetTitle(new IntPtr(parameters.GetAt<long>(1)));
@@ -88,7 +88,7 @@ namespace Tbasic.Libraries
             return sb.ToString();
         }
 
-        private object WinSetTitle(FuncData parameters)
+        private object WinSetTitle(RuntimeData parameters)
         {
             parameters.AssertCount(3);
             IntPtr hwnd = new IntPtr(parameters.GetAt<long>(1));
@@ -103,7 +103,7 @@ namespace Tbasic.Libraries
             return User32.ShowWindow(hwnd, flag);
         }
 
-        private object WinGetState(FuncData parameters)
+        private object WinGetState(RuntimeData parameters)
         {
             parameters.AssertCount(2);
             return WinGetState(parameters.GetAt<long>(1));
@@ -119,7 +119,7 @@ namespace Tbasic.Libraries
             return Windows.GetState(hwnd);
         }
 
-        private object WinSetState(FuncData parameters)
+        private object WinSetState(RuntimeData parameters)
         {
             parameters.AssertCount(3);
             uint flag = parameters.GetAt<uint>(2);
@@ -134,7 +134,7 @@ namespace Tbasic.Libraries
             return User32.SetForegroundWindow(hwnd);
         }
 
-        private object WinActivate(FuncData parameters)
+        private object WinActivate(RuntimeData parameters)
         {
             parameters.AssertCount(2);
             if (!WinActivate(new IntPtr(parameters.GetAt<long>(1)))) {
@@ -154,7 +154,7 @@ namespace Tbasic.Libraries
                 (rect.Right - rect.Left), (rect.Bottom - rect.Top), SWP.NOACTIVATE);
         }
 
-        private object WinMove(FuncData parameters)
+        private object WinMove(RuntimeData parameters)
         {
             parameters.AssertCount(4);
             IntPtr hwnd = new IntPtr(parameters.GetAt<long>(1));
@@ -174,7 +174,7 @@ namespace Tbasic.Libraries
                 place.rcNormalPosition.X, place.rcNormalPosition.Y, width, height, SWP.NOACTIVATE);
         }
 
-        private object WinSize(FuncData parameters)
+        private object WinSize(RuntimeData parameters)
         {
             parameters.AssertCount(4);
             IntPtr hwnd = new IntPtr(parameters.GetAt<long>(1));
@@ -189,7 +189,7 @@ namespace Tbasic.Libraries
             return User32.DestroyWindow(hwnd);
         }
 
-        private object WinKill(FuncData parameters)
+        private object WinKill(RuntimeData parameters)
         {
             parameters.AssertCount(2);
             long hwnd = parameters.GetAt<long>(1);
@@ -204,7 +204,7 @@ namespace Tbasic.Libraries
             return User32.SendMessage(hwnd, SendMessages.WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
         }
 
-        private object WinClose(FuncData parameters)
+        private object WinClose(RuntimeData parameters)
         {
             parameters.AssertCount(2);
             return WinClose(new IntPtr(parameters.GetAt<long>(1)));
@@ -216,7 +216,7 @@ namespace Tbasic.Libraries
             return User32.SetLayeredWindowAttributes(hwnd, 0, trans, User32.LWA_ALPHA);
         }
 
-        private object WinSetTrans(FuncData parameters)
+        private object WinSetTrans(RuntimeData parameters)
         {
             parameters.AssertCount(3);
             IntPtr hwnd = new IntPtr(parameters.GetAt<long>(1));
@@ -236,7 +236,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object WinList(FuncData parameters)
+        private object WinList(RuntimeData parameters)
         {
             if (parameters.ParameterCount == 1) {
                 parameters.Add(WindowFlag.Existing);
@@ -262,7 +262,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object GetScreen(FuncData parameters)
+        private object GetScreen(RuntimeData parameters)
         {
             parameters.AssertCount(2);
             int compression = parameters.GetFromRange(1, 0, 100);
@@ -285,7 +285,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object WinPicture(FuncData parameters)
+        private object WinPicture(RuntimeData parameters)
         {
             parameters.AssertCount(3);
             int compression = parameters.GetFromRange(2, 0, 100);
@@ -298,7 +298,7 @@ namespace Tbasic.Libraries
             return Windows.WinExists(hwnd);
         }
 
-        private object WinExists(FuncData parameters)
+        private object WinExists(RuntimeData parameters)
         {
             parameters.AssertCount(2);
             return Windows.WinExists(new IntPtr(parameters.GetAt<long>(1)));

@@ -30,7 +30,7 @@ namespace Tbasic.Libraries
             Add("StrInStr", Substring);
         }
 
-        private object CharsToString(FuncData stackFrame)
+        private object CharsToString(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             StringBuilder hanz = new StringBuilder();
@@ -40,49 +40,49 @@ namespace Tbasic.Libraries
             return hanz.ToString();
         }
 
-        private object ToCharArray(FuncData stackFrame)
+        private object ToCharArray(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             return stackFrame.GetAt<string>(1).ToCharArray();
         }
 
-        private object StringSplit(FuncData stackFrame)
+        private object StringSplit(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(3);
             return Regex.Split(stackFrame.GetAt(1).ToString(), stackFrame.GetAt(2).ToString());
         }
 
-        private object Trim(FuncData stackFrame)
+        private object Trim(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             return stackFrame.GetAt(1).ToString().Trim();
         }
 
-        private object TrimStart(FuncData stackFrame)
+        private object TrimStart(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             return stackFrame.GetAt(1).ToString().TrimStart();
         }
 
-        private object TrimEnd(FuncData stackFrame)
+        private object TrimEnd(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             return stackFrame.GetAt(1).ToString().TrimEnd();
         }
 
-        private object StringContains(FuncData stackFrame)
+        private object StringContains(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(3);
             return stackFrame.GetAt<string>(1).Contains(stackFrame.GetAt<string>(2));
         }
 
-        private object StringCompare(FuncData stackFrame)
+        private object StringCompare(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(3);
             return stackFrame.GetAt<string>(1).CompareTo(stackFrame.GetAt<string>(2));
         }
 
-        private object StringIndexOf(FuncData stackFrame)
+        private object StringIndexOf(RuntimeData stackFrame)
         {
             if (stackFrame.ParameterCount == 3) {
                 stackFrame.Add(0);
@@ -100,7 +100,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object StringLastIndexOf(FuncData stackFrame)
+        private object StringLastIndexOf(RuntimeData stackFrame)
         {
             if (stackFrame.ParameterCount == 3) {
                 stackFrame.Add(0);
@@ -118,31 +118,31 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object StringUpper(FuncData stackFrame)
+        private object StringUpper(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             return stackFrame.GetAt<string>(1).ToUpper();
         }
 
-        private object StringLower(FuncData stackFrame)
+        private object StringLower(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             return stackFrame.GetAt<string>(1).ToLower();
         }
 
-        private object StringLeft(FuncData stackFrame)
+        private object StringLeft(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(3);
             return stackFrame.GetAt<string>(1).Substring(stackFrame.GetAt<int>(2));
         }
 
-        private object StringRight(FuncData stackFrame)
+        private object StringRight(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(3);
             return stackFrame.GetAt<string>(1).Remove(stackFrame.GetAt<int>(2));
         }
 
-        private object Substring(FuncData stackFrame)
+        private object Substring(RuntimeData stackFrame)
         {
             if (stackFrame.ParameterCount == 3) {
                 return stackFrame.GetAt<string>(1).Substring(

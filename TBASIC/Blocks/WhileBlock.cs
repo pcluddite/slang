@@ -24,7 +24,7 @@ namespace Tbasic
 
         public override void Execute(Executer exec)
         {
-            FuncData parameters = new FuncData(exec, Header.Text);
+            RuntimeData parameters = new RuntimeData(exec, Header.Text);
 
             if (parameters.ParameterCount < 2) {
                 throw ThrowHelper.NoCondition();

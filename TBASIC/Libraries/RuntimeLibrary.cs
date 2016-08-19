@@ -28,13 +28,13 @@ namespace Tbasic.Libraries
             context.SetConstant("@osversion", Environment.OSVersion.VersionString);
         }
 
-        private object CStr(FuncData stackFrame)
+        private object CStr(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             return stackFrame.GetAt(1)?.ToString(); // return null if it is null
         }
 
-        private object CBool(FuncData stackFrame)
+        private object CBool(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             try {
@@ -53,7 +53,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object CNum(FuncData stackFrame)
+        private object CNum(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             try {
@@ -72,7 +72,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object SizeOf(FuncData stackFrame)
+        private object SizeOf(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             object obj = stackFrame.GetAt(1);
@@ -105,25 +105,25 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object IsNum(FuncData stackFrame)
+        private object IsNum(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             return Number.IsNumber(stackFrame.GetAt(1), stackFrame.StackExecuter.Options);
         }
 
-        private object IsString(FuncData stackFrame)
+        private object IsString(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             return stackFrame.GetAt(1) is string;
         }
 
-        private object IsBool(FuncData stackFrame)
+        private object IsBool(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             return stackFrame.GetAt(1) is bool;
         }
         
-        private object IsDefined(FuncData stackFrame)
+        private object IsDefined(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             string name = stackFrame.GetAt<string>(1);

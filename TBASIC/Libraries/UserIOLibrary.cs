@@ -35,39 +35,39 @@ namespace Tbasic.Libraries
             Add("StdPause", ConsolePause);
         }
 
-        private object ConsoleWriteline(FuncData _sframe)
+        private object ConsoleWriteline(RuntimeData _sframe)
         {
             _sframe.AssertCount(2);
             Console.WriteLine(_sframe.GetAt(1));
             return null;
         }
 
-        private object ConsoleWrite(FuncData _sframe)
+        private object ConsoleWrite(RuntimeData _sframe)
         {
             _sframe.AssertCount(2);
             Console.Write(_sframe.GetAt(1));
             return null;
         }
 
-        private object ConsoleRead(FuncData _sframe)
+        private object ConsoleRead(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             return Console.Read();
         }
 
-        private object ConsoleReadLine(FuncData _sframe)
+        private object ConsoleReadLine(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             return Console.ReadLine();
         }
 
-        private object ConsoleReadKey(FuncData _sframe)
+        private object ConsoleReadKey(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             return Console.ReadKey().KeyChar;
         }
 
-        private object ConsolePause(FuncData _sframe)
+        private object ConsolePause(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             return Console.ReadKey(true).KeyChar;
@@ -87,7 +87,7 @@ namespace Tbasic.Libraries
             return Interaction.InputBox(prompt, title, defaultResponse, x, y);
         }
 
-        private object Input(FuncData _sframe)
+        private object Input(RuntimeData _sframe)
         {
             if (_sframe.ParameterCount == 2) {
                 _sframe.AddRange("TBASIC", -1, -1);
@@ -127,7 +127,7 @@ namespace Tbasic.Libraries
             t.Start(new object[] { timeout, icon, text, title });
         }
 
-        private object TrayTip(FuncData _sframe)
+        private object TrayTip(RuntimeData _sframe)
         {
             if (_sframe.ParameterCount == 2) {
                 _sframe.Add(""); // title
@@ -182,7 +182,7 @@ namespace Tbasic.Libraries
             return Interaction.MsgBox(prompt, (MsgBoxStyle)buttons, title).ToString();
         }
 
-        private object MsgBox(FuncData _sframe)
+        private object MsgBox(RuntimeData _sframe)
         {
             if (_sframe.ParameterCount == 3) {
                 _sframe.Add("");
@@ -206,7 +206,7 @@ namespace Tbasic.Libraries
             t.Start(text);
         }
 
-        private object Say(FuncData _sframe)
+        private object Say(RuntimeData _sframe)
         {
             _sframe.AssertCount(2);
             Say(_sframe.GetAt<string>(1));

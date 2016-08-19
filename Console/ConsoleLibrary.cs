@@ -19,13 +19,13 @@ namespace Tbasic.Terminal
             Add("STOP", Exit);
         }
 
-        public object ClearScreen(FuncData fData)
+        public object ClearScreen(RuntimeData fData)
         {
             Console.Clear();
             return string.Empty;
         }
 
-        public object Exit(FuncData fData)
+        public object Exit(RuntimeData fData)
         {
             fData.StackExecuter.RequestExit();
             return null;

@@ -29,7 +29,7 @@ namespace Tbasic.Libraries
             Add("OPT", Option);
         }
 
-        private object Include(FuncData stackFrame)
+        private object Include(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             string path = Path.GetFullPath(stackFrame.GetAt<string>(1));
@@ -45,7 +45,7 @@ namespace Tbasic.Libraries
             return NULL(stackFrame);
         }
 
-        private static object Option(FuncData fData)
+        private static object Option(RuntimeData fData)
         {
             if (fData.ParameterCount == 2)
                 fData.Add(true);
@@ -66,39 +66,39 @@ namespace Tbasic.Libraries
             return NULL(fData);
         }
 
-        private object Sleep(FuncData stackFrame)
+        private object Sleep(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(2);
             System.Threading.Thread.Sleep(stackFrame.GetAt<int>(1));
             return NULL(stackFrame);
         }
 
-        private object Break(FuncData stackFrame)
+        private object Break(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(1);
             stackFrame.StackExecuter.RequestBreak();
             return NULL(stackFrame);
         }
 
-        internal object Exit(FuncData stackFrame)
+        internal object Exit(RuntimeData stackFrame)
         {
             stackFrame.AssertCount(1);
             stackFrame.StackExecuter.RequestExit();
             return NULL(stackFrame);
         }
 
-        internal static object NULL(FuncData stackFrame)
+        internal static object NULL(RuntimeData stackFrame)
         {
             stackFrame.Context.PersistReturns(stackFrame);
             return stackFrame.Data;
         }
 
-        internal object UhOh(FuncData stackFrame)
+        internal object UhOh(RuntimeData stackFrame)
         {
             throw ThrowHelper.NoOpeningStatement(stackFrame.Text);
         }
 
-        internal object DIM(FuncData stackFrame)
+        internal object DIM(RuntimeData stackFrame)
         {
             stackFrame.AssertAtLeast(2);
 
@@ -158,17 +158,17 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object Let(FuncData stackFrame)
+        private object Let(RuntimeData stackFrame)
         {
             return SetVariable(stackFrame, constant: false);
         }
 
-        internal object Const(FuncData stackFrame)
+        internal object Const(RuntimeData stackFrame)
         {
             return SetVariable(stackFrame, constant: true);
         }
 
-        private object SetVariable(FuncData stackFrame, bool constant)
+        private object SetVariable(RuntimeData stackFrame, bool constant)
         {
             stackFrame.AssertAtLeast(2);
             StringSegment text = new StringSegment(stackFrame.Text);

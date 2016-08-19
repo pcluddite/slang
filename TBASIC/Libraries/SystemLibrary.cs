@@ -22,49 +22,49 @@ namespace Tbasic.Libraries
             Add("GetMillisecond", GetMillisecond);
         }
 
-        private object GetMonth(FuncData _sframe)
+        private object GetMonth(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             return DateTime.Now.Month;
         }
 
-        private object GetDay(FuncData _sframe)
+        private object GetDay(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             return DateTime.Now.Day;
         }
 
-        private object GetDayOfWeek(FuncData _sframe)
+        private object GetDayOfWeek(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             return (int)DateTime.Now.DayOfWeek;
         }
 
-        private object GetYear(FuncData _sframe)
+        private object GetYear(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             return DateTime.Now.Year;
         }
 
-        private object GetHour(FuncData _sframe)
+        private object GetHour(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             return DateTime.Now.Hour;
         }
 
-        private object GetMinute(FuncData _sframe)
+        private object GetMinute(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             return DateTime.Now.Minute;
         }
 
-        private object GetSecond(FuncData _sframe)
+        private object GetSecond(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             return DateTime.Now.Second;
         }
 
-        private object GetMillisecond(FuncData _sframe)
+        private object GetMillisecond(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             return DateTime.Now.Millisecond;

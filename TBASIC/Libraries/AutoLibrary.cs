@@ -64,7 +64,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object MouseClick(FuncData _sframe)
+        private object MouseClick(RuntimeData _sframe)
         {
             if (_sframe.ParameterCount == 4) {
                 _sframe.Add(1);
@@ -91,7 +91,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object MouseMove(FuncData _sframe)
+        private object MouseMove(RuntimeData _sframe)
         {
             if (_sframe.ParameterCount == 3) {
                 _sframe.Add(1);
@@ -155,7 +155,7 @@ namespace Tbasic.Libraries
             return User32.BlockInput(blocked);
         }
 
-        private object BlockInput(FuncData _sframe)
+        private object BlockInput(RuntimeData _sframe)
         {
             _sframe.AssertCount(2);
             if (!BlockInput(_sframe.GetAt<bool>(1))) {
@@ -173,7 +173,7 @@ namespace Tbasic.Libraries
             SendKeys.SendWait(keys);
         }
 
-        private object Send(FuncData _sframe)
+        private object Send(RuntimeData _sframe)
         {
             _sframe.AssertCount(2);
             Send(_sframe.GetAt<string>(1));
@@ -191,7 +191,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object VolumeUp(FuncData _sframe)
+        private object VolumeUp(RuntimeData _sframe)
         {
             if (_sframe.ParameterCount == 1) {
                 _sframe.Add(1);
@@ -212,7 +212,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object VolumeDown(FuncData _sframe)
+        private object VolumeDown(RuntimeData _sframe)
         {
             if (_sframe.ParameterCount == 1) {
                 _sframe.Add(1);
@@ -230,7 +230,7 @@ namespace Tbasic.Libraries
             User32.keybd_event((byte)Forms.Keys.VolumeMute, 0, 0, 0);
         }
 
-        private object VolumeMute(FuncData _sframe)
+        private object VolumeMute(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             VolumeMute();

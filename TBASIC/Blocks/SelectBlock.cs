@@ -26,7 +26,7 @@ namespace Tbasic
 
         public override void Execute(Executer exec)
         {
-            FuncData parms = new FuncData(exec, Header.Text);
+            RuntimeData parms = new RuntimeData(exec, Header.Text);
             if (parms.ParameterCount < 2) {
                 throw ThrowHelper.NoCondition();
             }
@@ -90,7 +90,7 @@ namespace Tbasic
             private CaseBlock(LineCollection body)
             {
                 Header = body[0];
-                FuncData parms = new FuncData(null, Header.Text);
+                RuntimeData parms = new RuntimeData(null, Header.Text);
                 if (parms.Name.EqualsIgnoreCase("DEFAULT")) {
                     Condition = new StringSegment("default");
                 }

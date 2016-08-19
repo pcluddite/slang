@@ -12,7 +12,7 @@ namespace Tbasic.Runtime
     /// Delegate for processing a TBasic function
     /// </summary>
     /// <param name="stack">The object containing parameter and execution information</param>
-    public delegate object TBasicFunction(FuncData stack);
+    public delegate object TBasicFunction(RuntimeData stack);
 
     internal struct CallData
     {
@@ -38,7 +38,7 @@ namespace Tbasic.Runtime
             Function = NativeFuncWrapper;
         }
 
-        private object NativeFuncWrapper(FuncData fData)
+        private object NativeFuncWrapper(RuntimeData fData)
         {
             fData.AssertCount(ArgumentCount + 1); // plus 1 for the name
 

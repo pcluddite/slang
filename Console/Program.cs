@@ -44,7 +44,7 @@ namespace Tbasic.Terminal
             while(!Executer.ExitRequest) {
                 Console.Write(">");
                 line = Console.ReadLine();
-                FuncData dat;
+                RuntimeData dat;
                 try {
 #if DEBUG
                     Stopwatch watch = new Stopwatch();

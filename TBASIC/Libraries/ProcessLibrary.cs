@@ -31,7 +31,7 @@ namespace Tbasic.Libraries
             Add("ProcList", ProcessList);
         }
 
-        private object ProcessExists(FuncData _sframe)
+        private object ProcessExists(RuntimeData _sframe)
         {
             _sframe.AssertCount(2);
             foreach (Process p in Process.GetProcesses()) {
@@ -42,7 +42,7 @@ namespace Tbasic.Libraries
             return false;
         }
 
-        private object ProcessList(FuncData _sframe)
+        private object ProcessList(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             Process[] procs = Process.GetProcesses();
@@ -59,7 +59,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object ProcessKill(FuncData _sframe)
+        private object ProcessKill(RuntimeData _sframe)
         {
             _sframe.AssertCount(2);
             foreach (Process p in Process.GetProcesses()) {
@@ -72,7 +72,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object ProcessClose(FuncData _sframe)
+        private object ProcessClose(RuntimeData _sframe)
         {
             _sframe.AssertCount(2);
             foreach (Process p in Process.GetProcesses()) {
@@ -85,7 +85,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object BlockedList(FuncData _sframe)
+        private object BlockedList(RuntimeData _sframe)
         {
             _sframe.AssertCount(1);
             var list = BlockedList(); // dicts currently are not supported 2/24/15
@@ -120,7 +120,7 @@ namespace Tbasic.Libraries
 
         private const string REG_EXEC_PATH = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\";
 
-        private object ProcessBlock(FuncData _sframe)
+        private object ProcessBlock(RuntimeData _sframe)
         {
             if (_sframe.ParameterCount == 2) {
                 _sframe.Add(16);
@@ -139,7 +139,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object ProcessRedirect(FuncData _sframe)
+        private object ProcessRedirect(RuntimeData _sframe)
         {
             _sframe.AssertCount(3);
             string name = _sframe.GetAt<string>(1);
@@ -156,7 +156,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object ProcessSetDebugger(FuncData _sframe)
+        private object ProcessSetDebugger(RuntimeData _sframe)
         {
             _sframe.AssertCount(3);
             string name = _sframe.GetAt<string>(1);
@@ -173,7 +173,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object Unblock(FuncData _sframe)
+        private object Unblock(RuntimeData _sframe)
         {
             _sframe.AssertCount(2);
             string name = _sframe.GetAt<string>(1);
@@ -192,7 +192,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object Run(FuncData _sframe)
+        private object Run(RuntimeData _sframe)
         {
             if (_sframe.ParameterCount == 2) {
                 _sframe.Add("");

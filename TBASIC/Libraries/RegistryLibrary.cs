@@ -31,13 +31,13 @@ namespace Tbasic.Libraries
             Add("RegWrite", RegWrite);
         }
         
-        private object RegValueKind(FuncData _sframe)
+        private object RegValueKind(RuntimeData _sframe)
         {
             _sframe.AssertCount(3);
             return WinRegistry.GetValueKind(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2)).ToString();
         }
 
-        private object RegRead(FuncData _sframe)
+        private object RegRead(RuntimeData _sframe)
         {
             _sframe.AssertCount(atLeast: 3, atMost: 4);
 
@@ -47,35 +47,35 @@ namespace Tbasic.Libraries
             return WinRegistry.Read(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2), _sframe.GetAt<string>(3));
         }
 
-        private object RegDelete(FuncData _sframe)
+        private object RegDelete(RuntimeData _sframe)
         {
             _sframe.AssertCount(3);
             WinRegistry.Delete(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2));
             return null;
         }
 
-        private object RegRename(FuncData _sframe)
+        private object RegRename(RuntimeData _sframe)
         {
             _sframe.AssertCount(4);
             WinRegistry.Rename(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2), _sframe.GetAt<string>(3));
             return null;
         }
 
-        private object RegDeleteKey(FuncData _sframe)
+        private object RegDeleteKey(RuntimeData _sframe)
         {
             _sframe.AssertCount(2);
             WinRegistry.DeleteKey(_sframe.GetAt<string>(1));
             return null;
         }
 
-        private object RegRenameKey(FuncData _sframe)
+        private object RegRenameKey(RuntimeData _sframe)
         {
             _sframe.AssertCount(3);
             WinRegistry.RenameKey(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2));
             return null;
         }
 
-        private object RegCreateKey(FuncData _sframe)
+        private object RegCreateKey(RuntimeData _sframe)
         {
             _sframe.AssertCount(3);
             WinRegistry.RenameKey(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2));
@@ -83,7 +83,7 @@ namespace Tbasic.Libraries
             return null;
         }
         
-        private object RegEnumValues(FuncData _sframe)
+        private object RegEnumValues(RuntimeData _sframe)
         {
             _sframe.AssertCount(2);
 
@@ -97,13 +97,13 @@ namespace Tbasic.Libraries
             }
         }
 
-        private static object RegEnumKeys(FuncData _sframe)
+        private static object RegEnumKeys(RuntimeData _sframe)
         {
             _sframe.AssertCount(2);
             return WinRegistry.EnumeratKeys(_sframe.GetAt<string>(1));
         }
 
-        private object RegWrite(FuncData _sframe)
+        private object RegWrite(RuntimeData _sframe)
         {
             _sframe.AssertCount(5);
 

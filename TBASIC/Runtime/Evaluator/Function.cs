@@ -106,7 +106,7 @@ namespace Tbasic.Runtime
                 throw ThrowHelper.UndefinedFunction(name);
             }
             else {
-                FuncData _sframe = new FuncData(CurrentExecution, a_evaluated);
+                RuntimeData _sframe = new RuntimeData(CurrentExecution, a_evaluated);
                 _sframe.Name = name;
                 _sframe.Data = context.GetFunction(name).Invoke(_sframe);
                 CurrentContext.SetReturns(_sframe);

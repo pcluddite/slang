@@ -28,7 +28,7 @@ namespace Tbasic.Runtime
             return (int)Value;
         }
 
-        public object ToObject()
+        public object ToPrimitive()
         {
             if (HasFraction())
                 return Value;

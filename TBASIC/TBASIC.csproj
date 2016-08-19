@@ -110,6 +110,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Errors\LineException.cs" />
+    <Compile Include="Runtime\Types\CallData.cs" />
     <Compile Include="Runtime\Types\Number.cs" />
   </ItemGroup>
   <ItemGroup>

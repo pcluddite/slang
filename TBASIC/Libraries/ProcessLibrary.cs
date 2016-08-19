@@ -23,7 +23,7 @@ namespace Tbasic.Libraries
             Add("ProcClose", ProcessClose);
             Add("ProcKill", ProcessKill);
             Add("ProcExists", ProcessExists);
-            Add("ProcBlockList", BlockedList);
+            Add("ProcBlockList", new TBasicFunction(BlockedList));
             //Add("ProcBlock", ProcessBlock);
             //Add("ProcRedirect", ProcessRedirect);
             Add("ProcSetDebugger", ProcessSetDebugger);

@@ -11,6 +11,10 @@ using Tbasic.Parsing;
 using Tbasic.Runtime;
 using Tbasic.Errors;
 
+#if DEBUG
+using System.Diagnostics;
+#endif
+
 namespace Tbasic.Terminal
 {
     internal class Program
@@ -42,7 +46,15 @@ namespace Tbasic.Terminal
                 line = Console.ReadLine();
                 FuncData dat;
                 try {
+#if DEBUG
+                    Stopwatch watch = new Stopwatch();
+                    watch.Start();
+#endif
                     dat = exec.Execute(new Line(curr++, line));
+#if DEBUG
+                    watch.Stop();
+                    WriteTime(watch.ElapsedMilliseconds);
+#endif
                     Console.WriteLine(ObjectToString(dat.Data));
                 }
                 catch(TbasicRuntimeException e) {
@@ -53,7 +65,7 @@ namespace Tbasic.Terminal
                 Console.WriteLine();
             }
         }
-        
+
         private static string ObjectToString(object o)
         {
             if (o == null)
@@ -110,5 +122,15 @@ namespace Tbasic.Terminal
             }
             return sb.ToString();
         }
+        
+#if DEBUG
+        private static void WriteTime(long elapsedMils)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Elapsed: {0}", elapsedMils);
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+#endif
+
     }
 }

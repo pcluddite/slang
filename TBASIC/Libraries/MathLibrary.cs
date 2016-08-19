@@ -37,19 +37,24 @@ namespace Tbasic.Libraries
             Add<double, double>("SQRT", Math.Sqrt);
             Add<double, double>("FPART", fPart);
             Add<double, int>("IPART", iPart);
+            Add<string, object>("EVAL", Eval);
+            Add<double, int, double>("ROUND", Math.Round);
             Add<double, double, double>("POW", Math.Pow);
-            Add<double, int, double>("ROUND", Round);
-            Add("EVAL", Eval);
+            Add<double, double, double>("ROOT", Root);
             Add("RANDOM", Random);
-            Add("ROOT", Root);
             context.SetConstant("@PI", Math.PI); // pi
             context.SetConstant("@E", Math.E); // euler's number
         }
 
-        private static object Root(FuncData fData)
+        /// <summary>
+        /// Calculates a root with a given index
+        /// </summary>
+        /// <param name="radicand">the number under the radix</param>
+        /// <param name="index">the degree of the root (e.g. 2 is square root, 3 is cube root, etc)</param>
+        /// <returns></returns>
+        public static double Root(double radicand, double index)
         {
-            fData.AssertCount(3);
-            return Math.Pow(fData.GetAt<Number>(1), 1.0d / fData.GetAt<Number>(2));
+            return Math.Pow(radicand, 1.0d / index);
         }
 
         /// <summary>
@@ -124,37 +129,10 @@ namespace Tbasic.Libraries
         public static object Eval(string expr)
         {
             Executer e = new Executer(); // local execution
+            e.Global.LoadStandardOperators();
             e.Global.AddLibrary(new MathLibrary(e.Global)); // only allow math libs
             e.Global.SetFunction("eval", null); // that's a no-no
             return Evaluator.Evaluate(new StringSegment(expr), e);
-        }
-
-        /// <summary>
-        /// Rounds a double value to a given number of places
-        /// </summary>
-        /// <param name="number">the number to round</param>
-        /// <param name="places">the number of places</param>
-        /// <returns>the rounded double</returns>
-        public static double Round(double number, int places)
-        {
-            return Math.Round(number, places);
-        }
-
-        private static object Eval(FuncData stackFrame)
-        {
-            stackFrame.AssertCount(2);
-            try {
-                return Eval(stackFrame.GetAt<string>(1));
-            }
-            catch(Exception ex) {
-                ex = FunctionException.FromException(ex);
-                if (ex == null) {
-                    throw;
-                }
-                else {
-                    throw ex;
-                }
-            }
         }
     }
 }

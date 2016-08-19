@@ -4,10 +4,6 @@
 //
 // ======
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Tbasic.Libraries;
 using System.Reflection;
 
 namespace Tbasic.Runtime
@@ -41,7 +37,7 @@ namespace Tbasic.Runtime
 
         private static int GetArgCount(Delegate d)
         {
-            if (!typeof(IConvertible).IsAssignableFrom(d.Method.ReturnType)) {
+            if (!typeof(IConvertible).IsAssignableFrom(d.Method.ReturnType) && d.Method.ReturnType != typeof(object)) {
                 throw new ArgumentException("Delegate must have an IConvertible return type");
             }
             ParameterInfo[] info = d.Method.GetParameters();
@@ -56,15 +52,19 @@ namespace Tbasic.Runtime
         private object FuncWrapper(FuncData fData)
         {
             fData.AssertCount(ArgumentCount + 1); // plus 1 for the name
+
             object[] args = new object[fData.ParameterCount - 1];
-            for(int index = 1; index < fData.ParameterCount; ++index) {
-                object arg = fData.Parameters[index];
-                Number? nArg = arg as Number?;
-                if (nArg != null)
-                    arg = nArg.Value.ToPrimitive();
-                args[index - 1] = arg;
+            ParameterInfo[] expectedArgs = CalledDelegate.Method.GetParameters();
+
+            for (int index = 1; index < fData.ParameterCount; ++index) // make sure the types are correct for each parameter
+                args[index - 1] = fData.ConvertAt(index, expectedArgs[index - 1].ParameterType);
+            try {
+                return CalledDelegate.DynamicInvoke(args);
             }
-            return CalledDelegate.DynamicInvoke(args);
+            catch (ArgumentException ex) {
+                //if (ex.TargetSite.)
+                throw;
+            }
         }
     }
 }

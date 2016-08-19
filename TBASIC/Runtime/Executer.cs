@@ -301,10 +301,5 @@ namespace Tbasic.Runtime
         {
             OnUserExitRequest?.Invoke(this, e);
         }
-
-        internal bool TryConvert<T>(object obj, out T result)
-        {
-            return Evaluator.TryConvert(obj, out result, IsEnforced(ExecuterOption.Strict), !IsEnforced(ExecuterOption.EnforceStrings));
-        }
     }
 }

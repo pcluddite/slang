@@ -87,6 +87,14 @@ namespace Tbasic.Runtime
                 { "IF"    , (i,c) => new IfBlock(i,c) },
                 { "SELECT", (i,c) => new SelectBlock(i,c) }
             };
+            LoadStandardOperators();
+        }
+
+        /// <summary>
+        /// Loads only the standard operators. This is called by LoadStandardLibrary(). Do not call it if you already called that.
+        /// </summary>
+        public void LoadStandardOperators()
+        {
             _binaryOps.LoadStandardOperators();
             _unaryOps.LoadStandardOperators();
         }

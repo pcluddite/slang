@@ -222,10 +222,17 @@ namespace Tbasic.Runtime
         public T GetAt<T>(int index)
         {
             T ret;
-            if (StackExecuter.TryConvert(GetAt(index), out ret)) {
+            if (ObjectConvert.TryConvert(GetAt(index), out ret, StackExecuter.Options))
                 return ret;
-            }
             throw new InvalidCastException(string.Format("Expected parameter {0} to be of type {1}", index, typeof(T).Name));
+        }
+
+        internal object ConvertAt(int index, Type type)
+        {
+            object ret;
+            if (ObjectConvert.TryConvert(GetAt(index), out ret, StackExecuter.Options, type))
+                return ret;
+            throw new InvalidCastException(string.Format("Expected parameter {0} to be of type {1}", index, type.Name));
         }
 
         /// <summary>

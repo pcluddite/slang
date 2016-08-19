@@ -66,6 +66,7 @@
     <Compile Include="Operators\UnaryOpDictionary.cs" />
     <Compile Include="Operators\UnaryOperator.cs" />
     <Compile Include="Runtime\ExecuterOption.cs" />
+    <Compile Include="Runtime\ObjectConvert.cs" />
     <Compile Include="Runtime\Parsing\CmdLine.cs" />
     <Compile Include="Runtime\Parsing\GroupParser.cs" />
     <Compile Include="Runtime\Evaluator\Evaluator.cs" />

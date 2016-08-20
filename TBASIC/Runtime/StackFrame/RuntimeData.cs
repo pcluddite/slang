@@ -269,7 +269,7 @@ namespace Tbasic.Runtime
         /// <param name="param"></param>
         public void AddRange(params object[] param)
         {
-            AddRange(param);
+            _params.AddRange(param);
         }
 
         /// <summary>

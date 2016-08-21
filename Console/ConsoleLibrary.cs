@@ -22,7 +22,7 @@ namespace Tbasic.Terminal
         public object ClearScreen(RuntimeData fData)
         {
             Console.Clear();
-            return string.Empty;
+            return null;
         }
 
         public object Exit(RuntimeData fData)

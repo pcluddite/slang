@@ -19,8 +19,13 @@ namespace Tbasic.Terminal
 {
     internal class Program
     {
+        public const ConsoleColor BG_COLOR = ConsoleColor.DarkBlue;
+        public const ConsoleColor FG_COLOR = ConsoleColor.White;
+
         public static void Main(string[] args)
         {
+            ResetColor();
+            Console.Clear();
             Console.Title = "TBASIC Terminal";
             Console.WriteLine("T-BASIC Terminal [{0}]", Executer.VERSION);
             Console.WriteLine("Copyright (c) Timothy Baxendale. All Rights Reserved.");
@@ -55,15 +60,23 @@ namespace Tbasic.Terminal
                     watch.Stop();
                     WriteTime(watch.ElapsedMilliseconds);
 #endif
-                    Console.WriteLine(ObjectToString(dat.Data));
+                    if (dat.Data != null)
+                        Console.WriteLine(ObjectToString(dat.Data));
                 }
                 catch(TbasicRuntimeException e) {
+                    Console.BackgroundColor = ConsoleColor.Black;
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(e.Message);
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                    ResetColor();
                 }
                 Console.WriteLine();
             }
+        }
+
+        public static void ResetColor()
+        {
+            Console.ForegroundColor = FG_COLOR;
+            Console.BackgroundColor = BG_COLOR;
         }
 
         private static string ObjectToString(object o)
@@ -128,7 +141,7 @@ namespace Tbasic.Terminal
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Elapsed: {0}", elapsedMils);
-            Console.ForegroundColor = ConsoleColor.Gray;
+            ResetColor();
         }
 #endif
 

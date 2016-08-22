@@ -71,6 +71,56 @@ namespace Tbasic.Libraries
             lib.Add(key, new CallData(value, CountParameters(value)));
         }
 
+        /// <summary>
+        /// Adds a native function that takes no parameters and does not return a result
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void Add(string key, Action value)
+        {
+            lib.Add(key, new CallData(value, 0));
+        }
+
+        /// <summary>
+        /// Adds a native function that takes one parameter and does not return a result
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void Add<T>(string key, Action<T> value)
+        {
+            lib.Add(key, new CallData(value, 1));
+        }
+
+        /// <summary>
+        /// Adds a native function that takes two parameters and does not return a result
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void Add<T1, T2>(string key, Action<T1, T2> value)
+        {
+            lib.Add(key, new CallData(value, 2));
+        }
+
+        /// <summary>
+        /// Adds a native function that takes three parameters and does not return a result
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void Add<T1, T2, T3>(string key, Action<T1, T2, T3> value)
+        {
+            lib.Add(key, new CallData(value, 3));
+        }
+
+        /// <summary>
+        /// Adds a native function that takes four parameters and does not return a result
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void Add<T1, T2, T3, T4>(string key, Action<T1, T2, T3, T4> value)
+        {
+            lib.Add(key, new CallData(value, 4));
+        }
+
         private static int CountParameters(Delegate d)
         {
             return d.Method.GetParameters().Length;

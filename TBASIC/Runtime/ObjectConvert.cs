@@ -73,7 +73,16 @@ namespace Tbasic.Runtime
                     result = (T)Convert.ChangeType(obj, typeof(T));
                     return true;
                 }
-                catch (Exception ex) when (ex is FormatException || ex is InvalidCastException || ex is OverflowException) {
+                catch(InvalidCastException) {
+                    if (typeof(T).IsEnum) {
+                        Number? n = obj as Number?;
+                        if (n != null) {
+                            return TryConvert((int)n, out result, strict: true, parseStrings: false); // if we don't turn on strict, we'll have infinite recursion 8/22/16
+                        }
+                    }
+                    return false;
+                }
+                catch (Exception ex) when (ex is FormatException || ex is OverflowException) {
                     return false;
                 }
             }

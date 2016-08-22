@@ -4,7 +4,6 @@
 //
 // ======
 using System;
-using System.Globalization;
 
 namespace Tbasic.Runtime
 {
@@ -83,16 +82,18 @@ namespace Tbasic.Runtime
             return new Number(d);
         }
 
-        public static implicit operator double(Number n)
+        public static implicit operator Number(int n)
         {
-            return n.Value;
+            return new Number(n);
         }
 
         public static implicit operator int(Number n)
         {
-            return System.Convert.ToInt32(n, CultureInfo.CurrentCulture);
+            if (n.HasFraction())
+                throw new InvalidCastException("Number contains a fractional part");
+            return (int)n.Value;
         }
-
+        
         public override string ToString()
         {
             if (HasFraction())

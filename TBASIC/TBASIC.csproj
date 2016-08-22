@@ -55,6 +55,7 @@
     <Compile Include="Errors\FunctionException.cs" />
     <Compile Include="Errors\TbasicRuntimeException.cs" />
     <Compile Include="Errors\ThrowHelper.cs" />
+    <Compile Include="Errors\UndefinedObjectException.cs" />
     <Compile Include="Libraries\ArrayLibrary.cs" />
     <Compile Include="Libraries\StringLibrary.cs" />
     <Compile Include="Libraries\SystemLibrary.cs" />

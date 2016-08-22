@@ -4,7 +4,6 @@
 //
 // ======
 using System;
-using System.Collections.Generic;
 
 namespace Tbasic.Errors
 {
@@ -12,7 +11,7 @@ namespace Tbasic.Errors
     {
         public static Exception UndefinedObject(string name)
         {
-            return new KeyNotFoundException("'" + name + "' does not exist in the current context");
+            return new UndefinedObjectException("'" + name + "' is not defined in the current scope");
         }
 
         public static Exception UndefinedFunctionOrCommand(string name)

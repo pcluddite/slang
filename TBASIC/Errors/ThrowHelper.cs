@@ -21,7 +21,7 @@ namespace Tbasic.Errors
 
         public static Exception UndefinedFunction(string name)
         {
-            return new NotImplementedException("'" + name + "' is not defined as a function");
+            return UndefinedObject(name + "()");
         }
 
         public static Exception UnterminatedGroup()

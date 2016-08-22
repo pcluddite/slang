@@ -7,18 +7,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics.Contracts;
 
 namespace Tbasic.Components
 {
-    internal sealed class StringSegment : IEnumerable<char>, IEquatable<StringSegment>, IEquatable<string>
+    /// <summary>
+    /// This class is used to avoid string copying. It keeps a reference to the original string and accesses only a segment of it. This class is immutable.
+    /// </summary>
+    public sealed class StringSegment : IEnumerable<char>, IEquatable<StringSegment>, IEquatable<string>
     {
+        /// <summary>
+        /// Represents an empty string
+        /// </summary>
         public static readonly StringSegment Empty = new StringSegment(string.Empty);
 
         private string full;
         private int offset;
         private int len;
 
+        /// <summary>
+        /// Gets the length of this segment
+        /// </summary>
         public int Length
         {
             get {
@@ -26,6 +34,9 @@ namespace Tbasic.Components
             }
         }
 
+        /// <summary>
+        /// Gets the index of the segment in the complete string
+        /// </summary>
         public int Offset
         {
             get {
@@ -33,6 +44,9 @@ namespace Tbasic.Components
             }
         }
 
+        /// <summary>
+        /// Gets the entire string referenced by this segment
+        /// </summary>
         public string FullString
         {
             get {
@@ -40,16 +54,31 @@ namespace Tbasic.Components
             }
         }
 
+        /// <summary>
+        /// Constructs a new string segment with a given string
+        /// </summary>
+        /// <param name="fullStr">the string for this segment</param>
         public StringSegment(string fullStr)
             : this(fullStr, 0)
         {
         }
 
+        /// <summary>
+        /// Constructs a new string segment with a given string
+        /// </summary>
+        /// <param name="fullStr">the entire string</param>
+        /// <param name="offset">the index at which to start the segment</param>
         public StringSegment(string fullStr, int offset)
             : this(fullStr, offset, fullStr.Length - offset)
         {
         }
 
+        /// <summary>
+        /// Constructs a new string segment with a given string
+        /// </summary>
+        /// <param name="fullStr">the entire string</param>
+        /// <param name="offset">the index at which to start the segment</param>
+        /// <param name="count">the number of characters to include in this segment</param>
         public StringSegment(string fullStr, int offset, int count)
         {
             if (count > fullStr.Length - offset)
@@ -59,6 +88,11 @@ namespace Tbasic.Components
             len = count;
         }
 
+        /// <summary>
+        /// Gets a character at a given index of the segment
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public char this[int index]
         {
             get {
@@ -73,11 +107,23 @@ namespace Tbasic.Components
             return full[offset + index];
         }
 
+        /// <summary>
+        /// Create a substring within this segment
+        /// </summary>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
         public string Substring(int startIndex)
         {
             return Substring(startIndex, len - startIndex);
         }
 
+
+        /// <summary>
+        /// Create a substring within this segment
+        /// </summary>
+        /// <param name="startIndex"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public string Substring(int startIndex, int length)
         {
             if (length > len - startIndex)
@@ -85,77 +131,141 @@ namespace Tbasic.Components
             return full.Substring(startIndex + offset, length);
         }
 
+        /// <summary>
+        /// Just like Substring(), only returns a StringSegment instead of a string
+        /// </summary>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
         public StringSegment Subsegment(int startIndex)
         {
             return new StringSegment(full, offset + startIndex);
         }
 
+        /// <summary>
+        /// Just like Substring(), only returns a StringSegment instead of a string
+        /// </summary>
+        /// <param name="startIndex"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public StringSegment Subsegment(int startIndex, int length)
         {
             return new StringSegment(full, offset + startIndex, length);
         }
 
+        /// <summary>
+        /// Gets the first index of a character in a segment
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public int IndexOf(char value)
         {
             return full.IndexOf(value, offset, len) - offset;
         }
 
+        /// <summary>
+        /// Gets the first index of a character in a segment
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="start"></param>
+        /// <returns></returns>
         public int IndexOf(char value, int start)
         {
             return full.IndexOf(value, offset + start, len) - offset;
         }
 
+        /// <summary>
+        /// Gets the first index of a character in a segment
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public int IndexOf(string value)
         {
             return full.IndexOf(value, offset, len) - offset;
         }
 
+        /// <summary>
+        /// Gets the first index of a character in a segment
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="start"></param>
+        /// <returns></returns>
         public int IndexOf(string value, int start)
         {
             return full.IndexOf(value, offset + start, len - start) - offset;
         }
 
+        /// <summary>
+        /// Gets the first index of a character in a segment
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="start"></param>
+        /// <param name="comparisonType"></param>
+        /// <returns></returns>
         public int IndexOf(string value, int start, StringComparison comparisonType)
         {
             return full.IndexOf(value, offset + start, len - start, comparisonType) - offset;
         }
 
+        /// <summary>
+        /// Checks if this segment starts with another string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool StartsWith(string value)
         {
             return StartsWith(value, ignoreCase: false);
         }
 
+        /// <summary>
+        /// Checks if this segment starts with another string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="ignoreCase"></param>
+        /// <returns></returns>
         public bool StartsWith(string value, bool ignoreCase)
         {
             return StartsWith(value, 0, ignoreCase);
         }
 
-        public bool StartsWith(string value, int startIndex, bool ignoreCase)
+        /// <summary>
+        /// Checks if this segment starts with another string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="ignoreCase"></param>
+        /// <returns></returns>
+        public unsafe bool StartsWith(string value, int startIndex, bool ignoreCase)
         {
-            unsafe
-            {
-                int len = value.Length;
-                fixed (char* aptr = full) fixed (char* bptr = value)
-                {
-                    char* a = aptr + offset + startIndex;
-                    char* b = bptr;
-                    int index;
-                    if (!ignoreCase) {
-                        index = FirstIndexOfNotEqual(a, b, len);
-                    }
-                    else {
-                        index = FirstIndexOfNotEqualIgnoreCase(a, b, len);
-                    }
-                    return index == -1 || index == len;
+            int len = value.Length;
+            fixed (char* aptr = full) fixed (char* bptr = value) {
+                char* a = aptr + offset + startIndex;
+                char* b = bptr;
+                int index;
+                if (!ignoreCase) {
+                    index = FirstIndexOfNotEqual(a, b, len);
                 }
+                else {
+                    index = FirstIndexOfNotEqualIgnoreCase(a, b, len);
+                }
+                return index == -1 || index == len;
             }
+
         }
 
+        /// <summary>
+        /// Returns a segment with all characters removed after a given index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public StringSegment Remove(int index)
         {
             return new StringSegment(full, offset, index);
         }
 
+        /// <summary>
+        /// Removes trailing and leading whitespace
+        /// </summary>
+        /// <returns></returns>
         public StringSegment Trim()
         {
             int new_start = SkipWhiteSpace();
@@ -174,27 +284,44 @@ namespace Tbasic.Components
             }
         }
 
+        /// <summary>
+        /// Converts this string to upper case
+        /// </summary>
+        /// <returns></returns>
         public string ToUpper()
         {
             return ToString().ToUpper();
         }
 
+        /// <summary>
+        /// Converts this string to lower case
+        /// </summary>
+        /// <returns></returns>
         public string ToLower()
         {
             return ToString().ToLower();
         }
 
+        /// <summary>
+        /// Converts this StringSegment object to a string
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return full.Substring(offset, len);
         }
 
+        /// <summary>
+        /// Determines if this instance of a string segment is null or empty
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
         public static bool IsNullOrEmpty(StringSegment segment)
         {
             return segment == null || segment.FullString == null || segment.Length == 0;
         }
 
-        public int SkipWhiteSpace(int start = 0)
+        internal int SkipWhiteSpace(int start = 0)
         {
             for (int index = start; index < Length; ++index) {
                 if (!char.IsWhiteSpace(this[index])) {
@@ -204,11 +331,21 @@ namespace Tbasic.Components
             return -1;
         }
 
+        /// <summary>
+        /// Determines if this StringSegment is equal to another
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(StringSegment other)
         {
             return Equals(this, other);
         }
 
+        /// <summary>
+        /// Determines if this StringSegment is equal to another string
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(string other)
         {
             if (other == null) {
@@ -217,6 +354,11 @@ namespace Tbasic.Components
             return this.SequenceEqual(other);
         }
 
+        /// <summary>
+        /// Determines if this object is equal to another object
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             StringSegment seg = obj as StringSegment;
@@ -230,6 +372,12 @@ namespace Tbasic.Components
             return base.Equals(obj);
         }
 
+        /// <summary>
+        /// Determines if two instances of a StringSegment have equal values
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static bool Equals(StringSegment a, StringSegment b)
         {
             if (ReferenceEquals(a, b))
@@ -250,6 +398,12 @@ namespace Tbasic.Components
             }
         }
 
+        /// <summary>
+        /// Determines if this StringSegment is equal to a string
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static bool Equals(StringSegment a, string b)
         {
             if ((object)a == null || (object)b == null)
@@ -292,69 +446,50 @@ namespace Tbasic.Components
             return -1;
         }
 
+        /// <summary>
+        /// Determines if two StringSegments are equal
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
         public static bool operator==(StringSegment first, StringSegment second)
         {
             return Equals(first, second);
         }
 
+        /// <summary>
+        /// Determines if two StringSegments are not equal
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
         public static bool operator !=(StringSegment first, StringSegment second)
         {
             return !Equals(first, second);
         }
 
-
+        /// <summary>
+        /// Gets the hash code for this object
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return full.GetHashCode() ^ len ^ offset; // TODO: Optimize this so there aren't many collisions 6/16/16
         }
 
+        /// <summary>
+        /// Gets the enumerator for this StringSegment
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<char> GetEnumerator()
         {
-            return new StringSegEnumerator(this);
+            for (int i = offset; i < len; ++i)
+                yield return GetCharAt(i);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        private class StringSegEnumerator : IEnumerator<char>
-        {
-            private StringSegment seg;
-            private int curr = -1;
-
-            public StringSegEnumerator(StringSegment segment)
-            {
-                seg = segment;
-            }
-
-            public char Current
-            {
-                get {
-                    return seg.GetCharAt(curr);
-                }
-            }
-
-            object IEnumerator.Current
-            {
-                get {
-                    return Current;
-                }
-            }
-
-            public void Dispose()
-            {
-            }
-
-            public bool MoveNext()
-            {
-                return ++curr < seg.len;
-            }
-
-            public void Reset()
-            {
-                curr = -1;
-            }
         }
     }
 }

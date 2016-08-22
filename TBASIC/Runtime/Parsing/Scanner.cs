@@ -4,6 +4,7 @@
 //
 // ======
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Tbasic.Components;
@@ -15,10 +16,16 @@ namespace Tbasic.Parsing
     /// <summary>
     /// Similar idea to java.util.Scanner (don't sue me Oracle)
     /// </summary>
-    internal abstract class Scanner : Stream
+    public abstract class Scanner : Stream
     {
+        /// <summary>
+        /// Gets or sets the internal buffer for this scanner
+        /// </summary>
         protected StringSegment InternalBuffer;
 
+        /// <summary>
+        /// Gets whether or not data can be read from this stream
+        /// </summary>
         public override bool CanRead
         {
             get {
@@ -26,6 +33,9 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Gets whether this stream can seek
+        /// </summary>
         public override bool CanSeek
         {
             get {
@@ -33,6 +43,9 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Gets whether this stream can write
+        /// </summary>
         public override bool CanWrite
         {
             get {
@@ -40,6 +53,9 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Gets the length of this stream
+        /// </summary>
         public override long Length
         {
             get {
@@ -47,6 +63,9 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Gets or sets this stream's current position
+        /// </summary>
         public override long Position
         {
             get {
@@ -57,6 +76,9 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the end of the stream has been reached
+        /// </summary>
         public bool EndOfStream
         {
             get {
@@ -64,8 +86,14 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Gets or sets the current position of the stream as an integer
+        /// </summary>
         public int IntPosition { get; set; }
         
+        /// <summary>
+        /// Skips all leading whitespace
+        /// </summary>
         protected virtual void SkipWhiteSpace()
         {
             if (EndOfStream)
@@ -78,11 +106,19 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Gets the next string in the buffer
+        /// </summary>
+        /// <returns></returns>
         public virtual string Next()
         {
             return NextSegment().ToString();
         }
 
+        /// <summary>
+        /// Gets the next StringSegment in the buffer
+        /// </summary>
+        /// <returns></returns>
         internal virtual StringSegment NextSegment()
         {
             SkipWhiteSpace();
@@ -96,17 +132,110 @@ namespace Tbasic.Parsing
             return seg;
         }
         
+        /// <summary>
+        /// Gets the next unsigned number in the buffer
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
         public abstract bool NextUnsignedNumber(out Number num);
+        /// <summary>
+        /// Gets the next hexadecimal value in the buffer
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
         public abstract bool NextHexadecimal(out long number);
+        /// <summary>
+        /// Matches the next string in the buffer
+        /// </summary>
+        /// <param name="pattern"></param>
+        /// <param name="ignoreCase"></param>
+        /// <returns></returns>
         public abstract bool Next(string pattern, bool ignoreCase = true);
+        /// <summary>
+        /// Matches the next C-style string in the buffer
+        /// </summary>
+        /// <param name="parsed"></param>
+        /// <returns></returns>
         public abstract bool NextString(out string parsed);
-        public abstract bool NextFunction(Executer exec, out Function func);
-        public abstract bool NextVariable(Executer exec, out Variable variable);
+        /// <summary>
+        /// Matches the next indices for an array
+        /// </summary>
+        /// <param name="exec"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
         public abstract bool NextIndices(Executer exec, out int[] indices);
+        /// <summary>
+        /// Matches the next boolean
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public abstract bool NextBool(out bool b);
+        /// <summary>
+        /// Matches the next binary operator
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="foundOp"></param>
+        /// <returns></returns>
         public abstract bool NextBinaryOp(ObjectContext context, out BinaryOperator foundOp);
+        /// <summary>
+        /// Matches the next unary operator
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="last"></param>
+        /// <param name="foundOp"></param>
+        /// <returns></returns>
         public abstract bool NextUnaryOp(ObjectContext context, object last, out UnaryOperator foundOp);
+        /// <summary>
+        /// Matches the next function string
+        /// </summary>
+        /// <param name="exec"></param>
+        /// <param name="func"></param>
+        /// <param name="name"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public abstract bool NextFunction(Executer exec, out StringSegment name, out StringSegment func, out IList<object> args);
+        /// <summary>
+        /// Matches the next variable string
+        /// </summary>
+        /// <param name="exec"></param>
+        /// <param name="variable"></param>
+        /// <param name="name"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public abstract bool NextVariable(Executer exec, out StringSegment variable, out StringSegment name, out int[] indices);
 
+        internal bool NextFunctionInternal(Executer exec, out Function func)
+        {
+            StringSegment funcstr;
+            StringSegment name;
+            IList<object> args;
+            if (!NextFunction(exec, out name, out funcstr, out args)) {
+                func = null;
+                return false;
+            }
+            func = new Function(funcstr, exec, name, args);
+            return true;
+        }
+
+        internal bool NextVariableInternal(Executer exec, out Variable variable)
+        {
+            StringSegment varstr;
+            StringSegment name;
+            int[] indices;
+            if (!NextVariable(exec, out varstr, out name, out indices)) {
+                variable = null;
+                return false;
+            }
+            variable = new Variable(varstr, name, indices, exec);
+            return true;
+        }
+
+        /// <summary>
+        /// Sets the position to a given offset, then returns the new position
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="origin"></param>
+        /// <returns></returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
             switch (origin) {
@@ -123,21 +252,41 @@ namespace Tbasic.Parsing
             return 0;
         }
 
+        /// <summary>
+        /// Sets the length of this stream (not supported)
+        /// </summary>
+        /// <param name="value"></param>
         public override void SetLength(long value)
         {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Writes to this stream (not supported)
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
         public override void Write(byte[] buffer, int offset, int count)
         {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Flushes this stream (no-op)
+        /// </summary>
         public override void Flush()
         {
             // no-op
         }
 
+        /// <summary>
+        /// Reads a section of this stream as a byte array
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (Position + offset >= Length)

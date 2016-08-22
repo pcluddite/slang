@@ -107,7 +107,7 @@ namespace Tbasic.Libraries
             scanner.IntPosition += stackFrame.Name.Length;
 
             Variable v;
-            if (!scanner.NextVariable(stackFrame.StackExecuter, out v))
+            if (!scanner.NextVariableInternal(stackFrame.StackExecuter, out v))
                 throw ThrowHelper.InvalidVariableName();
 
             string name = v.Name.ToString();
@@ -177,7 +177,7 @@ namespace Tbasic.Libraries
             scanner.IntPosition += stackFrame.Name.Length;
 
             Variable v;
-            if (!scanner.NextVariable(stackFrame.StackExecuter, out v))
+            if (!scanner.NextVariableInternal(stackFrame.StackExecuter, out v))
                 throw ThrowHelper.InvalidVariableName();
 
             if (v.IsMacro)

@@ -153,23 +153,24 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextFunction(Executer exec, out Function func)
+        public override bool NextFunction(Executer exec, out StringSegment name, out StringSegment func, out IList<object> args)
         {
             int originalPos = IntPosition;
             try {
                 SkipWhiteSpace();
                 func = null;
+                args = null;
+                name = null;
                 if (EndOfStream)
                     return false;
                 if (char.IsLetter(InternalBuffer[IntPosition]) || InternalBuffer[IntPosition] == '_') {
                     IntPosition = FindAcceptableFuncChars(InternalBuffer, ++IntPosition);
                     if (IntPosition < InternalBuffer.Length) {
-                        StringSegment name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
+                        name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
                         SkipWhiteSpace();
                         if (Next("(")) {
-                            IList<object> args;
                             IntPosition = GroupParser.ReadGroup(InternalBuffer, IntPosition - 1, exec, out args) + 1;
-                            func = new Function(InternalBuffer.Subsegment(originalPos, IntPosition - originalPos), exec, name, args);
+                            func = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
                             return true;
                         }
                     }
@@ -183,29 +184,30 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextVariable(Executer exec, out Variable variable)
+        public override bool NextVariable(Executer exec, out StringSegment variable, out StringSegment name, out int[] indices)
         {
             int originalPos = IntPosition;
             try {
                 SkipWhiteSpace();
                 int start = IntPosition;
                 variable = null;
+                indices = null;
+                name = null;
                 if (EndOfStream)
                     return false;
                 if (char.IsLetter(InternalBuffer[IntPosition]) || InternalBuffer[IntPosition] == '_') {
                     IntPosition = FindAcceptableFuncChars(InternalBuffer, ++IntPosition);
                     if (!EndOfStream && InternalBuffer[IntPosition++] == '$') {
-                        StringSegment name = InternalBuffer.Subsegment(start, IntPosition - start);
+                        name = InternalBuffer.Subsegment(start, IntPosition - start);
                         SkipWhiteSpace();
-                        int[] indices;
                         if (!NextIndices(exec, out indices))
                             indices = null;
-                        variable = new Variable(InternalBuffer, name, indices, exec);
+                        variable = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
                         return true;
                     }
                 }
                 else if (InternalBuffer[IntPosition] == '@') { // it's a macro
-                    return NextMacro(exec, out variable);
+                    return NextMacro(exec, out variable, out name, out indices);
                 }
                 IntPosition = originalPos;
                 return false;
@@ -221,8 +223,10 @@ namespace Tbasic.Parsing
         /// </summary>
         /// <param name="exec"></param>
         /// <param name="variable"></param>
+        /// <param name="indices"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        private bool NextMacro(Executer exec, out Variable variable)
+        private bool NextMacro(Executer exec, out StringSegment variable, out StringSegment name, out int[] indices)
         {
             int originalPos = IntPosition;
             try {
@@ -230,15 +234,16 @@ namespace Tbasic.Parsing
                 int start = IntPosition;
                 if (++IntPosition < InternalBuffer.Length) {
                     IntPosition = FindAcceptableFuncChars(InternalBuffer, IntPosition);
-                    StringSegment name = InternalBuffer.Subsegment(start, IntPosition - start);
+                    name = InternalBuffer.Subsegment(start, IntPosition - start);
                     SkipWhiteSpace();
-                    int[] indices;
                     if (!NextIndices(exec, out indices))
                         indices = null;
-                    variable = new Variable(InternalBuffer, name, indices, exec);
+                    variable = InternalBuffer.Subsegment(originalPos, IntPosition);
                     return true;
                 }
                 variable = null;
+                name = null;
+                indices = null;
                 IntPosition = originalPos;
                 return false;
             }

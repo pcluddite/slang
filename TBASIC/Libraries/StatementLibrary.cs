@@ -29,10 +29,10 @@ namespace Tbasic.Libraries
             Add("OPT", Option);
         }
 
-        private object Include(RuntimeData stackFrame)
+        private object Include(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            string path = Path.GetFullPath(stackFrame.GetAt<string>(1));
+            runtime.AssertCount(2);
+            string path = Path.GetFullPath(runtime.GetAt<string>(1));
             if (!File.Exists(path)) {
                 throw new FileNotFoundException();
             }
@@ -42,85 +42,85 @@ namespace Tbasic.Libraries
 
 
 
-            return NULL(stackFrame);
+            return NULL(runtime);
         }
 
-        private static object Option(RuntimeData fData)
+        private static object Option(RuntimeData runtime)
         {
-            if (fData.ParameterCount == 2)
-                fData.Add(true);
-            fData.AssertCount(3);
+            if (runtime.ParameterCount == 2)
+                runtime.Add(true);
+            runtime.AssertCount(3);
 
-            string szOpt = fData.GetAt<string>(1);
+            string szOpt = runtime.GetAt<string>(1);
             ExecuterOption opt;
             if (!Enum.TryParse(szOpt, out opt)) {
-                opt = fData.GetAt<ExecuterOption>(1); // this will throw an error if its not a valid flag
+                opt = runtime.GetAt<ExecuterOption>(1); // this will throw an error if its not a valid flag
             }
 
-            if (fData.EvaluateAt<bool>(2)) {
-                fData.StackExecuter.EnableOption(opt);
+            if (runtime.EvaluateAt<bool>(2)) {
+                runtime.StackExecuter.EnableOption(opt);
             }
             else {
-                fData.StackExecuter.DisableOption(opt);
+                runtime.StackExecuter.DisableOption(opt);
             }
-            return NULL(fData);
+            return NULL(runtime);
         }
 
-        private object Sleep(RuntimeData stackFrame)
+        private object Sleep(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            System.Threading.Thread.Sleep(stackFrame.GetAt<int>(1));
-            return NULL(stackFrame);
+            runtime.AssertCount(2);
+            System.Threading.Thread.Sleep(runtime.GetAt<int>(1));
+            return NULL(runtime);
         }
 
-        private object Break(RuntimeData stackFrame)
+        private object Break(RuntimeData runtime)
         {
-            stackFrame.AssertCount(1);
-            stackFrame.StackExecuter.RequestBreak();
-            return NULL(stackFrame);
+            runtime.AssertCount(1);
+            runtime.StackExecuter.RequestBreak();
+            return NULL(runtime);
         }
 
-        internal object Exit(RuntimeData stackFrame)
+        internal object Exit(RuntimeData runtime)
         {
-            stackFrame.AssertCount(1);
-            stackFrame.StackExecuter.RequestExit();
-            return NULL(stackFrame);
+            runtime.AssertCount(1);
+            runtime.StackExecuter.RequestExit();
+            return NULL(runtime);
         }
 
-        internal static object NULL(RuntimeData stackFrame)
+        internal static object NULL(RuntimeData runtime)
         {
-            stackFrame.Context.PersistReturns(stackFrame);
-            return stackFrame.Data;
+            runtime.Context.PersistReturns(runtime);
+            return runtime.Data;
         }
 
-        internal object UhOh(RuntimeData stackFrame)
+        internal object UhOh(RuntimeData runtime)
         {
-            throw ThrowHelper.NoOpeningStatement(stackFrame.Text);
+            throw ThrowHelper.NoOpeningStatement(runtime.Text);
         }
 
-        internal object DIM(RuntimeData stackFrame)
+        internal object DIM(RuntimeData runtime)
         {
-            stackFrame.AssertAtLeast(2);
+            runtime.AssertAtLeast(2);
 
-            StringSegment text = new StringSegment(stackFrame.Text);
-            Scanner scanner = stackFrame.StackExecuter.ScannerDelegate(text);
-            scanner.IntPosition += stackFrame.Name.Length;
+            StringSegment text = new StringSegment(runtime.Text);
+            Scanner scanner = runtime.StackExecuter.ScannerDelegate(text);
+            scanner.IntPosition += runtime.Name.Length;
 
             Variable v;
-            if (!scanner.NextVariableInternal(stackFrame.StackExecuter, out v))
+            if (!scanner.NextVariableInternal(runtime.StackExecuter, out v))
                 throw ThrowHelper.InvalidVariableName();
 
             string name = v.Name.ToString();
-            ObjectContext context = stackFrame.Context.FindVariableContext(name);
+            ObjectContext context = runtime.Context.FindVariableContext(name);
             if (context == null) {
-                stackFrame.Context.SetVariable(name, array_alloc(v.Indices, 0));
+                runtime.Context.SetVariable(name, array_alloc(v.Indices, 0));
             }
             else {
                 object obj = context.GetVariable(name);
                 array_realloc(ref obj, v.Indices, 0);
                 context.SetVariable(name, obj);
             }
-            return NULL(stackFrame);
+            return NULL(runtime);
         }
 
         private object array_alloc(int[] sizes, int index)
@@ -158,26 +158,26 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object Let(RuntimeData stackFrame)
+        private object Let(RuntimeData runtime)
         {
-            return SetVariable(stackFrame, constant: false);
+            return SetVariable(runtime, constant: false);
         }
 
-        internal object Const(RuntimeData stackFrame)
+        internal object Const(RuntimeData runtime)
         {
-            return SetVariable(stackFrame, constant: true);
+            return SetVariable(runtime, constant: true);
         }
 
-        private object SetVariable(RuntimeData stackFrame, bool constant)
+        private object SetVariable(RuntimeData runtime, bool constant)
         {
-            stackFrame.AssertAtLeast(2);
-            StringSegment text = new StringSegment(stackFrame.Text);
+            runtime.AssertAtLeast(2);
+            StringSegment text = new StringSegment(runtime.Text);
 
-            Scanner scanner = stackFrame.StackExecuter.ScannerDelegate(text);
-            scanner.IntPosition += stackFrame.Name.Length;
+            Scanner scanner = runtime.StackExecuter.ScannerDelegate(text);
+            scanner.IntPosition += runtime.Name.Length;
 
             Variable v;
-            if (!scanner.NextVariableInternal(stackFrame.StackExecuter, out v))
+            if (!scanner.NextVariableInternal(runtime.StackExecuter, out v))
                 throw ThrowHelper.InvalidVariableName();
 
             if (v.IsMacro)
@@ -186,22 +186,22 @@ namespace Tbasic.Libraries
             if (!scanner.Next("="))
                 throw ThrowHelper.InvalidDefinitionOperator();
 
-            Evaluator e = new Evaluator(text.Subsegment(scanner.IntPosition), stackFrame.StackExecuter);
+            Evaluator e = new Evaluator(text.Subsegment(scanner.IntPosition), runtime.StackExecuter);
             object data = e.Evaluate();
 
             if (v.Indices == null) {
                 if (!constant) {
-                    stackFrame.Context.SetVariable(v.Name.ToString(), data);
+                    runtime.Context.SetVariable(v.Name.ToString(), data);
                 }
                 else {
-                    stackFrame.Context.SetConstant(v.Name.ToString(), data);
+                    runtime.Context.SetConstant(v.Name.ToString(), data);
                 }
             }
             else {
                 if (constant)
                     throw ThrowHelper.ArraysCannotBeConstant();
                 
-                ObjectContext context = stackFrame.Context.FindVariableContext(v.Name.ToString());
+                ObjectContext context = runtime.Context.FindVariableContext(v.Name.ToString());
                 if (context == null)
                     throw new ArgumentException("Array has not been defined and cannot be indexed");
                 context.SetArrayAt(v.Name.ToString(), data, v.Indices);

@@ -43,83 +43,83 @@ namespace Tbasic.Libraries
             Add("Shell", Shell);
         }
 
-        private object DirExists(RuntimeData _sframe)
+        private object DirExists(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            return Directory.Exists(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            return Directory.Exists(runtime.GetAt<string>(1));
         }
 
-        private object FileExists(RuntimeData _sframe)
+        private object FileExists(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            return File.Exists(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            return File.Exists(runtime.GetAt<string>(1));
         }
 
-        private object FileMove(RuntimeData _sframe)
+        private object FileMove(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            File.Move(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2));
+            runtime.AssertCount(3);
+            File.Move(runtime.GetAt<string>(1), runtime.GetAt<string>(2));
             return null;
         }
 
-        private object FileCopy(RuntimeData _sframe)
+        private object FileCopy(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            File.Copy(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2));
+            runtime.AssertCount(3);
+            File.Copy(runtime.GetAt<string>(1), runtime.GetAt<string>(2));
             return null;
         }
 
-        private object FileDelete(RuntimeData _sframe)
+        private object FileDelete(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            File.Delete(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            File.Delete(runtime.GetAt<string>(1));
             return null;
         }
 
-        private object DirDelete(RuntimeData _sframe)
+        private object DirDelete(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            Directory.Delete(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            Directory.Delete(runtime.GetAt<string>(1));
             return null;
         }
 
-        private object DirMove(RuntimeData _sframe)
+        private object DirMove(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            Directory.Move(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2));
+            runtime.AssertCount(3);
+            Directory.Move(runtime.GetAt<string>(1), runtime.GetAt<string>(2));
             return null;
         }
 
-        private object DirCreate(RuntimeData _sframe)
+        private object DirCreate(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            Directory.CreateDirectory(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            Directory.CreateDirectory(runtime.GetAt<string>(1));
             return null;
         }
 
-        private object DirGetFileList(RuntimeData _sframe)
+        private object DirGetFileList(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            return Directory.GetFiles(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            return Directory.GetFiles(runtime.GetAt<string>(1));
         }
 
-        private object DirGetDirList(RuntimeData _sframe)
+        private object DirGetDirList(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            return Directory.GetDirectories(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            return Directory.GetDirectories(runtime.GetAt<string>(1));
         }
 
-        private object FileReadAll(RuntimeData _sframe)
+        private object FileReadAll(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            return File.ReadAllText(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            return File.ReadAllText(runtime.GetAt<string>(1));
         }
 
-        private object FileWriteAll(RuntimeData _sframe)
+        private object FileWriteAll(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            string path = _sframe.GetAt<string>(1);
-            object data = _sframe.GetAt(2);
+            runtime.AssertCount(3);
+            string path = runtime.GetAt<string>(1);
+            object data = runtime.GetAt(2);
 
             string sData = data as string;
             if (sData != null) {
@@ -139,7 +139,7 @@ namespace Tbasic.Libraries
                 return null;
             }
 
-            _sframe.Status = ErrorSuccess.Warnings; // data is written, but not necessarily useful
+            runtime.Status = ErrorSuccess.Warnings; // data is written, but not necessarily useful
             File.WriteAllText(path, data + "");
             return null;
         }
@@ -153,30 +153,30 @@ namespace Tbasic.Libraries
             FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
         }
 
-        private object Recycle(RuntimeData _sframe)
+        private object Recycle(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            Recycle(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            Recycle(runtime.GetAt<string>(1));
             return null;
         }
 
-        private object FileGetAttributes(RuntimeData _sframe)
+        private object FileGetAttributes(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            string path = _sframe.GetAt<string>(1);
+            runtime.AssertCount(2);
+            string path = runtime.GetAt<string>(1);
             FileAttributes current = File.GetAttributes(path);
             return GetStringFromAttributes(current);
         }
 
-        private object FileSetAttributes(RuntimeData _sframe)
+        private object FileSetAttributes(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            string path = _sframe.GetAt<string>(1);
+            runtime.AssertCount(3);
+            string path = runtime.GetAt<string>(1);
             FileAttributes current = File.GetAttributes(path);
             if ((current & FileAttributes.ReadOnly) == FileAttributes.ReadOnly) {
                 File.SetAttributes(path, current & ~FileAttributes.ReadOnly);
             }
-            FileAttributes attributes = GetAttributesFromString(_sframe.GetAt<string>(2));
+            FileAttributes attributes = GetAttributesFromString(runtime.GetAt<string>(2));
             File.SetAttributes(path, attributes);
             return null;
         }
@@ -211,17 +211,17 @@ namespace Tbasic.Libraries
             return result;
         }
 
-        private object FileSetAccessDate(RuntimeData _sframe)
+        private object FileSetAccessDate(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            string path = _sframe.GetAt<string>(1);
+            runtime.AssertCount(3);
+            string path = runtime.GetAt<string>(1);
             try {
                 if (File.Exists(path)) {
-                    File.SetLastAccessTime(path, DateTime.Parse(_sframe.GetAt<string>(2)));
+                    File.SetLastAccessTime(path, DateTime.Parse(runtime.GetAt<string>(2)));
                     return File.GetLastAccessTime(path).ToString();
                 }
                 else if (Directory.Exists(path)) {
-                    Directory.SetLastAccessTime(path, DateTime.Parse(_sframe.GetAt<string>(2)));
+                    Directory.SetLastAccessTime(path, DateTime.Parse(runtime.GetAt<string>(2)));
                     return Directory.GetLastAccessTime(path).ToString();
                 }
                 throw new FileNotFoundException();
@@ -231,17 +231,17 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object FileSetModifiedDate(RuntimeData _sframe)
+        private object FileSetModifiedDate(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            string path = _sframe.GetAt<string>(1);
+            runtime.AssertCount(3);
+            string path = runtime.GetAt<string>(1);
             try {
                 if (File.Exists(path)) {
-                    File.SetLastWriteTime(path, DateTime.Parse(_sframe.GetAt<string>(2)));
+                    File.SetLastWriteTime(path, DateTime.Parse(runtime.GetAt<string>(2)));
                     return File.GetLastWriteTime(path).ToString();
                 }
                 else if (Directory.Exists(path)) {
-                    Directory.SetLastWriteTime(path, DateTime.Parse(_sframe.GetAt<string>(2)));
+                    Directory.SetLastWriteTime(path, DateTime.Parse(runtime.GetAt<string>(2)));
                     return Directory.GetLastWriteTime(path).ToString();
                 }
                 throw new FileNotFoundException();
@@ -251,17 +251,17 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object FileSetCreatedDate(RuntimeData _sframe)
+        private object FileSetCreatedDate(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            string path = _sframe.GetAt<string>(1);
+            runtime.AssertCount(3);
+            string path = runtime.GetAt<string>(1);
             try {
                 if (File.Exists(path)) {
-                    File.SetCreationTime(path, DateTime.Parse(_sframe.GetAt<string>(2)));
+                    File.SetCreationTime(path, DateTime.Parse(runtime.GetAt<string>(2)));
                     return File.GetCreationTime(path).ToString();
                 }
                 else if (Directory.Exists(path)) {
-                    Directory.SetCreationTime(path, DateTime.Parse(_sframe.GetAt<string>(2)));
+                    Directory.SetCreationTime(path, DateTime.Parse(runtime.GetAt<string>(2)));
                     return Directory.GetCreationTime(path).ToString();
                 }
                 throw new FileNotFoundException();
@@ -271,16 +271,16 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object DirectoryGetCurrent(RuntimeData _sframe)
+        private object DirectoryGetCurrent(RuntimeData runtime)
         {
-            _sframe.AssertCount(1);
+            runtime.AssertCount(1);
             return Directory.GetCurrentDirectory();
         }
 
-        private object DirectorySetCurrent(RuntimeData _sframe)
+        private object DirectorySetCurrent(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            Directory.SetCurrentDirectory(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            Directory.SetCurrentDirectory(runtime.GetAt<string>(1));
             return null;
         }
 
@@ -319,11 +319,11 @@ namespace Tbasic.Libraries
             return Shell(cmd, Directory.GetCurrentDirectory(), out output);
         }
 
-        private object Shell(RuntimeData _sframe)
+        private object Shell(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
+            runtime.AssertCount(2);
             string output;
-            _sframe.Status = Shell(_sframe.GetAt<string>(1), out output);
+            runtime.Status = Shell(runtime.GetAt<string>(1), out output);
             return output;
         }
     }

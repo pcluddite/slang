@@ -38,15 +38,15 @@ namespace Tbasic.Runtime
             Function = NativeFuncWrapper;
         }
 
-        private object NativeFuncWrapper(RuntimeData fData)
+        private object NativeFuncWrapper(RuntimeData runtime)
         {
-            fData.AssertCount(ArgumentCount + 1); // plus 1 for the name
+            runtime.AssertCount(ArgumentCount + 1); // plus 1 for the name
 
-            object[] args = new object[fData.ParameterCount - 1];
+            object[] args = new object[runtime.ParameterCount - 1];
             ParameterInfo[] expectedArgs = CalledDelegate.Method.GetParameters();
 
-            for (int index = 1; index < fData.ParameterCount; ++index) // make sure the types are correct for each parameter
-                args[index - 1] = fData.ConvertAt(index, expectedArgs[index - 1].ParameterType);
+            for (int index = 1; index < runtime.ParameterCount; ++index) // make sure the types are correct for each parameter
+                args[index - 1] = runtime.ConvertAt(index, expectedArgs[index - 1].ParameterType);
 
             if (ReturnsType) {
                 return CalledDelegate.DynamicInvoke(args);

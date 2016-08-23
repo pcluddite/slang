@@ -31,20 +31,20 @@ namespace Tbasic.Libraries
             Add("ProcList", ProcessList);
         }
 
-        private object ProcessExists(RuntimeData _sframe)
+        private object ProcessExists(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
+            runtime.AssertCount(2);
             foreach (Process p in Process.GetProcesses()) {
-                if (p.ProcessName.EqualsIgnoreCase(_sframe.GetAt<string>(1))) {
+                if (p.ProcessName.EqualsIgnoreCase(runtime.GetAt<string>(1))) {
                     return true;
                 }
             }
             return false;
         }
 
-        private object ProcessList(RuntimeData _sframe)
+        private object ProcessList(RuntimeData runtime)
         {
-            _sframe.AssertCount(1);
+            runtime.AssertCount(1);
             Process[] procs = Process.GetProcesses();
             if (procs.Length > 0) {
                 object[][] _ret = new object[procs.Length][];
@@ -54,43 +54,43 @@ namespace Tbasic.Libraries
                 return _ret;
             }
             else {
-                _sframe.Status = ErrorSuccess.NoContent;
+                runtime.Status = ErrorSuccess.NoContent;
                 return null;
             }
         }
 
-        private object ProcessKill(RuntimeData _sframe)
+        private object ProcessKill(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
+            runtime.AssertCount(2);
             foreach (Process p in Process.GetProcesses()) {
-                if (p.ProcessName.EqualsIgnoreCase(_sframe.GetAt<string>(1))) {
+                if (p.ProcessName.EqualsIgnoreCase(runtime.GetAt<string>(1))) {
                     p.Kill();
                     return null;
                 }
             }
-            _sframe.Status = ErrorClient.NotFound;
+            runtime.Status = ErrorClient.NotFound;
             return null;
         }
 
-        private object ProcessClose(RuntimeData _sframe)
+        private object ProcessClose(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
+            runtime.AssertCount(2);
             foreach (Process p in Process.GetProcesses()) {
-                if (p.ProcessName.EqualsIgnoreCase(_sframe.GetAt<string>(1))) {
+                if (p.ProcessName.EqualsIgnoreCase(runtime.GetAt<string>(1))) {
                     p.Close();
                     return null;
                 }
             }
-            _sframe.Status = ErrorClient.NotFound;
+            runtime.Status = ErrorClient.NotFound;
             return null;
         }
 
-        private object BlockedList(RuntimeData _sframe)
+        private object BlockedList(RuntimeData runtime)
         {
-            _sframe.AssertCount(1);
+            runtime.AssertCount(1);
             var list = BlockedList(); // dicts currently are not supported 2/24/15
             if (list.Count == 0) {
-                _sframe.Status = ErrorSuccess.NoContent;
+                runtime.Status = ErrorSuccess.NoContent;
                 return null;
             }
             else {
@@ -120,63 +120,63 @@ namespace Tbasic.Libraries
 
         private const string REG_EXEC_PATH = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\";
 
-        private object ProcessBlock(RuntimeData _sframe)
+        private object ProcessBlock(RuntimeData runtime)
         {
-            if (_sframe.ParameterCount == 2) {
-                _sframe.Add(16);
-                _sframe.Add("The application you requested has been blocked");
-                _sframe.Add("Blocked");
+            if (runtime.ParameterCount == 2) {
+                runtime.Add(16);
+                runtime.Add("The application you requested has been blocked");
+                runtime.Add("Blocked");
             }
-            _sframe.AssertCount(5);
-            string name = _sframe.GetAt<string>(1);
+            runtime.AssertCount(5);
+            string name = runtime.GetAt<string>(1);
             if (!Path.HasExtension(name)) {
                 name += ".exe";
             }
             name = Path.GetFileName(name);
             using (RegistryKey key = Registry.LocalMachine.CreateSubKey(Path.Combine(REG_EXEC_PATH, name))) {
-                key.SetValue("Debugger", "\"" + Application.ExecutablePath + "\" -m \"" + _sframe.GetAt(2) + "\" \"" + _sframe.GetAt(3) + "\" \"" + _sframe.GetAt(4) + "\"");
+                key.SetValue("Debugger", "\"" + Application.ExecutablePath + "\" -m \"" + runtime.GetAt(2) + "\" \"" + runtime.GetAt(3) + "\" \"" + runtime.GetAt(4) + "\"");
             }
             return null;
         }
 
-        private object ProcessRedirect(RuntimeData _sframe)
+        private object ProcessRedirect(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            string name = _sframe.GetAt<string>(1);
+            runtime.AssertCount(3);
+            string name = runtime.GetAt<string>(1);
             if (!Path.HasExtension(name)) {
                 name += ".exe";
             }
             name = Path.GetFileName(name);
-            if (!File.Exists(_sframe.GetAt<string>(2))) {
+            if (!File.Exists(runtime.GetAt<string>(2))) {
                 throw new FileNotFoundException();
             }
             using (RegistryKey key = Registry.LocalMachine.CreateSubKey(Path.Combine(REG_EXEC_PATH, name))) {
-                key.SetValue("Debugger", "\"" + Application.ExecutablePath + "\" -r \"" + _sframe.GetAt(2) + "\"");
+                key.SetValue("Debugger", "\"" + Application.ExecutablePath + "\" -r \"" + runtime.GetAt(2) + "\"");
             }
             return null;
         }
 
-        private object ProcessSetDebugger(RuntimeData _sframe)
+        private object ProcessSetDebugger(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            string name = _sframe.GetAt<string>(1);
+            runtime.AssertCount(3);
+            string name = runtime.GetAt<string>(1);
             if (!Path.HasExtension(name)) {
                 name += ".exe";
             }
             name = Path.GetFileName(name);
-            if (!File.Exists(_sframe.GetAt<string>(2))) {
+            if (!File.Exists(runtime.GetAt<string>(2))) {
                 throw new FileNotFoundException();
             }
             using (RegistryKey key = Registry.LocalMachine.CreateSubKey(Path.Combine(REG_EXEC_PATH, name))) {
-                key.SetValue("Debugger", _sframe.GetAt<string>(2));
+                key.SetValue("Debugger", runtime.GetAt<string>(2));
             }
             return null;
         }
 
-        private object Unblock(RuntimeData _sframe)
+        private object Unblock(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            string name = _sframe.GetAt<string>(1);
+            runtime.AssertCount(2);
+            string name = runtime.GetAt<string>(1);
             if (!name.Contains(".")) {
                 name += ".exe";
             }
@@ -187,28 +187,28 @@ namespace Tbasic.Libraries
                 }
             }
             else {
-                _sframe.Status = -1; // -1 not found 2-24-15
+                runtime.Status = -1; // -1 not found 2-24-15
             }
             return null;
         }
 
-        private object Run(RuntimeData _sframe)
+        private object Run(RuntimeData runtime)
         {
-            if (_sframe.ParameterCount == 2) {
-                _sframe.Add("");
+            if (runtime.ParameterCount == 2) {
+                runtime.Add("");
             }
-            if (_sframe.ParameterCount == 3) {
-                _sframe.Add(Environment.CurrentDirectory);
+            if (runtime.ParameterCount == 3) {
+                runtime.Add(Environment.CurrentDirectory);
             }
-            if (_sframe.ParameterCount == 4) {
-                _sframe.Add(false);
+            if (runtime.ParameterCount == 4) {
+                runtime.Add(false);
             }
-            _sframe.AssertCount(5);
+            runtime.AssertCount(5);
             ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = _sframe.GetAt<string>(1);
-            startInfo.Arguments = _sframe.GetAt<string>(2);
-            startInfo.WorkingDirectory = _sframe.GetAt<string>(3);
-            _sframe.Status = Run(startInfo, _sframe.GetAt<bool>(4));
+            startInfo.FileName = runtime.GetAt<string>(1);
+            startInfo.Arguments = runtime.GetAt<string>(2);
+            startInfo.WorkingDirectory = runtime.GetAt<string>(3);
+            runtime.Status = Run(startInfo, runtime.GetAt<bool>(4));
             return null;
         }
 

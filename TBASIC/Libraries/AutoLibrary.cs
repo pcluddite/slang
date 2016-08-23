@@ -64,24 +64,24 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object MouseClick(RuntimeData _sframe)
+        private object MouseClick(RuntimeData runtime)
         {
-            if (_sframe.ParameterCount == 4) {
-                _sframe.Add(1);
-                _sframe.Add(1);
+            if (runtime.ParameterCount == 4) {
+                runtime.Add(1);
+                runtime.Add(1);
             }
-            if (_sframe.ParameterCount == 5) {
-                _sframe.Add(5);
+            if (runtime.ParameterCount == 5) {
+                runtime.Add(5);
             }
-            _sframe.AssertCount(6);
+            runtime.AssertCount(6);
 
-            int x = _sframe.GetAt<int>(2),
-                y = _sframe.GetAt<int>(3),
-                clicks = _sframe.GetAt<int>(4),
-                speed = _sframe.GetAt<int>(5);
+            int x = runtime.GetAt<int>(2),
+                y = runtime.GetAt<int>(3),
+                clicks = runtime.GetAt<int>(4),
+                speed = runtime.GetAt<int>(5);
 
             MouseButton button;
-            if (_sframe.GetEnum(1, "button", "LEFT", "RIGHT").EqualsIgnoreCase("LEFT")) {
+            if (runtime.GetEnum(1, "button", "LEFT", "RIGHT").EqualsIgnoreCase("LEFT")) {
                 button = MouseButton.Left;
             }
             else {
@@ -91,16 +91,16 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object MouseMove(RuntimeData _sframe)
+        private object MouseMove(RuntimeData runtime)
         {
-            if (_sframe.ParameterCount == 3) {
-                _sframe.Add(1);
+            if (runtime.ParameterCount == 3) {
+                runtime.Add(1);
             }
-            _sframe.AssertCount(4);
+            runtime.AssertCount(4);
 
-            MouseMove(_sframe.GetAt<int>(1),
-                      _sframe.GetAt<int>(2),
-                      _sframe.GetAt<int>(3));
+            MouseMove(runtime.GetAt<int>(1),
+                      runtime.GetAt<int>(2),
+                      runtime.GetAt<int>(3));
 
             return null;
         }
@@ -155,11 +155,11 @@ namespace Tbasic.Libraries
             return User32.BlockInput(blocked);
         }
 
-        private object BlockInput(RuntimeData _sframe)
+        private object BlockInput(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            if (!BlockInput(_sframe.GetAt<bool>(1))) {
-                _sframe.Status = ErrorClient.Forbidden;
+            runtime.AssertCount(2);
+            if (!BlockInput(runtime.GetAt<bool>(1))) {
+                runtime.Status = ErrorClient.Forbidden;
             }
             return null;
         }
@@ -173,10 +173,10 @@ namespace Tbasic.Libraries
             SendKeys.SendWait(keys);
         }
 
-        private object Send(RuntimeData _sframe)
+        private object Send(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            Send(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            Send(runtime.GetAt<string>(1));
             return null;
         }
 
@@ -191,13 +191,13 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object VolumeUp(RuntimeData _sframe)
+        private object VolumeUp(RuntimeData runtime)
         {
-            if (_sframe.ParameterCount == 1) {
-                _sframe.Add(1);
+            if (runtime.ParameterCount == 1) {
+                runtime.Add(1);
             }
-            _sframe.AssertCount(2);
-            VolumeUp(_sframe.GetAt<int>(1));
+            runtime.AssertCount(2);
+            VolumeUp(runtime.GetAt<int>(1));
             return null;
         }
 
@@ -212,13 +212,13 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object VolumeDown(RuntimeData _sframe)
+        private object VolumeDown(RuntimeData runtime)
         {
-            if (_sframe.ParameterCount == 1) {
-                _sframe.Add(1);
+            if (runtime.ParameterCount == 1) {
+                runtime.Add(1);
             }
-            _sframe.AssertCount(2);
-            VolumeDown(_sframe.GetAt<int>(1));
+            runtime.AssertCount(2);
+            VolumeDown(runtime.GetAt<int>(1));
             return null;
         }
 
@@ -230,9 +230,9 @@ namespace Tbasic.Libraries
             User32.keybd_event((byte)Forms.Keys.VolumeMute, 0, 0, 0);
         }
 
-        private object VolumeMute(RuntimeData _sframe)
+        private object VolumeMute(RuntimeData runtime)
         {
-            _sframe.AssertCount(1);
+            runtime.AssertCount(1);
             VolumeMute();
             return null;
         }

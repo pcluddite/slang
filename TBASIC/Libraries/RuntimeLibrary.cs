@@ -28,54 +28,54 @@ namespace Tbasic.Libraries
             context.SetConstant("@osversion", Environment.OSVersion.VersionString);
         }
 
-        private object CStr(RuntimeData stackFrame)
+        private object CStr(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            return stackFrame.GetAt(1)?.ToString(); // return null if it is null
+            runtime.AssertCount(2);
+            return runtime.GetAt(1)?.ToString(); // return null if it is null
         }
 
-        private object CBool(RuntimeData stackFrame)
+        private object CBool(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
+            runtime.AssertCount(2);
             try {
                 bool b;
-                if (bool.TryParse(stackFrame.GetAt<string>(1), out b)) {
+                if (bool.TryParse(runtime.GetAt<string>(1), out b)) {
                     return b;
                 }
                 Number n;
-                if (Number.TryParse(stackFrame.GetAt<string>(1), out n)) {
+                if (Number.TryParse(runtime.GetAt<string>(1), out n)) {
                     return (n != 0); // non-zero is true, zero is false
                 }
                 throw new InvalidCastException();
             }
             catch(InvalidCastException) {
-                return Convert.ToBoolean(stackFrame.GetAt(1));
+                return Convert.ToBoolean(runtime.GetAt(1));
             }
         }
 
-        private object CNum(RuntimeData stackFrame)
+        private object CNum(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
+            runtime.AssertCount(2);
             try {
                 Number n;
-                if (Number.TryParse(stackFrame.GetAt<string>(1), out n)) {
+                if (Number.TryParse(runtime.GetAt<string>(1), out n)) {
                     return n;
                 }
                 bool b;
-                if (bool.TryParse(stackFrame.GetAt<string>(1), out b)) {
+                if (bool.TryParse(runtime.GetAt<string>(1), out b)) {
                     return b ? 1 : 0;
                 }
                 throw new InvalidCastException();
             }
             catch (InvalidCastException) {
-                return Number.Convert(stackFrame.GetAt(1));
+                return Number.Convert(runtime.GetAt(1));
             }
         }
 
-        private object SizeOf(RuntimeData stackFrame)
+        private object SizeOf(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            object obj = stackFrame.GetAt(1);
+            runtime.AssertCount(2);
+            object obj = runtime.GetAt(1);
             if (obj == null) {
                 return 0;
             }
@@ -105,29 +105,29 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object IsNum(RuntimeData stackFrame)
+        private object IsNum(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            return Number.IsNumber(stackFrame.GetAt(1), stackFrame.StackExecuter.Options);
+            runtime.AssertCount(2);
+            return Number.IsNumber(runtime.GetAt(1), runtime.StackExecuter.Options);
         }
 
-        private object IsString(RuntimeData stackFrame)
+        private object IsString(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            return stackFrame.GetAt(1) is string;
+            runtime.AssertCount(2);
+            return runtime.GetAt(1) is string;
         }
 
-        private object IsBool(RuntimeData stackFrame)
+        private object IsBool(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            return stackFrame.GetAt(1) is bool;
+            runtime.AssertCount(2);
+            return runtime.GetAt(1) is bool;
         }
         
-        private object IsDefined(RuntimeData stackFrame)
+        private object IsDefined(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            string name = stackFrame.GetAt<string>(1);
-            ObjectContext context = stackFrame.Context.FindContext(name);
+            runtime.AssertCount(2);
+            string name = runtime.GetAt<string>(1);
+            ObjectContext context = runtime.Context.FindContext(name);
             return context != null;
         }
     }

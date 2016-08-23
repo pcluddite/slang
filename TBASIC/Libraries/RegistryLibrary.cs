@@ -31,65 +31,65 @@ namespace Tbasic.Libraries
             Add("RegWrite", RegWrite);
         }
         
-        private object RegValueKind(RuntimeData _sframe)
+        private object RegValueKind(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            return WinRegistry.GetValueKind(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2)).ToString();
+            runtime.AssertCount(3);
+            return WinRegistry.GetValueKind(runtime.GetAt<string>(1), runtime.GetAt<string>(2)).ToString();
         }
 
-        private object RegRead(RuntimeData _sframe)
+        private object RegRead(RuntimeData runtime)
         {
-            _sframe.AssertCount(atLeast: 3, atMost: 4);
+            runtime.AssertCount(atLeast: 3, atMost: 4);
 
-            if (_sframe.ParameterCount == 3)
-                _sframe.Add(null);
+            if (runtime.ParameterCount == 3)
+                runtime.Add(null);
             
-            return WinRegistry.Read(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2), _sframe.GetAt<string>(3));
+            return WinRegistry.Read(runtime.GetAt<string>(1), runtime.GetAt<string>(2), runtime.GetAt<string>(3));
         }
 
-        private object RegDelete(RuntimeData _sframe)
+        private object RegDelete(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            WinRegistry.Delete(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2));
+            runtime.AssertCount(3);
+            WinRegistry.Delete(runtime.GetAt<string>(1), runtime.GetAt<string>(2));
             return null;
         }
 
-        private object RegRename(RuntimeData _sframe)
+        private object RegRename(RuntimeData runtime)
         {
-            _sframe.AssertCount(4);
-            WinRegistry.Rename(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2), _sframe.GetAt<string>(3));
+            runtime.AssertCount(4);
+            WinRegistry.Rename(runtime.GetAt<string>(1), runtime.GetAt<string>(2), runtime.GetAt<string>(3));
             return null;
         }
 
-        private object RegDeleteKey(RuntimeData _sframe)
+        private object RegDeleteKey(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            WinRegistry.DeleteKey(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            WinRegistry.DeleteKey(runtime.GetAt<string>(1));
             return null;
         }
 
-        private object RegRenameKey(RuntimeData _sframe)
+        private object RegRenameKey(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            WinRegistry.RenameKey(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2));
+            runtime.AssertCount(3);
+            WinRegistry.RenameKey(runtime.GetAt<string>(1), runtime.GetAt<string>(2));
             return null;
         }
 
-        private object RegCreateKey(RuntimeData _sframe)
+        private object RegCreateKey(RuntimeData runtime)
         {
-            _sframe.AssertCount(3);
-            WinRegistry.RenameKey(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2));
-            _sframe.Status = ErrorSuccess.Created;
+            runtime.AssertCount(3);
+            WinRegistry.RenameKey(runtime.GetAt<string>(1), runtime.GetAt<string>(2));
+            runtime.Status = ErrorSuccess.Created;
             return null;
         }
         
-        private object RegEnumValues(RuntimeData _sframe)
+        private object RegEnumValues(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
+            runtime.AssertCount(2);
 
-            object[][] values = WinRegistry.EnumerateValues(_sframe.GetAt<string>(1));
+            object[][] values = WinRegistry.EnumerateValues(runtime.GetAt<string>(1));
             if (values.Length == 0) {
-                _sframe.Status = ErrorSuccess.NoContent;
+                runtime.Status = ErrorSuccess.NoContent;
                 return null;
             }
             else {
@@ -97,30 +97,30 @@ namespace Tbasic.Libraries
             }
         }
 
-        private static object RegEnumKeys(RuntimeData _sframe)
+        private static object RegEnumKeys(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            return WinRegistry.EnumeratKeys(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            return WinRegistry.EnumeratKeys(runtime.GetAt<string>(1));
         }
 
-        private object RegWrite(RuntimeData _sframe)
+        private object RegWrite(RuntimeData runtime)
         {
-            _sframe.AssertCount(5);
+            runtime.AssertCount(5);
 
-            object value = _sframe.GetAt(3);
-            RegistryValueKind kind = _sframe.GetAt<RegistryValueKind>(4);
+            object value = runtime.GetAt(3);
+            RegistryValueKind kind = runtime.GetAt<RegistryValueKind>(4);
 
             switch (kind) {
                 case RegistryValueKind.Binary:
-                    value = Convert.FromBase64String(_sframe.GetAt<string>(3));
+                    value = Convert.FromBase64String(runtime.GetAt<string>(3));
                     break;
                 case RegistryValueKind.MultiString:
                     string strval = value as string;
                     if (value is string) {
-                        value = _sframe.GetAt<string>(3).Replace("\r\n", "\n").Split('\n');
+                        value = runtime.GetAt<string>(3).Replace("\r\n", "\n").Split('\n');
                     }
                     else if (value is string[]) {
-                        value = _sframe.GetAt<string[]>(3);
+                        value = runtime.GetAt<string[]>(3);
                     }
                     else {
                         throw new ArgumentException("Parameter is not a valid multi-string");
@@ -134,7 +134,7 @@ namespace Tbasic.Libraries
                 default:
                     throw new ArgumentException("Registry value of type '" + kind + "' is unsupported");
             }
-            WinRegistry.Write(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2), value, kind);
+            WinRegistry.Write(runtime.GetAt<string>(1), runtime.GetAt<string>(2), value, kind);
             return null;
         }
     }

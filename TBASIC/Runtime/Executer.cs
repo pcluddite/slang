@@ -120,9 +120,9 @@ namespace Tbasic.Runtime
         /// <returns></returns>
         public RuntimeData Execute(Line codeLine)
         {
-            RuntimeData data = new RuntimeData(this);
+            RuntimeData runtime = new RuntimeData(this);
             try {
-                Execute(ref data, codeLine);
+                Execute(ref runtime, codeLine);
             }
             catch(Exception ex) {
                 TbasicRuntimeException runEx = TbasicRuntimeException.WrapException(ex);
@@ -130,12 +130,12 @@ namespace Tbasic.Runtime
                     throw;
                 throw runEx;
             }
-            return data;
+            return runtime;
         }
 
         internal RuntimeData Execute(LineCollection lines)
         {
-            RuntimeData stackFrame = new RuntimeData(this);
+            RuntimeData runtime = new RuntimeData(this);
             for (int index = 0; index < lines.Count; index++) {
                 if (BreakRequest) {
                     break;
@@ -145,7 +145,7 @@ namespace Tbasic.Runtime
                 try {
                     ObjectContext blockContext = Context.FindBlockContext(current.Name);
                     if (blockContext == null) {
-                        Execute(ref stackFrame, current);
+                        Execute(ref runtime, current);
                     }
                     else {
                         CodeBlock block = blockContext.GetBlock(current.Name).Invoke(index, lines);
@@ -159,40 +159,40 @@ namespace Tbasic.Runtime
                     TbasicRuntimeException runEx = TbasicRuntimeException.WrapException(ex);
                     if (ex == null) // only catch errors that we understand 8/16/16
                         throw;
-                    HandleError(current, stackFrame, runEx);
+                    HandleError(current, runtime, runEx);
                 }
             }
-            return stackFrame;
+            return runtime;
         }
 
-        internal static void Execute(ref RuntimeData stackFrame, Line codeLine)
+        internal static void Execute(ref RuntimeData runtime, Line codeLine)
         {
-            ObjectContext context = stackFrame.Context.FindCommandContext(codeLine.Name);
+            ObjectContext context = runtime.Context.FindCommandContext(codeLine.Name);
             if (context == null) {
-                Evaluator eval = new Evaluator(new StringSegment(codeLine.Text), stackFrame.StackExecuter);
+                Evaluator eval = new Evaluator(new StringSegment(codeLine.Text), runtime.StackExecuter);
                 object result = eval.Evaluate();
-                stackFrame.Context.PersistReturns(stackFrame);
-                stackFrame.Data = result;
+                runtime.Context.PersistReturns(runtime);
+                runtime.Data = result;
             }
             else {
-                stackFrame = new RuntimeData(stackFrame.StackExecuter, codeLine.Text);
-                stackFrame.Data = context.GetCommand(codeLine.Name).Invoke(stackFrame);
+                runtime = new RuntimeData(runtime.StackExecuter, codeLine.Text);
+                runtime.Data = context.GetCommand(codeLine.Name).Invoke(runtime);
             }
-            stackFrame.Context.SetReturns(stackFrame);
+            runtime.Context.SetReturns(runtime);
         }
 
-        private void HandleError(Line current, RuntimeData stackFrame, TbasicRuntimeException ex)
+        private void HandleError(Line current, RuntimeData runtime, TbasicRuntimeException ex)
         {
             FunctionException cEx = ex as FunctionException;
             if (cEx != null) {
                 int status = cEx.Status;
-                string msg = stackFrame.Data as string;
+                string msg = runtime.Data as string;
                 if (string.IsNullOrEmpty(msg)) {
                     msg = cEx.Message;
                 }
-                stackFrame.Status = status;
-                stackFrame.Data = msg;
-                stackFrame.Context.SetReturns(stackFrame);
+                runtime.Status = status;
+                runtime.Data = msg;
+                runtime.Context.SetReturns(runtime);
                 if (Options.HasFlag(ExecuterOption.ThrowErrors)) { // only actually throw anything if we understand the error
                     throw new LineException(current.LineNumber, current.VisibleName, cEx);
                 }

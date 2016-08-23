@@ -33,23 +33,23 @@ namespace Tbasic
             return new TBasicFunction(Execute);
         }
 
-        public object Execute(RuntimeData stackFrame)
+        public object Execute(RuntimeData runtime)
         {
-            stackFrame.AssertCount(Template.ParameterCount);
+            runtime.AssertCount(Template.ParameterCount);
 
-            Executer exec = stackFrame.StackExecuter;
+            Executer exec = runtime.StackExecuter;
             exec.Context = exec.Context.CreateSubContext();
 
             for (int index = 1; index < Template.ParameterCount; index++) {
-                exec.Context.SetVariable(Template.GetAt<string>(index), stackFrame.GetAt(index));
+                exec.Context.SetVariable(Template.GetAt<string>(index), runtime.GetAt(index));
             }
             exec.Context.SetCommand("return", Return);
             exec.Context.SetFunction("SetStatus", SetStatus);
 
-            stackFrame.CopyFrom(exec.Execute(Body));
+            runtime.CopyFrom(exec.Execute(Body));
             exec.HonorBreak();
             exec.Context = exec.Context.Collect();
-            return stackFrame.Data;
+            return runtime.Data;
         }
 
         private object Return(RuntimeData stackFrame)

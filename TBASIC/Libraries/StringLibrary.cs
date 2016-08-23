@@ -30,129 +30,129 @@ namespace Tbasic.Libraries
             Add("StrInStr", Substring);
         }
 
-        private object CharsToString(RuntimeData stackFrame)
+        private object CharsToString(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
+            runtime.AssertCount(2);
             StringBuilder hanz = new StringBuilder();
-            foreach (char c in stackFrame.GetAt<char[]>(1)) {
+            foreach (char c in runtime.GetAt<char[]>(1)) {
                 hanz.Append(c);
             }
             return hanz.ToString();
         }
 
-        private object ToCharArray(RuntimeData stackFrame)
+        private object ToCharArray(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            return stackFrame.GetAt<string>(1).ToCharArray();
+            runtime.AssertCount(2);
+            return runtime.GetAt<string>(1).ToCharArray();
         }
 
-        private object StringSplit(RuntimeData stackFrame)
+        private object StringSplit(RuntimeData runtime)
         {
-            stackFrame.AssertCount(3);
-            return Regex.Split(stackFrame.GetAt(1).ToString(), stackFrame.GetAt(2).ToString());
+            runtime.AssertCount(3);
+            return Regex.Split(runtime.GetAt(1).ToString(), runtime.GetAt(2).ToString());
         }
 
-        private object Trim(RuntimeData stackFrame)
+        private object Trim(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            return stackFrame.GetAt(1).ToString().Trim();
+            runtime.AssertCount(2);
+            return runtime.GetAt(1).ToString().Trim();
         }
 
-        private object TrimStart(RuntimeData stackFrame)
+        private object TrimStart(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            return stackFrame.GetAt(1).ToString().TrimStart();
+            runtime.AssertCount(2);
+            return runtime.GetAt(1).ToString().TrimStart();
         }
 
-        private object TrimEnd(RuntimeData stackFrame)
+        private object TrimEnd(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            return stackFrame.GetAt(1).ToString().TrimEnd();
+            runtime.AssertCount(2);
+            return runtime.GetAt(1).ToString().TrimEnd();
         }
 
-        private object StringContains(RuntimeData stackFrame)
+        private object StringContains(RuntimeData runtime)
         {
-            stackFrame.AssertCount(3);
-            return stackFrame.GetAt<string>(1).Contains(stackFrame.GetAt<string>(2));
+            runtime.AssertCount(3);
+            return runtime.GetAt<string>(1).Contains(runtime.GetAt<string>(2));
         }
 
-        private object StringCompare(RuntimeData stackFrame)
+        private object StringCompare(RuntimeData runtime)
         {
-            stackFrame.AssertCount(3);
-            return stackFrame.GetAt<string>(1).CompareTo(stackFrame.GetAt<string>(2));
+            runtime.AssertCount(3);
+            return runtime.GetAt<string>(1).CompareTo(runtime.GetAt<string>(2));
         }
 
-        private object StringIndexOf(RuntimeData stackFrame)
+        private object StringIndexOf(RuntimeData runtime)
         {
-            if (stackFrame.ParameterCount == 3) {
-                stackFrame.Add(0);
+            if (runtime.ParameterCount == 3) {
+                runtime.Add(0);
             }
-            if (stackFrame.ParameterCount == 4) {
-                stackFrame.Add(stackFrame.GetAt<string>(1).Length);
+            if (runtime.ParameterCount == 4) {
+                runtime.Add(runtime.GetAt<string>(1).Length);
             }
-            stackFrame.AssertCount(5);
-            char? cObj = stackFrame.GetAt(2) as char?;
+            runtime.AssertCount(5);
+            char? cObj = runtime.GetAt(2) as char?;
             if (cObj == null) {
-                return stackFrame.GetAt<string>(1).IndexOf(stackFrame.GetAt<string>(2), stackFrame.GetAt<int>(3), stackFrame.GetAt<int>(4));
+                return runtime.GetAt<string>(1).IndexOf(runtime.GetAt<string>(2), runtime.GetAt<int>(3), runtime.GetAt<int>(4));
             }
             else {
-                return stackFrame.GetAt<string>(1).IndexOf(cObj.Value, stackFrame.GetAt<int>(3), stackFrame.GetAt<int>(4));
+                return runtime.GetAt<string>(1).IndexOf(cObj.Value, runtime.GetAt<int>(3), runtime.GetAt<int>(4));
             }
         }
 
-        private object StringLastIndexOf(RuntimeData stackFrame)
+        private object StringLastIndexOf(RuntimeData runtime)
         {
-            if (stackFrame.ParameterCount == 3) {
-                stackFrame.Add(0);
+            if (runtime.ParameterCount == 3) {
+                runtime.Add(0);
             }
-            if (stackFrame.ParameterCount == 4) {
-                stackFrame.Add(stackFrame.GetAt<string>(1).Length);
+            if (runtime.ParameterCount == 4) {
+                runtime.Add(runtime.GetAt<string>(1).Length);
             }
-            stackFrame.AssertCount(5);
-            char? cObj = stackFrame.GetAt(2) as char?;
+            runtime.AssertCount(5);
+            char? cObj = runtime.GetAt(2) as char?;
             if (cObj == null) {
-                return stackFrame.GetAt<string>(1).LastIndexOf(stackFrame.GetAt<string>(2), stackFrame.GetAt<int>(3), stackFrame.GetAt<int>(4));
+                return runtime.GetAt<string>(1).LastIndexOf(runtime.GetAt<string>(2), runtime.GetAt<int>(3), runtime.GetAt<int>(4));
             }
             else {
-                return stackFrame.GetAt<string>(1).LastIndexOf(cObj.Value, stackFrame.GetAt<int>(3), stackFrame.GetAt<int>(4));
+                return runtime.GetAt<string>(1).LastIndexOf(cObj.Value, runtime.GetAt<int>(3), runtime.GetAt<int>(4));
             }
         }
 
-        private object StringUpper(RuntimeData stackFrame)
+        private object StringUpper(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            return stackFrame.GetAt<string>(1).ToUpper();
+            runtime.AssertCount(2);
+            return runtime.GetAt<string>(1).ToUpper();
         }
 
-        private object StringLower(RuntimeData stackFrame)
+        private object StringLower(RuntimeData runtime)
         {
-            stackFrame.AssertCount(2);
-            return stackFrame.GetAt<string>(1).ToLower();
+            runtime.AssertCount(2);
+            return runtime.GetAt<string>(1).ToLower();
         }
 
-        private object StringLeft(RuntimeData stackFrame)
+        private object StringLeft(RuntimeData runtime)
         {
-            stackFrame.AssertCount(3);
-            return stackFrame.GetAt<string>(1).Substring(stackFrame.GetAt<int>(2));
+            runtime.AssertCount(3);
+            return runtime.GetAt<string>(1).Substring(runtime.GetAt<int>(2));
         }
 
-        private object StringRight(RuntimeData stackFrame)
+        private object StringRight(RuntimeData runtime)
         {
-            stackFrame.AssertCount(3);
-            return stackFrame.GetAt<string>(1).Remove(stackFrame.GetAt<int>(2));
+            runtime.AssertCount(3);
+            return runtime.GetAt<string>(1).Remove(runtime.GetAt<int>(2));
         }
 
-        private object Substring(RuntimeData stackFrame)
+        private object Substring(RuntimeData runtime)
         {
-            if (stackFrame.ParameterCount == 3) {
-                return stackFrame.GetAt<string>(1).Substring(
-                                    stackFrame.GetAt<int>(2)
+            if (runtime.ParameterCount == 3) {
+                return runtime.GetAt<string>(1).Substring(
+                                    runtime.GetAt<int>(2)
                                     );
             }
             else {
-                stackFrame.AssertCount(4);
-                return stackFrame.GetAt<string>(1).Substring(
-                                    stackFrame.GetAt<int>(2), stackFrame.GetAt<int>(3)
+                runtime.AssertCount(4);
+                return runtime.GetAt<string>(1).Substring(
+                                    runtime.GetAt<int>(2), runtime.GetAt<int>(3)
                                     );
             }
         }

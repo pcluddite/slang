@@ -35,41 +35,41 @@ namespace Tbasic.Libraries
             Add("StdPause", ConsolePause);
         }
 
-        private object ConsoleWriteline(RuntimeData _sframe)
+        private object ConsoleWriteline(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            Console.WriteLine(_sframe.GetAt(1));
+            runtime.AssertCount(2);
+            Console.WriteLine(runtime.GetAt(1));
             return null;
         }
 
-        private object ConsoleWrite(RuntimeData _sframe)
+        private object ConsoleWrite(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            Console.Write(_sframe.GetAt(1));
+            runtime.AssertCount(2);
+            Console.Write(runtime.GetAt(1));
             return null;
         }
 
-        private object ConsoleRead(RuntimeData _sframe)
+        private object ConsoleRead(RuntimeData runtime)
         {
-            _sframe.AssertCount(1);
+            runtime.AssertCount(1);
             return Console.Read();
         }
 
-        private object ConsoleReadLine(RuntimeData _sframe)
+        private object ConsoleReadLine(RuntimeData runtime)
         {
-            _sframe.AssertCount(1);
+            runtime.AssertCount(1);
             return Console.ReadLine();
         }
 
-        private object ConsoleReadKey(RuntimeData _sframe)
+        private object ConsoleReadKey(RuntimeData runtime)
         {
-            _sframe.AssertCount(1);
+            runtime.AssertCount(1);
             return Console.ReadKey().KeyChar;
         }
 
-        private object ConsolePause(RuntimeData _sframe)
+        private object ConsolePause(RuntimeData runtime)
         {
-            _sframe.AssertCount(1);
+            runtime.AssertCount(1);
             return Console.ReadKey(true).KeyChar;
         }
 
@@ -87,26 +87,26 @@ namespace Tbasic.Libraries
             return Interaction.InputBox(prompt, title, defaultResponse, x, y);
         }
 
-        private object Input(RuntimeData _sframe)
+        private object Input(RuntimeData runtime)
         {
-            if (_sframe.ParameterCount == 2) {
-                _sframe.AddRange("TBASIC", -1, -1);
+            if (runtime.ParameterCount == 2) {
+                runtime.AddRange("TBASIC", -1, -1);
             }
-            if (_sframe.ParameterCount == 3) {
-                _sframe.AddRange(-1, -1);
+            if (runtime.ParameterCount == 3) {
+                runtime.AddRange(-1, -1);
             }
-            if (_sframe.ParameterCount == 4) {
-                _sframe.AddRange(-1);
+            if (runtime.ParameterCount == 4) {
+                runtime.AddRange(-1);
             }
-            _sframe.AssertCount(5);
+            runtime.AssertCount(5);
 
-            int x = _sframe.GetAt<int>(3),
-                y = _sframe.GetAt<int>(4);
+            int x = runtime.GetAt<int>(3),
+                y = runtime.GetAt<int>(4);
 
-            string resp = InputBox(_sframe.GetAt<string>(1), _sframe.GetAt<string>(2), "", x, y);
+            string resp = InputBox(runtime.GetAt<string>(1), runtime.GetAt<string>(2), "", x, y);
 
             if (string.IsNullOrEmpty(resp)) { 
-                _sframe.Status = ErrorSuccess.NoContent; // -1 no input 2/24
+                runtime.Status = ErrorSuccess.NoContent; // -1 no input 2/24
                 return null;
             }
             else {
@@ -127,22 +127,22 @@ namespace Tbasic.Libraries
             t.Start(new object[] { timeout, icon, text, title });
         }
 
-        private object TrayTip(RuntimeData _sframe)
+        private object TrayTip(RuntimeData runtime)
         {
-            if (_sframe.ParameterCount == 2) {
-                _sframe.Add(""); // title
-                _sframe.Add(0); // icon
-                _sframe.Add(5000); // timeout
+            if (runtime.ParameterCount == 2) {
+                runtime.Add(""); // title
+                runtime.Add(0); // icon
+                runtime.Add(5000); // timeout
             }
-            else if (_sframe.ParameterCount == 3) {
-                _sframe.Add(0); // icon
-                _sframe.Add(5000); // timeout
+            else if (runtime.ParameterCount == 3) {
+                runtime.Add(0); // icon
+                runtime.Add(5000); // timeout
             }
-            else if (_sframe.ParameterCount == 4) {
-                _sframe.Add(5000); // timeout
+            else if (runtime.ParameterCount == 4) {
+                runtime.Add(5000); // timeout
             }
-            _sframe.AssertCount(5);
-            TrayTip(text: _sframe.GetAt<string>(1), title: _sframe.GetAt<string>(2), icon: _sframe.GetAt<ToolTipIcon>(3), timeout: _sframe.GetAt<int>(4));
+            runtime.AssertCount(5);
+            TrayTip(text: runtime.GetAt<string>(1), title: runtime.GetAt<string>(2), icon: runtime.GetAt<ToolTipIcon>(3), timeout: runtime.GetAt<int>(4));
             return null;
         }
 
@@ -182,16 +182,16 @@ namespace Tbasic.Libraries
             return Interaction.MsgBox(prompt, (MsgBoxStyle)buttons, title).ToString();
         }
 
-        private object MsgBox(RuntimeData _sframe)
+        private object MsgBox(RuntimeData runtime)
         {
-            if (_sframe.ParameterCount == 3) {
-                _sframe.Add("");
+            if (runtime.ParameterCount == 3) {
+                runtime.Add("");
             }
-            _sframe.AssertCount(4);
+            runtime.AssertCount(4);
 
-            int flag = _sframe.GetAt<int>(1);
-            string text = _sframe.GetAt<string>(2),
-                   title = _sframe.GetAt<string>(3);
+            int flag = runtime.GetAt<int>(1);
+            string text = runtime.GetAt<string>(2),
+                   title = runtime.GetAt<string>(3);
 
             return MsgBox(buttons: flag, prompt: text, title: title);
         }
@@ -206,10 +206,10 @@ namespace Tbasic.Libraries
             t.Start(text);
         }
 
-        private object Say(RuntimeData _sframe)
+        private object Say(RuntimeData runtime)
         {
-            _sframe.AssertCount(2);
-            Say(_sframe.GetAt<string>(1));
+            runtime.AssertCount(2);
+            Say(runtime.GetAt<string>(1));
             return null;
         }
 

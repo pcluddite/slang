@@ -92,17 +92,17 @@ namespace Tbasic.Libraries
             return Random(upperBound - lowerBound) + lowerBound;
         }
 
-        private object Random(RuntimeData stackFrame)
+        private object Random(RuntimeData runtime)
         {
-            stackFrame.AssertCount(atLeast: 1, atMost: 3);
-            if (stackFrame.ParameterCount == 1) {
+            runtime.AssertCount(atLeast: 1, atMost: 3);
+            if (runtime.ParameterCount == 1) {
                 return Random();
             }
-            else if (stackFrame.ParameterCount == 2) {
-                return Random(stackFrame.GetAt<int>(1));
+            else if (runtime.ParameterCount == 2) {
+                return Random(runtime.GetAt<int>(1));
             }
             else {
-                return Random(stackFrame.GetAt<int>(1), stackFrame.GetAt<int>(2));
+                return Random(runtime.GetAt<int>(1), runtime.GetAt<int>(2));
             }
         }
 

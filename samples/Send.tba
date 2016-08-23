@@ -29,7 +29,7 @@ hwnd$ = 0
 
 Do Until hwnd$ <> 0
 	hwnd$ = WinGetHandle("Untitled - Notepad")
-Loop
+Loop sdf
 
 WinActivate(hwnd$)
 Send("Hello{!} I am a notepad application{!}")

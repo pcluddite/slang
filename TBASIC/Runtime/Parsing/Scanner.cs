@@ -72,7 +72,7 @@ namespace Tbasic.Parsing
         public override long Length
         {
             get {
-                return InternalBuffer.Length;
+                return IntLength;
             }
         }
 
@@ -103,6 +103,16 @@ namespace Tbasic.Parsing
         /// Gets or sets the current position of the stream as an integer
         /// </summary>
         public int IntPosition { get; set; }
+
+        /// <summary>
+        /// Gets the length of this stream as an integer
+        /// </summary>
+        public int IntLength
+        {
+            get {
+                return InternalBuffer.Length;
+            }
+        }
         
         /// <summary>
         /// Skips all leading whitespace
@@ -137,10 +147,12 @@ namespace Tbasic.Parsing
             SkipWhiteSpace();
 
             int last = IntPosition;
-            while (!EndOfStream && !char.IsWhiteSpace(InternalBuffer[last]))
-                ++last;
 
-            StringSegment seg = InternalBuffer.Subsegment(IntPosition, last - IntPosition + 1);
+            while (!EndOfStream && !char.IsWhiteSpace(InternalBuffer[last])) {
+                ++last;
+            }
+
+            StringSegment seg = InternalBuffer.Subsegment(IntPosition, last - IntPosition);
             IntPosition = last; // advance the stream
             return seg;
         }
@@ -302,9 +314,36 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (Position + offset >= Length)
-                return 0;
             return Encoding.Unicode.GetBytes(InternalBuffer.ToString(), IntPosition, count, buffer, offset);
+        }
+
+        /// <summary>
+        /// Reads a string segment from the buffer
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public StringSegment Read(int offset, int count)
+        {
+            return InternalBuffer.Subsegment(offset, count);
+        }
+
+        /// <summary>
+        /// Converts this scanner's buffer to a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return InternalBuffer.ToString();
+        }
+
+        /// <summary>
+        /// Converts this scanner's buffer to a string segment
+        /// </summary>
+        /// <returns></returns>
+        public StringSegment ToSegment()
+        {
+            return new StringSegment(InternalBuffer.FullString, InternalBuffer.Offset, InternalBuffer.Length);
         }
     }
 }

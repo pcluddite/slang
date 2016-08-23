@@ -48,7 +48,7 @@ namespace Tbasic.Errors
             LineException current = ex as LineException;
             while (current != null) { // traverse the exception until we find the actual error
                 msg.AppendFormat("\tat '{0}' on line {1}\n", current.Name, current.Line);
-                current = (ex = current.InnerException) as LineException;
+                current = (ex = current).InnerException as LineException;
             }
             msg.Append("\nDetail:\n");
             msg.AppendFormat("{0}", ex.Message);

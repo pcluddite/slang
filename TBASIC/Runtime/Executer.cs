@@ -198,7 +198,7 @@ namespace Tbasic.Runtime
                 }
             }
             else {
-                throw new LineException(current.LineNumber, current.VisibleName, ex.InnerException);
+                throw new LineException(current.LineNumber, current.VisibleName, ex);
             }
         }
 

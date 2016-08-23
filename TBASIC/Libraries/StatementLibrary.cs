@@ -103,7 +103,7 @@ namespace Tbasic.Libraries
             stackFrame.AssertAtLeast(2);
 
             StringSegment text = new StringSegment(stackFrame.Text);
-            Scanner scanner = new DefaultScanner(text);
+            Scanner scanner = stackFrame.StackExecuter.ScannerDelegate(text);
             scanner.IntPosition += stackFrame.Name.Length;
 
             Variable v;
@@ -173,7 +173,7 @@ namespace Tbasic.Libraries
             stackFrame.AssertAtLeast(2);
             StringSegment text = new StringSegment(stackFrame.Text);
 
-            Scanner scanner = new DefaultScanner(text);
+            Scanner scanner = stackFrame.StackExecuter.ScannerDelegate(text);
             scanner.IntPosition += stackFrame.Name.Length;
 
             Variable v;

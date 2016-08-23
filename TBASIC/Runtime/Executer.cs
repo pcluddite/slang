@@ -30,6 +30,11 @@ namespace Tbasic.Runtime
 
         #region Properties
         /// <summary>
+        /// Gets or sets the scanner creation delegate
+        /// </summary>
+        public CreateScannerDelegate ScannerDelegate { get; set; } = Scanner.Default;
+
+        /// <summary>
         /// The global context for this object
         /// </summary>
         public ObjectContext Global { get; private set; }

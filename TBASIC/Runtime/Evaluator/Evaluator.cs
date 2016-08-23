@@ -82,7 +82,7 @@ namespace Tbasic.Runtime
                 return 0;
             
             if (!_parsed) {
-                Scanner scanner = new DefaultScanner(_expression);
+                Scanner scanner = CurrentExecution.ScannerDelegate(_expression);
                 while (!scanner.EndOfStream)
                     NextToken(scanner);
                 _parsed = true;

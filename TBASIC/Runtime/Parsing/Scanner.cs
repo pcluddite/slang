@@ -10,14 +10,27 @@ using System.Text;
 using Tbasic.Components;
 using Tbasic.Operators;
 using Tbasic.Runtime;
+using System.Linq;
 
 namespace Tbasic.Parsing
 {
     /// <summary>
-    /// Similar idea to java.util.Scanner (don't sue me Oracle)
+    /// A delegate for creating scanner objects
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <returns></returns>
+    public delegate Scanner CreateScannerDelegate(StringSegment buffer);
+
+    /// <summary>
+    /// Parses text to various language symbols. Similar idea to java.util.Scanner (don't sue me Oracle)
     /// </summary>
     public abstract class Scanner : Stream
     {
+        /// <summary>
+        /// Gets the default BASIC scanner
+        /// </summary>
+        public static readonly CreateScannerDelegate Default = (buff => new DefaultScanner(buff));
+
         /// <summary>
         /// Gets or sets the internal buffer for this scanner
         /// </summary>

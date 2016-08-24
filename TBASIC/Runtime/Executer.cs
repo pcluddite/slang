@@ -120,9 +120,8 @@ namespace Tbasic.Runtime
         /// <returns></returns>
         public RuntimeData Execute(Line codeLine)
         {
-            RuntimeData runtime = new RuntimeData(this);
             try {
-                Execute(ref runtime, codeLine);
+                return Execute(this, codeLine);
             }
             catch(Exception ex) {
                 TbasicRuntimeException runEx = TbasicRuntimeException.WrapException(ex);
@@ -130,12 +129,11 @@ namespace Tbasic.Runtime
                     throw;
                 throw runEx;
             }
-            return runtime;
         }
 
         internal RuntimeData Execute(LineCollection lines)
         {
-            RuntimeData runtime = new RuntimeData(this);
+            RuntimeData runtime = null;
             for (int index = 0; index < lines.Count; index++) {
                 if (BreakRequest) {
                     break;
@@ -145,7 +143,7 @@ namespace Tbasic.Runtime
                 try {
                     ObjectContext blockContext = Context.FindBlockContext(current.Name);
                     if (blockContext == null) {
-                        Execute(ref runtime, current);
+                        runtime = Execute(this, current);
                     }
                     else {
                         CodeBlock block = blockContext.GetBlock(current.Name).Invoke(index, lines);
@@ -159,26 +157,28 @@ namespace Tbasic.Runtime
                     TbasicRuntimeException runEx = TbasicRuntimeException.WrapException(ex);
                     if (ex == null) // only catch errors that we understand 8/16/16
                         throw;
-                    HandleError(current, runtime, runEx);
+                    HandleError(current, runtime ?? new RuntimeData(this), runEx);
                 }
             }
-            return runtime;
+            return runtime ?? new RuntimeData(this);
         }
 
-        internal static void Execute(ref RuntimeData runtime, Line codeLine)
+        internal static RuntimeData Execute(Executer exec, Line codeLine)
         {
-            ObjectContext context = runtime.Context.FindCommandContext(codeLine.Name);
+            RuntimeData runtime;
+            ObjectContext context = exec.Context.FindCommandContext(codeLine.Name);
             if (context == null) {
-                Evaluator eval = new Evaluator(new StringSegment(codeLine.Text), runtime.StackExecuter);
-                object result = eval.Evaluate();
-                runtime.Context.PersistReturns(runtime);
-                runtime.Data = result;
+                runtime = new RuntimeData(exec);
+                Evaluator eval = new Evaluator(new StringSegment(codeLine.Text), exec);
+                exec.Context.PersistReturns(runtime);
+                runtime.Data = eval.Evaluate();
             }
             else {
-                runtime = new RuntimeData(runtime.StackExecuter, codeLine.Text);
+                runtime = new RuntimeData(exec, codeLine.Text);
                 runtime.Data = context.GetCommand(codeLine.Name).Invoke(runtime);
             }
             runtime.Context.SetReturns(runtime);
+            return runtime;
         }
 
         private void HandleError(Line current, RuntimeData runtime, TbasicRuntimeException ex)

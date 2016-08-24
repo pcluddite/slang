@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Parsing;
+using System.IO;
 
 namespace Tbasic.Runtime
 {
@@ -19,12 +20,12 @@ namespace Tbasic.Runtime
     public delegate void UserExittedEventHandler(object sender, EventArgs e);
 
     /// <summary>
-    /// Executes a script and stores information on the current state of the line being executed
+    /// Executes a script and stores information on the current runtime
     /// </summary>
     public class Executer
     {
         /// <summary>
-        /// A string containing information on this version of Tbasic
+        /// A string containing information on this version of TBasic
         /// </summary>
         public const string VERSION = "TBASIC 2.5.2016 Beta";
 
@@ -72,7 +73,7 @@ namespace Tbasic.Runtime
         #endregion
 
         /// <summary>
-        /// Initializes a new script executer
+        /// Initializes a new object to execute scripts or single lines of code
         /// </summary>
         public Executer()
         {
@@ -83,24 +84,24 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
-        /// Runs a Tbasic script
+        /// Runs a script
         /// </summary>
         /// <param name="script">the full text of the script to process</param>
         public void Execute(string script)
         {
-            Execute(script.Replace("\r\n", "\n").Split('\n'));
+            Execute(new StringReader(script));
         }
 
         /// <summary>
-        /// Runs a Tbasic script
+        /// Runs a script
         /// </summary>
         /// <param name="lines">the lines of the script to process</param>
-        public void Execute(string[] lines)
+        public void Execute(TextReader lines)
         {
-            CodeBlock[] userFuncs;
+            IList<CodeBlock> userFuncs;
             LineCollection code = ScanLines(lines, out userFuncs);
 
-            if (userFuncs != null && userFuncs.Length > 0) {
+            if (userFuncs != null && userFuncs.Count > 0) {
                 foreach (CodeBlock cb in userFuncs) {
                     FuncBlock fBlock = (FuncBlock)cb;
                     Global.SetFunction(fBlock.Template.Name, fBlock.CreateDelegate());
@@ -202,36 +203,37 @@ namespace Tbasic.Runtime
             }
         }
 
-        internal static LineCollection ScanLines(string[] lines, out CodeBlock[] userFunctions)
+        internal static LineCollection ScanLines(TextReader reader, out IList<CodeBlock> userFunctions)
         {
             LineCollection allLines = new LineCollection();
             List<int> funLines = new List<int>();
 
-            for (int lineNumber = 0; lineNumber < lines.Length; ++lineNumber) {
-                Line current = new Line(lineNumber + 1, lines[lineNumber]); // Tag all lines with its line number (index + 1)
+            string linestr;
+            int lineNumber = 0;
+            while ((linestr = reader.ReadLine()) != null) {
+                Line line = new Line(lineNumber + 1, linestr); // Tag all lines with its line number (index + 1)
 
-                if (string.IsNullOrEmpty(current.Text) || current.Text[0] == ';') {
+                if (string.IsNullOrEmpty(line.Text) || line.Text[0] == ';')
                     continue;
+                
+                if (line.Name[line.Name.Length - 1] == '$' || line.Name[line.Name.Length - 1] == ']') {
+                    line.Text = "LET " + line.Text; // add the word LET if it's an equality, but use the original name as visible name
                 }
-                if (current.Name[current.Name.Length - 1] == '$' || current.Name[current.Name.Length - 1] == ']') {
-                    current.Text = "LET " + current.Text; // add the word LET if it's an equality, but use the original name as visible name
-                }
-                else if (current.Name.EqualsIgnoreCase("FUNCTION")) {
-                    funLines.Add(current.LineNumber);
+                else if (line.Name.EqualsIgnoreCase("FUNCTION")) {
+                    funLines.Add(line.LineNumber);
                 }
                 else {
-                    current.VisibleName = current.VisibleName.ToUpper();
+                    line.VisibleName = line.VisibleName.ToUpper();
                 }
 
-                while (current.Text[current.Text.Length - 1] == '_') { // line continuation
+                while (line.Text[line.Text.Length - 1] == '_') { // line continuation
                     lineNumber++;
-                    if (lineNumber >= lines.Length) {
+                    linestr = reader.ReadLine();
+                    if (linestr == null)
                         throw new EndOfCodeException("line continuation character '_' cannot end script");
-                    }
-                    current = new Line(current.LineNumber, current.Text.Remove(current.Text.LastIndexOf('_')) + lines[lineNumber].Trim());
+                    line = new Line(line.LineNumber, line.Text.Remove(line.Text.LastIndexOf('_')) + linestr.Trim());
                 }
-
-                allLines.Add(current);
+                allLines.Add(line);
             }
 
             List<CodeBlock> userFuncs = new List<CodeBlock>();
@@ -242,7 +244,8 @@ namespace Tbasic.Runtime
                 allLines.Remove(func.Body);
                 allLines.Remove(func.Footer);
             }
-            userFunctions = userFuncs.ToArray();
+            userFunctions = userFuncs;
+
             return allLines;
         }
 
@@ -255,7 +258,7 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
-        /// Signals that a break request will be honored in the immediate future
+        /// Signals that a break request will be honored in the immediate future. This should only be called if you actually intend to break.
         /// </summary>
         public void HonorBreak()
         {
@@ -265,7 +268,7 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
-        /// Requests the script to exit
+        /// Requests the script to exit. This implies a break request.
         /// </summary>
         public void RequestExit()
         {

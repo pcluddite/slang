@@ -98,16 +98,13 @@ namespace Tbasic.Runtime
         /// <param name="lines">the lines of the script to process</param>
         public void Execute(TextReader lines)
         {
-            IList<CodeBlock> userFuncs;
-            LineCollection code = ScanLines(lines, out userFuncs);
-
-            if (userFuncs != null && userFuncs.Count > 0) {
-                foreach (CodeBlock cb in userFuncs) {
-                    FuncBlock fBlock = (FuncBlock)cb;
-                    Global.SetFunction(fBlock.Template.Name, fBlock.CreateDelegate());
+            Preprocessor p = Preprocessor.Preprocess(lines);
+            if (p.DefinedFunctions != null && p.DefinedFunctions.Count > 0) {
+                foreach (FuncBlock func in p.DefinedFunctions) {
+                    Global.SetFunction(func.Template.Name, func.CreateDelegate());
                 }
             }
-            Execute(code);
+            Execute(p.Lines);
 
             /*if (ManagedWindows.Count != 0 && !this.ExitRequest) {
                 System.Windows.Forms.Application.Run(new FormLoader(this));
@@ -156,7 +153,7 @@ namespace Tbasic.Runtime
                 }
                 catch (Exception ex) {
                     TbasicRuntimeException runEx = TbasicRuntimeException.WrapException(ex);
-                    if (ex == null) // only catch errors that we understand 8/16/16
+                    if (runEx == null) // only catch errors that we understand 8/16/16
                         throw;
                     HandleError(current, runtime ?? new RuntimeData(this), runEx);
                 }
@@ -194,59 +191,13 @@ namespace Tbasic.Runtime
                 runtime.Status = status;
                 runtime.Data = msg;
                 runtime.Context.SetReturns(runtime);
-                if (Options.HasFlag(ExecuterOption.ThrowErrors)) { // only actually throw anything if we understand the error
+                if (Options.HasFlag(ExecuterOption.ThrowErrors)) { // throw errors if the user wants it
                     throw new LineException(current.LineNumber, current.VisibleName, cEx);
                 }
             }
             else {
                 throw new LineException(current.LineNumber, current.VisibleName, ex);
             }
-        }
-
-        internal static LineCollection ScanLines(TextReader reader, out IList<CodeBlock> userFunctions)
-        {
-            LineCollection allLines = new LineCollection();
-            List<int> funLines = new List<int>();
-
-            string linestr;
-            int lineNumber = 1;
-            while ((linestr = reader.ReadLine()) != null) {
-                Line line = new Line(lineNumber++, linestr); // Tag all lines with its line number (index + 1)
-
-                if (string.IsNullOrEmpty(line.Text) || line.Text[0] == ';')
-                    continue;
-                
-                if (line.Name[line.Name.Length - 1] == '$' || line.Name[line.Name.Length - 1] == ']') {
-                    line.Text = "LET " + line.Text; // add the word LET if it's an equality, but use the original name as visible name
-                }
-                else if (line.Name.EqualsIgnoreCase("FUNCTION")) {
-                    funLines.Add(line.LineNumber);
-                }
-                else {
-                    line.VisibleName = line.VisibleName.ToUpper();
-                }
-
-                while (line.Text[line.Text.Length - 1] == '_') { // line continuation
-                    lineNumber++;
-                    linestr = reader.ReadLine();
-                    if (linestr == null)
-                        throw new EndOfCodeException("line continuation character '_' cannot end script");
-                    line = new Line(line.LineNumber, line.Text.Remove(line.Text.LastIndexOf('_')) + linestr.Trim());
-                }
-                allLines.Add(line);
-            }
-
-            List<CodeBlock> userFuncs = new List<CodeBlock>();
-            foreach (int funcLine in funLines) {
-                FuncBlock func = new FuncBlock(allLines.IndexOf(funcLine), allLines);
-                userFuncs.Add(func);
-                allLines.Remove(func.Header);
-                allLines.Remove(func.Body);
-                allLines.Remove(func.Footer);
-            }
-            userFunctions = userFuncs;
-
-            return allLines;
         }
 
         /// <summary>

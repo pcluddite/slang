@@ -91,6 +91,15 @@ namespace Tbasic.Parsing
             VisibleName = Name;
         }
 
+        private Line()
+        {
+        }
+
+        internal static Line CreateLineNoTrim(int id, string line)
+        {
+            return new Line() { LineNumber = id, Text = line };
+        }
+
         /// <summary>
         /// Initializes a line of Tbasic code carring the same information as another Tbasic.Line
         /// </summary>

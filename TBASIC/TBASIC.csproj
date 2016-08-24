@@ -77,6 +77,7 @@
     <Compile Include="Runtime\Parsing\LineCollection.cs" />
     <Compile Include="Runtime\Parsing\DefaultScanner.cs" />
     <Compile Include="Runtime\Parsing\Scanner.cs" />
+    <Compile Include="Runtime\Preprocessor.cs" />
     <Compile Include="Runtime\StackFrame\ObjectContext.cs" />
     <Compile Include="Runtime\Evaluator\Variable.cs" />
     <Compile Include="Runtime\Executer.cs" />

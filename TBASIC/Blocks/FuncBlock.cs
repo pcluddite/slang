@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using Tbasic.Components;
 using Tbasic.Errors;
-using Tbasic.Libraries;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
 
@@ -16,15 +15,20 @@ namespace Tbasic
     internal class FuncBlock : CodeBlock
     {
         public RuntimeData Template { get; private set; }
+        public static readonly Predicate<Line> CheckBegin = (line => line.Name.EqualsIgnoreCase("FUNCTION"));
+        public static readonly Predicate<Line> CheckEnd = (line => line.Text.EqualsIgnoreCase("END FUNCTION"));
+        
+        internal FuncBlock(Line header, LineCollection body, Line footer)
+        {
+            Header = header;
+            Footer = footer;
+            Body = body;
+            Template = new RuntimeData(null, ParseFunction(Header.Text.Substring(Header.Name.Length)));
+        }
 
         public FuncBlock(int index, LineCollection code)
         {
-            LoadFromCollection(
-                code.ParseBlock(
-                    index,
-                    c => c.Name.EqualsIgnoreCase("FUNCTION"),
-                    c => c.Text.EqualsIgnoreCase("END FUNCTION")
-                ));
+            LoadFromCollection(code.ParseBlock(index, CheckBegin, CheckEnd));
             Template = new RuntimeData(null, ParseFunction(Header.Text.Substring(Header.Name.Length)));
         }
 
@@ -41,7 +45,7 @@ namespace Tbasic
             exec.Context = exec.Context.CreateSubContext();
 
             for (int index = 1; index < Template.ParameterCount; index++) {
-                exec.Context.SetVariable(Template.GetAt<string>(index), runtime.GetAt(index));
+                exec.Context.SetVariable((string)Template.GetAt(index), runtime.GetAt(index));
             }
             exec.Context.SetCommand("return", Return);
             exec.Context.SetFunction("SetStatus", SetStatus);

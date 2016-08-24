@@ -27,9 +27,9 @@ ProcStart("notepad.exe")
 
 hwnd$ = 0
 
-Do Until hwnd$ <> 0
+Do
 	hwnd$ = WinGetHandle("Untitled - Notepad")
-Loop sdf
+Loop Until hwnd$ <> 0
 
 WinActivate(hwnd$)
 Send("Hello{!} I am a notepad application{!}")

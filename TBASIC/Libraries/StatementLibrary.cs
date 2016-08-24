@@ -38,7 +38,7 @@ namespace Tbasic.Libraries
             }
 
             CodeBlock[] funcs;
-            LineCollection lines = Executer.ScanLines(File.ReadAllLines(path), out funcs);
+            //LineCollection lines = Executer.ScanLines(File.ReadAllLines(path), out funcs);
 
 
 

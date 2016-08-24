@@ -209,9 +209,9 @@ namespace Tbasic.Runtime
             List<int> funLines = new List<int>();
 
             string linestr;
-            int lineNumber = 0;
+            int lineNumber = 1;
             while ((linestr = reader.ReadLine()) != null) {
-                Line line = new Line(lineNumber + 1, linestr); // Tag all lines with its line number (index + 1)
+                Line line = new Line(lineNumber++, linestr); // Tag all lines with its line number (index + 1)
 
                 if (string.IsNullOrEmpty(line.Text) || line.Text[0] == ';')
                     continue;

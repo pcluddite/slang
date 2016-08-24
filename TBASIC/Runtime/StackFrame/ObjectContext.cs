@@ -497,6 +497,54 @@ namespace Tbasic.Runtime
 
         #endregion
 
+        #region TryGet
+        
+        // c# doesn't have metaprogramming like c++, that would be very usefull right about now
+        private bool TryGet<TKey, TValue>(Func<ObjectContext, IDictionary<TKey, TValue>> getdict, TKey key, out TValue value)
+        {
+            if (getdict(this).TryGetValue(key, out value)) {
+                return true;
+            }
+            else if (_super == null) {
+                return false;
+            }
+            else {
+                return _super.TryGet(getdict, key, out value);
+            }
+        }
+
+        internal bool TryGetBlock(string name, out BlockCreator value)
+        {
+            return TryGet(o => o._blocks, name, out value);
+        }
+
+        internal bool TryGetVariable(string name, out object value)
+        {
+            return TryGet(o => o._variables, name, out value);
+        }
+
+        internal bool TryGetFunction(string name, out TBasicFunction value)
+        {
+            return TryGet(o => o._functions, name, out value);
+        }
+
+        internal bool TryGetCommand(string name, out TBasicFunction value)
+        {
+            return TryGet(o => o._commands, name, out value);
+        }
+        
+        internal bool GetBinaryOperator(string strOp, out BinaryOperator op)
+        {
+            return TryGet(o => o._binaryOps, strOp, out op);
+        }
+        
+        internal bool GetUnaryOperator(string strOp, out UnaryOperator op)
+        {
+            return TryGet(o => o._unaryOps, strOp, out op);
+        }
+
+        #endregion
+
         #region Get
 
         /// <summary>

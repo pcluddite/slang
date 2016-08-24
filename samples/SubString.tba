@@ -29,7 +29,7 @@ Function GetNumChars()
         If @err = 204 Then
             Exit
         End If
-        amnt$ = Int(amnt$)
+        amnt$ = CNum(amnt$)
         If @err = 400 Then
             MsgBox(16, "What you entered is not a valid integer!", "Substring Test")
         Else
@@ -58,7 +58,7 @@ Function GetString(amnt$)
 End Function
 
 Function GetMiddle(str$, amnt$)
-    middle$ = iPart((sizeof(str$) - Int(amnt$)) / 2)
+    middle$ = iPart((sizeof(str$) - CNum(amnt$)) / 2)
     MsgBox(64, "The middle character was determined to be at position " + (middle$ + 1) + ".\n" + _
                "The resulting string is \"" + StrInStr(str$, middle$, amnt$) + "\".", _
                "Substring")

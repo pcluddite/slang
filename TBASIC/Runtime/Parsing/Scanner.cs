@@ -117,7 +117,7 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Skips all leading whitespace
         /// </summary>
-        protected virtual void SkipWhiteSpace()
+        public virtual void SkipWhiteSpace()
         {
             if (EndOfStream)
                 return;

@@ -27,7 +27,6 @@ namespace Tbasic.Parsing
             int originalPos = IntPosition;
             try {
                 num = default(Number);
-                SkipWhiteSpace();
                 if (EndOfStream)
                     return false;
                 int endPos = FindConsecutiveDigits(InternalBuffer, IntPosition);
@@ -59,7 +58,6 @@ namespace Tbasic.Parsing
             int originalPos = IntPosition;
             try {
                 number = default(long);
-                SkipWhiteSpace();
 
                 int endPos = IntPosition;
                 if (EndOfStream || InternalBuffer[endPos++] != '0' ||
@@ -119,7 +117,6 @@ namespace Tbasic.Parsing
         {
             int originalPos = IntPosition;
             try {
-                SkipWhiteSpace();
                 if (EndOfStream || !InternalBuffer.Subsegment(IntPosition).StartsWith(pattern, ignoreCase)) {
                     IntPosition = originalPos;
                     return false;
@@ -137,7 +134,6 @@ namespace Tbasic.Parsing
         {
             int originalPos = IntPosition;
             try {
-                SkipWhiteSpace();
                 if (EndOfStream || (InternalBuffer[IntPosition] != '\"' && InternalBuffer[IntPosition] != '\'')) {
                     parsed = null;
                     IntPosition = originalPos;
@@ -157,7 +153,6 @@ namespace Tbasic.Parsing
         {
             int originalPos = IntPosition;
             try {
-                SkipWhiteSpace();
                 func = null;
                 args = null;
                 name = null;
@@ -188,7 +183,6 @@ namespace Tbasic.Parsing
         {
             int originalPos = IntPosition;
             try {
-                SkipWhiteSpace();
                 int start = IntPosition;
                 variable = null;
                 indices = null;
@@ -257,7 +251,6 @@ namespace Tbasic.Parsing
         {
             int originalPos = IntPosition;
             try {
-                SkipWhiteSpace();
                 indices = null;
                 if (!EndOfStream && InternalBuffer[IntPosition] == '[') {
                     IList<object> args;
@@ -303,7 +296,6 @@ namespace Tbasic.Parsing
         {
             int originalPos = IntPosition;
             try {
-                SkipWhiteSpace();
                 if (EndOfStream) {
                     b = default(bool);
                     return false;
@@ -332,7 +324,6 @@ namespace Tbasic.Parsing
         {
             int originalPos = IntPosition;
             try {
-                SkipWhiteSpace();
                 if (EndOfStream || !MatchOperator(InternalBuffer, IntPosition, context, out foundOp)) {
                     foundOp = default(BinaryOperator);
                     IntPosition = originalPos;
@@ -351,7 +342,6 @@ namespace Tbasic.Parsing
         {
             int originalPos = IntPosition;
             try {
-                SkipWhiteSpace();
                 if (EndOfStream || (last != null && !(last is BinaryOperator))) {
                     foundOp = default(UnaryOperator);
                     return false;

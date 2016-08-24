@@ -98,6 +98,7 @@ namespace Tbasic.Runtime
         
         private int NextToken(Scanner scanner)
         {
+            scanner.SkipWhiteSpace();
             int startIndex = scanner.IntPosition;
 
             // check group
@@ -171,7 +172,8 @@ namespace Tbasic.Runtime
         private int AddObjectToExprList(object val, int startIndex, Scanner scanner)
         {
             if (Equals(val, "(")) {
-
+                scanner.IntPosition = startIndex;
+                scanner.SkipWhiteSpace();
                 scanner.IntPosition = GroupParser.IndexGroup(_expression, startIndex) + 1;
 
                 Evaluator eval = new Evaluator(

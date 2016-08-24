@@ -105,6 +105,7 @@ namespace Tbasic.Libraries
             StringSegment text = new StringSegment(runtime.Text);
             Scanner scanner = runtime.StackExecuter.ScannerDelegate(text);
             scanner.IntPosition += runtime.Name.Length;
+            scanner.SkipWhiteSpace();
 
             Variable v;
             if (!scanner.NextVariableInternal(runtime.StackExecuter, out v))
@@ -175,6 +176,7 @@ namespace Tbasic.Libraries
 
             Scanner scanner = runtime.StackExecuter.ScannerDelegate(text);
             scanner.IntPosition += runtime.Name.Length;
+            scanner.SkipWhiteSpace();
 
             Variable v;
             if (!scanner.NextVariableInternal(runtime.StackExecuter, out v))

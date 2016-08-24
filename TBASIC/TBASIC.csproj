@@ -50,6 +50,7 @@
     <Compile Include="Components\StructReference.cs" />
     <Compile Include="Components\Win32\GDI32.cs" />
     <Compile Include="Components\Win32\Impersonate.cs" />
+    <Compile Include="Errors\DuplicateDefinitionException.cs" />
     <Compile Include="Errors\ErrorCodes.cs" />
     <Compile Include="Errors\ScriptParsingException.cs" />
     <Compile Include="Errors\FunctionException.cs" />

@@ -99,8 +99,10 @@ namespace Tbasic.Runtime
         public void Execute(TextReader lines)
         {
             Preprocessor p = Preprocessor.Preprocess(lines);
-            if (p.DefinedFunctions != null && p.DefinedFunctions.Count > 0) {
+            if (p.DefinedFunctions.Count > 0) {
                 foreach (FuncBlock func in p.DefinedFunctions) {
+                    if (Global.FindFunctionContext(func.Template.Name) != null)
+                        throw ThrowHelper.AlreadyDefined(func.Template.Name + "()");
                     Global.SetFunction(func.Template.Name, func.CreateDelegate());
                 }
             }

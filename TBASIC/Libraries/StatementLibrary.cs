@@ -9,6 +9,8 @@ using System.IO;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Components;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace Tbasic.Libraries
 {
@@ -17,6 +19,7 @@ namespace Tbasic.Libraries
         public StatementLibrary()
         {
             Add("LET", Let);
+            Add("SET", Let);
             Add("DIM", DIM);
             Add("SLEEP", Sleep);
             Add("ELSE", UhOh);
@@ -27,20 +30,32 @@ namespace Tbasic.Libraries
             Add("BREAK", Break);
             Add("OPTION", Option);
             Add("OPT", Option);
+            Add("#INCLUDE", Include);
         }
 
-        private object Include(RuntimeData runtime)
+        private static object Include(RuntimeData runtime)
         {
             runtime.AssertCount(2);
-            string path = Path.GetFullPath(runtime.GetAt<string>(1));
-            if (!File.Exists(path)) {
-                throw new FileNotFoundException();
+            string path = Path.GetFullPath(runtime.EvaluateAt<string>(1));
+
+            try {
+                Preprocessor p;
+                using (StreamReader reader = new StreamReader(File.OpenRead(path))) {
+                    p = Preprocessor.Preprocess(reader);
+                }
+
+                if (p.DefinedFunctions.Count > 0) {
+                    foreach (FuncBlock func in p.DefinedFunctions) {
+                        ObjectContext context = runtime.Context.FindFunctionContext(func.Template.Name);
+                        if (context != null)
+                            throw ThrowHelper.AlreadyDefined(func.Template.Name + "()");
+                        runtime.Context.SetFunction(func.Template.Name, func.CreateDelegate());
+                    }
+                }
             }
-
-            CodeBlock[] funcs;
-            //LineCollection lines = Executer.ScanLines(File.ReadAllLines(path), out funcs);
-
-
+            catch(Exception ex) when (ex is TbasicRuntimeException || ex is IOException || ex is UnauthorizedAccessException) {
+                throw new TbasicRuntimeException("Unable to load library. " + ex.Message, ex);
+            }
 
             return NULL(runtime);
         }

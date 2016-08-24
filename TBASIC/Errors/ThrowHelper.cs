@@ -54,6 +54,11 @@ namespace Tbasic.Errors
             return new InvalidCastException(string.Format("An object '{0}' has been defined as a {1} and cannot be redefined as a {2}", name, type, newType));
         }
 
+        public static Exception AlreadyDefined(string name)
+        {
+            return new DuplicateDefinitionException(name);
+        }
+
         public static Exception ConstantChange()
         {
             return new InvalidOperationException("Cannot redefine a constant");

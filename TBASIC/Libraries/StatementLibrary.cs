@@ -41,11 +41,11 @@ namespace Tbasic.Libraries
             try {
                 Preprocessor p;
                 using (StreamReader reader = new StreamReader(File.OpenRead(path))) {
-                    p = Preprocessor.Preprocess(reader);
+                    p = Preprocessor.Preprocess(reader, runtime.StackExecuter);
                 }
 
-                if (p.DefinedFunctions.Count > 0) {
-                    foreach (FuncBlock func in p.DefinedFunctions) {
+                if (p.Functions.Count > 0) {
+                    foreach (FuncBlock func in p.Functions) {
                         ObjectContext context = runtime.Context.FindFunctionContext(func.Template.Name);
                         if (context != null)
                             throw ThrowHelper.AlreadyDefined(func.Template.Name + "()");
@@ -129,7 +129,12 @@ namespace Tbasic.Libraries
             string name = v.Name.ToString();
             ObjectContext context = runtime.Context.FindVariableContext(name);
             if (context == null) {
-                runtime.Context.SetVariable(name, array_alloc(v.Indices, 0));
+                if (v.Indices != null) {
+                    runtime.Context.SetVariable(name, array_alloc(v.Indices, 0));
+                }
+                else {
+                    runtime.Context.SetVariable(name, null); // just declare it.
+                }
             }
             else {
                 object obj = context.GetVariable(name);

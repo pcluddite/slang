@@ -228,6 +228,12 @@ namespace Tbasic.Parsing
         /// <param name="indices"></param>
         /// <returns></returns>
         public abstract bool NextVariable(Executer exec, out StringSegment variable, out StringSegment name, out int[] indices);
+        /// <summary>
+        /// Matches the next set of characters that are acceptable in an identifier (such as a variable or function)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public abstract bool NextValidIdentifier(out StringSegment name);
 
         internal bool NextFunctionInternal(Executer exec, out Function func)
         {

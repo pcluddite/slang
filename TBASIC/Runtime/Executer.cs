@@ -98,12 +98,17 @@ namespace Tbasic.Runtime
         /// <param name="lines">the lines of the script to process</param>
         public void Execute(TextReader lines)
         {
-            Preprocessor p = Preprocessor.Preprocess(lines);
-            if (p.DefinedFunctions.Count > 0) {
-                foreach (FuncBlock func in p.DefinedFunctions) {
+            Preprocessor p = Preprocessor.Preprocess(lines, this);
+            if (p.Functions.Count > 0) {
+                foreach (FuncBlock func in p.Functions) {
                     if (Global.FindFunctionContext(func.Template.Name) != null)
                         throw ThrowHelper.AlreadyDefined(func.Template.Name + "()");
                     Global.SetFunction(func.Template.Name, func.CreateDelegate());
+                }
+            }
+            if (p.Types.Count > 0) {
+                foreach(TClass t in p.Types) {
+                    Global.AddType(t);
                 }
             }
             Execute(p.Lines);

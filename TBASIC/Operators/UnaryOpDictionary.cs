@@ -10,14 +10,29 @@ namespace Tbasic.Operators
 {
     internal class UnaryOpDictionary : OperatorDictionary<UnaryOperator>
     {
+        public UnaryOpDictionary()
+        {
+        }
+
+        public UnaryOpDictionary(UnaryOpDictionary other)
+            : base(other)
+        {
+        }
+
         public override void LoadStandardOperators()
         {
+            operators.Add("NEW", new UnaryOperator("NEW", New));
             operators.Add("+", new UnaryOperator("+", Plus));
             operators.Add("-", new UnaryOperator("-", Minus));
             operators.Add("NOT ", new UnaryOperator("NOT ", Not));
             operators.Add("~", new UnaryOperator("~", BitNot));
         }
-        
+
+        private static object New(object value)
+        {
+            throw new NotImplementedException();
+        }
+
         private static object Plus(object value)
         {
             return +Convert.ToDouble(value, CultureInfo.CurrentCulture);

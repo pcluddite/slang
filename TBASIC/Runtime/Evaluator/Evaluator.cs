@@ -282,42 +282,47 @@ namespace Tbasic.Runtime
         /// <returns>v1 (op) v2</returns>
         public static object PerformBinaryOp(BinaryOperator op, object left, object right)
         {
-            IEvaluator tv = left as IEvaluator;
-            if (tv != null) 
-                left = tv.Evaluate();
+            if (op.EvaulatedOperand.HasFlag(BinaryOperator.OperandPosition.Left)) {
+                IEvaluator tv = left as IEvaluator;
+                if (tv != null)
+                    left = tv.Evaluate();
+            }
 
             try {
-                switch (op.OperatorString) { // short circuit evaluation 1/6/16
-                    case "AND":
-                        if (Convert.ToBoolean(left, CultureInfo.CurrentCulture)) {
-                            tv = right as IEvaluator;
-                            if (tv != null) {
-                                right = tv.Evaluate();
+                if (op.EvaulatedOperand.HasFlag(BinaryOperator.OperandPosition.Right)) {
+                    IEvaluator tv;
+                    switch (op.OperatorString) { // short circuit evaluation 1/6/16
+                        case "AND":
+                            if (Convert.ToBoolean(left, CultureInfo.CurrentCulture)) {
+                                tv = right as IEvaluator;
+                                if (tv != null) {
+                                    right = tv.Evaluate();
+                                }
+                                if (Convert.ToBoolean(right, CultureInfo.CurrentCulture)) {
+                                    return true;
+                                }
                             }
-                            if (Convert.ToBoolean(right, CultureInfo.CurrentCulture)) {
+                            return false;
+                        case "OR":
+                            if (Convert.ToBoolean(left, CultureInfo.CurrentCulture)) {
                                 return true;
                             }
-                        }
-                        return false;
-                    case "OR":
-                        if (Convert.ToBoolean(left, CultureInfo.CurrentCulture)) {
-                            return true;
-                        }
-                        else {
-                            tv = right as IEvaluator;
-                            if (tv != null) {
-                                right = tv.Evaluate();
+                            else {
+                                tv = right as IEvaluator;
+                                if (tv != null) {
+                                    right = tv.Evaluate();
+                                }
+                                if (Convert.ToBoolean(right, CultureInfo.CurrentCulture)) {
+                                    return true;
+                                }
                             }
-                            if (Convert.ToBoolean(right, CultureInfo.CurrentCulture)) {
-                                return true;
-                            }
-                        }
-                        return false;
-                }
+                            return false;
+                    }
 
-                tv = right as IEvaluator;
-                if (tv != null)
-                    right = tv.Evaluate();
+                    tv = right as IEvaluator;
+                    if (tv != null)
+                        right = tv.Evaluate();
+                }
                 
                 return op.ExecuteOperator(left, right);
             }

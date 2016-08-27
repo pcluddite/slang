@@ -6,13 +6,24 @@
 using System;
 using System.Globalization;
 using Tbasic.Runtime;
+using Tbasic.Errors;
 
 namespace Tbasic.Operators
 {
     internal class BinOpDictionary : OperatorDictionary<BinaryOperator>
     {
+        public BinOpDictionary()
+        {
+        }
+
+        public BinOpDictionary(BinOpDictionary other)
+            : base(other)
+        {
+        }
+
         public override void LoadStandardOperators()
         {
+            operators.Add(".", new BinaryOperator(".", -1, Dot, BinaryOperator.OperandPosition.Left)); // only evaluate the left operand
             operators.Add("*", new BinaryOperator("*", 0, Multiply));
             operators.Add("/", new BinaryOperator("/", 0, Divide));
             operators.Add("MOD", new BinaryOperator("MOD", 0, Modulo));
@@ -46,6 +57,27 @@ namespace Tbasic.Operators
         public int OperatorPrecedence(string strOp)
         {
             return operators[strOp].Precedence;
+        }
+
+        private static object Dot(object left, object right)
+        {
+            if (left == null || right == null) {
+                throw new UndefinedObjectException("The dot operator does not accept null operands");
+            }
+            TClass n = left as TClass;
+            if (n == null)
+                throw new TbasicRuntimeException("The dot operator cannot be used on primitive types");
+            IEvaluator e = right as IEvaluator;
+            if (e != null) {
+                ObjectContext old = e.CurrentExecution.Context;
+                e.CurrentExecution.Context = n;
+                object result = e.Evaluate();
+                e.CurrentExecution.Context = old;
+                return result;
+            }
+            else {
+                throw ThrowHelper.InvalidExpression($"{n.Name}.{right}");
+            }
         }
 
         private static object Multiply(object left, object right)

@@ -27,6 +27,14 @@ namespace Tbasic.Libraries
         }
 
         /// <summary>
+        /// Initializes a new Tbasic Library object incorporating the functions from another library
+        /// </summary>
+        public Library(Library other)
+        {
+            lib = new Dictionary<string, CallData>(other.lib);
+        }
+
+        /// <summary>
         /// Initializes a new Tbasic Library object
         /// </summary>
         /// <param name="libs">a collection of Library objects that should be incorporated into this one</param>

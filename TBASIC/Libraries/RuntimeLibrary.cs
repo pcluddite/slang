@@ -6,6 +6,7 @@
 using System;
 using Tbasic.Runtime;
 using Tbasic.Errors;
+using System.Linq;
 
 namespace Tbasic.Libraries
 {
@@ -13,6 +14,7 @@ namespace Tbasic.Libraries
     {
         public RuntimeLibrary(ObjectContext context)
         {
+            Add("CreateObject", CreateObject);
             Add("SizeOf", SizeOf);
             Add("Len", SizeOf);
             Add("IsStr", IsString);
@@ -26,6 +28,16 @@ namespace Tbasic.Libraries
             AddLibrary(new ArrayLibrary());
             context.SetConstant("@version", Executer.VERSION);
             context.SetConstant("@osversion", Environment.OSVersion.VersionString);
+        }
+
+        private static object CreateObject(RuntimeData runtime)
+        {
+            runtime.AssertAtLeast(2);
+            string name = runtime.GetAt<string>(1);
+            TClass prototype;
+            if (!runtime.Context.TryGetType(name, out prototype))
+                throw new UndefinedObjectException($"The class {name} is undefined");
+            return prototype.GetInstance(new RuntimeData(runtime.StackExecuter, runtime.Parameters.Skip(1)));
         }
 
         private object CStr(RuntimeData runtime)

@@ -149,6 +149,29 @@ namespace Tbasic.Parsing
             }
         }
 
+        public override bool NextValidIdentifier(out StringSegment name)
+        {
+            int originalPos = IntPosition;
+            try {
+                name = null;
+                if (EndOfStream)
+                    return false;
+                if (char.IsLetter(InternalBuffer[IntPosition]) || InternalBuffer[IntPosition] == '_') {
+                    IntPosition = FindAcceptableFuncChars(InternalBuffer, ++IntPosition);
+                    if (IntPosition <= InternalBuffer.Length) {
+                        name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
+                        return true;
+                    }
+                }
+                IntPosition = originalPos;
+                return false;
+            }
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
+        }
+
         public override bool NextFunction(Executer exec, out StringSegment name, out StringSegment func, out IList<object> args)
         {
             int originalPos = IntPosition;

@@ -13,12 +13,41 @@ namespace Tbasic.Operators
     public struct BinaryOperator : IOperator, IComparable<BinaryOperator>, IEquatable<BinaryOperator>
     {
         /// <summary>
+        /// Operand positions
+        /// </summary>
+        [Flags]
+        public enum OperandPosition
+        {
+            /// <summary>
+            /// Neither operand should be evaluated
+            /// </summary>
+            Neither = 0x00,
+            /// <summary>
+            /// The left operand
+            /// </summary>
+            Left = 0x01,
+            /// <summary>
+            /// The right operand
+            /// </summary>
+            Right = 0x02,
+            /// <summary>
+            /// Both operands
+            /// </summary>
+            Both = Left | Right,
+        }
+
+        /// <summary>
         /// A delegate that represents the method which processes the operands
         /// </summary>
         /// <param name="left">the left operand</param>
         /// <param name="right">the right operand</param>
         /// <returns>the result of the operator</returns>
         public delegate object BinaryOpDelegate(object left, object right);
+
+        /// <summary>
+        /// Gets which operand should be evaluated
+        /// </summary>
+        public OperandPosition EvaulatedOperand { get; private set; }
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -41,11 +70,13 @@ namespace Tbasic.Operators
         /// <param name="strOp">the string representation of the operator</param>
         /// <param name="precedence">the operator precedence. Lower precedence are processed first</param>
         /// <param name="doOp">the method that processes the operands</param>
-        public BinaryOperator(string strOp, int precedence, BinaryOpDelegate doOp)
+        /// <param name="operand">the operand that should be evaluated</param>
+        public BinaryOperator(string strOp, int precedence, BinaryOpDelegate doOp, OperandPosition operand = OperandPosition.Both)
         {
             OperatorString = strOp.ToUpper();
             Precedence = precedence;
             ExecuteOperator = doOp;
+            EvaulatedOperand = operand;
         }
         
         /// <summary>
@@ -65,7 +96,7 @@ namespace Tbasic.Operators
         /// <returns></returns>
         public bool Equals(BinaryOperator other)
         {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence;
+            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
         }
 
         /// <summary>
@@ -110,6 +141,15 @@ namespace Tbasic.Operators
         public override int GetHashCode()
         {
             return OperatorString.GetHashCode() ^ Precedence ^ ExecuteOperator.GetHashCode();
+        }
+
+        /// <summary>
+        /// Converts this operator to a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return OperatorString;
         }
     }
 }

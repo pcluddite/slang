@@ -5,7 +5,6 @@
 // ======
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Tbasic.Errors;
 using Tbasic.Libraries;
 using Tbasic.Operators;
@@ -23,6 +22,7 @@ namespace Tbasic.Runtime
         private Dictionary<string, object> _variables;
         private Dictionary<string, object> _constants;
         private Dictionary<string, BlockCreator> _blocks;
+        private Dictionary<string, TClass> _prototypes;
         private BinOpDictionary _binaryOps;
         private UnaryOpDictionary _unaryOps;
         private Library _functions;
@@ -32,7 +32,25 @@ namespace Tbasic.Runtime
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Gets the parent context. If this is the global context, returns null.
+        /// </summary>
+        public ObjectContext ParentContext
+        {
+            get {
+                return _super;
+            }
+        }
+
+        #endregion
+
         #region Constructors
+
+        internal ObjectContext()
+        {
+        }
 
         internal ObjectContext(ObjectContext superContext)
         {
@@ -42,6 +60,7 @@ namespace Tbasic.Runtime
             _variables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             _constants = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             _blocks = new Dictionary<string, BlockCreator>(StringComparer.OrdinalIgnoreCase);
+            _prototypes = new Dictionary<string, TClass>(StringComparer.OrdinalIgnoreCase);
             if (superContext == null) {
                 _binaryOps = new BinOpDictionary();
                 _unaryOps = new UnaryOpDictionary();
@@ -533,14 +552,28 @@ namespace Tbasic.Runtime
             return TryGet(o => o._commands, name, out value);
         }
         
-        internal bool GetBinaryOperator(string strOp, out BinaryOperator op)
+        internal bool TryGetBinaryOperator(string strOp, out BinaryOperator op)
         {
             return TryGet(o => o._binaryOps, strOp, out op);
         }
         
-        internal bool GetUnaryOperator(string strOp, out UnaryOperator op)
+        internal bool TryGetUnaryOperator(string strOp, out UnaryOperator op)
         {
             return TryGet(o => o._unaryOps, strOp, out op);
+        }
+
+        internal bool TryGetType(string name, out TClass prototype)
+        {
+            return TryGet(o => o._prototypes, name, out prototype);
+        }
+
+        #endregion
+
+        #region Add
+
+        internal void AddType(TClass type)
+        {
+            _prototypes.Add(type.Name, type);
         }
 
         #endregion
@@ -870,6 +903,28 @@ namespace Tbasic.Runtime
         {
             _unaryOps[op.OperatorString] = op;
         }
+
         #endregion
+
+        internal static T CopyFrom<T>(ObjectContext other) where T : ObjectContext, new()
+        {
+            T cloned = new T();
+            if (other._super == null) {
+                cloned._unaryOps = new UnaryOpDictionary(other._unaryOps);
+                cloned._binaryOps = new BinOpDictionary(other._binaryOps);
+            }
+            else {
+                cloned._super = other._super;
+                cloned._unaryOps = other._super._unaryOps;
+                cloned._binaryOps = other._super._binaryOps;
+            }
+            cloned._variables = new Dictionary<string, object>(other._variables);
+            cloned._prototypes = new Dictionary<string, TClass>(other._prototypes);
+            cloned._functions = new Library(other._functions);
+            cloned._constants = new Dictionary<string, object>(other._constants);
+            cloned._commands = new Library(other._commands);
+            cloned._blocks = new Dictionary<string, BlockCreator>(other._blocks);
+            return cloned;
+        }
     }
 }

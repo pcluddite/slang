@@ -80,7 +80,7 @@
     <Compile Include="Runtime\Parsing\DefaultScanner.cs" />
     <Compile Include="Runtime\Parsing\Scanner.cs" />
     <Compile Include="Runtime\Preprocessor.cs" />
-    <Compile Include="Runtime\StackFrame\ObjectContext.cs" />
+    <Compile Include="Runtime\ObjectContext.cs" />
     <Compile Include="Runtime\Evaluator\Variable.cs" />
     <Compile Include="Runtime\Executer.cs" />
     <Compile Include="Libraries\AutoLibrary.cs" />
@@ -105,7 +105,7 @@
     <Compile Include="Components\Win32\UnmanagedTypes.cs" />
     <Compile Include="Components\Win32\User32.cs" />
     <Compile Include="Components\Win32\WindowEnums.cs" />
-    <Compile Include="Runtime\StackFrame\RuntimeData.cs" />
+    <Compile Include="Runtime\RuntimeData.cs" />
     <Compile Include="Components\Win32\Windows.cs" />
     <Compile Include="Libraries\WindowLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

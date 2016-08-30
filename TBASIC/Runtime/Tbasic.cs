@@ -122,7 +122,7 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="codeLine"></param>
         /// <returns></returns>
-        public RuntimeData Execute(Line codeLine)
+        public StackData Execute(Line codeLine)
         {
             try {
                 return Execute(this, codeLine);
@@ -135,9 +135,9 @@ namespace Tbasic.Runtime
             }
         }
 
-        internal RuntimeData Execute(LineCollection lines)
+        internal StackData Execute(LineCollection lines)
         {
-            RuntimeData runtime = null;
+            StackData runtime = null;
             for (int index = 0; index < lines.Count; index++) {
                 if (BreakRequest) {
                     break;
@@ -161,31 +161,31 @@ namespace Tbasic.Runtime
                     TbasicRuntimeException runEx = TbasicRuntimeException.WrapException(ex);
                     if (runEx == null) // only catch errors that we understand 8/16/16
                         throw;
-                    HandleError(current, runtime ?? new RuntimeData(this), runEx);
+                    HandleError(current, runtime ?? new StackData(this), runEx);
                 }
             }
-            return runtime ?? new RuntimeData(this);
+            return runtime ?? new StackData(this);
         }
 
-        internal static RuntimeData Execute(TBasic exec, Line codeLine)
+        internal static StackData Execute(TBasic exec, Line codeLine)
         {
-            RuntimeData runtime;
+            StackData runtime;
             ObjectContext context = exec.Context.FindCommandContext(codeLine.Name);
             if (context == null) {
-                runtime = new RuntimeData(exec);
-                Evaluator eval = new Evaluator(new StringSegment(codeLine.Text), exec);
+                runtime = new StackData(exec);
+                ExpressionEvaluator eval = new ExpressionEvaluator(new StringSegment(codeLine.Text), exec);
                 exec.Context.PersistReturns(runtime);
                 runtime.Data = eval.Evaluate();
             }
             else {
-                runtime = new RuntimeData(exec, codeLine.Text);
+                runtime = new StackData(exec, codeLine.Text);
                 runtime.Data = context.GetCommand(codeLine.Name).Invoke(runtime);
             }
             runtime.Context.SetReturns(runtime);
             return runtime;
         }
 
-        private void HandleError(Line current, RuntimeData runtime, TbasicRuntimeException ex)
+        private void HandleError(Line current, StackData runtime, TbasicRuntimeException ex)
         {
             FunctionException cEx = ex as FunctionException;
             if (cEx != null) {

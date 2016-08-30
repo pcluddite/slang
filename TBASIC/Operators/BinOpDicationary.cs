@@ -67,12 +67,12 @@ namespace Tbasic.Operators
             TClass n = left as TClass;
             if (n == null)
                 throw new TbasicRuntimeException("The dot operator cannot be used on primitive types");
-            IEvaluator e = right as IEvaluator;
+            IExpressionEvaluator e = right as IExpressionEvaluator;
             if (e != null) {
-                ObjectContext old = e.CurrentExecution.Context;
-                e.CurrentExecution.Context = n;
+                ObjectContext old = e.Runtime.Context;
+                e.Runtime.Context = n;
                 object result = e.Evaluate();
-                e.CurrentExecution.Context = old;
+                e.Runtime.Context = old;
                 return result;
             }
             else {
@@ -163,9 +163,9 @@ namespace Tbasic.Operators
         private static void InitializeStrings(object left, object right, ref string str1, ref string str2)
         {
             if (str1 == null)
-                str1 = Evaluator.GetStringRepresentation(left);
+                str1 = ExpressionEvaluator.GetStringRepresentation(left);
             if (str2 == null)
-                str2 = Evaluator.GetStringRepresentation(right);
+                str2 = ExpressionEvaluator.GetStringRepresentation(right);
         }
 
         private static object SortaEquals(object left, object right)

@@ -30,129 +30,129 @@ namespace Tbasic.Libraries
             Add("StrInStr", Substring);
         }
 
-        private object CharsToString(RuntimeData runtime)
+        private object CharsToString(StackData stackdat)
         {
-            runtime.AssertCount(2);
+            stackdat.AssertCount(2);
             StringBuilder hanz = new StringBuilder();
-            foreach (char c in runtime.GetAt<char[]>(1)) {
+            foreach (char c in stackdat.GetAt<char[]>(1)) {
                 hanz.Append(c);
             }
             return hanz.ToString();
         }
 
-        private object ToCharArray(RuntimeData runtime)
+        private object ToCharArray(StackData stackdat)
         {
-            runtime.AssertCount(2);
-            return runtime.GetAt<string>(1).ToCharArray();
+            stackdat.AssertCount(2);
+            return stackdat.GetAt<string>(1).ToCharArray();
         }
 
-        private object StringSplit(RuntimeData runtime)
+        private object StringSplit(StackData stackdat)
         {
-            runtime.AssertCount(3);
-            return Regex.Split(runtime.GetAt(1).ToString(), runtime.GetAt(2).ToString());
+            stackdat.AssertCount(3);
+            return Regex.Split(stackdat.GetAt(1).ToString(), stackdat.GetAt(2).ToString());
         }
 
-        private object Trim(RuntimeData runtime)
+        private object Trim(StackData stackdat)
         {
-            runtime.AssertCount(2);
-            return runtime.GetAt(1).ToString().Trim();
+            stackdat.AssertCount(2);
+            return stackdat.GetAt(1).ToString().Trim();
         }
 
-        private object TrimStart(RuntimeData runtime)
+        private object TrimStart(StackData stackdat)
         {
-            runtime.AssertCount(2);
-            return runtime.GetAt(1).ToString().TrimStart();
+            stackdat.AssertCount(2);
+            return stackdat.GetAt(1).ToString().TrimStart();
         }
 
-        private object TrimEnd(RuntimeData runtime)
+        private object TrimEnd(StackData stackdat)
         {
-            runtime.AssertCount(2);
-            return runtime.GetAt(1).ToString().TrimEnd();
+            stackdat.AssertCount(2);
+            return stackdat.GetAt(1).ToString().TrimEnd();
         }
 
-        private object StringContains(RuntimeData runtime)
+        private object StringContains(StackData stackdat)
         {
-            runtime.AssertCount(3);
-            return runtime.GetAt<string>(1).Contains(runtime.GetAt<string>(2));
+            stackdat.AssertCount(3);
+            return stackdat.GetAt<string>(1).Contains(stackdat.GetAt<string>(2));
         }
 
-        private object StringCompare(RuntimeData runtime)
+        private object StringCompare(StackData stackdat)
         {
-            runtime.AssertCount(3);
-            return runtime.GetAt<string>(1).CompareTo(runtime.GetAt<string>(2));
+            stackdat.AssertCount(3);
+            return stackdat.GetAt<string>(1).CompareTo(stackdat.GetAt<string>(2));
         }
 
-        private object StringIndexOf(RuntimeData runtime)
+        private object StringIndexOf(StackData stackdat)
         {
-            if (runtime.ParameterCount == 3) {
-                runtime.Add(0);
+            if (stackdat.ParameterCount == 3) {
+                stackdat.Add(0);
             }
-            if (runtime.ParameterCount == 4) {
-                runtime.Add(runtime.GetAt<string>(1).Length);
+            if (stackdat.ParameterCount == 4) {
+                stackdat.Add(stackdat.GetAt<string>(1).Length);
             }
-            runtime.AssertCount(5);
-            char? cObj = runtime.GetAt(2) as char?;
+            stackdat.AssertCount(5);
+            char? cObj = stackdat.GetAt(2) as char?;
             if (cObj == null) {
-                return runtime.GetAt<string>(1).IndexOf(runtime.GetAt<string>(2), runtime.GetAt<int>(3), runtime.GetAt<int>(4));
+                return stackdat.GetAt<string>(1).IndexOf(stackdat.GetAt<string>(2), stackdat.GetAt<int>(3), stackdat.GetAt<int>(4));
             }
             else {
-                return runtime.GetAt<string>(1).IndexOf(cObj.Value, runtime.GetAt<int>(3), runtime.GetAt<int>(4));
+                return stackdat.GetAt<string>(1).IndexOf(cObj.Value, stackdat.GetAt<int>(3), stackdat.GetAt<int>(4));
             }
         }
 
-        private object StringLastIndexOf(RuntimeData runtime)
+        private object StringLastIndexOf(StackData stackdat)
         {
-            if (runtime.ParameterCount == 3) {
-                runtime.Add(0);
+            if (stackdat.ParameterCount == 3) {
+                stackdat.Add(0);
             }
-            if (runtime.ParameterCount == 4) {
-                runtime.Add(runtime.GetAt<string>(1).Length);
+            if (stackdat.ParameterCount == 4) {
+                stackdat.Add(stackdat.GetAt<string>(1).Length);
             }
-            runtime.AssertCount(5);
-            char? cObj = runtime.GetAt(2) as char?;
+            stackdat.AssertCount(5);
+            char? cObj = stackdat.GetAt(2) as char?;
             if (cObj == null) {
-                return runtime.GetAt<string>(1).LastIndexOf(runtime.GetAt<string>(2), runtime.GetAt<int>(3), runtime.GetAt<int>(4));
+                return stackdat.GetAt<string>(1).LastIndexOf(stackdat.GetAt<string>(2), stackdat.GetAt<int>(3), stackdat.GetAt<int>(4));
             }
             else {
-                return runtime.GetAt<string>(1).LastIndexOf(cObj.Value, runtime.GetAt<int>(3), runtime.GetAt<int>(4));
+                return stackdat.GetAt<string>(1).LastIndexOf(cObj.Value, stackdat.GetAt<int>(3), stackdat.GetAt<int>(4));
             }
         }
 
-        private object StringUpper(RuntimeData runtime)
+        private object StringUpper(StackData stackdat)
         {
-            runtime.AssertCount(2);
-            return runtime.GetAt<string>(1).ToUpper();
+            stackdat.AssertCount(2);
+            return stackdat.GetAt<string>(1).ToUpper();
         }
 
-        private object StringLower(RuntimeData runtime)
+        private object StringLower(StackData stackdat)
         {
-            runtime.AssertCount(2);
-            return runtime.GetAt<string>(1).ToLower();
+            stackdat.AssertCount(2);
+            return stackdat.GetAt<string>(1).ToLower();
         }
 
-        private object StringLeft(RuntimeData runtime)
+        private object StringLeft(StackData stackdat)
         {
-            runtime.AssertCount(3);
-            return runtime.GetAt<string>(1).Substring(runtime.GetAt<int>(2));
+            stackdat.AssertCount(3);
+            return stackdat.GetAt<string>(1).Substring(stackdat.GetAt<int>(2));
         }
 
-        private object StringRight(RuntimeData runtime)
+        private object StringRight(StackData stackdat)
         {
-            runtime.AssertCount(3);
-            return runtime.GetAt<string>(1).Remove(runtime.GetAt<int>(2));
+            stackdat.AssertCount(3);
+            return stackdat.GetAt<string>(1).Remove(stackdat.GetAt<int>(2));
         }
 
-        private object Substring(RuntimeData runtime)
+        private object Substring(StackData stackdat)
         {
-            if (runtime.ParameterCount == 3) {
-                return runtime.GetAt<string>(1).Substring(
-                                    runtime.GetAt<int>(2)
+            if (stackdat.ParameterCount == 3) {
+                return stackdat.GetAt<string>(1).Substring(
+                                    stackdat.GetAt<int>(2)
                                     );
             }
             else {
-                runtime.AssertCount(4);
-                return runtime.GetAt<string>(1).Substring(
-                                    runtime.GetAt<int>(2), runtime.GetAt<int>(3)
+                stackdat.AssertCount(4);
+                return stackdat.GetAt<string>(1).Substring(
+                                    stackdat.GetAt<int>(2), stackdat.GetAt<int>(3)
                                     );
             }
         }

@@ -84,24 +84,24 @@ namespace Tbasic
             throw ThrowHelper.UnterminatedBlock(Header.VisibleName);
         }
 
-        public override void Execute(TBasic exec)
+        public override void Execute(TBasic runtime)
         {
             if (!Header.Text.EndsWithIgnoreCase(" then")) {
                 throw ThrowHelper.ExpectedToken("THEN");
             }
 
-            Evaluator eval = new Evaluator(
+            ExpressionEvaluator eval = new ExpressionEvaluator(
                 new StringSegment(Header.Text,
                 Header.Text.IndexOf(' ') + 1, // Get rid of the IF
                 Header.Text.LastIndexOf(' ') - 2), // Get rid of the THEN
-                exec
+                runtime
             );
 
             if (eval.EvaluateBool()) {
-                exec.Execute(Body);
+                runtime.Execute(Body);
             }
             else if (HasElseBlock) {
-                exec.Execute(Else.Body);
+                runtime.Execute(Else.Body);
             }
         }
 

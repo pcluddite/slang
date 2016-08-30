@@ -23,32 +23,32 @@ namespace Tbasic
                 ));
         }
 
-        public override void Execute(TBasic exec)
+        public override void Execute(TBasic runtime)
         {
             Scanner scanner;
             bool doLoop;
-            RuntimeData parameters = new RuntimeData(exec, Footer.Text);
+            StackData stackdat = new StackData(runtime, Footer.Text);
 
-            if (parameters.ParameterCount < 3) {
-                parameters = new RuntimeData(exec, Header.Text);
-                if (parameters.ParameterCount < 3) { // still less than three? there's no condition
+            if (stackdat.ParameterCount < 3) {
+                stackdat = new StackData(runtime, Header.Text);
+                if (stackdat.ParameterCount < 3) { // still less than three? there's no condition
                     throw ThrowHelper.NoCondition();
                 }
                 if (Footer.Name != Footer.Text) {
                     throw new UnexpectedTokenExceptiopn("Unexpected arguments in loop footer", prependGeneric: false);
                 }
-                scanner = exec.ScannerDelegate(new StringSegment(Header.Text, Header.Text.IndexOf(' ', Header.Name.Length)));
+                scanner = runtime.ScannerDelegate(new StringSegment(Header.Text, Header.Text.IndexOf(' ', Header.Name.Length)));
                 doLoop = false;
             }
             else {
                 if (Header.Name != Header.Text) {
                     throw new UnexpectedTokenExceptiopn("Unexpected arguments in loop header", prependGeneric: false);
                 }
-                scanner = exec.ScannerDelegate(new StringSegment(Footer.Text, Footer.Text.IndexOf(' ', Footer.Name.Length)));
+                scanner = runtime.ScannerDelegate(new StringSegment(Footer.Text, Footer.Text.IndexOf(' ', Footer.Name.Length)));
                 doLoop = true;
             }
 
-            Predicate<Evaluator> condition;
+            Predicate<ExpressionEvaluator> condition;
             string loop = scanner.Next();
 
             if (string.Equals(loop, "UNTIL", StringComparison.OrdinalIgnoreCase)) {
@@ -61,27 +61,27 @@ namespace Tbasic
                 throw ThrowHelper.ExpectedToken("UNTIL' or 'WHILE");
             }
 
-            Evaluator eval = new Evaluator(scanner.Read(scanner.IntPosition, scanner.IntLength - scanner.IntPosition), exec);
+            ExpressionEvaluator eval = new ExpressionEvaluator(scanner.Read(scanner.IntPosition, scanner.IntLength - scanner.IntPosition), runtime);
 
             if (doLoop) {
                 do {
-                    exec.Execute(Body);
-                    if (exec.BreakRequest) {
-                        exec.HonorBreak();
+                    runtime.Execute(Body);
+                    if (runtime.BreakRequest) {
+                        runtime.HonorBreak();
                         break;
                     }
-                    eval.ShouldParse = true;
+                    eval.Evaluated = true;
                 }
                 while (condition(eval));
             }
             else {
                 while (condition(eval)) {
-                    exec.Execute(Body);
-                    if (exec.BreakRequest) {
-                        exec.HonorBreak();
+                    runtime.Execute(Body);
+                    if (runtime.BreakRequest) {
+                        runtime.HonorBreak();
                         break;
                     }
-                    eval.ShouldParse = true;
+                    eval.Evaluated = true;
                 }
             }
         }

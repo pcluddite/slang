@@ -22,51 +22,51 @@ namespace Tbasic.Libraries
             Add("GetMillisecond", GetMillisecond);
         }
 
-        private object GetMonth(RuntimeData runtime)
+        private object GetMonth(StackData stackdat)
         {
-            runtime.AssertCount(1);
+            stackdat.AssertCount(1);
             return DateTime.Now.Month;
         }
 
-        private object GetDay(RuntimeData runtime)
+        private object GetDay(StackData stackdat)
         {
-            runtime.AssertCount(1);
+            stackdat.AssertCount(1);
             return DateTime.Now.Day;
         }
 
-        private object GetDayOfWeek(RuntimeData runtime)
+        private object GetDayOfWeek(StackData stackdat)
         {
-            runtime.AssertCount(1);
+            stackdat.AssertCount(1);
             return (int)DateTime.Now.DayOfWeek;
         }
 
-        private object GetYear(RuntimeData runtime)
+        private object GetYear(StackData stackdat)
         {
-            runtime.AssertCount(1);
+            stackdat.AssertCount(1);
             return DateTime.Now.Year;
         }
 
-        private object GetHour(RuntimeData runtime)
+        private object GetHour(StackData stackdat)
         {
-            runtime.AssertCount(1);
+            stackdat.AssertCount(1);
             return DateTime.Now.Hour;
         }
 
-        private object GetMinute(RuntimeData runtime)
+        private object GetMinute(StackData stackdat)
         {
-            runtime.AssertCount(1);
+            stackdat.AssertCount(1);
             return DateTime.Now.Minute;
         }
 
-        private object GetSecond(RuntimeData runtime)
+        private object GetSecond(StackData stackdat)
         {
-            runtime.AssertCount(1);
+            stackdat.AssertCount(1);
             return DateTime.Now.Second;
         }
 
-        private object GetMillisecond(RuntimeData runtime)
+        private object GetMillisecond(StackData stackdat)
         {
-            runtime.AssertCount(1);
+            stackdat.AssertCount(1);
             return DateTime.Now.Millisecond;
         }
     }

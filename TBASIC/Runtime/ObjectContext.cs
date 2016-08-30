@@ -397,7 +397,7 @@ namespace Tbasic.Runtime
 
         #region Set
 
-        internal void SetReturns(RuntimeData _sframe)
+        internal void SetReturns(StackData _sframe)
         {
             SetVariable("@lasterror", _sframe.Status);
             SetVariable("@lasterr", _sframe.Status);
@@ -405,7 +405,7 @@ namespace Tbasic.Runtime
             SetVariable("@error", _sframe.Status);
         }
 
-        internal void PersistReturns(RuntimeData _sframe)
+        internal void PersistReturns(StackData _sframe)
         {
             ObjectContext context = FindVariableContext("@error");
             if (context != null)

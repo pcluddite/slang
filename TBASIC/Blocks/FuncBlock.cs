@@ -14,7 +14,7 @@ namespace Tbasic
 {
     internal class FuncBlock : CodeBlock
     {
-        public RuntimeData Template { get; private set; }
+        public StackData Template { get; private set; }
         public static readonly Predicate<Line> CheckBegin = (line => line.Name.EqualsIgnoreCase("FUNCTION"));
         public static readonly Predicate<Line> CheckEnd = (line => line.Text.EqualsIgnoreCase("END FUNCTION"));
         
@@ -23,13 +23,13 @@ namespace Tbasic
             Header = header;
             Footer = footer;
             Body = body;
-            Template = new RuntimeData(null, ParseFunction(Header.Text.Substring(Header.Name.Length)));
+            Template = new StackData(null, ParseFunction(Header.Text.Substring(Header.Name.Length)));
         }
 
         public FuncBlock(int index, LineCollection code)
         {
             LoadFromCollection(code.ParseBlock(index, CheckBegin, CheckEnd));
-            Template = new RuntimeData(null, ParseFunction(Header.Text.Substring(Header.Name.Length)));
+            Template = new StackData(null, ParseFunction(Header.Text.Substring(Header.Name.Length)));
         }
 
         public TBasicFunction CreateDelegate()
@@ -37,38 +37,38 @@ namespace Tbasic
             return new TBasicFunction(Execute);
         }
 
-        public object Execute(RuntimeData runtime)
+        public object Execute(StackData stackdat)
         {
-            runtime.AssertCount(Template.ParameterCount);
+            stackdat.AssertCount(Template.ParameterCount);
 
-            TBasic exec = runtime.StackExecuter;
-            exec.Context = exec.Context.CreateSubContext();
+            TBasic runtime = stackdat.Runtime;
+            runtime.Context = runtime.Context.CreateSubContext();
 
             for (int index = 1; index < Template.ParameterCount; index++) {
-                exec.Context.SetVariable((string)Template.GetAt(index), runtime.GetAt(index));
+                runtime.Context.SetVariable((string)Template.GetAt(index), stackdat.GetAt(index));
             }
-            exec.Context.SetCommand("return", Return);
-            exec.Context.SetFunction("SetStatus", SetStatus);
+            runtime.Context.SetCommand("return", Return);
+            runtime.Context.SetFunction("SetStatus", SetStatus);
 
-            runtime.CopyFrom(exec.Execute(Body));
-            exec.HonorBreak();
-            exec.Context = exec.Context.Collect();
-            return runtime.Data;
+            stackdat.CopyFrom(runtime.Execute(Body));
+            runtime.HonorBreak();
+            runtime.Context = runtime.Context.Collect();
+            return stackdat.Data;
         }
 
-        private object Return(RuntimeData stackFrame)
+        private object Return(StackData stackFrame)
         {
             if (stackFrame.ParameterCount < 2) {
                 stackFrame.AssertCount(2);
             }
-            Evaluator e = new Evaluator(
+            ExpressionEvaluator e = new ExpressionEvaluator(
                 new StringSegment(stackFrame.Text, stackFrame.Name.Length),
-                stackFrame.StackExecuter);
-            stackFrame.StackExecuter.RequestBreak();
+                stackFrame.Runtime);
+            stackFrame.Runtime.RequestBreak();
             return stackFrame.Data = e.Evaluate();
         }
 
-        private object SetStatus(RuntimeData stackFrame)
+        private object SetStatus(StackData stackFrame)
         {
             stackFrame.AssertCount(2);
             return stackFrame.Status = stackFrame.GetAt<int>(1);

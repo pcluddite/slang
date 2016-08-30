@@ -38,10 +38,10 @@ namespace Tbasic.Runner
         public static void RunScript(string filename)
         {
             try {
-                TBasic exec = new TBasic();
-                exec.Global.LoadStandardLibrary();
+                TBasic runtime = new TBasic();
+                runtime.Global.LoadStandardLibrary();
                 using (StreamReader fstream = new StreamReader(File.OpenRead(filename))) {
-                    exec.Execute(fstream);
+                    runtime.Execute(fstream);
                 }
             }
             catch (TbasicRuntimeException ex) {

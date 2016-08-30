@@ -8,7 +8,7 @@ using Tbasic.Components;
 
 namespace Tbasic.Runtime
 {
-    internal class Variable : IEvaluator
+    internal class Variable : IExpressionEvaluator
     {
         private StringSegment _expression = null;
 
@@ -33,11 +33,11 @@ namespace Tbasic.Runtime
         public ObjectContext CurrentContext
         {
             get {
-                return CurrentExecution.Context;
+                return Runtime.Context;
             }
         }
 
-        public TBasic CurrentExecution { get; set; }
+        public TBasic Runtime { get; set; }
         public StringSegment Name { get; private set; }
 
         public StringSegment Expression
@@ -54,7 +54,7 @@ namespace Tbasic.Runtime
 
         public Variable(StringSegment full, StringSegment name, int[] indices, TBasic exec)
         {
-            CurrentExecution = exec;
+            Runtime = exec;
             _expression = full;
             Name = name;
             Indices = indices;

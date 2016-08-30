@@ -22,18 +22,18 @@ namespace Tbasic.Runtime
         public ICollection<TClass> Types { get; } = new List<TClass>();
         public LineCollection Lines { get; } = new LineCollection();
 
-        private TBasic exec;
+        private TBasic runtime;
 
-        private Preprocessor(TextReader reader, TBasic exec)
+        private Preprocessor(TextReader reader, TBasic runtime)
         {
-            this.exec = exec;
+            this.runtime = runtime;
             ScanLines(reader);
-            this.exec = null; // don't hold onto it on my account 8/26/16
+            this.runtime = null; // don't hold onto it on my account 8/26/16
         }
 
-        public static Preprocessor Preprocess(TextReader reader, TBasic exec)
+        public static Preprocessor Preprocess(TextReader reader, TBasic runtime)
         {
-            return new Preprocessor(reader, exec);
+            return new Preprocessor(reader, runtime);
         }
 
         private void ScanLines(TextReader reader)
@@ -106,14 +106,14 @@ namespace Tbasic.Runtime
         private int ProcessClassBlock(TextReader reader, Line current, out TClass tclass)
         {
             int nline = current.LineNumber + 1;
-            Scanner scanner = exec.ScannerDelegate(new StringSegment(current.Text));
+            Scanner scanner = runtime.ScannerDelegate(new StringSegment(current.Text));
             scanner.Next("CLASS");
             scanner.SkipWhiteSpace();
             StringSegment classname;
             if (!scanner.NextValidIdentifier(out classname))
                 throw new InvalidDefinitionException("Name contains invalid characters or was not present", "class");
 
-            tclass = new TClass(classname.ToString(), exec.Global);
+            tclass = new TClass(classname.ToString(), runtime.Global);
 
             while ((current = ProcessCodeLine(reader, nline++)) != null && !ClassEnd(current)) {
                 if (string.IsNullOrEmpty(current.Text) || current.Text[0] == CommentChar)

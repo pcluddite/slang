@@ -194,7 +194,7 @@ namespace Tbasic.Parsing
         internal static int ReadGroup(StringSegment fullstr, int index, char separator, TBasic exec, out IList<object> args)
         {
             List<object> result = new List<object>();
-            Evaluator eval = new Evaluator(exec);
+            ExpressionEvaluator eval = new ExpressionEvaluator(exec);
             char c_open = fullstr[index];
             char c_close = c_open == '(' ? ')' : ']';
             int expected = 0;

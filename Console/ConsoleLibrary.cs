@@ -16,9 +16,9 @@ namespace Tbasic.Terminal
             Add("STOP", Exit); // exit is already declared in stdlib 8/22/16
         }
 
-        public object Exit(RuntimeData fData)
+        public object Exit(StackData stackdat)
         {
-            fData.StackExecuter.RequestExit();
+            stackdat.Runtime.RequestExit();
             return null;
         }
     }

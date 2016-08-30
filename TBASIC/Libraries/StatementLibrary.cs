@@ -33,23 +33,23 @@ namespace Tbasic.Libraries
             Add("#INCLUDE", Include);
         }
 
-        private static object Include(RuntimeData runtime)
+        private static object Include(StackData stackdat)
         {
-            runtime.AssertCount(2);
-            string path = Path.GetFullPath(runtime.EvaluateAt<string>(1));
+            stackdat.AssertCount(2);
+            string path = Path.GetFullPath(stackdat.EvaluateAt<string>(1));
 
             try {
                 Preprocessor p;
                 using (StreamReader reader = new StreamReader(File.OpenRead(path))) {
-                    p = Preprocessor.Preprocess(reader, runtime.StackExecuter);
+                    p = Preprocessor.Preprocess(reader, stackdat.Runtime);
                 }
 
                 if (p.Functions.Count > 0) {
                     foreach (FuncBlock func in p.Functions) {
-                        ObjectContext context = runtime.Context.FindFunctionContext(func.Template.Name);
+                        ObjectContext context = stackdat.Context.FindFunctionContext(func.Template.Name);
                         if (context != null)
                             throw ThrowHelper.AlreadyDefined(func.Template.Name + "()");
-                        runtime.Context.SetFunction(func.Template.Name, func.CreateDelegate());
+                        stackdat.Context.SetFunction(func.Template.Name, func.CreateDelegate());
                     }
                 }
             }
@@ -57,83 +57,83 @@ namespace Tbasic.Libraries
                 throw new TbasicRuntimeException("Unable to load library. " + ex.Message, ex);
             }
 
-            return NULL(runtime);
+            return NULL(stackdat);
         }
 
-        private static object Option(RuntimeData runtime)
+        private static object Option(StackData stackdat)
         {
-            if (runtime.ParameterCount == 2)
-                runtime.Add(true);
-            runtime.AssertCount(3);
+            if (stackdat.ParameterCount == 2)
+                stackdat.Add(true);
+            stackdat.AssertCount(3);
 
-            string szOpt = runtime.GetAt<string>(1);
+            string szOpt = stackdat.GetAt<string>(1);
             ExecuterOption opt;
             if (!Enum.TryParse(szOpt, out opt)) {
-                opt = runtime.GetAt<ExecuterOption>(1); // this will throw an error if its not a valid flag
+                opt = stackdat.GetAt<ExecuterOption>(1); // this will throw an error if its not a valid flag
             }
 
-            if (runtime.EvaluateAt<bool>(2)) {
-                runtime.StackExecuter.EnableOption(opt);
+            if (stackdat.EvaluateAt<bool>(2)) {
+                stackdat.Runtime.EnableOption(opt);
             }
             else {
-                runtime.StackExecuter.DisableOption(opt);
+                stackdat.Runtime.DisableOption(opt);
             }
-            return NULL(runtime);
+            return NULL(stackdat);
         }
 
-        private object Sleep(RuntimeData runtime)
+        private object Sleep(StackData stackdat)
         {
-            runtime.AssertCount(2);
-            System.Threading.Thread.Sleep(runtime.GetAt<int>(1));
-            return NULL(runtime);
+            stackdat.AssertCount(2);
+            System.Threading.Thread.Sleep(stackdat.GetAt<int>(1));
+            return NULL(stackdat);
         }
 
-        private object Break(RuntimeData runtime)
+        private object Break(StackData stackdat)
         {
-            runtime.AssertCount(1);
-            runtime.StackExecuter.RequestBreak();
-            return NULL(runtime);
+            stackdat.AssertCount(1);
+            stackdat.Runtime.RequestBreak();
+            return NULL(stackdat);
         }
 
-        internal object Exit(RuntimeData runtime)
+        internal object Exit(StackData stackdat)
         {
-            runtime.AssertCount(1);
-            runtime.StackExecuter.RequestExit();
-            return NULL(runtime);
+            stackdat.AssertCount(1);
+            stackdat.Runtime.RequestExit();
+            return NULL(stackdat);
         }
 
-        internal static object NULL(RuntimeData runtime)
+        internal static object NULL(StackData stackdat)
         {
-            runtime.Context.PersistReturns(runtime);
-            return runtime.Data;
+            stackdat.Context.PersistReturns(stackdat);
+            return stackdat.Data;
         }
 
-        internal object UhOh(RuntimeData runtime)
+        internal object UhOh(StackData stackdat)
         {
-            throw ThrowHelper.NoOpeningStatement(runtime.Text);
+            throw ThrowHelper.NoOpeningStatement(stackdat.Text);
         }
 
-        internal object DIM(RuntimeData runtime)
+        internal object DIM(StackData stackdat)
         {
-            runtime.AssertAtLeast(2);
+            stackdat.AssertAtLeast(2);
 
-            StringSegment text = new StringSegment(runtime.Text);
-            Scanner scanner = runtime.StackExecuter.ScannerDelegate(text);
-            scanner.IntPosition += runtime.Name.Length;
+            StringSegment text = new StringSegment(stackdat.Text);
+            Scanner scanner = stackdat.Runtime.ScannerDelegate(text);
+            scanner.IntPosition += stackdat.Name.Length;
             scanner.SkipWhiteSpace();
 
             Variable v;
-            if (!scanner.NextVariableInternal(runtime.StackExecuter, out v))
+            if (!scanner.NextVariableInternal(stackdat.Runtime, out v))
                 throw ThrowHelper.InvalidVariableName();
 
             string name = v.Name.ToString();
-            ObjectContext context = runtime.Context.FindVariableContext(name);
+            ObjectContext context = stackdat.Context.FindVariableContext(name);
             if (context == null) {
                 if (v.Indices != null) {
-                    runtime.Context.SetVariable(name, array_alloc(v.Indices, 0));
+                    stackdat.Context.SetVariable(name, array_alloc(v.Indices, 0));
                 }
                 else {
-                    runtime.Context.SetVariable(name, null); // just declare it.
+                    stackdat.Context.SetVariable(name, null); // just declare it.
                 }
             }
             else {
@@ -141,7 +141,7 @@ namespace Tbasic.Libraries
                 array_realloc(ref obj, v.Indices, 0);
                 context.SetVariable(name, obj);
             }
-            return NULL(runtime);
+            return NULL(stackdat);
         }
 
         private object array_alloc(int[] sizes, int index)
@@ -179,27 +179,27 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object Let(RuntimeData runtime)
+        private object Let(StackData stackdat)
         {
-            return SetVariable(runtime, constant: false);
+            return SetVariable(stackdat, constant: false);
         }
 
-        internal object Const(RuntimeData runtime)
+        internal object Const(StackData stackdat)
         {
-            return SetVariable(runtime, constant: true);
+            return SetVariable(stackdat, constant: true);
         }
 
-        private object SetVariable(RuntimeData runtime, bool constant)
+        private object SetVariable(StackData stackdat, bool constant)
         {
-            runtime.AssertAtLeast(2);
-            StringSegment text = new StringSegment(runtime.Text);
+            stackdat.AssertAtLeast(2);
+            StringSegment text = new StringSegment(stackdat.Text);
 
-            Scanner scanner = runtime.StackExecuter.ScannerDelegate(text);
-            scanner.IntPosition += runtime.Name.Length;
+            Scanner scanner = stackdat.Runtime.ScannerDelegate(text);
+            scanner.IntPosition += stackdat.Name.Length;
             scanner.SkipWhiteSpace();
 
             Variable v;
-            if (!scanner.NextVariableInternal(runtime.StackExecuter, out v))
+            if (!scanner.NextVariableInternal(stackdat.Runtime, out v))
                 throw ThrowHelper.InvalidVariableName();
 
             if (v.IsMacro)
@@ -208,22 +208,22 @@ namespace Tbasic.Libraries
             if (!scanner.Next("="))
                 throw ThrowHelper.InvalidDefinitionOperator();
 
-            Evaluator e = new Evaluator(text.Subsegment(scanner.IntPosition), runtime.StackExecuter);
+            ExpressionEvaluator e = new ExpressionEvaluator(text.Subsegment(scanner.IntPosition), stackdat.Runtime);
             object data = e.Evaluate();
 
             if (v.Indices == null) {
                 if (!constant) {
-                    runtime.Context.SetVariable(v.Name.ToString(), data);
+                    stackdat.Context.SetVariable(v.Name.ToString(), data);
                 }
                 else {
-                    runtime.Context.SetConstant(v.Name.ToString(), data);
+                    stackdat.Context.SetConstant(v.Name.ToString(), data);
                 }
             }
             else {
                 if (constant)
                     throw ThrowHelper.ArraysCannotBeConstant();
                 
-                ObjectContext context = runtime.Context.FindVariableContext(v.Name.ToString());
+                ObjectContext context = stackdat.Context.FindVariableContext(v.Name.ToString());
                 if (context == null)
                     throw new ArgumentException("Array has not been defined and cannot be indexed");
                 context.SetArrayAt(v.Name.ToString(), data, v.Indices);

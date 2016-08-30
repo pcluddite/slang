@@ -14,7 +14,7 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Manages parameters and other data passed to a function or subroutine
     /// </summary>
-    public class RuntimeData : ICloneable
+    public class StackData : ICloneable
     {
         private List<object> _params = new List<object>();
 
@@ -31,18 +31,18 @@ namespace Tbasic.Runtime
         /// <summary>
         /// The executer that called the function
         /// </summary>
-        public TBasic StackExecuter { get; private set; }
+        public TBasic Runtime { get; private set; }
 
         /// <summary>
-        /// Gets or sets the current context of stack executer
+        /// Gets or sets the current context of the runtime
         /// </summary>
         public ObjectContext Context
         {
             get {
-                return StackExecuter.Context;
+                return Runtime.Context;
             }
             set {
-                StackExecuter.Context = value;
+                Runtime.Context = value;
             }
         }
 
@@ -97,19 +97,19 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Constructs this object
         /// </summary>
-        /// <param name="exec">the execution that called the function</param>
-        public RuntimeData(TBasic exec)
+        /// <param name="runtime">the execution that called the function</param>
+        public StackData(TBasic runtime)
         {
-            StackExecuter = exec;
+            Runtime = runtime;
         }
 
         /// <summary>
         /// Constructs this object
         /// </summary>
         /// <param name="parameters">the parameters of the function</param>
-        /// <param name="exec">the execution that called the function</param>
-        public RuntimeData(TBasic exec, IEnumerable<object> parameters)
-            : this(exec)
+        /// <param name="runtime">the execution that called the function</param>
+        public StackData(TBasic runtime, IEnumerable<object> parameters)
+            : this(runtime)
         {
             _params.AddRange(parameters);
         }
@@ -118,9 +118,9 @@ namespace Tbasic.Runtime
         /// Constructs this object
         /// </summary>
         /// <param name="text">the line that executed this function, this will be parsed like the Windows Command Prompt</param>
-        /// <param name="exec">the execution that called the function</param>
-        public RuntimeData(TBasic exec, string text)
-            : this(exec)
+        /// <param name="runtime">the execution that called the function</param>
+        public StackData(TBasic runtime, string text)
+            : this(runtime)
         {
             CmdLine line = new CmdLine(text);
             Text = text;
@@ -222,7 +222,7 @@ namespace Tbasic.Runtime
         public T GetAt<T>(int index)
         {
             T ret;
-            if (ObjectConvert.TryConvert(GetAt(index), out ret, StackExecuter.Options))
+            if (ObjectConvert.TryConvert(GetAt(index), out ret, Runtime.Options))
                 return ret;
             throw ThrowHelper.InvalidParamType(index, typeof(T).Name);
         }
@@ -230,7 +230,7 @@ namespace Tbasic.Runtime
         internal object ConvertAt(int index, Type type)
         {
             object ret;
-            if (ObjectConvert.TryConvert(GetAt(index), type, out ret, StackExecuter.Options))
+            if (ObjectConvert.TryConvert(GetAt(index), type, out ret, Runtime.Options))
                 return ret;
             throw ThrowHelper.InvalidParamType(index, type.Name);
         }
@@ -289,7 +289,7 @@ namespace Tbasic.Runtime
         {
             string param = GetAt(index) as string;
             if (param != null)
-                _params[index] = Evaluator.Evaluate(new StringSegment(param), StackExecuter);
+                _params[index] = ExpressionEvaluator.Evaluate(new StringSegment(param), Runtime);
             return _params[index];
         }
         
@@ -300,7 +300,7 @@ namespace Tbasic.Runtime
         {
             string param = GetAt(index) as string;
             if (param != null)
-                _params[index] = Evaluator.Evaluate(new StringSegment(param), StackExecuter);
+                _params[index] = ExpressionEvaluator.Evaluate(new StringSegment(param), Runtime);
             return GetAt<T>(index);
         }
 
@@ -308,9 +308,9 @@ namespace Tbasic.Runtime
         /// Clones this
         /// </summary>
         /// <returns>A new object with the same data</returns>
-        public RuntimeData Clone()
+        public StackData Clone()
         {
-            RuntimeData clone = new RuntimeData(StackExecuter);
+            StackData clone = new StackData(Runtime);
             clone.Text = Text;
             if (_params == null) {
                 clone._params = new List<object>();
@@ -327,10 +327,10 @@ namespace Tbasic.Runtime
         /// Copies all properties of another into this one
         /// </summary>
         /// <param name="other"></param>
-        public void CopyFrom(RuntimeData other)
+        public void CopyFrom(StackData other)
         {
-            RuntimeData clone = other.Clone();
-            StackExecuter = clone.StackExecuter;
+            StackData clone = other.Clone();
+            Runtime = clone.Runtime;
             Text = clone.Text;
             _params = clone._params;
             Status = clone.Status;

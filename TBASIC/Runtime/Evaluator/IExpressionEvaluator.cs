@@ -10,10 +10,10 @@ namespace Tbasic.Runtime
     /// <summary>
     /// An expression evaluator
     /// </summary>
-    internal interface IEvaluator
+    internal interface IExpressionEvaluator
     {
         StringSegment Expression { get; set; }
         object Evaluate();
-        TBasic CurrentExecution { get; set; }
+        TBasic Runtime { get; set; }
     }
 }

@@ -24,24 +24,24 @@ namespace Tbasic
                 ));
         }
 
-        public override void Execute(TBasic exec)
+        public override void Execute(TBasic runtime)
         {
-            RuntimeData parms = new RuntimeData(exec, Header.Text);
-            if (parms.ParameterCount < 2) {
+            StackData stackdat = new StackData(runtime, Header.Text);
+            if (stackdat.ParameterCount < 2) {
                 throw ThrowHelper.NoCondition();
             }
-            object obj = Evaluator.Evaluate(new StringSegment(Header.Text, Header.Name.Length), exec);
+            object obj = ExpressionEvaluator.Evaluate(new StringSegment(Header.Text, Header.Name.Length), runtime);
             CodeBlock _default;
-            var dict = ToDictionary(exec, out _default);
+            var dict = ToDictionary(runtime, out _default);
             if (obj != null && dict.ContainsKey(obj)) {
-                dict[obj].Execute(exec);
+                dict[obj].Execute(runtime);
             }
             else if (_default != null) {
-                _default.Execute(exec);
+                _default.Execute(runtime);
             }
         }
 
-        public Dictionary<object, CodeBlock> ToDictionary(TBasic exec, out CodeBlock _default)
+        public Dictionary<object, CodeBlock> ToDictionary(TBasic runtime, out CodeBlock _default)
         {
             Dictionary<object, CodeBlock> dict = new Dictionary<object, CodeBlock>();
             _default = null;
@@ -54,7 +54,7 @@ namespace Tbasic
                 }
                 else if (caseBlock.Header.Name.EqualsIgnoreCase("CASE")) {
                     dict.Add(
-                        Evaluator.Evaluate(caseBlock.Condition, exec),
+                        ExpressionEvaluator.Evaluate(caseBlock.Condition, runtime),
                         caseBlock
                        );
                 }
@@ -90,7 +90,7 @@ namespace Tbasic
             private CaseBlock(LineCollection body)
             {
                 Header = body[0];
-                RuntimeData parms = new RuntimeData(null, Header.Text);
+                StackData parms = new StackData(null, Header.Text);
                 if (parms.Name.EqualsIgnoreCase("DEFAULT")) {
                     Condition = new StringSegment("default");
                 }

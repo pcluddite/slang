@@ -61,7 +61,7 @@ namespace Tbasic.Runtime
             return lineage;
         }
 
-        public TClass GetInstance(RuntimeData runtime)
+        public TClass GetInstance(StackData runtime)
         {
             TClass instance = (TClass)Clone();
             instance.SetVariable("@this", instance);
@@ -75,18 +75,18 @@ namespace Tbasic.Runtime
             return instance;
         }
 
-        private void Ctor(RuntimeData runtime, TClass instance)
+        private void Ctor(StackData runtime, TClass instance)
         {
-            ObjectContext old = runtime.StackExecuter.Context;
-            runtime.StackExecuter.Context = instance;
-            runtime.StackExecuter.Execute(Constructor); // this is to initialize all the variables
+            ObjectContext old = runtime.Runtime.Context;
+            runtime.Runtime.Context = instance;
+            runtime.Runtime.Execute(Constructor); // this is to initialize all the variables
 
             TBasicFunction ctor;
             if (TryGetFunction("<>ctor", out ctor)) {
                 ctor(runtime); // do the user defined constructor
             }
 
-            runtime.StackExecuter.Context = old;
+            runtime.Runtime.Context = old;
         }
 
         internal TClass Clone()

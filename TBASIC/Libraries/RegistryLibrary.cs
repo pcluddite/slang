@@ -31,65 +31,65 @@ namespace Tbasic.Libraries
             Add("RegWrite", RegWrite);
         }
         
-        private object RegValueKind(RuntimeData runtime)
+        private object RegValueKind(StackData stackdat)
         {
-            runtime.AssertCount(3);
-            return WinRegistry.GetValueKind(runtime.GetAt<string>(1), runtime.GetAt<string>(2)).ToString();
+            stackdat.AssertCount(3);
+            return WinRegistry.GetValueKind(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2)).ToString();
         }
 
-        private object RegRead(RuntimeData runtime)
+        private object RegRead(StackData stackdat)
         {
-            runtime.AssertCount(atLeast: 3, atMost: 4);
+            stackdat.AssertCount(atLeast: 3, atMost: 4);
 
-            if (runtime.ParameterCount == 3)
-                runtime.Add(null);
+            if (stackdat.ParameterCount == 3)
+                stackdat.Add(null);
             
-            return WinRegistry.Read(runtime.GetAt<string>(1), runtime.GetAt<string>(2), runtime.GetAt<string>(3));
+            return WinRegistry.Read(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2), stackdat.GetAt<string>(3));
         }
 
-        private object RegDelete(RuntimeData runtime)
+        private object RegDelete(StackData stackdat)
         {
-            runtime.AssertCount(3);
-            WinRegistry.Delete(runtime.GetAt<string>(1), runtime.GetAt<string>(2));
+            stackdat.AssertCount(3);
+            WinRegistry.Delete(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2));
             return null;
         }
 
-        private object RegRename(RuntimeData runtime)
+        private object RegRename(StackData stackdat)
         {
-            runtime.AssertCount(4);
-            WinRegistry.Rename(runtime.GetAt<string>(1), runtime.GetAt<string>(2), runtime.GetAt<string>(3));
+            stackdat.AssertCount(4);
+            WinRegistry.Rename(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2), stackdat.GetAt<string>(3));
             return null;
         }
 
-        private object RegDeleteKey(RuntimeData runtime)
+        private object RegDeleteKey(StackData stackdat)
         {
-            runtime.AssertCount(2);
-            WinRegistry.DeleteKey(runtime.GetAt<string>(1));
+            stackdat.AssertCount(2);
+            WinRegistry.DeleteKey(stackdat.GetAt<string>(1));
             return null;
         }
 
-        private object RegRenameKey(RuntimeData runtime)
+        private object RegRenameKey(StackData stackdat)
         {
-            runtime.AssertCount(3);
-            WinRegistry.RenameKey(runtime.GetAt<string>(1), runtime.GetAt<string>(2));
+            stackdat.AssertCount(3);
+            WinRegistry.RenameKey(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2));
             return null;
         }
 
-        private object RegCreateKey(RuntimeData runtime)
+        private object RegCreateKey(StackData stackdat)
         {
-            runtime.AssertCount(3);
-            WinRegistry.RenameKey(runtime.GetAt<string>(1), runtime.GetAt<string>(2));
-            runtime.Status = ErrorSuccess.Created;
+            stackdat.AssertCount(3);
+            WinRegistry.RenameKey(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2));
+            stackdat.Status = ErrorSuccess.Created;
             return null;
         }
         
-        private object RegEnumValues(RuntimeData runtime)
+        private object RegEnumValues(StackData stackdat)
         {
-            runtime.AssertCount(2);
+            stackdat.AssertCount(2);
 
-            object[][] values = WinRegistry.EnumerateValues(runtime.GetAt<string>(1));
+            object[][] values = WinRegistry.EnumerateValues(stackdat.GetAt<string>(1));
             if (values.Length == 0) {
-                runtime.Status = ErrorSuccess.NoContent;
+                stackdat.Status = ErrorSuccess.NoContent;
                 return null;
             }
             else {
@@ -97,30 +97,30 @@ namespace Tbasic.Libraries
             }
         }
 
-        private static object RegEnumKeys(RuntimeData runtime)
+        private static object RegEnumKeys(StackData stackdat)
         {
-            runtime.AssertCount(2);
-            return WinRegistry.EnumeratKeys(runtime.GetAt<string>(1));
+            stackdat.AssertCount(2);
+            return WinRegistry.EnumeratKeys(stackdat.GetAt<string>(1));
         }
 
-        private object RegWrite(RuntimeData runtime)
+        private object RegWrite(StackData stackdat)
         {
-            runtime.AssertCount(5);
+            stackdat.AssertCount(5);
 
-            object value = runtime.GetAt(3);
-            RegistryValueKind kind = runtime.GetAt<RegistryValueKind>(4);
+            object value = stackdat.GetAt(3);
+            RegistryValueKind kind = stackdat.GetAt<RegistryValueKind>(4);
 
             switch (kind) {
                 case RegistryValueKind.Binary:
-                    value = Convert.FromBase64String(runtime.GetAt<string>(3));
+                    value = Convert.FromBase64String(stackdat.GetAt<string>(3));
                     break;
                 case RegistryValueKind.MultiString:
                     string strval = value as string;
                     if (value is string) {
-                        value = runtime.GetAt<string>(3).Replace("\r\n", "\n").Split('\n');
+                        value = stackdat.GetAt<string>(3).Replace("\r\n", "\n").Split('\n');
                     }
                     else if (value is string[]) {
-                        value = runtime.GetAt<string[]>(3);
+                        value = stackdat.GetAt<string[]>(3);
                     }
                     else {
                         throw new ArgumentException("Parameter is not a valid multi-string");
@@ -134,7 +134,7 @@ namespace Tbasic.Libraries
                 default:
                     throw new ArgumentException("Registry value of type '" + kind + "' is unsupported");
             }
-            WinRegistry.Write(runtime.GetAt<string>(1), runtime.GetAt<string>(2), value, kind);
+            WinRegistry.Write(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2), value, kind);
             return null;
         }
     }

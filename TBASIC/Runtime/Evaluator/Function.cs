@@ -14,7 +14,7 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Class for evaluating a function
     /// </summary>
-    internal class Function : IEvaluator
+    internal class Function : IExpressionEvaluator
     {
         #region Private Members
 
@@ -56,17 +56,17 @@ namespace Tbasic.Runtime
             }
         }
 
-        public ObjectContext CurrentContext { get { return CurrentExecution.Context; } }
+        public ObjectContext CurrentContext { get { return Runtime.Context; } }
 
-        public TBasic CurrentExecution { get; set; }
+        public TBasic Runtime { get; set; }
 
         #endregion
 
         #region Construction
         
-        public Function(StringSegment expr, TBasic exec, StringSegment name, IList<object> parameters)
+        public Function(StringSegment expr, TBasic runtime, StringSegment name, IList<object> parameters)
         {
-            CurrentExecution = exec;
+            Runtime = runtime;
             _expression = expr;
             _params = parameters;
             _function = name;
@@ -95,7 +95,7 @@ namespace Tbasic.Runtime
                 a_evaluated = new object[l_params.Count];
                 l_params.CopyTo(a_evaluated, 0);
                 for (int i = 0; i < a_evaluated.Length; ++i) {
-                    IEvaluator expr = a_evaluated[i] as IEvaluator;
+                    IExpressionEvaluator expr = a_evaluated[i] as IExpressionEvaluator;
                     if (expr != null) {
                         a_evaluated[i] = expr.Evaluate();
                     }
@@ -106,7 +106,7 @@ namespace Tbasic.Runtime
                 throw ThrowHelper.UndefinedFunction(name);
             }
             else {
-                RuntimeData _sframe = new RuntimeData(CurrentExecution, a_evaluated);
+                StackData _sframe = new StackData(Runtime, a_evaluated);
                 _sframe.Name = name;
                 _sframe.Data = context.GetFunction(name).Invoke(_sframe);
                 CurrentContext.SetReturns(_sframe);

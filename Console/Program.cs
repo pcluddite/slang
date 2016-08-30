@@ -33,14 +33,14 @@ namespace Tbasic.Terminal
 
             Console.Write("Initializing standard library...");
 
-            TBasic exec = new TBasic();
-            exec.Global.LoadStandardLibrary();
+            TBasic runtime = new TBasic();
+            runtime.Global.LoadStandardLibrary();
 
-            foreach (var kv in exec.Global.GetAllFunctions()) {
-                exec.Global.SetCommand(kv.Key, kv.Value);
+            foreach (var kv in runtime.Global.GetAllFunctions()) {
+                runtime.Global.SetCommand(kv.Key, kv.Value);
             }
 
-            exec.Global.AddCommandLibrary(new ConsoleLibrary(exec));
+            runtime.Global.AddCommandLibrary(new ConsoleLibrary(runtime));
 
             Console.WriteLine("Done.\n");
 
@@ -49,13 +49,13 @@ namespace Tbasic.Terminal
             while(!TBasic.ExitRequest) {
                 Console.Write(">");
                 line = Console.ReadLine();
-                RuntimeData dat;
+                StackData dat;
                 try {
 #if DEBUG
                     Stopwatch watch = new Stopwatch();
                     watch.Start();
 #endif
-                    dat = exec.Execute(new Line(curr++, line));
+                    dat = runtime.Execute(new Line(curr++, line));
 #if DEBUG
                     watch.Stop();
                     WriteTime(watch.ElapsedMilliseconds);

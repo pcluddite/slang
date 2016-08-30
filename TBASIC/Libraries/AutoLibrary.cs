@@ -64,24 +64,24 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object MouseClick(RuntimeData runtime)
+        private object MouseClick(StackData stackdat)
         {
-            if (runtime.ParameterCount == 4) {
-                runtime.Add(1);
-                runtime.Add(1);
+            if (stackdat.ParameterCount == 4) {
+                stackdat.Add(1);
+                stackdat.Add(1);
             }
-            if (runtime.ParameterCount == 5) {
-                runtime.Add(5);
+            if (stackdat.ParameterCount == 5) {
+                stackdat.Add(5);
             }
-            runtime.AssertCount(6);
+            stackdat.AssertCount(6);
 
-            int x = runtime.GetAt<int>(2),
-                y = runtime.GetAt<int>(3),
-                clicks = runtime.GetAt<int>(4),
-                speed = runtime.GetAt<int>(5);
+            int x = stackdat.GetAt<int>(2),
+                y = stackdat.GetAt<int>(3),
+                clicks = stackdat.GetAt<int>(4),
+                speed = stackdat.GetAt<int>(5);
 
             MouseButton button;
-            if (runtime.GetEnum(1, "button", "LEFT", "RIGHT").EqualsIgnoreCase("LEFT")) {
+            if (stackdat.GetEnum(1, "button", "LEFT", "RIGHT").EqualsIgnoreCase("LEFT")) {
                 button = MouseButton.Left;
             }
             else {
@@ -91,16 +91,16 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object MouseMove(RuntimeData runtime)
+        private object MouseMove(StackData stackdat)
         {
-            if (runtime.ParameterCount == 3) {
-                runtime.Add(1);
+            if (stackdat.ParameterCount == 3) {
+                stackdat.Add(1);
             }
-            runtime.AssertCount(4);
+            stackdat.AssertCount(4);
 
-            MouseMove(runtime.GetAt<int>(1),
-                      runtime.GetAt<int>(2),
-                      runtime.GetAt<int>(3));
+            MouseMove(stackdat.GetAt<int>(1),
+                      stackdat.GetAt<int>(2),
+                      stackdat.GetAt<int>(3));
 
             return null;
         }
@@ -155,11 +155,11 @@ namespace Tbasic.Libraries
             return User32.BlockInput(blocked);
         }
 
-        private object BlockInput(RuntimeData runtime)
+        private object BlockInput(StackData stackdat)
         {
-            runtime.AssertCount(2);
-            if (!BlockInput(runtime.GetAt<bool>(1))) {
-                runtime.Status = ErrorClient.Forbidden;
+            stackdat.AssertCount(2);
+            if (!BlockInput(stackdat.GetAt<bool>(1))) {
+                stackdat.Status = ErrorClient.Forbidden;
             }
             return null;
         }
@@ -173,10 +173,10 @@ namespace Tbasic.Libraries
             SendKeys.SendWait(keys);
         }
 
-        private object Send(RuntimeData runtime)
+        private object Send(StackData stackdat)
         {
-            runtime.AssertCount(2);
-            Send(runtime.GetAt<string>(1));
+            stackdat.AssertCount(2);
+            Send(stackdat.GetAt<string>(1));
             return null;
         }
 
@@ -191,13 +191,13 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object VolumeUp(RuntimeData runtime)
+        private object VolumeUp(StackData stackdat)
         {
-            if (runtime.ParameterCount == 1) {
-                runtime.Add(1);
+            if (stackdat.ParameterCount == 1) {
+                stackdat.Add(1);
             }
-            runtime.AssertCount(2);
-            VolumeUp(runtime.GetAt<int>(1));
+            stackdat.AssertCount(2);
+            VolumeUp(stackdat.GetAt<int>(1));
             return null;
         }
 
@@ -212,13 +212,13 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object VolumeDown(RuntimeData runtime)
+        private object VolumeDown(StackData stackdat)
         {
-            if (runtime.ParameterCount == 1) {
-                runtime.Add(1);
+            if (stackdat.ParameterCount == 1) {
+                stackdat.Add(1);
             }
-            runtime.AssertCount(2);
-            VolumeDown(runtime.GetAt<int>(1));
+            stackdat.AssertCount(2);
+            VolumeDown(stackdat.GetAt<int>(1));
             return null;
         }
 
@@ -230,9 +230,9 @@ namespace Tbasic.Libraries
             User32.keybd_event((byte)Forms.Keys.VolumeMute, 0, 0, 0);
         }
 
-        private object VolumeMute(RuntimeData runtime)
+        private object VolumeMute(StackData stackdat)
         {
-            runtime.AssertCount(1);
+            stackdat.AssertCount(1);
             VolumeMute();
             return null;
         }

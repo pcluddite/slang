@@ -22,25 +22,25 @@ namespace Tbasic
                 ));
         }
 
-        public override void Execute(TBasic exec)
+        public override void Execute(TBasic runtime)
         {
-            RuntimeData parameters = new RuntimeData(exec, Header.Text);
+            StackData stackdat = new StackData(runtime, Header.Text);
 
-            if (parameters.ParameterCount < 2) {
+            if (stackdat.ParameterCount < 2) {
                 throw ThrowHelper.NoCondition();
             }
 
             StringSegment condition = new StringSegment(Header.Text, Header.Text.IndexOf(' '));
 
-            Evaluator eval = new Evaluator(condition, exec);
+            ExpressionEvaluator eval = new ExpressionEvaluator(condition, runtime);
 
             while (eval.EvaluateBool()) {
-                exec.Execute(Body);
-                if (exec.BreakRequest) {
-                    exec.HonorBreak();
+                runtime.Execute(Body);
+                if (runtime.BreakRequest) {
+                    runtime.HonorBreak();
                     break;
                 }
-                eval.ShouldParse = true;
+                eval.Evaluated = true;
             }
         }
     }

@@ -17,20 +17,20 @@ namespace Tbasic.Runtime
     /// <summary>
     /// General purpose evaluator for functions, variables, math, booleans, etc.
     /// </summary>
-    internal partial class Evaluator : IEvaluator
+    internal partial class ExpressionEvaluator : IExpressionEvaluator
     {
         private LinkedList<object> _tokens = new LinkedList<object>();
         private StringSegment _expression = StringSegment.Empty;
         private bool _parsed;
         
-        public Evaluator(TBasic exec)
+        public ExpressionEvaluator(TBasic runtime)
         {
-            CurrentExecution = exec;
+            Runtime = runtime;
         }
         
-        public Evaluator(StringSegment expression, TBasic exec)
+        public ExpressionEvaluator(StringSegment expression, TBasic exec)
         {
-            CurrentExecution = exec;
+            Runtime = exec;
             Expression = expression;
         }
 
@@ -46,16 +46,16 @@ namespace Tbasic.Runtime
             }
         }
 
-        public ObjectContext CurrentContext
+        public ObjectContext RuntimeContext
         {
             get {
-                return CurrentExecution.Context;
+                return Runtime.Context;
             }
         }
 
-        public TBasic CurrentExecution { get; set; }
+        public TBasic Runtime { get; set; }
 
-        public bool ShouldParse
+        public bool Evaluated
         {
             get {
                 return !_parsed;
@@ -82,13 +82,13 @@ namespace Tbasic.Runtime
                 return 0;
             
             if (!_parsed) {
-                Scanner scanner = CurrentExecution.ScannerDelegate(_expression);
+                Scanner scanner = Runtime.ScannerDelegate(_expression);
                 while (!scanner.EndOfStream)
                     NextToken(scanner);
                 _parsed = true;
             }
 
-            return ConvertToSimpleType(EvaluateList(), CurrentExecution.Options);
+            return ConvertToSimpleType(EvaluateList(), Runtime.Options);
         }
 
         public bool EvaluateBool()
@@ -114,13 +114,13 @@ namespace Tbasic.Runtime
 
             // check unary op
             UnaryOperator unaryOp;
-            if (scanner.NextUnaryOp(CurrentContext, _tokens.Last?.Value, out unaryOp)) {
+            if (scanner.NextUnaryOp(RuntimeContext, _tokens.Last?.Value, out unaryOp)) {
                 return AddObjectToExprList(unaryOp, startIndex, scanner);
             }
 
             // check function
             Function func;
-            if (scanner.NextFunctionInternal(CurrentExecution, out func)) {
+            if (scanner.NextFunctionInternal(Runtime, out func)) {
                 return AddObjectToExprList(func, startIndex, scanner);
             }
 
@@ -131,7 +131,7 @@ namespace Tbasic.Runtime
 
             // check variable
             Variable variable;
-            if (scanner.NextVariableInternal(CurrentExecution, out variable)) {
+            if (scanner.NextVariableInternal(Runtime, out variable)) {
                 return AddObjectToExprList(variable, startIndex, scanner);
             }
 
@@ -155,13 +155,13 @@ namespace Tbasic.Runtime
 
             // check binary operator
             BinaryOperator binOp;
-            if (scanner.NextBinaryOp(CurrentContext, out binOp)) {
+            if (scanner.NextBinaryOp(RuntimeContext, out binOp)) {
                 return AddObjectToExprList(binOp, startIndex, scanner);
             }
 
             // couldn't be parsed
 
-            if (CurrentContext.FindFunctionContext(_expression.ToString()) == null) {
+            if (RuntimeContext.FindFunctionContext(_expression.ToString()) == null) {
                 throw new ArgumentException("Invalid expression '" + _expression + "'");
             }
             else {
@@ -176,9 +176,9 @@ namespace Tbasic.Runtime
                 scanner.SkipWhiteSpace();
                 scanner.IntPosition = GroupParser.IndexGroup(_expression, startIndex) + 1;
 
-                Evaluator eval = new Evaluator(
+                ExpressionEvaluator eval = new ExpressionEvaluator(
                     _expression.Subsegment(startIndex + 1, scanner.IntPosition - startIndex - 2),
-                    CurrentExecution // share the wealth
+                    Runtime // share the wealth
                 );
                 _tokens.AddLast(eval);
             }
@@ -232,7 +232,7 @@ namespace Tbasic.Runtime
                 list.Remove(nodePair.Node);
             }
 
-            IEvaluator expr = list.First.Value as IEvaluator;
+            IExpressionEvaluator expr = list.First.Value as IExpressionEvaluator;
             if (expr == null) {
                 return list.First.Value;
             }
@@ -251,14 +251,14 @@ namespace Tbasic.Runtime
         /// <returns></returns>
         public static object Evaluate(StringSegment expressionString, TBasic exec)
         {
-            Evaluator expression = new Evaluator(expressionString, exec);
+            ExpressionEvaluator expression = new ExpressionEvaluator(expressionString, exec);
             return expression.Evaluate();
         }
 
         public static object PerformUnaryOp(UnaryOperator op, object left, object right)
         {
             object operand = op.Side == UnaryOperator.OperandSide.Left ? left : right;
-            IEvaluator tempv = operand as IEvaluator;
+            IExpressionEvaluator tempv = operand as IExpressionEvaluator;
             if (tempv != null)
                 operand = tempv.Evaluate();
 
@@ -283,18 +283,18 @@ namespace Tbasic.Runtime
         public static object PerformBinaryOp(BinaryOperator op, object left, object right)
         {
             if (op.EvaulatedOperand.HasFlag(BinaryOperator.OperandPosition.Left)) {
-                IEvaluator tv = left as IEvaluator;
+                IExpressionEvaluator tv = left as IExpressionEvaluator;
                 if (tv != null)
                     left = tv.Evaluate();
             }
 
             try {
                 if (op.EvaulatedOperand.HasFlag(BinaryOperator.OperandPosition.Right)) {
-                    IEvaluator tv;
+                    IExpressionEvaluator tv;
                     switch (op.OperatorString) { // short circuit evaluation 1/6/16
                         case "AND":
                             if (Convert.ToBoolean(left, CultureInfo.CurrentCulture)) {
-                                tv = right as IEvaluator;
+                                tv = right as IExpressionEvaluator;
                                 if (tv != null) {
                                     right = tv.Evaluate();
                                 }
@@ -308,7 +308,7 @@ namespace Tbasic.Runtime
                                 return true;
                             }
                             else {
-                                tv = right as IEvaluator;
+                                tv = right as IExpressionEvaluator;
                                 if (tv != null) {
                                     right = tv.Evaluate();
                                 }
@@ -319,7 +319,7 @@ namespace Tbasic.Runtime
                             return false;
                     }
 
-                    tv = right as IEvaluator;
+                    tv = right as IExpressionEvaluator;
                     if (tv != null)
                         right = tv.Evaluate();
                 }

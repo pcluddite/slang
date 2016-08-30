@@ -92,17 +92,17 @@ namespace Tbasic.Libraries
             return Random(upperBound - lowerBound) + lowerBound;
         }
 
-        private object Random(RuntimeData runtime)
+        private object Random(StackData stackdat)
         {
-            runtime.AssertCount(atLeast: 1, atMost: 3);
-            if (runtime.ParameterCount == 1) {
+            stackdat.AssertCount(atLeast: 1, atMost: 3);
+            if (stackdat.ParameterCount == 1) {
                 return Random();
             }
-            else if (runtime.ParameterCount == 2) {
-                return Random(runtime.GetAt<int>(1));
+            else if (stackdat.ParameterCount == 2) {
+                return Random(stackdat.GetAt<int>(1));
             }
             else {
-                return Random(runtime.GetAt<int>(1), runtime.GetAt<int>(2));
+                return Random(stackdat.GetAt<int>(1), stackdat.GetAt<int>(2));
             }
         }
 
@@ -137,7 +137,7 @@ namespace Tbasic.Libraries
             e.Global.LoadStandardOperators();
             e.Global.AddLibrary(new MathLibrary(e.Global)); // only allow math libs
             e.Global.SetFunction("eval", null); // that's a no-no
-            return Evaluator.Evaluate(new StringSegment(expr), e);
+            return ExpressionEvaluator.Evaluate(new StringSegment(expr), e);
         }
     }
 }

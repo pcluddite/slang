@@ -14,7 +14,7 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Manages the variables, functions, and commands declared in a given context
     /// </summary>
-    public class ObjectContext
+    public partial class ObjectContext
     {
         #region Private Fields
 
@@ -191,79 +191,7 @@ namespace Tbasic.Runtime
         #endregion
 
         #region FindContext
-
-        /// <summary>
-        /// Searches for the context in which a code block is declared. If the block cannot be found, null is returned.
-        /// </summary>
-        /// <param name="name">the block name</param>
-        /// <returns>the ObjectContext in which the block is declared</returns>
-        public ObjectContext FindBlockContext(string name)
-        {
-            if (_blocks.ContainsKey(name)) {
-                return this;
-            }
-            else if (_super == null) {
-                return null;
-            }
-            else {
-                return _super.FindBlockContext(name);
-            }
-        }
-
-        /// <summary>
-        /// Searches for the context in which a command is declared. If the command cannot be found, null is returned.
-        /// </summary>
-        /// <param name="name">the command name</param>
-        /// <returns>the ObjectContext in which the command is declared</returns>
-        public ObjectContext FindCommandContext(string name)
-        {
-            if (_commands.ContainsKey(name)) {
-                return this;
-            }
-            else if (_super == null) {
-                return null;
-            }
-            else {
-                return _super.FindCommandContext(name);
-            }
-        }
-
-        /// <summary>
-        /// Searches for the context in which a function is declared. If the function cannot be found, null is returned.
-        /// </summary>
-        /// <param name="name">the function name</param>
-        /// <returns>the ObjectContext in which the function is declared</returns>
-        public ObjectContext FindFunctionContext(string name)
-        {
-            if (_functions.ContainsKey(name)) {
-                return this;
-            }
-            else if (_super == null) {
-                return null;
-            }
-            else {
-                return _super.FindFunctionContext(name);
-            }
-        }
-
-        /// <summary>
-        /// Searches for the context in which a variable is declared. If the variable cannot be found, null is returned.
-        /// </summary>
-        /// <param name="name">the variable name</param>
-        /// <returns>the ObjectContext in which the variable is declared</returns>
-        public ObjectContext FindVariableContext(string name)
-        {
-            if (_variables.ContainsKey(name)) {
-                return this;
-            }
-            else if (_super == null) {
-                return null;
-            }
-            else {
-                return _super.FindVariableContext(name);
-            }
-        }
-
+        
         /// <summary>
         /// Searches for the context in which any name is declared (variable, constant, function, command or block). If no definition cannot be found, null is returned.
         /// </summary>
@@ -290,141 +218,30 @@ namespace Tbasic.Runtime
             return FindBlockContext(name);
         }
 
-        /// <summary>
-        /// Searches for the context in which a constant is declared. If the constant cannot be found, null is returned.
-        /// </summary>
-        /// <param name="name">the constant name</param>
-        /// <returns>the ObjectContext in which the constant is declared</returns>
-        public ObjectContext FindConstantContext(string name)
-        {
-            if (_constants.ContainsKey(name)) {
-                return this;
-            }
-            else if (_super == null) {
-                return null;
-            }
-            else {
-                return _super.FindConstantContext(name);
-            }
-        }
-
         #endregion
 
         #region List
-        
-        /// <summary>
-        /// Lists all the functions currently defined
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<KeyValuePair<string, TBasicFunction>> GetAllFunctions()
-        {
-            ObjectContext context = this;
-            while (context != null) {
-                foreach (var func in context.GetLocalFunctions()) {
-                    yield return func;
-                }
-                context = context._super;
-            }
-        }
 
         /// <summary>
-        /// Lists the functions defined in this context
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<KeyValuePair<string, TBasicFunction>> GetLocalFunctions()
-        {
-            return _functions;
-        }
-
-        /// <summary>
-        /// Lists all the commands currently defined
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<KeyValuePair<string, TBasicFunction>> GetAllCommands()
-        {
-            ObjectContext context = this;
-            while (context != null) {
-                foreach (var cmd in context.GetLocalCommands()) {
-                    yield return cmd;
-                }
-                context = context._super;
-            }
-        }
-
-        /// <summary>
-        /// Lists the commands defined in this context
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<KeyValuePair<string, TBasicFunction>> GetLocalCommands()
-        {
-            return _commands;
-        }
-
-        /// <summary>
-        /// Lists all the variables currently defined
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<KeyValuePair<string, object>> GetAllVariables()
-        {
-            ObjectContext context = this;
-            while (context != null) {
-                foreach (var v in context.GetLocalVariables()) {
-                    yield return v;
-                }
-                context = context._super;
-            }
-        }
-
-        /// <summary>
-        /// Lists the variables defined in this context
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<KeyValuePair<string, object>> GetLocalVariables()
-        {
-            return _variables;
-        }
-
-        /// <summary>
-        /// Lists all the constants currently defined
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<KeyValuePair<string, object>> ListAllConstants()
-        {
-            ObjectContext context = this;
-            while (context != null) {
-                foreach (var c in context.ListConstants()) {
-                    yield return c;
-                }
-                context = context._super;
-            }
-        }
-
-        /// <summary>
-        /// Lists the constants defined in this context
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<KeyValuePair<string, object>> ListConstants()
-        {
-            return _variables;
-        }
-
-        /// <summary>
-        /// Lists all the unary operators currently defined
+        /// List all unary operators defined
         /// </summary>
         /// <returns></returns>
         public IEnumerable<UnaryOperator> GetAllUnaryOperators()
         {
-            ObjectContext context = this;
-            while (context != null) {
-                foreach (var unOp in context.GetLocalUnaryOperators()) {
-                    yield return unOp;
-                }
-                context = context._super;
-            }
+            return _unaryOps.Values;
+        }
+        
+        /// <summary>
+        /// Lists all binary operators defined
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<BinaryOperator> GetAllBinaryOperators()
+        {
+            return _binaryOps.Values;
         }
 
         /// <summary>
-        /// Lists the unary operators defined in this context
+        /// List the unary operators defined in this context
         /// </summary>
         /// <returns></returns>
         public IEnumerable<UnaryOperator> GetLocalUnaryOperators()
@@ -432,20 +249,6 @@ namespace Tbasic.Runtime
             return _unaryOps.Values;
         }
 
-        /// <summary>
-        /// Lists all the binary operators currently defined
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<BinaryOperator> GetAllBinaryOperators()
-        {
-            ObjectContext context = this;
-            while (context != null) {
-                foreach (var binOp in context.GetLocalBinaryOperators()) {
-                    yield return binOp;
-                }
-                context = context._super;
-            }
-        }
 
         /// <summary>
         /// Lists the binary operators defined in this context
@@ -486,8 +289,6 @@ namespace Tbasic.Runtime
         /// <summary>
         /// This is a workaround for some generic programming. I don't like it.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         internal IEnumerable<T> GetAllOperators<T>() where T : IOperator
         {
             ObjectContext context = this;
@@ -502,8 +303,6 @@ namespace Tbasic.Runtime
         /// <summary>
         /// This is another workaround for generic programming. I still don't like it.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         internal IEnumerable<T> GetLocalOperators<T>() where T : IOperator
         {
             if (typeof(T) == typeof(BinaryOperator)) {
@@ -512,59 +311,6 @@ namespace Tbasic.Runtime
             else {
                 return (IEnumerable<T>)GetLocalUnaryOperators();
             }
-        }
-
-        #endregion
-
-        #region TryGet
-        
-        // c# doesn't have metaprogramming like c++, that would be very usefull right about now
-        private bool TryGet<TKey, TValue>(Func<ObjectContext, IDictionary<TKey, TValue>> getdict, TKey key, out TValue value)
-        {
-            if (getdict(this).TryGetValue(key, out value)) {
-                return true;
-            }
-            else if (_super == null) {
-                return false;
-            }
-            else {
-                return _super.TryGet(getdict, key, out value);
-            }
-        }
-
-        internal bool TryGetBlock(string name, out BlockCreator value)
-        {
-            return TryGet(o => o._blocks, name, out value);
-        }
-
-        internal bool TryGetVariable(string name, out object value)
-        {
-            return TryGet(o => o._variables, name, out value);
-        }
-
-        internal bool TryGetFunction(string name, out TBasicFunction value)
-        {
-            return TryGet(o => o._functions, name, out value);
-        }
-
-        internal bool TryGetCommand(string name, out TBasicFunction value)
-        {
-            return TryGet(o => o._commands, name, out value);
-        }
-        
-        internal bool TryGetBinaryOperator(string strOp, out BinaryOperator op)
-        {
-            return TryGet(o => o._binaryOps, strOp, out op);
-        }
-        
-        internal bool TryGetUnaryOperator(string strOp, out UnaryOperator op)
-        {
-            return TryGet(o => o._unaryOps, strOp, out op);
-        }
-
-        internal bool TryGetType(string name, out TClass prototype)
-        {
-            return TryGet(o => o._prototypes, name, out prototype);
         }
 
         #endregion
@@ -578,26 +324,24 @@ namespace Tbasic.Runtime
 
         #endregion
 
-        #region Get
+        #region TryGet
 
-        /// <summary>
-        /// Gets a code block that has been declared in this context
-        /// </summary>
-        /// <param name="name">block name</param>
-        /// <returns>the code block</returns>
-        public BlockCreator GetBlock(string name)
+        internal bool TryGetType(string typename, out TClass tclass)
         {
-            BlockCreator block;
-            if (_blocks.TryGetValue(name, out block)) {
-                return block;
+            if (_prototypes.TryGetValue(typename, out tclass)) {
+                return true;
             }
             else if (_super == null) {
-                throw ThrowHelper.UndefinedObject(name);
+                return false;
             }
             else {
-                return _super.GetBlock(name);
+                return _super.TryGetType(typename, out tclass);
             }
         }
+
+        #endregion
+
+        #region Get
 
         /// <summary>
         /// Gets a variable or constant that has been declared in this context
@@ -648,78 +392,6 @@ namespace Tbasic.Runtime
             }
             return obj;
         }
-        
-        /// <summary>
-        /// Gets a function that has been declared in this context
-        /// </summary>
-        /// <param name="name">function name</param>
-        /// <returns>the function delegate</returns>
-        public TBasicFunction GetFunction(string name)
-        {
-            TBasicFunction func;
-            if (_functions.TryGetValue(name, out func)) {
-                return func;
-            }
-            else if (_super == null) {
-                throw ThrowHelper.UndefinedObject(name);
-            }
-            else {
-                return _super.GetFunction(name);
-            }
-        }
-
-        /// <summary>
-        /// Gets a command that has been declared in this context
-        /// </summary>
-        /// <param name="name">command name</param>
-        /// <returns>the command delegate</returns>
-        public TBasicFunction GetCommand(string name)
-        {
-            TBasicFunction func;
-            if (_commands.TryGetValue(name, out func)) {
-                return func;
-            }
-            else if (_super == null) {
-                throw ThrowHelper.UndefinedObject(name);
-            }
-            else {
-                return _super.GetCommand(name);
-            }
-        }
-
-        /// <summary>
-        /// Gets a binary operator if it exists, throws an ArgumentException otherwise
-        /// </summary>
-        /// <param name="strOp">the operator as a string</param>
-        /// <exception cref="ArgumentException">thrown if the operator is undefined</exception>
-        /// <returns></returns>
-        public BinaryOperator GetBinaryOperator(string strOp)
-        {
-            BinaryOperator op;
-            if (_binaryOps.TryGetValue(strOp, out op)) {
-                return op;
-            }
-            else {
-                throw ThrowHelper.OperatorUndefined(strOp);
-            }
-        }
-
-        /// <summary>
-        /// Gets a binary operator if it exists, throws an ArgumentException otherwise
-        /// </summary>
-        /// <param name="strOp">the operator as a string</param>
-        /// <exception cref="ArgumentException">thrown if the operator is undefined</exception>
-        /// <returns></returns>
-        public UnaryOperator GetUnaryOperator(string strOp)
-        {
-            UnaryOperator op;
-            if (_unaryOps.TryGetValue(strOp, out op)) {
-                return op;
-            }
-            else {
-                throw ThrowHelper.OperatorUndefined(strOp);
-            }
-        }
 
         #endregion
 
@@ -738,29 +410,6 @@ namespace Tbasic.Runtime
             ObjectContext context = FindVariableContext("@error");
             if (context != null)
                 _sframe.Status = (int)context.GetVariable("@error");
-        }
-
-        /// <summary>
-        /// Sets a code block in this context. If the block exists, it is set in
-        /// the context in which it was declared. Otherwise, it is declared in this context.
-        /// </summary>
-        /// <param name="name">the constant name</param>
-        /// <param name="block">a method that can be called to initialize the block</param>
-        public void SetBlock(string name, BlockCreator block)
-        {
-            ObjectContext c = FindBlockContext(name);
-            if (c == null) {
-                _blocks.Add(name, block);
-#if SHOW_OBJECTS
-                Console.WriteLine("{1} declared in {0}", GetHashCode(), name);
-#endif
-            }
-            else {
-                c._blocks[name] = block;
-#if SHOW_OBJECTS
-                Console.WriteLine("{1} set in {0}", c.GetHashCode(), name);
-#endif
-            }
         }
 
         /// <summary>
@@ -839,71 +488,7 @@ namespace Tbasic.Runtime
             }
             array[indices[indices.Length - 1]] = value;
         }
-
-        /// <summary>
-        /// Sets a function in this context. If the function exists, it is set in
-        /// the context in which it was declared. Otherwise, it is declared in this context.
-        /// </summary>
-        /// <param name="name">the function name</param>
-        /// <param name="func">the delegate to the function</param>
-        public void SetFunction(string name, TBasicFunction func)
-        {
-            ObjectContext c = FindFunctionContext(name);
-            if (c == null) {
-                _functions.Add(name, func);
-#if SHOW_OBJECTS
-                Console.WriteLine("{1} function declared in {0}", GetHashCode(), name);
-#endif
-            }
-            else {
-                c._functions[name] = func;
-#if SHOW_OBJECTS
-                Console.WriteLine("{1} function declared in {0}", c.GetHashCode(), name);
-#endif
-            }
-        }
-
-        /// <summary>
-        /// Sets a command in this context. If the command exists, it is set in
-        /// the context in which it was declared. Otherwise, it is declared in this context.
-        /// </summary>
-        /// <param name="name">the command name</param>
-        /// <param name="func">the delegate to the command</param>
-        public void SetCommand(string name, TBasicFunction func)
-        {
-            ObjectContext c = FindCommandContext(name);
-            if (c == null) {
-                _commands.Add(name, func);
-#if SHOW_OBJECTS
-                Console.WriteLine("{1} command declared in {1}", GetHashCode(), name);
-#endif
-            }
-            else {
-                c._commands[name] = func;
-#if SHOW_OBJECTS
-                Console.WriteLine("{0} command set in {1}", c.GetHashCode(), name);
-#endif
-            }
-        }
-
-        /// <summary>
-        /// Defines a binary operator
-        /// </summary>
-        /// <param name="op">the operator</param>
-        public void SetBinaryOperator(BinaryOperator op)
-        {
-            _binaryOps[op.OperatorString] = op;
-        }
-
-        /// <summary>
-        /// Defines a unary operator
-        /// </summary>
-        /// <param name="op">the operator</param>
-        public void SetUnaryOperator(UnaryOperator op)
-        {
-            _unaryOps[op.OperatorString] = op;
-        }
-
+        
         #endregion
 
         internal static T CopyFrom<T>(ObjectContext other) where T : ObjectContext, new()

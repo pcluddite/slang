@@ -69,6 +69,11 @@
     <Compile Include="Operators\UnaryOpDictionary.cs" />
     <Compile Include="Operators\UnaryOperator.cs" />
     <Compile Include="Runtime\ExecuterOption.cs" />
+    <Compile Include="Runtime\ObjectContext.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ObjectContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Runtime\ObjectConvert.cs" />
     <Compile Include="Runtime\Parsing\CmdLine.cs" />
     <Compile Include="Runtime\Parsing\GroupParser.cs" />
@@ -130,6 +135,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Runtime\ObjectContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ObjectContext.Generated.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

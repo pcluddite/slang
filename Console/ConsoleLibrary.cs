@@ -6,9 +6,9 @@ namespace Tbasic.Terminal
 {
     public class ConsoleLibrary : Library
     {
-        private Executer _exec;
+        private TBasic _exec;
 
-        public ConsoleLibrary(Executer exec)
+        public ConsoleLibrary(TBasic exec)
         {
             _exec = exec;
             Add("CLS", Console.Clear);

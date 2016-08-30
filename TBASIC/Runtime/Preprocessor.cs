@@ -22,16 +22,16 @@ namespace Tbasic.Runtime
         public ICollection<TClass> Types { get; } = new List<TClass>();
         public LineCollection Lines { get; } = new LineCollection();
 
-        private Executer exec;
+        private TBasic exec;
 
-        private Preprocessor(TextReader reader, Executer exec)
+        private Preprocessor(TextReader reader, TBasic exec)
         {
             this.exec = exec;
             ScanLines(reader);
             this.exec = null; // don't hold onto it on my account 8/26/16
         }
 
-        public static Preprocessor Preprocess(TextReader reader, Executer exec)
+        public static Preprocessor Preprocess(TextReader reader, TBasic exec)
         {
             return new Preprocessor(reader, exec);
         }

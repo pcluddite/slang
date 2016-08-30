@@ -4,11 +4,10 @@
 //
 // ======
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Parsing;
-using System.IO;
 
 namespace Tbasic.Runtime
 {
@@ -22,7 +21,7 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Executes a script and stores information on the current runtime
     /// </summary>
-    public class Executer
+    public class TBasic
     {
         /// <summary>
         /// A string containing information on this version of TBasic
@@ -75,7 +74,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Initializes a new object to execute scripts or single lines of code
         /// </summary>
-        public Executer()
+        public TBasic()
         {
             Global = new ObjectContext(null);
             Context = Global;
@@ -168,7 +167,7 @@ namespace Tbasic.Runtime
             return runtime ?? new RuntimeData(this);
         }
 
-        internal static RuntimeData Execute(Executer exec, Line codeLine)
+        internal static RuntimeData Execute(TBasic exec, Line codeLine)
         {
             RuntimeData runtime;
             ObjectContext context = exec.Context.FindCommandContext(codeLine.Name);

@@ -21,7 +21,7 @@ namespace Tbasic
                 ));
         }
 
-        public override void Execute(Executer exec)
+        public override void Execute(TBasic exec)
         {
             throw new NotImplementedException();
         }

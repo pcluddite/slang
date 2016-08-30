@@ -84,7 +84,7 @@ namespace Tbasic
             throw ThrowHelper.UnterminatedBlock(Header.VisibleName);
         }
 
-        public override void Execute(Executer exec)
+        public override void Execute(TBasic exec)
         {
             if (!Header.Text.EndsWithIgnoreCase(" then")) {
                 throw ThrowHelper.ExpectedToken("THEN");
@@ -114,7 +114,7 @@ namespace Tbasic
                 Footer = lines[lines.Count - 1];
             }
 
-            public override void Execute(Executer exec)
+            public override void Execute(TBasic exec)
             {
                 throw new NotImplementedException();
             }

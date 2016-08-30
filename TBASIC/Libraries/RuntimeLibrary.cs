@@ -26,7 +26,7 @@ namespace Tbasic.Libraries
             Add("CBool", CBool);
             AddLibrary(new StringLibrary());
             AddLibrary(new ArrayLibrary());
-            context.SetConstant("@version", Executer.VERSION);
+            context.SetConstant("@version", TBasic.VERSION);
             context.SetConstant("@osversion", Environment.OSVersion.VersionString);
         }
 

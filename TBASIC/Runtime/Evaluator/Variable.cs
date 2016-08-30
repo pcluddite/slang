@@ -37,7 +37,7 @@ namespace Tbasic.Runtime
             }
         }
 
-        public Executer CurrentExecution { get; set; }
+        public TBasic CurrentExecution { get; set; }
         public StringSegment Name { get; private set; }
 
         public StringSegment Expression
@@ -52,7 +52,7 @@ namespace Tbasic.Runtime
 
         #endregion
 
-        public Variable(StringSegment full, StringSegment name, int[] indices, Executer exec)
+        public Variable(StringSegment full, StringSegment name, int[] indices, TBasic exec)
         {
             CurrentExecution = exec;
             _expression = full;

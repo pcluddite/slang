@@ -27,13 +27,13 @@ namespace Tbasic.Terminal
             ResetColor();
             Console.Clear();
             Console.Title = "TBASIC Terminal";
-            Console.WriteLine("T-BASIC Terminal [{0}]", Executer.VERSION);
+            Console.WriteLine("T-BASIC Terminal [{0}]", TBasic.VERSION);
             Console.WriteLine("Copyright (c) Timothy Baxendale. All Rights Reserved.");
             Console.WriteLine();
 
             Console.Write("Initializing standard library...");
 
-            Executer exec = new Executer();
+            TBasic exec = new TBasic();
             exec.Global.LoadStandardLibrary();
 
             foreach (var kv in exec.Global.GetAllFunctions()) {
@@ -46,7 +46,7 @@ namespace Tbasic.Terminal
 
             int curr = 0;
             string line;
-            while(!Executer.ExitRequest) {
+            while(!TBasic.ExitRequest) {
                 Console.Write(">");
                 line = Console.ReadLine();
                 RuntimeData dat;

@@ -41,7 +41,7 @@ namespace Tbasic
         {
             runtime.AssertCount(Template.ParameterCount);
 
-            Executer exec = runtime.StackExecuter;
+            TBasic exec = runtime.StackExecuter;
             exec.Context = exec.Context.CreateSubContext();
 
             for (int index = 1; index < Template.ParameterCount; index++) {
@@ -74,7 +74,7 @@ namespace Tbasic
             return stackFrame.Status = stackFrame.GetAt<int>(1);
         }
 
-        public override void Execute(Executer exec)
+        public override void Execute(TBasic exec)
         {
             throw new NotImplementedException();
         }

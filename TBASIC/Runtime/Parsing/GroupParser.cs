@@ -186,12 +186,12 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedGroup();
         }
 
-        internal static int ReadGroup(StringSegment fullstr, int index, Executer exec, out IList<object> args)
+        internal static int ReadGroup(StringSegment fullstr, int index, TBasic exec, out IList<object> args)
         {
             return ReadGroup(fullstr, index, ',', exec, out args);
         }
 
-        internal static int ReadGroup(StringSegment fullstr, int index, char separator, Executer exec, out IList<object> args)
+        internal static int ReadGroup(StringSegment fullstr, int index, char separator, TBasic exec, out IList<object> args)
         {
             List<object> result = new List<object>();
             Evaluator eval = new Evaluator(exec);

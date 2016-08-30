@@ -172,7 +172,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextFunction(Executer exec, out StringSegment name, out StringSegment func, out IList<object> args)
+        public override bool NextFunction(TBasic exec, out StringSegment name, out StringSegment func, out IList<object> args)
         {
             int originalPos = IntPosition;
             try {
@@ -202,7 +202,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextVariable(Executer exec, out StringSegment variable, out StringSegment name, out int[] indices)
+        public override bool NextVariable(TBasic exec, out StringSegment variable, out StringSegment name, out int[] indices)
         {
             int originalPos = IntPosition;
             try {
@@ -243,7 +243,7 @@ namespace Tbasic.Parsing
         /// <param name="indices"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        private bool NextMacro(Executer exec, out StringSegment variable, out StringSegment name, out int[] indices)
+        private bool NextMacro(TBasic exec, out StringSegment variable, out StringSegment name, out int[] indices)
         {
             int originalPos = IntPosition;
             try {
@@ -270,7 +270,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextIndices(Executer exec, out int[] indices)
+        public override bool NextIndices(TBasic exec, out int[] indices)
         {
             int originalPos = IntPosition;
             try {

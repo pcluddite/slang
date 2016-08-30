@@ -23,12 +23,12 @@ namespace Tbasic.Runtime
         private StringSegment _expression = StringSegment.Empty;
         private bool _parsed;
         
-        public Evaluator(Executer exec)
+        public Evaluator(TBasic exec)
         {
             CurrentExecution = exec;
         }
         
-        public Evaluator(StringSegment expression, Executer exec)
+        public Evaluator(StringSegment expression, TBasic exec)
         {
             CurrentExecution = exec;
             Expression = expression;
@@ -53,7 +53,7 @@ namespace Tbasic.Runtime
             }
         }
 
-        public Executer CurrentExecution { get; set; }
+        public TBasic CurrentExecution { get; set; }
 
         public bool ShouldParse
         {
@@ -249,7 +249,7 @@ namespace Tbasic.Runtime
         /// <param name="expressionString">expression to be evaluated</param>
         /// <param name="exec">the current execution</param>
         /// <returns></returns>
-        public static object Evaluate(StringSegment expressionString, Executer exec)
+        public static object Evaluate(StringSegment expressionString, TBasic exec)
         {
             Evaluator expression = new Evaluator(expressionString, exec);
             return expression.Evaluate();

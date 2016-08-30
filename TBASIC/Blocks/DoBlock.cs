@@ -23,7 +23,7 @@ namespace Tbasic
                 ));
         }
 
-        public override void Execute(Executer exec)
+        public override void Execute(TBasic exec)
         {
             Scanner scanner;
             bool doLoop;

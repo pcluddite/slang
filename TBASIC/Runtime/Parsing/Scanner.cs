@@ -188,7 +188,7 @@ namespace Tbasic.Parsing
         /// <param name="exec"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public abstract bool NextIndices(Executer exec, out int[] indices);
+        public abstract bool NextIndices(TBasic exec, out int[] indices);
         /// <summary>
         /// Matches the next boolean
         /// </summary>
@@ -218,7 +218,7 @@ namespace Tbasic.Parsing
         /// <param name="name"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public abstract bool NextFunction(Executer exec, out StringSegment name, out StringSegment func, out IList<object> args);
+        public abstract bool NextFunction(TBasic exec, out StringSegment name, out StringSegment func, out IList<object> args);
         /// <summary>
         /// Matches the next variable string
         /// </summary>
@@ -227,7 +227,7 @@ namespace Tbasic.Parsing
         /// <param name="name"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public abstract bool NextVariable(Executer exec, out StringSegment variable, out StringSegment name, out int[] indices);
+        public abstract bool NextVariable(TBasic exec, out StringSegment variable, out StringSegment name, out int[] indices);
         /// <summary>
         /// Matches the next set of characters that are acceptable in an identifier (such as a variable or function)
         /// </summary>
@@ -235,7 +235,7 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public abstract bool NextValidIdentifier(out StringSegment name);
 
-        internal bool NextFunctionInternal(Executer exec, out Function func)
+        internal bool NextFunctionInternal(TBasic exec, out Function func)
         {
             StringSegment funcstr;
             StringSegment name;
@@ -248,7 +248,7 @@ namespace Tbasic.Parsing
             return true;
         }
 
-        internal bool NextVariableInternal(Executer exec, out Variable variable)
+        internal bool NextVariableInternal(TBasic exec, out Variable variable)
         {
             StringSegment varstr;
             StringSegment name;

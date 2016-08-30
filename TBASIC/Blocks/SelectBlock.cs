@@ -24,7 +24,7 @@ namespace Tbasic
                 ));
         }
 
-        public override void Execute(Executer exec)
+        public override void Execute(TBasic exec)
         {
             RuntimeData parms = new RuntimeData(exec, Header.Text);
             if (parms.ParameterCount < 2) {
@@ -41,7 +41,7 @@ namespace Tbasic
             }
         }
 
-        public Dictionary<object, CodeBlock> ToDictionary(Executer exec, out CodeBlock _default)
+        public Dictionary<object, CodeBlock> ToDictionary(TBasic exec, out CodeBlock _default)
         {
             Dictionary<object, CodeBlock> dict = new Dictionary<object, CodeBlock>();
             _default = null;
@@ -134,7 +134,7 @@ namespace Tbasic
                 return index;
             }
 
-            public override void Execute(Executer exec)
+            public override void Execute(TBasic exec)
             {
                 exec.Execute(Body);
             }

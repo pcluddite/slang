@@ -14,6 +14,6 @@ namespace Tbasic.Runtime
     {
         StringSegment Expression { get; set; }
         object Evaluate();
-        Executer CurrentExecution { get; set; }
+        TBasic CurrentExecution { get; set; }
     }
 }

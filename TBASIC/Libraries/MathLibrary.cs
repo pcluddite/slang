@@ -133,7 +133,7 @@ namespace Tbasic.Libraries
         /// <returns>the evaluated expression</returns>
         public static object Eval(string expr)
         {
-            Executer e = new Executer(); // local execution
+            TBasic e = new TBasic(); // local execution
             e.Global.LoadStandardOperators();
             e.Global.AddLibrary(new MathLibrary(e.Global)); // only allow math libs
             e.Global.SetFunction("eval", null); // that's a no-no

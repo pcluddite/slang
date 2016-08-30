@@ -58,13 +58,13 @@ namespace Tbasic.Runtime
 
         public ObjectContext CurrentContext { get { return CurrentExecution.Context; } }
 
-        public Executer CurrentExecution { get; set; }
+        public TBasic CurrentExecution { get; set; }
 
         #endregion
 
         #region Construction
         
-        public Function(StringSegment expr, Executer exec, StringSegment name, IList<object> parameters)
+        public Function(StringSegment expr, TBasic exec, StringSegment name, IList<object> parameters)
         {
             CurrentExecution = exec;
             _expression = expr;

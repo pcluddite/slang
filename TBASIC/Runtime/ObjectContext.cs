@@ -339,6 +339,32 @@ namespace Tbasic.Runtime
             }
         }
 
+        internal bool TryGetCommand(string name, out CallData value)
+        {
+            if (_commands.TryGetValue(name, out value)) {
+                return true;
+            }
+            else if (_super == null) {
+                return false;
+            }
+            else {
+                return _super.TryGetCommand(name, out value);
+            }
+        }
+
+        internal bool TryGetFunction(string name, out CallData value)
+        {
+            if (_commands.TryGetValue(name, out value)) {
+                return true;
+            }
+            else if (_super == null) {
+                return false;
+            }
+            else {
+                return _super.TryGetFunction(name, out value);
+            }
+        }
+
         #endregion
 
         #region Get

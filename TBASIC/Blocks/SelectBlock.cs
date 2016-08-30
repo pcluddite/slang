@@ -26,8 +26,8 @@ namespace Tbasic
 
         public override void Execute(TBasic runtime)
         {
-            StackData stackdat = new StackData(runtime, Header.Text);
-            if (stackdat.ParameterCount < 2) {
+            CmdLine line = new CmdLine(Header.Text);
+            if (line.Count < 2) {
                 throw ThrowHelper.NoCondition();
             }
             object obj = ExpressionEvaluator.Evaluate(new StringSegment(Header.Text, Header.Name.Length), runtime);
@@ -90,11 +90,11 @@ namespace Tbasic
             private CaseBlock(LineCollection body)
             {
                 Header = body[0];
-                StackData parms = new StackData(null, Header.Text);
-                if (parms.Name.EqualsIgnoreCase("DEFAULT")) {
+                CmdLine parms = new CmdLine(Header.Text);
+                if (parms[0].EqualsIgnoreCase("DEFAULT")) {
                     Condition = new StringSegment("default");
                 }
-                else if (parms.ParameterCount < 2) {
+                else if (parms.Count < 2) {
                     throw ThrowHelper.NoCondition();
                 }
                 else {

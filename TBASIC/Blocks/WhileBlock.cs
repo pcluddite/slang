@@ -24,9 +24,9 @@ namespace Tbasic
 
         public override void Execute(TBasic runtime)
         {
-            StackData stackdat = new StackData(runtime, Header.Text);
+            CmdLine line = new CmdLine(Header.Text);
 
-            if (stackdat.ParameterCount < 2) {
+            if (line.Count < 2) {
                 throw ThrowHelper.NoCondition();
             }
 

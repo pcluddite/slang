@@ -18,9 +18,9 @@ namespace Tbasic.Libraries
     {
         public StatementLibrary()
         {
-            Add("LET", Let);
-            Add("SET", Let);
-            Add("DIM", DIM);
+            Add("LET", Let, evaluate: false);
+            Add("SET", Let, evaluate: false);
+            Add("DIM", DIM, evaluate: false);
             Add("SLEEP", Sleep);
             Add("ELSE", UhOh);
             Add("END", UhOh);

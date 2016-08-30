@@ -305,6 +305,19 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
+        /// Forces the (re-)evaluation of all prarameters excluding the name. If the parameter is not a string, it's value is kept. This is useful for statements, whose parameters don't get evaluated automatically.
+        /// </summary>
+        public void EvaluateAll()
+        {
+            ExpressionEvaluator eval = new ExpressionEvaluator(Runtime);
+            for (int index = 1; index < _params.Count; ++index) {
+                string arg = _params[index] as string;
+                if (arg != null)
+                    _params[index] = eval.Evaluate(new StringSegment(arg));
+            }
+        }
+
+        /// <summary>
         /// Clones this
         /// </summary>
         /// <returns>A new object with the same data</returns>

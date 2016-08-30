@@ -47,11 +47,11 @@ namespace Tbasic.Libraries
         /// <summary>
         /// Adds a Tbasic Library to this one
         /// </summary>
-        /// <param name="lib">the Tbasic Library</param>
-        public void AddLibrary(Library lib)
+        /// <param name="other">the Tbasic Library</param>
+        public void AddLibrary(Library other)
         {
-            foreach (var kv_entry in lib)
-                Add(kv_entry.Key, kv_entry.Value);
+            foreach (var kv_entry in other.lib)
+                lib.Add(kv_entry.Key, kv_entry.Value);
         }
 
         /// <summary>
@@ -61,7 +61,18 @@ namespace Tbasic.Libraries
         /// <param name="value"></param>
         public void Add(string key, TBasicFunction value)
         {
-            lib.Add(key, new CallData(value));
+            lib.Add(key, new CallData(value, evaluate: true));
+        }
+
+        /// <summary>
+        /// Adds a function to this dictionary
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
+        public void Add(string key, TBasicFunction value, bool evaluate)
+        {
+            lib.Add(key, new CallData(value, evaluate));
         }
 
         /// <summary>
@@ -69,14 +80,15 @@ namespace Tbasic.Libraries
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void AddDelegate(string key, Delegate value)
+        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
+        public void AddDelegate(string key, Delegate value, bool evaluate = true)
         {
             TBasicFunction func = value as TBasicFunction;
             if (func != null)
                 Add(key, func);
             if (value.Method.ReturnType == typeof(void))
 
-            lib.Add(key, new CallData(value, CountParameters(value)));
+            lib.Add(key, new CallData(value, CountParameters(value), evaluate));
         }
 
         /// <summary>
@@ -84,9 +96,10 @@ namespace Tbasic.Libraries
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add(string key, Action value)
+        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
+        public void Add(string key, Action value, bool evaluate = true)
         {
-            lib.Add(key, new CallData(value, 0));
+            lib.Add(key, new CallData(value, 0, evaluate));
         }
 
         /// <summary>
@@ -94,9 +107,10 @@ namespace Tbasic.Libraries
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add<T>(string key, Action<T> value)
+        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
+        public void Add<T>(string key, Action<T> value, bool evaluate = true)
         {
-            lib.Add(key, new CallData(value, 1));
+            lib.Add(key, new CallData(value, 1, evaluate));
         }
 
         /// <summary>
@@ -104,9 +118,10 @@ namespace Tbasic.Libraries
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add<T1, T2>(string key, Action<T1, T2> value)
+        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
+        public void Add<T1, T2>(string key, Action<T1, T2> value, bool evaluate = true)
         {
-            lib.Add(key, new CallData(value, 2));
+            lib.Add(key, new CallData(value, 2, evaluate));
         }
 
         /// <summary>
@@ -114,9 +129,10 @@ namespace Tbasic.Libraries
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add<T1, T2, T3>(string key, Action<T1, T2, T3> value)
+        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
+        public void Add<T1, T2, T3>(string key, Action<T1, T2, T3> value, bool evaluate = true)
         {
-            lib.Add(key, new CallData(value, 3));
+            lib.Add(key, new CallData(value, 3, evaluate));
         }
 
         /// <summary>
@@ -124,9 +140,10 @@ namespace Tbasic.Libraries
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add<T1, T2, T3, T4>(string key, Action<T1, T2, T3, T4> value)
+        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
+        public void Add<T1, T2, T3, T4>(string key, Action<T1, T2, T3, T4> value, bool evaluate = true)
         {
-            lib.Add(key, new CallData(value, 4));
+            lib.Add(key, new CallData(value, 4, evaluate));
         }
 
         private static int CountParameters(Delegate d)
@@ -154,9 +171,10 @@ namespace Tbasic.Libraries
         /// <typeparam name="TResult"></typeparam>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add<TResult>(string key, Func<TResult> value)
+        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
+        public void Add<TResult>(string key, Func<TResult> value, bool evaluate = true)
         {
-            lib.Add(key, new CallData(value, 0));
+            lib.Add(key, new CallData(value, 0, evaluate));
         }
 
         /// <summary>
@@ -166,9 +184,10 @@ namespace Tbasic.Libraries
         /// <typeparam name="TResult"></typeparam>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add<T, TResult>(string key, Func<T, TResult> value)
+        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
+        public void Add<T, TResult>(string key, Func<T, TResult> value, bool evaluate = true)
         {
-            lib.Add(key, new CallData(value, 1));
+            lib.Add(key, new CallData(value, 1, evaluate));
         }
 
         /// <summary>
@@ -179,9 +198,10 @@ namespace Tbasic.Libraries
         /// <typeparam name="TResult"></typeparam>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add<T1, T2, TResult>(string key, Func<T1, T2, TResult> value)
+        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
+        public void Add<T1, T2, TResult>(string key, Func<T1, T2, TResult> value, bool evaluate = true)
         {
-            lib.Add(key, new CallData(value, 2));
+            lib.Add(key, new CallData(value, 2, evaluate));
         }
 
         /// <summary>
@@ -193,9 +213,10 @@ namespace Tbasic.Libraries
         /// <typeparam name="TResult"></typeparam>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add<T1, T2, T3, TResult>(string key, Func<T1, T2, T3, TResult> value)
+        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
+        public void Add<T1, T2, T3, TResult>(string key, Func<T1, T2, T3, TResult> value, bool evaluate = true)
         {
-            lib.Add(key, new CallData(value, 3));
+            lib.Add(key, new CallData(value, 3, evaluate));
         }
 
         /// <summary>
@@ -208,9 +229,10 @@ namespace Tbasic.Libraries
         /// <typeparam name="TResult"></typeparam>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add<T1, T2, T3, T4, TResult>(string key, Func<T1, T2, T3, T4, TResult> value)
+        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
+        public void Add<T1, T2, T3, T4, TResult>(string key, Func<T1, T2, T3, T4, TResult> value, bool evaluate = true)
         {
-            lib.Add(key, new CallData(value, 4));
+            lib.Add(key, new CallData(value, 4, evaluate));
         }
 
         /// <summary>
@@ -259,6 +281,11 @@ namespace Tbasic.Libraries
                 return false;
             }
         }
+        
+        internal bool TryGetValue(string key, out CallData value)
+        {
+            return lib.TryGetValue(key, out value);
+        }
 
         /// <summary>
         /// Gets a collection of this dictionary's values
@@ -280,7 +307,7 @@ namespace Tbasic.Libraries
                 return lib[key].Function;
             }
             set {
-                lib[key] = new CallData(value);
+                lib[key] = new CallData(value, evaluate: true);
             }
         }
 

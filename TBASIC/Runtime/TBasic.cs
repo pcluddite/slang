@@ -170,16 +170,19 @@ namespace Tbasic.Runtime
         internal static StackData Execute(TBasic exec, Line codeLine)
         {
             StackData runtime;
-            ObjectContext context = exec.Context.FindCommandContext(codeLine.Name);
-            if (context == null) {
+            CallData data;
+            if (exec.Context.TryGetCommand(codeLine.Name, out data)) {
+                runtime = new StackData(exec, codeLine.Text);
+                if (data.Evaluate) {
+                    runtime.EvaluateAll();
+                }
+                runtime.Data = data.Function(runtime);
+            }
+            else {
                 runtime = new StackData(exec);
                 ExpressionEvaluator eval = new ExpressionEvaluator(new StringSegment(codeLine.Text), exec);
                 exec.Context.PersistReturns(runtime);
                 runtime.Data = eval.Evaluate();
-            }
-            else {
-                runtime = new StackData(exec, codeLine.Text);
-                runtime.Data = context.GetCommand(codeLine.Name).Invoke(runtime);
             }
             runtime.Context.SetReturns(runtime);
             return runtime;

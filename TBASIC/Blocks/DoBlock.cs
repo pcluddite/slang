@@ -27,11 +27,11 @@ namespace Tbasic
         {
             Scanner scanner;
             bool doLoop;
-            StackData stackdat = new StackData(runtime, Footer.Text);
+            CmdLine line = new CmdLine(Footer.Text);
 
-            if (stackdat.ParameterCount < 3) {
-                stackdat = new StackData(runtime, Header.Text);
-                if (stackdat.ParameterCount < 3) { // still less than three? there's no condition
+            if (line.Count < 3) {
+                line = new CmdLine(Header.Text);
+                if (line.Count < 3) { // still less than three? there's no condition
                     throw ThrowHelper.NoCondition();
                 }
                 if (Footer.Name != Footer.Text) {

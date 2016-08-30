@@ -20,20 +20,23 @@ namespace Tbasic.Runtime
         public TBasicFunction Function { get; set; }
         public Delegate CalledDelegate { get; set; }
         public bool ReturnsType { get; private set; }
+        public bool Evaluate { get; private set; }
 
-        public CallData(TBasicFunction func)
+        public CallData(TBasicFunction func, bool evaluate)
         {
             Function = func;
             CalledDelegate = null;
             ArgumentCount = -1;
             ReturnsType = true;
+            Evaluate = evaluate;
         }
 
-        public CallData(Delegate d, int args)
+        public CallData(Delegate d, int args, bool evaluate)
         {
             ArgumentCount = args;
             CalledDelegate = d;
             ReturnsType = (d.Method.ReturnType != null);
+            Evaluate = evaluate;
             Function = null; // squelching error message about not all fields assigned 8/18/16
             Function = NativeFuncWrapper;
         }

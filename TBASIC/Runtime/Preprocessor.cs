@@ -109,13 +109,10 @@ namespace Tbasic.Runtime
             if (!scanner.NextValidIdentifier(out funcname))
                 throw new InvalidDefinitionException("Name contains invalid characters or was not present", "function");
             IList<StringSegment> args;
-            scanner.NextGroupNoEvaluate(out args);
-            string[] strargs = new string[args.Count + 1];
-            strargs[0] = funcname.ToString();
-            for(int i = 1; i < strargs.Length; ++i) {
-                strargs[i] = args[i - 1].ToString();
-            }
-            return new StackData(null, strargs);
+            scanner.NextGroup(out args);
+            StackData stackdat = new StackData(null, args.TB_ToStrings());
+            stackdat.Name = funcname.ToString();
+            return stackdat;
         }
 
         private static readonly Predicate<Line> ClassBegin = (o => o.Name.EqualsIgnoreCase("CLASS"));

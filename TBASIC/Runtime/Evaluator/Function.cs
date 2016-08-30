@@ -20,7 +20,7 @@ namespace Tbasic.Runtime
 
         private StringSegment _expression;
         private StringSegment _function;
-        private IList<object> _params;
+        private IList<StringSegment> _params;
 
         #endregion
 
@@ -64,7 +64,7 @@ namespace Tbasic.Runtime
 
         #region Construction
         
-        public Function(StringSegment expr, TBasic runtime, StringSegment name, IList<object> parameters)
+        public Function(StringSegment expr, TBasic runtime, StringSegment name, IList<StringSegment> parameters)
         {
             Runtime = runtime;
             _expression = expr;
@@ -87,30 +87,22 @@ namespace Tbasic.Runtime
             return Expression.ToString();
         }
         
-        private object ExecuteFunction(StringSegment _name, IList<object> l_params)
+        private object ExecuteFunction(StringSegment _name, IList<StringSegment> l_params)
         {
             string name = _name.Trim().ToString();
-            object[] a_evaluated = null;
-            if (l_params != null) {
-                a_evaluated = new object[l_params.Count];
-                l_params.CopyTo(a_evaluated, 0);
-                for (int i = 0; i < a_evaluated.Length; ++i) {
-                    IExpressionEvaluator expr = a_evaluated[i] as IExpressionEvaluator;
-                    if (expr != null) {
-                        a_evaluated[i] = expr.Evaluate();
-                    }
+            CallData func;
+            if (CurrentContext.TryGetFunction(name, out func)) {
+                StackData stackdat = new StackData(Runtime, l_params.TB_ToStrings());
+                stackdat.Name = name; // if this isn't before evaluation, EvaluateAll() won't eval properly 8/30/16
+                if (func.Evaluate) {
+                    stackdat.EvaluateAll();
                 }
-            }
-            ObjectContext context = CurrentContext.FindFunctionContext(name);
-            if (context == null) {
-                throw ThrowHelper.UndefinedFunction(name);
+                stackdat.Data = func.Function(stackdat);
+                CurrentContext.SetReturns(stackdat);
+                return stackdat.Data;
             }
             else {
-                StackData _sframe = new StackData(Runtime, a_evaluated);
-                _sframe.Name = name;
-                _sframe.Data = context.GetFunction(name).Invoke(_sframe);
-                CurrentContext.SetReturns(_sframe);
-                return _sframe.Data;
+                throw ThrowHelper.UndefinedFunction(name);
             }
         }
 

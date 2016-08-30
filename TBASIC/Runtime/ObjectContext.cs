@@ -354,7 +354,7 @@ namespace Tbasic.Runtime
 
         internal bool TryGetFunction(string name, out CallData value)
         {
-            if (_commands.TryGetValue(name, out value)) {
+            if (_functions.TryGetValue(name, out value)) {
                 return true;
             }
             else if (_super == null) {

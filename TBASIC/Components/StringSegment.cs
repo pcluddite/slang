@@ -469,6 +469,24 @@ namespace Tbasic.Components
         }
 
         /// <summary>
+        /// Casts a StringSegment to a string
+        /// </summary>
+        /// <param name="seg"></param>
+        public static explicit operator string(StringSegment seg)
+        {
+            return seg.ToString();
+        }
+
+        /// <summary>
+        /// Casts a string to a StringSegment
+        /// </summary>
+        /// <param name="str"></param>
+        public static explicit operator StringSegment(string str)
+        {
+            return new StringSegment(str);
+        }
+
+        /// <summary>
         /// Gets the hash code for this object
         /// </summary>
         /// <returns></returns>

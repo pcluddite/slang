@@ -184,13 +184,9 @@ namespace Tbasic.Parsing
         /// </summary>
         public abstract bool SkipString();
         /// <summary>
-        /// When implemented in a derived class, matches the next group in the buffer. This should evaluate each parameter as its parsed.
+        /// When implemented in a derived class, matches the next group in the buffer.
         /// </summary>
-        public abstract bool NextGroup(TBasic runtime, out IList<object> args);
-        /// <summary>
-        /// When implemented in a derived class, matches the next group in the buffer. This should not evaluate each parameter as its parsed.
-        /// </summary>
-        public abstract bool NextGroupNoEvaluate(out IList<StringSegment> args);
+        public abstract bool NextGroup(out IList<StringSegment> args);
         /// <summary>
         /// When implemented in a derived class, sets the position of the stream to the last index of the group
         /// </summary>
@@ -198,10 +194,7 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Matches the next indices for an array
         /// </summary>
-        /// <param name="exec"></param>
-        /// <param name="indices"></param>
-        /// <returns></returns>
-        public abstract bool NextIndices(TBasic exec, out int[] indices);
+        public abstract bool NextIndices(out StringSegment[] indices);
         /// <summary>
         /// Matches the next boolean
         /// </summary>
@@ -226,21 +219,19 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Matches the next function string
         /// </summary>
-        /// <param name="exec"></param>
         /// <param name="func"></param>
         /// <param name="name"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public abstract bool NextFunction(TBasic exec, out StringSegment name, out StringSegment func, out IList<object> args);
+        public abstract bool NextFunction(out StringSegment name, out StringSegment func, out IList<StringSegment> args);
         /// <summary>
         /// Matches the next variable string
         /// </summary>
-        /// <param name="exec"></param>
         /// <param name="variable"></param>
         /// <param name="name"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public abstract bool NextVariable(TBasic exec, out StringSegment variable, out StringSegment name, out int[] indices);
+        public abstract bool NextVariable(out StringSegment variable, out StringSegment name, out StringSegment[] indices);
         /// <summary>
         /// Matches the next set of characters that are acceptable in an identifier (such as a variable or function)
         /// </summary>
@@ -252,8 +243,8 @@ namespace Tbasic.Parsing
         {
             StringSegment funcstr;
             StringSegment name;
-            IList<object> args;
-            if (!NextFunction(exec, out name, out funcstr, out args)) {
+            IList<StringSegment> args;
+            if (!NextFunction(out name, out funcstr, out args)) {
                 func = null;
                 return false;
             }
@@ -265,8 +256,8 @@ namespace Tbasic.Parsing
         {
             StringSegment varstr;
             StringSegment name;
-            int[] indices;
-            if (!NextVariable(exec, out varstr, out name, out indices)) {
+            StringSegment[] indices;
+            if (!NextVariable(out varstr, out name, out indices)) {
                 variable = null;
                 return false;
             }

@@ -166,31 +166,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextGroup(TBasic runtime, out IList<object> args)
-        {
-            int originalPos = IntPosition;
-            try {
-                if (EndOfStream || (InternalBuffer[IntPosition] != '(' && InternalBuffer[IntPosition] != '[')) {
-                    args = null;
-                    IntPosition = originalPos;
-                    return false;
-                }
-                IList<StringSegment> unevalled;
-                IntPosition = ReadGroup(InternalBuffer, IntPosition, out unevalled) + 1;
-                args = new object[unevalled.Count];
-                ExpressionEvaluator eval = new ExpressionEvaluator(runtime);
-                for(int i = 0; i < unevalled.Count; ++i) {
-                    args[i] = eval.Evaluate(unevalled[i]);
-                }
-                return true;
-            }
-            catch {
-                IntPosition = originalPos;
-                throw;
-            }
-        }
-
-        public override bool NextGroupNoEvaluate(out IList<StringSegment> args)
+        public override bool NextGroup(out IList<StringSegment> args)
         {
             int originalPos = IntPosition;
             try {
@@ -248,7 +224,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextFunction(TBasic runtime, out StringSegment name, out StringSegment func, out IList<object> args)
+        public override bool NextFunction(out StringSegment name, out StringSegment func, out IList<StringSegment> args)
         {
             int originalPos = IntPosition;
             try {
@@ -262,7 +238,7 @@ namespace Tbasic.Parsing
                     if (IntPosition < InternalBuffer.Length) {
                         name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
                         SkipWhiteSpace();
-                        if (NextGroup(runtime, out args)) {
+                        if (NextGroup(out args)) {
                             func = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
                             return true;
                         }
@@ -277,7 +253,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextVariable(TBasic exec, out StringSegment variable, out StringSegment name, out int[] indices)
+        public override bool NextVariable(out StringSegment variable, out StringSegment name, out StringSegment[] indices)
         {
             int originalPos = IntPosition;
             try {
@@ -292,14 +268,14 @@ namespace Tbasic.Parsing
                     if (!EndOfStream && InternalBuffer[IntPosition++] == '$') {
                         name = InternalBuffer.Subsegment(start, IntPosition - start);
                         SkipWhiteSpace();
-                        if (!NextIndices(exec, out indices))
+                        if (!NextIndices(out indices))
                             indices = null;
                         variable = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
                         return true;
                     }
                 }
                 else if (InternalBuffer[IntPosition] == '@') { // it's a macro
-                    return NextMacro(exec, out variable, out name, out indices);
+                    return NextMacro(out variable, out name, out indices);
                 }
                 IntPosition = originalPos;
                 return false;
@@ -313,12 +289,7 @@ namespace Tbasic.Parsing
         /// <summary>
         /// This assumes that the first char has already been checked to be an '@'!
         /// </summary>
-        /// <param name="exec"></param>
-        /// <param name="variable"></param>
-        /// <param name="indices"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private bool NextMacro(TBasic exec, out StringSegment variable, out StringSegment name, out int[] indices)
+        private bool NextMacro(out StringSegment variable, out StringSegment name, out StringSegment[] indices)
         {
             int originalPos = IntPosition;
             try {
@@ -328,7 +299,7 @@ namespace Tbasic.Parsing
                     IntPosition = FindAcceptableFuncChars(InternalBuffer, IntPosition);
                     name = InternalBuffer.Subsegment(start, IntPosition - start);
                     SkipWhiteSpace();
-                    if (!NextIndices(exec, out indices))
+                    if (!NextIndices(out indices))
                         indices = null;
                     variable = InternalBuffer.Subsegment(originalPos, IntPosition);
                     return true;
@@ -345,27 +316,19 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextIndices(TBasic runtime, out int[] indices)
+        public override bool NextIndices(out StringSegment[] indices)
         {
             int originalPos = IntPosition;
             try {
-                IList<object> args;
+                IList<StringSegment> args;
                 indices = null;
-                if (!EndOfStream && InternalBuffer[IntPosition] == '[' && NextGroup(runtime, out args)) {
-                    indices = new int[args.Count];
-                    for (int i = 0; i < args.Count; ++i) {
-                        Number? index = Number.AsNumber(args[i], runtime.Options);
-                        if (index == null) {
-                            throw ThrowHelper.InvalidTypeInExpression(args[i].GetType().Name, typeof(Number).Name);
-                        }
-                        else {
-                            indices[i] = (int)index.Value;
-                        }
-                    }
+                if (!EndOfStream && InternalBuffer[IntPosition] == '[' && NextGroup(out args)) {
                     return true;
                 }
-                IntPosition = originalPos;
-                return false;
+                else {
+                    IntPosition = originalPos;
+                    return false;
+                }
             }
             catch {
                 IntPosition = originalPos;

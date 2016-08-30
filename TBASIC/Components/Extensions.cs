@@ -4,6 +4,8 @@
 //
 // ======
 using System;
+using System.Collections.Generic;
+using Tbasic.Components;
 
 namespace Tbasic
 {
@@ -68,6 +70,18 @@ namespace Tbasic
             else {
                 return str.Substring(0, char_index);
             }
+        }
+
+        internal static IEnumerable<TOutput> TB_ConvertAll<TInput, TOutput>(this IEnumerable<TInput> enumerable, Converter<TInput, TOutput> conversion)
+        {
+            foreach (TInput item in enumerable)
+                yield return conversion(item);
+        }
+
+        internal static IEnumerable<string> TB_ToStrings(this IEnumerable<StringSegment> enumerable)
+        {
+            foreach (StringSegment item in enumerable)
+                yield return item.ToString();
         }
     }
 }

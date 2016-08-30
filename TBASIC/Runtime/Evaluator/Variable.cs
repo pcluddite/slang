@@ -3,8 +3,10 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
+using System;
 using System.Text;
 using Tbasic.Components;
+using Tbasic.Errors;
 
 namespace Tbasic.Runtime
 {
@@ -14,7 +16,7 @@ namespace Tbasic.Runtime
 
         #region Properties
 
-        public int[] Indices { get; private set; }
+        public StringSegment[] Indices { get; private set; }
 
         public bool IsMacro
         {
@@ -52,7 +54,7 @@ namespace Tbasic.Runtime
 
         #endregion
 
-        public Variable(StringSegment full, StringSegment name, int[] indices, TBasic exec)
+        public Variable(StringSegment full, StringSegment name, StringSegment[] indices, TBasic exec)
         {
             Runtime = exec;
             _expression = full;
@@ -69,14 +71,26 @@ namespace Tbasic.Runtime
         {
             object obj = CurrentContext.GetVariable(Name.ToString());
             if (Indices != null) {
-                obj = CurrentContext.GetArrayAt(Name.ToString(), Indices);
+                obj = CurrentContext.GetArrayAt(Name.ToString(), EvaluateIndices());
             }
             return obj;
         }
 
-        public string GetFullName()
+        public int[] EvaluateIndices()
         {
-            return GetFullName(Name.ToString(), Indices);
+            ExpressionEvaluator eval = new ExpressionEvaluator(Runtime);
+            int[] indices = new int[Indices.Length];
+            for (int index = 0; index < indices.Length; ++index) {
+                object o = eval.Evaluate(Indices[index]);
+                Number? num = Number.AsNumber(o, Runtime.Options);
+                if (num == null) {
+                    throw ThrowHelper.InvalidTypeInExpression(o.GetType().Name, typeof(Number).Name);
+                }
+                else {
+                    indices[index] = (int)num; // this will fail if there's a fractional part
+                }
+            }
+            return indices;
         }
 
         public static string GetFullName(string name, int[] indices)

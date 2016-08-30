@@ -130,7 +130,7 @@ namespace Tbasic.Libraries
             ObjectContext context = stackdat.Context.FindVariableContext(name);
             if (context == null) {
                 if (v.Indices != null) {
-                    stackdat.Context.SetVariable(name, array_alloc(v.Indices, 0));
+                    stackdat.Context.SetVariable(name, array_alloc(v.EvaluateIndices(), 0));
                 }
                 else {
                     stackdat.Context.SetVariable(name, null); // just declare it.
@@ -138,7 +138,7 @@ namespace Tbasic.Libraries
             }
             else {
                 object obj = context.GetVariable(name);
-                array_realloc(ref obj, v.Indices, 0);
+                array_realloc(ref obj, v.EvaluateIndices(), 0);
                 context.SetVariable(name, obj);
             }
             return NULL(stackdat);
@@ -226,7 +226,7 @@ namespace Tbasic.Libraries
                 ObjectContext context = stackdat.Context.FindVariableContext(v.Name.ToString());
                 if (context == null)
                     throw new ArgumentException("Array has not been defined and cannot be indexed");
-                context.SetArrayAt(v.Name.ToString(), data, v.Indices);
+                context.SetArrayAt(v.Name.ToString(), data, v.EvaluateIndices());
             }
 
             return data;

@@ -86,7 +86,7 @@ namespace Tbasic.Runtime
             return line;
         }
 
-        private static int ProcessFuncBlock(TextReader reader, Line current, out FuncBlock block)
+        private int ProcessFuncBlock(TextReader reader, Line current, out FuncBlock block)
         {
             Line header = current;
             LineCollection body = new LineCollection();
@@ -96,8 +96,26 @@ namespace Tbasic.Runtime
             }
             if (current == null)
                 throw ThrowHelper.UnterminatedBlock("FUNCTION");
-            block = new FuncBlock(header, body, current);
+            block = new FuncBlock(GetPrototype(header), header, body, current);
             return lineNumber;
+        }
+
+        private StackData GetPrototype(Line header)
+        {
+            Scanner scanner = runtime.ScannerDelegate(new StringSegment(header.Text));
+            scanner.Next("FUNCTION");
+            scanner.SkipWhiteSpace();
+            StringSegment funcname;
+            if (!scanner.NextValidIdentifier(out funcname))
+                throw new InvalidDefinitionException("Name contains invalid characters or was not present", "function");
+            IList<StringSegment> args;
+            scanner.NextGroupNoEvaluate(out args);
+            string[] strargs = new string[args.Count + 1];
+            strargs[0] = funcname.ToString();
+            for(int i = 1; i < strargs.Length; ++i) {
+                strargs[i] = args[i - 1].ToString();
+            }
+            return new StackData(null, strargs);
         }
 
         private static readonly Predicate<Line> ClassBegin = (o => o.Name.EqualsIgnoreCase("CLASS"));
@@ -125,7 +143,7 @@ namespace Tbasic.Runtime
                 else if (FuncBlock.CheckBegin(current)) {
                     FuncBlock func;
                     nline = ProcessFuncBlock(reader, current, out func);
-                    tclass.SetFunction(func.Template.Name, func.CreateDelegate());
+                    tclass.SetFunction(func.Prototype.Name, func.CreateDelegate());
                 }
                 else if (current.Name.EqualsIgnoreCase(tclass.Name)) {
                     current.Text = "FUNCTION " + current.Text; // this is just to satisfy the parser. Try to fix later. 8/26/16

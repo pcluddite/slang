@@ -10,7 +10,6 @@ using System.Text;
 using Tbasic.Components;
 using Tbasic.Operators;
 using Tbasic.Runtime;
-using System.Linq;
 
 namespace Tbasic.Parsing
 {
@@ -177,11 +176,25 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public abstract bool Next(string pattern, bool ignoreCase = true);
         /// <summary>
-        /// Matches the next C-style string in the buffer
+        /// When implemented in a derived class, matches the next string in the buffer
         /// </summary>
-        /// <param name="parsed"></param>
-        /// <returns></returns>
         public abstract bool NextString(out string parsed);
+        /// <summary>
+        /// When implemented in a derived class, sets the position of the stream to the last index of the string
+        /// </summary>
+        public abstract bool SkipString();
+        /// <summary>
+        /// When implemented in a derived class, matches the next group in the buffer. This should evaluate each parameter as its parsed.
+        /// </summary>
+        public abstract bool NextGroup(TBasic runtime, out IList<object> args);
+        /// <summary>
+        /// When implemented in a derived class, matches the next group in the buffer. This should not evaluate each parameter as its parsed.
+        /// </summary>
+        public abstract bool NextGroupNoEvaluate(out IList<StringSegment> args);
+        /// <summary>
+        /// When implemented in a derived class, sets the position of the stream to the last index of the group
+        /// </summary>
+        public abstract bool SkipGroup();
         /// <summary>
         /// Matches the next indices for an array
         /// </summary>

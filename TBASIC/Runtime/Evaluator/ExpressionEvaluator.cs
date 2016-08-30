@@ -174,7 +174,7 @@ namespace Tbasic.Runtime
             if (Equals(val, "(")) {
                 scanner.IntPosition = startIndex;
                 scanner.SkipWhiteSpace();
-                scanner.IntPosition = GroupParser.IndexGroup(_expression, startIndex) + 1;
+                scanner.SkipGroup();
 
                 ExpressionEvaluator eval = new ExpressionEvaluator(
                     _expression.Subsegment(startIndex + 1, scanner.IntPosition - startIndex - 2),

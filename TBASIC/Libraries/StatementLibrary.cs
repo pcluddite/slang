@@ -46,10 +46,10 @@ namespace Tbasic.Libraries
 
                 if (p.Functions.Count > 0) {
                     foreach (FuncBlock func in p.Functions) {
-                        ObjectContext context = stackdat.Context.FindFunctionContext(func.Template.Name);
+                        ObjectContext context = stackdat.Context.FindFunctionContext(func.Prototype.Name);
                         if (context != null)
-                            throw ThrowHelper.AlreadyDefined(func.Template.Name + "()");
-                        stackdat.Context.SetFunction(func.Template.Name, func.CreateDelegate());
+                            throw ThrowHelper.AlreadyDefined(func.Prototype.Name + "()");
+                        stackdat.Context.SetFunction(func.Prototype.Name, func.CreateDelegate());
                     }
                 }
             }

@@ -14,22 +14,16 @@ namespace Tbasic
 {
     internal class FuncBlock : CodeBlock
     {
-        public StackData Template { get; private set; }
+        public StackData Prototype { get; private set; }
         public static readonly Predicate<Line> CheckBegin = (line => line.Name.EqualsIgnoreCase("FUNCTION"));
         public static readonly Predicate<Line> CheckEnd = (line => line.Text.EqualsIgnoreCase("END FUNCTION"));
         
-        internal FuncBlock(Line header, LineCollection body, Line footer)
+        internal FuncBlock(StackData prototype, Line header, LineCollection body, Line footer)
         {
             Header = header;
             Footer = footer;
             Body = body;
-            Template = new StackData(null, ParseFunction(Header.Text.Substring(Header.Name.Length)));
-        }
-
-        public FuncBlock(int index, LineCollection code)
-        {
-            LoadFromCollection(code.ParseBlock(index, CheckBegin, CheckEnd));
-            Template = new StackData(null, ParseFunction(Header.Text.Substring(Header.Name.Length)));
+            Prototype = prototype;
         }
 
         public TBasicFunction CreateDelegate()
@@ -39,13 +33,13 @@ namespace Tbasic
 
         public object Execute(StackData stackdat)
         {
-            stackdat.AssertCount(Template.ParameterCount);
+            stackdat.AssertCount(Prototype.ParameterCount);
 
             TBasic runtime = stackdat.Runtime;
             runtime.Context = runtime.Context.CreateSubContext();
 
-            for (int index = 1; index < Template.ParameterCount; index++) {
-                runtime.Context.SetVariable((string)Template.GetAt(index), stackdat.GetAt(index));
+            for (int index = 1; index < Prototype.ParameterCount; index++) {
+                runtime.Context.SetVariable((string)Prototype.GetAt(index), stackdat.GetAt(index));
             }
             runtime.Context.SetCommand("return", Return);
             runtime.Context.SetFunction("SetStatus", SetStatus);
@@ -77,50 +71,6 @@ namespace Tbasic
         public override void Execute(TBasic exec)
         {
             throw new NotImplementedException();
-        }
-
-        private object[] ParseFunction(string text)
-        {
-            Line codeLine = new Line(0, text);
-            text = codeLine.Text; // it's trimmed
-            List<object> result = new List<object>();
-            result.Add(codeLine.Name);
-
-            int c_index = codeLine.Name.Length; // Start at the end of the name
-            int expected = 0;
-            int last = c_index;
-
-            for (; c_index < text.Length; c_index++) {
-                char cur = text[c_index];
-                switch (cur) {
-                    case ' ': // ignore spaces
-                        continue;
-                    case '\'':
-                    case '\"': {
-                            c_index = GroupParser.IndexString(text, c_index);
-                        }
-                        break;
-                    case '(':
-                        expected++;
-                        break;
-                    case ')':
-                        expected--;
-                        break;
-                }
-
-                if ((expected == 1 && cur == ',') ||
-                     expected == 0) { // The commas in between other parentheses are not ours.
-                    string param = text.Substring(last + 1, c_index - last - 1).Trim();
-                    if (!param.Equals("")) {
-                        result.Add(param); // From the last comma to this one. That's a parameter.
-                    }
-                    last = c_index;
-                    if (expected == 0) { // fin
-                        return result.ToArray();
-                    }
-                }
-            }
-            throw ThrowHelper.UnterminatedBlock("FUNC");
         }
     }
 }

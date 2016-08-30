@@ -15,7 +15,7 @@ namespace Tbasic.Parsing
     /// <summary>
     /// The default implementation of Scanner
     /// </summary>
-    internal class DefaultScanner : Scanner
+    internal partial class DefaultScanner : Scanner
     {
         public DefaultScanner(StringSegment buffer)
         {
@@ -139,7 +139,83 @@ namespace Tbasic.Parsing
                     IntPosition = originalPos;
                     return false;
                 }
-                int endPos = GroupParser.ReadString(InternalBuffer, IntPosition, out parsed) + 1;
+                int endPos = ReadString(InternalBuffer, IntPosition, out parsed) + 1;
+                IntPosition = endPos;
+                return true;
+            }
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
+        }
+
+        public override bool SkipString()
+        {
+            int originalPos = IntPosition;
+            try {
+                if (EndOfStream || (InternalBuffer[IntPosition] != '\"' && InternalBuffer[IntPosition] != '\'')) {
+                    return false;
+                }
+                int endPos = IndexString(InternalBuffer, IntPosition) + 1;
+                IntPosition = endPos;
+                return true;
+            }
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
+        }
+
+        public override bool NextGroup(TBasic runtime, out IList<object> args)
+        {
+            int originalPos = IntPosition;
+            try {
+                if (EndOfStream || (InternalBuffer[IntPosition] != '(' && InternalBuffer[IntPosition] != '[')) {
+                    args = null;
+                    IntPosition = originalPos;
+                    return false;
+                }
+                IList<StringSegment> unevalled;
+                IntPosition = ReadGroup(InternalBuffer, IntPosition, out unevalled) + 1;
+                args = new object[unevalled.Count];
+                ExpressionEvaluator eval = new ExpressionEvaluator(runtime);
+                for(int i = 0; i < unevalled.Count; ++i) {
+                    args[i] = eval.Evaluate(unevalled[i]);
+                }
+                return true;
+            }
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
+        }
+
+        public override bool NextGroupNoEvaluate(out IList<StringSegment> args)
+        {
+            int originalPos = IntPosition;
+            try {
+                if (EndOfStream || (InternalBuffer[IntPosition] != '(' && InternalBuffer[IntPosition] != '[')) {
+                    args = null;
+                    IntPosition = originalPos;
+                    return false;
+                }
+                IntPosition = ReadGroup(InternalBuffer, IntPosition, out args) + 1;
+                return true;
+            }
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
+        }
+
+        public override bool SkipGroup()
+        {
+            int originalPos = IntPosition;
+            try {
+                if (EndOfStream || (InternalBuffer[IntPosition] != '(' && InternalBuffer[IntPosition] != '[')) {
+                    return false;
+                }
+                int endPos = IndexGroup(InternalBuffer, IntPosition) + 1;
                 IntPosition = endPos;
                 return true;
             }
@@ -172,7 +248,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextFunction(TBasic exec, out StringSegment name, out StringSegment func, out IList<object> args)
+        public override bool NextFunction(TBasic runtime, out StringSegment name, out StringSegment func, out IList<object> args)
         {
             int originalPos = IntPosition;
             try {
@@ -186,8 +262,7 @@ namespace Tbasic.Parsing
                     if (IntPosition < InternalBuffer.Length) {
                         name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
                         SkipWhiteSpace();
-                        if (Next("(")) {
-                            IntPosition = GroupParser.ReadGroup(InternalBuffer, IntPosition - 1, exec, out args) + 1;
+                        if (NextGroup(runtime, out args)) {
                             func = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
                             return true;
                         }
@@ -270,22 +345,21 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextIndices(TBasic exec, out int[] indices)
+        public override bool NextIndices(TBasic runtime, out int[] indices)
         {
             int originalPos = IntPosition;
             try {
+                IList<object> args;
                 indices = null;
-                if (!EndOfStream && InternalBuffer[IntPosition] == '[') {
-                    IList<object> args;
-                    IntPosition = GroupParser.ReadGroup(InternalBuffer, IntPosition, exec, out args) + 1;
+                if (!EndOfStream && InternalBuffer[IntPosition] == '[' && NextGroup(runtime, out args)) {
                     indices = new int[args.Count];
                     for (int i = 0; i < args.Count; ++i) {
-                        int? index = args[i] as int?;
+                        Number? index = Number.AsNumber(args[i], runtime.Options);
                         if (index == null) {
-                            throw ThrowHelper.InvalidTypeInExpression(args[i].GetType().Name, typeof(int).Name);
+                            throw ThrowHelper.InvalidTypeInExpression(args[i].GetType().Name, typeof(Number).Name);
                         }
                         else {
-                            indices[i] = index.Value;
+                            indices[i] = (int)index.Value;
                         }
                     }
                     return true;

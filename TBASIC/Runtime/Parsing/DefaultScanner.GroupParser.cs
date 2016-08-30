@@ -12,23 +12,9 @@ using Tbasic.Runtime;
 
 namespace Tbasic.Parsing
 {
-    /// <summary>
-    /// A set of methods for parsing character groups such as strings and characters grouped by parentheses
-    /// </summary>
-    public static class GroupParser
+    internal partial class DefaultScanner
     {
-        /// <summary>
-        /// Indexes a string without parsing it (i.e. retreives the index of the terminating quote)
-        /// </summary>
-        /// <param name="fullstr">the full string containing the string to be checked</param>
-        /// <param name="index">the index in the full string of the first quote of the string to be indexed</param>
-        /// <returns>the index of the terminating quote in the full string</returns>
-        public static int IndexString(string fullstr, int index)
-        {
-            return IndexString(new StringSegment(fullstr), index);
-        }
-
-        internal static int IndexString(StringSegment fullstr, int index)
+        private static int IndexString(StringSegment fullstr, int index)
         {
             char quote = fullstr[index++]; // The first character should be the quote
 
@@ -73,19 +59,7 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedString();
         }
 
-        /// <summary>
-        /// Indexes and builds a string, parsing any escape sequences properly
-        /// </summary>
-        /// <param name="fullstr">the full string containing the string to be parsed</param>
-        /// <param name="index">the index in the full string of the first quote of the string to be indexed</param>
-        /// <param name="s_parsed">the parsed string (without quotes and escape sequences replaced)</param>
-        /// <returns>the index of the terminating quote  in the full string</returns>
-        public static int ReadString(string fullstr, int index, out string s_parsed)
-        {
-            return ReadString(new StringSegment(fullstr), index, out s_parsed);
-        }
-
-        internal static int ReadString(StringSegment fullstr, int index, out string s_parsed)
+        private static int ReadString(StringSegment fullstr, int index, out string s_parsed)
         {
             char quote = fullstr[index++]; // The first character should be the quote
 
@@ -136,18 +110,7 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedString();
         }
 
-        /// <summary>
-        /// Indexes a group (set off by parentheses or brackets) without evaluating its operators
-        /// </summary>
-        /// <param name="fullstr">the full string containing the group to be indexed</param>
-        /// <param name="index">the index in the full string of the character of the group to be indexed</param>
-        /// <returns>the index of the terminating grouping character in the full string</returns>
-        public static int IndexGroup(string fullstr, int index)
-        {
-            return IndexGroup(new StringSegment(fullstr), index);
-        }
-        
-        internal static int IndexGroup(StringSegment fullstr, int index)
+        private static int IndexGroup(StringSegment fullstr, int index)
         {
             char c_open = fullstr[index]; // The first character should be the grouping character (i.e. '(' or '[')
             char c_close = c_open == '(' ? ')' : ']';
@@ -186,15 +149,14 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedGroup();
         }
 
-        internal static int ReadGroup(StringSegment fullstr, int index, TBasic exec, out IList<object> args)
+        private static int ReadGroup(StringSegment fullstr, int index, out IList<StringSegment> args)
         {
-            return ReadGroup(fullstr, index, ',', exec, out args);
+            return ReadGroup(fullstr, index, ',', out args);
         }
 
-        internal static int ReadGroup(StringSegment fullstr, int index, char separator, TBasic exec, out IList<object> args)
+        private static int ReadGroup(StringSegment fullstr, int index, char separator, out IList<StringSegment> args)
         {
-            List<object> result = new List<object>();
-            ExpressionEvaluator eval = new ExpressionEvaluator(exec);
+            List<StringSegment> result = new List<StringSegment>();
             char c_open = fullstr[index];
             char c_close = c_open == '(' ? ')' : ']';
             int expected = 0;
@@ -228,7 +190,7 @@ namespace Tbasic.Parsing
                     || expected == 0) {
                     StringSegment _param = fullstr.Subsegment(last + 1, index - last - 1).Trim();
                     if (!StringSegment.Equals(_param, "")) {
-                        result.Add(eval.Evaluate(_param));
+                        result.Add(_param);
                     }
                     last = index;
                     if (expected == 0) { // fin

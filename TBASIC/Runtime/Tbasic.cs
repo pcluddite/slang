@@ -100,9 +100,9 @@ namespace Tbasic.Runtime
             Preprocessor p = Preprocessor.Preprocess(lines, this);
             if (p.Functions.Count > 0) {
                 foreach (FuncBlock func in p.Functions) {
-                    if (Global.FindFunctionContext(func.Template.Name) != null)
-                        throw ThrowHelper.AlreadyDefined(func.Template.Name + "()");
-                    Global.SetFunction(func.Template.Name, func.CreateDelegate());
+                    if (Global.FindFunctionContext(func.Prototype.Name) != null)
+                        throw ThrowHelper.AlreadyDefined(func.Prototype.Name + "()");
+                    Global.SetFunction(func.Prototype.Name, func.CreateDelegate());
                 }
             }
             if (p.Types.Count > 0) {

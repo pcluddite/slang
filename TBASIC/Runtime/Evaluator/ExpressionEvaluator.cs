@@ -199,8 +199,10 @@ namespace Tbasic.Runtime
             while (x != null) {
                 UnaryOperator? op = x.Value as UnaryOperator?;
                 if (op != null) {
-                    x.Value = PerformUnaryOp(op.Value, x.Previous?.Value, x.Next.Value);
-                    list.Remove(x.Next);
+                    var node = op.Value.Side == UnaryOperator.OperandSide.Right ? x.Next : x.Previous;
+                    x.Value = PerformUnaryOp(op.Value, node?.Value);
+                    if (node != null)
+                        list.Remove(node);
                 }
                 x = x.Next;
             }
@@ -208,7 +210,7 @@ namespace Tbasic.Runtime
             // queue and evaluate binary operators
             BinaryOpQueue opqueue = new BinaryOpQueue(list);
             
-            x = list.First.Next; // skip the first operand
+            x = list.First?.Next; // skip the first operand
             while (x != null) {
                 BinaryOperator? op = x.Value as BinaryOperator?;
                 if (op == null) {
@@ -218,18 +220,20 @@ namespace Tbasic.Runtime
                     if (x.Next == null)
                         throw new ArgumentException("Expression cannot end in a binary operation [" + x.Value + "]");
                 }
-                x = x.Next.Next; // skip the operand
+                x = x.Next?.Next; // skip the operand
             }
 
             BinOpNodePair nodePair;
             while (opqueue.Dequeue(out nodePair)) {
-                nodePair.Node.Previous.Value = PerformBinaryOp(
+                nodePair.Node.Value = PerformBinaryOp(
                     nodePair.Operator,
-                    nodePair.Node.Previous.Value,
-                    nodePair.Node.Next.Value
+                    nodePair.Node.Previous?.Value,
+                    nodePair.Node.Next?.Value
                     );
-                list.Remove(nodePair.Node.Next);
-                list.Remove(nodePair.Node);
+                if (nodePair.Node.Next != null)
+                    list.Remove(nodePair.Node.Next);
+                if (nodePair.Node.Previous != null)
+                    list.Remove(nodePair.Node.Previous);
             }
 
             IExpressionEvaluator expr = list.First.Value as IExpressionEvaluator;
@@ -255,9 +259,8 @@ namespace Tbasic.Runtime
             return expression.Evaluate();
         }
 
-        public static object PerformUnaryOp(UnaryOperator op, object left, object right)
+        public static object PerformUnaryOp(UnaryOperator op, object operand)
         {
-            object operand = op.Side == UnaryOperator.OperandSide.Left ? left : right;
             IExpressionEvaluator tempv = operand as IExpressionEvaluator;
             if (tempv != null)
                 operand = tempv.Evaluate();

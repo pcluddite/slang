@@ -220,7 +220,7 @@ namespace Tbasic.Runtime
                     if (x.Next == null)
                         throw new ArgumentException("Expression cannot end in a binary operation [" + x.Value + "]");
                 }
-                x = x.Next?.Next; // skip the operand
+                x = x.Next.Next; // skip the operand
             }
 
             BinOpNodePair nodePair;

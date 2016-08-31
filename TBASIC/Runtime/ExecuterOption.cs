@@ -26,8 +26,12 @@ namespace Tbasic.Runtime
         /// </summary>
         EnforceStrings = 0x02,
         /// <summary>
-        /// Gets or sets if FunctionExceptions should be thrown instead of simply setting the status code
+        /// FunctionExceptions should be thrown instead of simply setting the status code
         /// </summary>
-        ThrowErrors = 0x04
+        ThrowErrors = 0x04,
+        /// <summary>
+        /// Nulls should implicitly be converted to zero (this does nothing if Strict is set)
+        /// </summary>
+        NullIsZero = 0x08
     }
 }

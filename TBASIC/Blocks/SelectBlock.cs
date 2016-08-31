@@ -26,7 +26,7 @@ namespace Tbasic
 
         public override void Execute(TBasic runtime)
         {
-            CmdLine line = new CmdLine(Header.Text);
+            Statement line = new Statement(runtime.ScannerDelegate, Header.Text);
             if (line.Count < 2) {
                 throw ThrowHelper.NoCondition();
             }
@@ -47,7 +47,7 @@ namespace Tbasic
             _default = null;
             for (int index = 0; index < Body.Count; index++) {
                 CaseBlock caseBlock;
-                index = CaseBlock.ParseBlock(index, Body, out caseBlock) - 1;
+                index = CaseBlock.ParseBlock(runtime, index, Body, out caseBlock) - 1;
 
                 if (caseBlock.Header.Name.EqualsIgnoreCase("DEFAULT")) {
                     _default = caseBlock;
@@ -87,10 +87,10 @@ namespace Tbasic
 
             public StringSegment Condition { get; private set; }
 
-            private CaseBlock(LineCollection body)
+            private CaseBlock(TBasic runtime, LineCollection body)
             {
                 Header = body[0];
-                CmdLine parms = new CmdLine(Header.Text);
+                Statement parms = new Statement(runtime.ScannerDelegate, Header.Text);
                 if (parms[0].EqualsIgnoreCase("DEFAULT")) {
                     Condition = new StringSegment("default");
                 }
@@ -104,7 +104,7 @@ namespace Tbasic
                 Body = body;
             }
 
-            public static int ParseBlock(int index, LineCollection all, out CaseBlock caseBlock)
+            public static int ParseBlock(TBasic runtime, int index, LineCollection all, out CaseBlock caseBlock)
             {
                 LineCollection blockLines = new LineCollection();
 
@@ -126,7 +126,7 @@ namespace Tbasic
                     }
                 }
                 if (blockLines.Count > 0) {
-                    caseBlock = new CaseBlock(blockLines);
+                    caseBlock = new CaseBlock(runtime, blockLines);
                 }
                 else {
                     caseBlock = null;

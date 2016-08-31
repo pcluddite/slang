@@ -75,7 +75,7 @@
       <DependentUpon>ObjectContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Runtime\ObjectConvert.cs" />
-    <Compile Include="Runtime\Parsing\CmdLine.cs" />
+    <Compile Include="Runtime\Evaluator\Statement.cs" />
     <Compile Include="Runtime\Parsing\DefaultScanner.GroupParser.cs" />
     <Compile Include="Runtime\Evaluator\ExpressionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\BinaryOpQueue.cs" />

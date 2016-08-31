@@ -8,13 +8,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Tbasic.Components;
 
 namespace Tbasic.Parsing
 {
     /// <summary>
-    /// Parses and constructs a string like Windows cmd.exe
+    /// A class for parsing statements, where each argument is an escaped string separated by a space
     /// </summary>
-    public class CmdLine : IList<string>, ICloneable
+    public class Statement : IList<string>, ICloneable
     {
         private List<string> args = new List<string>();
 
@@ -45,63 +46,32 @@ namespace Tbasic.Parsing
         }
 
         /// <summary>
-        /// Constructs and parses a command line
+        /// Constructs and parses a statement
         /// </summary>
+        /// <param name="scannerCreator">the scanner constructor for parsing arguments</param>
         /// <param name="line"></param>
-        public CmdLine(string line)
+        public Statement(CreateScannerDelegate scannerCreator, string line)
         {
-            ParseArguments(line);
+            ParseArguments(scannerCreator, line);
         }
-
-        /// <summary>
-        /// Constructs a command line with given arguments
-        /// </summary>
-        /// <param name="cmdArgs"></param>
-        public CmdLine(params string[] cmdArgs)
+        
+        private void ParseArguments(CreateScannerDelegate CreateScanner, string line)
         {
-            args.AddRange(cmdArgs);
-        }
-
-        /// <summary>
-        /// Constructs a command line based on a collection of objects
-        /// </summary>
-        /// <param name="_sframe"></param>
-        public CmdLine(IEnumerable<object> _sframe)
-        {
-            ParseArguments(_sframe);
-        }
-
-        private void ParseArguments(IEnumerable<object> _sframe)
-        {
-            foreach(object o in _sframe) {
-                args.Add(o.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Arguments are parsed just like the windows command line
-        /// </summary>
-        /// <param name="line"></param>
-        private void ParseArguments(string line)
-        {
-            if (args.Count > 0) {
+            if (args.Count > 0)
                 args.Clear();
-            }
 
-            char[] chars = line.ToCharArray();
-            bool inquote = false;
+            if (string.IsNullOrEmpty(line))
+                return;
 
-            for (int index = 0; index < chars.Length; ++index) {
-                if (chars[index] == '"')
-                    inquote = !inquote;
-                if (!inquote && chars[index] == ' ')
-                    chars[index] = '\n';
-            }
+            Scanner scanner = CreateScanner((StringSegment)line);
+            scanner.SkipWhiteSpace();
+            Add(scanner.Next());
+            scanner.SkipWhiteSpace();
 
-            args.AddRange(new string(chars).Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
-
-            for (int index = 0; index < args.Count; ++index) {
-                args[index] = Unquote(args[index]);
+            StringSegment arg;
+            while(scanner.NextStringOrToken(out arg)) {
+                Add(arg.ToString());
+                scanner.SkipWhiteSpace();
             }
         }
 
@@ -231,13 +201,17 @@ namespace Tbasic.Parsing
             }
         }
 
+        private Statement()
+        {
+        }
+
         /// <summary>
         /// Clones this command line
         /// </summary>
         /// <returns></returns>
-        public CmdLine Clone()
+        public Statement Clone()
         {
-            CmdLine clone = new CmdLine("");
+            Statement clone = new Statement();
             clone.args.AddRange(args);
             return clone;
         }

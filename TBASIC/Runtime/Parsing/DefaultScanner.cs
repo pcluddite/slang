@@ -130,6 +130,30 @@ namespace Tbasic.Parsing
             }
         }
 
+        public override bool NextStringOrToken(out StringSegment token)
+        {
+            int originalPos = IntPosition;
+            try {
+                if (EndOfStream) {
+                    token = null;
+                    return false;
+                }
+                if (InternalBuffer[IntPosition] == '\"' || InternalBuffer[IntPosition] == '\'') {
+                    IntPosition = IndexString(InternalBuffer, IntPosition) + 1;
+                    token = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
+                }
+                else {
+                    token = NextSegment();
+                }
+                
+                return true;
+            }
+            catch {
+                IntPosition = originalPos;
+                throw;
+            }
+        }
+
         public override bool NextString(out string parsed)
         {
             int originalPos = IntPosition;

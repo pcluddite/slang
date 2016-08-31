@@ -27,10 +27,10 @@ namespace Tbasic
         {
             Scanner scanner;
             bool doLoop;
-            CmdLine line = new CmdLine(Footer.Text);
+            Statement line = new Statement(runtime.ScannerDelegate, Footer.Text);
 
             if (line.Count < 3) {
-                line = new CmdLine(Header.Text);
+                line = new Statement(runtime.ScannerDelegate, Header.Text);
                 if (line.Count < 3) { // still less than three? there's no condition
                     throw ThrowHelper.NoCondition();
                 }

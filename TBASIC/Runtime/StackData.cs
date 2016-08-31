@@ -122,7 +122,7 @@ namespace Tbasic.Runtime
         public StackData(TBasic runtime, string text)
             : this(runtime)
         {
-            CmdLine line = new CmdLine(text);
+            Statement line = new Statement(runtime.ScannerDelegate, text);
             Text = text;
             _params.AddRange(line);
         }

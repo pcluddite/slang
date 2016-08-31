@@ -24,7 +24,7 @@ namespace Tbasic
 
         public override void Execute(TBasic runtime)
         {
-            CmdLine line = new CmdLine(Header.Text);
+            Statement line = new Statement(runtime.ScannerDelegate, Header.Text);
 
             if (line.Count < 2) {
                 throw ThrowHelper.NoCondition();

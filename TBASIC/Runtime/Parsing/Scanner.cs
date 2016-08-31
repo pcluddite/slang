@@ -129,7 +129,7 @@ namespace Tbasic.Parsing
         }
 
         /// <summary>
-        /// Gets the next string in the buffer
+        /// Gets the next token in the buffer as a string
         /// </summary>
         /// <returns></returns>
         public virtual string Next()
@@ -138,16 +138,23 @@ namespace Tbasic.Parsing
         }
 
         /// <summary>
-        /// Gets the next StringSegment in the buffer
+        /// Parses the next escaped string or token
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public abstract bool NextStringOrToken(out StringSegment token);
+
+        /// <summary>
+        /// Gets the next token in the buffer as a StringSegment
         /// </summary>
         /// <returns></returns>
-        internal virtual StringSegment NextSegment()
+        public virtual StringSegment NextSegment()
         {
             SkipWhiteSpace();
 
             int last = IntPosition;
 
-            while (!EndOfStream && !char.IsWhiteSpace(InternalBuffer[last])) {
+            while (last < InternalBuffer.Length && !char.IsWhiteSpace(InternalBuffer[last])) {
                 ++last;
             }
 

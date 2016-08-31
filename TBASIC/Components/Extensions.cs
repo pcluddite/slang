@@ -83,5 +83,11 @@ namespace Tbasic
             foreach (StringSegment item in enumerable)
                 yield return item.ToString();
         }
+
+        internal static IEnumerable<StringSegment> TB_ToSegments(this IEnumerable<string> enumerable)
+        {
+            foreach (string item in enumerable)
+                yield return new StringSegment(item);
+        }
     }
 }

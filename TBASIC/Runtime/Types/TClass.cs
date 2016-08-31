@@ -9,13 +9,25 @@ using Tbasic.Parsing;
 
 namespace Tbasic.Runtime
 {
-    internal class TClass : ObjectContext, ICloneable
+    /// <summary>
+    /// Represents a tbasic class
+    /// </summary>
+    public class TClass : ObjectContext, ICloneable
     {
+        /// <summary>
+        /// The name of this class
+        /// </summary>
         public string Name { get; private set; }
+        /// <summary>
+        /// The parent class
+        /// </summary>
         public TClass ParentClass { get; private set; } = null;
+        /// <summary>
+        /// The lines in the constructor. This includes any field initializations.
+        /// </summary>
         public LineCollection Constructor { get; private set; }
 
-        public TClass()
+        private TClass()
         {
         }
 
@@ -38,6 +50,11 @@ namespace Tbasic.Runtime
             Constructor = new LineCollection();
         }
 
+        /// <summary>
+        /// Checks if this class inherits from a parent class
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
         public bool Inherits(TClass parent)
         {
             TClass myancestor = ParentClass;
@@ -61,9 +78,14 @@ namespace Tbasic.Runtime
             return lineage;
         }
 
+        /// <summary>
+        /// Creates an instance of this class for use in TBASIC code
+        /// </summary>
+        /// <param name="runtime"></param>
+        /// <returns></returns>
         public TClass GetInstance(StackData runtime)
         {
-            TClass instance = (TClass)Clone();
+            TClass instance = Clone();
             instance.SetVariable("@this", instance);
             instance.SetVariable("@base", instance.ParentClass);
 
@@ -91,7 +113,8 @@ namespace Tbasic.Runtime
 
         internal TClass Clone()
         {
-            TClass cloned = CopyFrom<TClass>(this);
+            TClass cloned = new TClass();
+            CopyTo(this, cloned);
             cloned.Name = Name;
             cloned.ParentClass = ParentClass?.Clone();
             cloned.Constructor = Constructor;

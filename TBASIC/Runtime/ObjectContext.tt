@@ -24,6 +24,7 @@ namespace Tbasic.Runtime
 <#	BuildGroup("Function", "TBasicFunction", "_functions");
     BuildGroup("Command", "TBasicFunction", "_commands");
     BuildGroup("Block", "BlockCreator", "_blocks");
+	BuildGroup("Type", "TClass", "_prototypes");
     BuildGroup("BinaryOperator", "BinaryOperator", "_binaryOps", list: false);
     BuildGroup("UnaryOperator", "UnaryOperator", "_unaryOps", list: false);
 #>

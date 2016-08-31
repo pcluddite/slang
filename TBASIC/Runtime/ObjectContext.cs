@@ -326,19 +326,6 @@ namespace Tbasic.Runtime
 
         #region TryGet
 
-        internal bool TryGetType(string typename, out TClass tclass)
-        {
-            if (_prototypes.TryGetValue(typename, out tclass)) {
-                return true;
-            }
-            else if (_super == null) {
-                return false;
-            }
-            else {
-                return _super.TryGetType(typename, out tclass);
-            }
-        }
-
         internal bool TryGetCommand(string name, out CallData value)
         {
             if (_commands.TryGetValue(name, out value)) {
@@ -517,25 +504,24 @@ namespace Tbasic.Runtime
         
         #endregion
 
-        internal static T CopyFrom<T>(ObjectContext other) where T : ObjectContext, new()
+        internal static T CopyTo<T>(ObjectContext source, T dest) where T : ObjectContext
         {
-            T cloned = new T();
-            if (other._super == null) {
-                cloned._unaryOps = new UnaryOpDictionary(other._unaryOps);
-                cloned._binaryOps = new BinOpDictionary(other._binaryOps);
+            if (source._super == null) {
+                dest._unaryOps = new UnaryOpDictionary(source._unaryOps);
+                dest._binaryOps = new BinOpDictionary(source._binaryOps);
             }
             else {
-                cloned._super = other._super;
-                cloned._unaryOps = other._super._unaryOps;
-                cloned._binaryOps = other._super._binaryOps;
+                dest._super = source._super;
+                dest._unaryOps = source._super._unaryOps;
+                dest._binaryOps = source._super._binaryOps;
             }
-            cloned._variables = new Dictionary<string, object>(other._variables);
-            cloned._prototypes = new Dictionary<string, TClass>(other._prototypes);
-            cloned._functions = new Library(other._functions);
-            cloned._constants = new Dictionary<string, object>(other._constants);
-            cloned._commands = new Library(other._commands);
-            cloned._blocks = new Dictionary<string, BlockCreator>(other._blocks);
-            return cloned;
+            dest._variables = new Dictionary<string, object>(source._variables);
+            dest._prototypes = new Dictionary<string, TClass>(source._prototypes);
+            dest._functions = new Library(source._functions);
+            dest._constants = new Dictionary<string, object>(source._constants);
+            dest._commands = new Library(source._commands);
+            dest._blocks = new Dictionary<string, BlockCreator>(source._blocks);
+            return dest;
         }
     }
 }

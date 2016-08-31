@@ -333,6 +333,112 @@ namespace Tbasic.Runtime
 
 		#endregion
 
+		#region Generated _prototypes methods 
+
+		/// <summary>
+        /// Searches for the context in which a Type is declared. If the Type cannot be found, null is returned.
+        /// </summary>
+        /// <param name="name">the block name</param>
+        /// <returns>the ObjectContext in which the block is declared</returns>
+        public ObjectContext FindTypeContext(string name)
+        {
+            if (_prototypes.ContainsKey(name)) {
+                return this;
+            }
+            else if (_super == null) {
+                return null;
+            }
+            else {
+                return _super.FindTypeContext(name);
+            }
+        }
+
+        /// <summary>
+        /// Tries to get a Type from this context
+        /// </summary>
+        /// <returns>true if the Type was found, otherwise false.</returns>
+        public bool TryGetType(string name, out TClass value)
+        {
+            if (_prototypes.TryGetValue(name, out value)) {
+                return true;
+            }
+            else if (_super == null) {
+                return false;
+            }
+            else {
+                return _super.TryGetType(name, out value);
+            }
+        }
+
+        /// <summary>
+        /// Gets a Type if it exists, throws an ArgumentException otherwise
+        /// </summary>
+        /// <param name="name">the Type as a string</param>
+        /// <exception cref="ArgumentException">thrown if the Type is undefined</exception>
+        /// <returns></returns>
+        public TClass GetType(string name)
+        {
+            TClass value;
+            if (_prototypes.TryGetValue(name, out value)) {
+                return value;
+            }
+            else if (_super == null) {
+                throw ThrowHelper.UndefinedObject(name);
+            }
+            else {
+                return _super.GetType(name);
+            }
+        }
+
+        /// <summary>
+        /// Sets a Type in this context. If the Type exists, it is set in
+        /// the context in which it was declared. Otherwise, it is declared in this context.
+        /// </summary>
+        public void SetType(string name, TClass value)
+        {
+            ObjectContext c = FindTypeContext(name);
+			if (c != null) {
+				c._prototypes[name] = value;
+			}
+			else {
+				AddType(name, value);
+			}
+        }
+
+        /// <summary>
+        /// Adds a Type to this context. If the Type exists, an exception is thrown
+        /// </summary>
+        public void AddType(string name, TClass value)
+        {
+            _prototypes.Add(name, value);
+        }
+
+        /// <summary>
+        /// Lists all the Types currently defined in this context
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<KeyValuePair<string, TClass>> GetLocalTypes()
+        {
+            return _prototypes;
+        }
+
+        /// <summary>
+        /// Lists all the Types currently defined
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<KeyValuePair<string, TClass>> GetAllTypes()
+        {
+            ObjectContext context = this;
+            while (context != null) {
+                foreach (var value in context.GetLocalTypes()) {
+                    yield return value;
+                }
+                context = context._super;
+            }
+        }
+
+		#endregion
+
 		#region Generated _binaryOps methods 
 
 		/// <summary>

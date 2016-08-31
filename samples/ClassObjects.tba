@@ -20,22 +20,21 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
-first$ = CreateObject("MyClass", "Hello, World!")
-;first$.ShowMsg()
-
-second$ = CreateObject("MyClass", "This is an object-oriented program")
+first$ = CreateObject("MyMessage", "This is an object-oriented program")
+second$ = CreateObject("MyMessage", "Hello, World!")
 second$.ShowMsg()
 first$.ShowMsg()
 
-class MyClass
+class MyMessage
+	dim title$ = "Class Objects"
 	dim mystr$
 	
-	MyClass(msg$)
+	MyMessage(msg$)
 		mystr$ = msg$
 	end function
 	
 	function ShowMsg()
-		MsgBox(64, "The message is: " + mystr$)
+		MsgBox(64, "The message is: " + mystr$, title$)
 	end function
 	
 end class

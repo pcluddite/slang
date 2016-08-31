@@ -133,7 +133,12 @@ namespace Tbasic.Libraries
                     stackdat.Context.SetVariable(name, array_alloc(v.EvaluateIndices(), 0));
                 }
                 else {
-                    stackdat.Context.SetVariable(name, null); // just declare it.
+                    if (!scanner.EndOfStream && scanner.Next() == "=") {
+                        SetVariable(stackdat, false);
+                    }
+                    else {
+                        stackdat.Context.SetVariable(name, null); // just declare it.
+                    }
                 }
             }
             else {
@@ -205,6 +210,7 @@ namespace Tbasic.Libraries
             if (v.IsMacro)
                 throw ThrowHelper.MacroRedefined();
 
+            scanner.SkipWhiteSpace();
             if (!scanner.Next("="))
                 throw ThrowHelper.InvalidDefinitionOperator();
 

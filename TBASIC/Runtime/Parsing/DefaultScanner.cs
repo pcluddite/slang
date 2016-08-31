@@ -5,8 +5,8 @@
 // ======
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Tbasic.Components;
-using Tbasic.Errors;
 using Tbasic.Operators;
 using Tbasic.Runtime;
 
@@ -349,6 +349,7 @@ namespace Tbasic.Parsing
                 IList<StringSegment> args;
                 indices = null;
                 if (!EndOfStream && InternalBuffer[IntPosition] == '[' && NextGroup(out args)) {
+                    indices = args.ToArray();
                     return true;
                 }
                 else {

@@ -124,15 +124,17 @@ namespace Tbasic.Runtime
         /// <returns></returns>
         public StackData Execute(Line codeLine)
         {
+#if !NO_EXCEPT
+            TbasicRuntimeException runEx;
             try {
+#endif
                 return Execute(this, codeLine);
+#if !NO_EXCEPT
             }
-            catch(Exception ex) {
-                TbasicRuntimeException runEx = TbasicRuntimeException.WrapException(ex);
-                if (runEx == null)
-                    throw;
+            catch(Exception ex) when ((runEx = TbasicRuntimeException.WrapException(ex)) != null) {
                 throw runEx;
             }
+#endif
         }
 
         internal StackData Execute(LineCollection lines)
@@ -144,8 +146,11 @@ namespace Tbasic.Runtime
                 }
                 Line current = lines[index];
                 CurrentLine = current.LineNumber;
+#if !NO_EXCEPT
+                TbasicRuntimeException runEx;
                 try {
-                    ObjectContext blockContext = Context.FindBlockContext(current.Name);
+#endif
+                ObjectContext blockContext = Context.FindBlockContext(current.Name);
                     if (blockContext == null) {
                         runtime = Execute(this, current);
                     }
@@ -156,13 +161,12 @@ namespace Tbasic.Runtime
                         Context = Context.Collect();
                         index += block.Length - 1; // skip the length of the executed block
                     }
+#if !NO_EXCEPT
                 }
-                catch (Exception ex) {
-                    TbasicRuntimeException runEx = TbasicRuntimeException.WrapException(ex);
-                    if (runEx == null) // only catch errors that we understand 8/16/16
-                        throw;
+                catch (Exception ex) when ((runEx = TbasicRuntimeException.WrapException(ex)) != null) { // only catch errors that we understand 8/16/16
                     HandleError(current, runtime ?? new StackData(this), runEx);
                 }
+#endif
             }
             return runtime ?? new StackData(this);
         }

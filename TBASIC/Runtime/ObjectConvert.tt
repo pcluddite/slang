@@ -87,7 +87,7 @@ namespace Tbasic.Runtime
 <#+ if (extraParam == "") { #>
             if (obj is <#= typename #>) {
 <#+ } else { #>
-            if (<#= extraParamName #>.IsAssignableFrom(<#= getType #>)) {
+            if (<#= extraParamName #>.IsAssignableFrom(obj.GetType())) {
 <#+ } #>
                 result = <#= cast #>obj;
                 return true;

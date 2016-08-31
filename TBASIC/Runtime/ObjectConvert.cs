@@ -69,7 +69,7 @@ namespace Tbasic.Runtime
         /// <returns></returns>
         internal static bool TryConvert(object obj,  Type type, out object result, bool strict, bool parseStrings)
         {
-            if (type.IsAssignableFrom(type)) {
+            if (type.IsAssignableFrom(obj.GetType())) {
                 result = obj;
                 return true;
             }

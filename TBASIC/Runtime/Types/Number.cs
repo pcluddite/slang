@@ -141,6 +141,15 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
+        /// Implicitly converts a Number to a double
+        /// </summary>
+        /// <param name="num"></param>
+        public static implicit operator double(Number num)
+        {
+            return num.Value;
+        }
+
+        /// <summary>
         /// Implicitly converts a double to an Integer
         /// </summary>
         /// <param name="n"></param>

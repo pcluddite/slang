@@ -46,12 +46,14 @@ namespace Tbasic.Errors
             StringBuilder msg = new StringBuilder();
 
             LineException current = ex as LineException;
+            string details = ex.Message;
             while (current != null) { // traverse the exception until we find the actual error
+                details = current.DetailMessage;
                 msg.AppendFormat("\tat '{0}' on line {1}\n", current.Name, current.Line);
-                current = (ex = current).InnerException as LineException;
+                current = current.InnerException as LineException;
             }
             msg.Append("\nDetail:\n");
-            msg.AppendFormat("{0}", ex.Message);
+            msg.AppendFormat("{0}", details);
             return msg.ToString();
         }
     }

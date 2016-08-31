@@ -85,7 +85,7 @@ namespace Tbasic.Runtime
         internal static bool TryConvert<#= genericParam #>(object obj, <#= extraParam #> out <#= typename #> result, bool strict, bool parseStrings)
         {
 <#+ if (extraParam == "") { #>
-            if (obj is T) {
+            if (obj is <#= typename #>) {
 <#+ } else { #>
             if (<#= extraParamName #>.IsAssignableFrom(<#= getType #>)) {
 <#+ } #>

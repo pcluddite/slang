@@ -171,7 +171,7 @@ namespace Tbasic.Runtime
         {
             StackData runtime;
             CallData data;
-            if (exec.Context.TryGetCommand(codeLine.Name, out data)) {
+            if (!codeLine.IsFunction && exec.Context.TryGetCommand(codeLine.Name, out data)) {
                 runtime = new StackData(exec, codeLine.Text);
                 if (data.Evaluate) {
                     runtime.EvaluateAll();

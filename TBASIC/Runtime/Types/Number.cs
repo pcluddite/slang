@@ -4,6 +4,7 @@
 //
 // ======
 using System;
+using Tbasic.Errors;
 
 namespace Tbasic.Runtime
 {
@@ -126,7 +127,7 @@ namespace Tbasic.Runtime
         {
             double d;
             if (!ObjectConvert.TryConvert(o, out d, strict: false, parseStrings: false)) // this should always obey these rules
-                throw new InvalidCastException();
+                throw ThrowHelper.InvalidTypeInExpression(o?.ToString(), nameof(Number));
             return d;
         }
 

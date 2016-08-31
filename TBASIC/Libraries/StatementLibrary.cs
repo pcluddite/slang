@@ -21,6 +21,8 @@ namespace Tbasic.Libraries
             Add("LET", Let, evaluate: false);
             Add("SET", Let, evaluate: false);
             Add("DIM", DIM, evaluate: false);
+            Add("OPTION", Option, evaluate: false);
+            Add("OPT", Option, evaluate: false);
             Add("SLEEP", Sleep);
             Add("ELSE", UhOh);
             Add("END", UhOh);
@@ -28,8 +30,6 @@ namespace Tbasic.Libraries
             Add("CONST", Const);
             Add("EXIT", Exit);
             Add("BREAK", Break);
-            Add("OPTION", Option);
-            Add("OPT", Option);
             Add("#INCLUDE", Include);
         }
 

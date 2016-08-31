@@ -35,7 +35,9 @@ namespace Tbasic.Parsing
                         endPos = FindConsecutiveDigits(InternalBuffer, endPos + 1);
                     }
                     if (endPos < InternalBuffer.Length && (InternalBuffer[endPos] == 'e' || InternalBuffer[endPos] == 'E')) {
-                        if (InternalBuffer[++endPos] == '-')
+                        if (++endPos >= InternalBuffer.Length)
+                            return false;
+                        if (InternalBuffer[endPos] == '-')
                             ++endPos;
                         endPos = FindConsecutiveDigits(InternalBuffer, endPos);
                     }

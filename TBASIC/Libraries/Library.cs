@@ -4,18 +4,16 @@
 //
 // ======
 using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using Tbasic.Runtime;
-using System.Linq;
-using System.Reflection;
 
 namespace Tbasic.Libraries
 {
     /// <summary>
     /// A library for storing and processing TBasic functions
     /// </summary>
-    public class Library : IDictionary<string, TBasicFunction>
+    public class Library : IDictionary<string, CallData>
     {
         private Dictionary<string, CallData> lib = new Dictionary<string, CallData>(StringComparer.OrdinalIgnoreCase);
         
@@ -62,6 +60,16 @@ namespace Tbasic.Libraries
         public void Add(string key, TBasicFunction value)
         {
             lib.Add(key, new CallData(value, evaluate: true));
+        }
+
+        /// <summary>
+        /// Adds a function to this dictionary
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void Add(string key, CallData value)
+        {
+            lib.Add(key, value);
         }
 
         /// <summary>
@@ -151,20 +159,6 @@ namespace Tbasic.Libraries
             return d.Method.GetParameters().Length;
         }
         
-        private static int CheckParameters(Delegate d)
-        {
-            if (!typeof(IConvertible).IsAssignableFrom(d.Method.ReturnType) && d.Method.ReturnType != typeof(object)) {
-                throw new ArgumentException("Delegate must have an IConvertible return type");
-            }
-            ParameterInfo[] info = d.Method.GetParameters();
-            for (int index = 0; index < info.Length; ++index) {
-                if (!typeof(IConvertible).IsAssignableFrom(info[index].ParameterType)) {
-                    throw new ArgumentException(string.Format("{0} cannot be {1} because {1} does not implement IConvertible", info[index].Name, info[index].ParameterType.Name));
-                }
-            }
-            return info.Length;
-        }
-
         /// <summary>
         /// Adds a native function that takes no parameters and returns a result
         /// </summary>
@@ -269,20 +263,7 @@ namespace Tbasic.Libraries
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public bool TryGetValue(string key, out TBasicFunction value)
-        {
-            CallData info;
-            if (lib.TryGetValue(key, out info)) {
-                value = info.Function;
-                return true;
-            }
-            else {
-                value = null;
-                return false;
-            }
-        }
-        
-        internal bool TryGetValue(string key, out CallData value)
+        public bool TryGetValue(string key, out CallData value)
         {
             return lib.TryGetValue(key, out value);
         }
@@ -290,10 +271,9 @@ namespace Tbasic.Libraries
         /// <summary>
         /// Gets a collection of this dictionary's values
         /// </summary>
-        public ICollection<TBasicFunction> Values
+        public ICollection<CallData> Values
         {
-            get { return (from info in lib.Values
-                          select info.Function).ToArray(); }
+            get { return lib.Values; }
         }
 
         /// <summary>
@@ -301,13 +281,13 @@ namespace Tbasic.Libraries
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public TBasicFunction this[string key]
+        public CallData this[string key]
         {
             get {
-                return lib[key].Function;
+                return lib[key];
             }
             set {
-                lib[key] = new CallData(value, evaluate: true);
+                lib[key] = value;
             }
         }
 
@@ -320,61 +300,57 @@ namespace Tbasic.Libraries
         }
 
         /// <summary>
+        /// Gets the enumerator
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<KeyValuePair<string, CallData>> GetEnumerator()
+        {
+            return ((IDictionary<string, CallData>)lib).GetEnumerator();
+        }
+
+        /// <summary>
         /// Returns the number of elements in this collection
         /// </summary>
         public int Count
         {
             get { return lib.Count; }
         }
-
-        void ICollection<KeyValuePair<string, TBasicFunction>>.Add(KeyValuePair<string, TBasicFunction> item)
-        {
-            Add(item.Key, item.Value);
-        }
-
-        bool ICollection<KeyValuePair<string, TBasicFunction>>.Contains(KeyValuePair<string, TBasicFunction> item)
-        {
-            CallData data;
-            if (lib.TryGetValue(item.Key, out data))
-                return item.Value == data.Function;
-            return false;
-        }
-
-        void ICollection<KeyValuePair<string, TBasicFunction>>.CopyTo(KeyValuePair<string, TBasicFunction>[] array, int arrayIndex)
-        {
-            foreach(var kv in this) {
-                array[arrayIndex++] = kv;
-            }
-        }
-
-        bool ICollection<KeyValuePair<string, TBasicFunction>>.IsReadOnly
-        {
-            get { return ((ICollection<KeyValuePair<string, CallData>>)lib).IsReadOnly; }
-        }
-
-        bool ICollection<KeyValuePair<string, TBasicFunction>>.Remove(KeyValuePair<string, TBasicFunction> item)
-        {
-            CallData data;
-            if (lib.TryGetValue(item.Key, out data) && item.Value == data.Function) {
-                lib.Remove(item.Key);
-                return true;
-            }
-            return false;
-        }
         
-        /// <summary>
-        /// Gets an enumerator for this dictionary
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator<KeyValuePair<string, TBasicFunction>> GetEnumerator()
+        bool IDictionary<string, CallData>.TryGetValue(string key, out CallData value)
         {
-            foreach (var kv in lib)
-                yield return new KeyValuePair<string, TBasicFunction>(kv.Key, kv.Value.Function);
+            return ((IDictionary<string, CallData>)lib).TryGetValue(key, out value);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return ((IDictionary<string, CallData>)lib).GetEnumerator();
+        }
+
+        bool ICollection<KeyValuePair<string, CallData>>.IsReadOnly
+        {
+            get {
+                return ((IDictionary<string, CallData>)lib).IsReadOnly;
+            }
+        }
+
+        void ICollection<KeyValuePair<string, CallData>>.CopyTo(KeyValuePair<string, CallData>[] array, int arrayIndex)
+        {
+            ((IDictionary<string, CallData>)lib).CopyTo(array, arrayIndex);
+        }
+
+        bool ICollection<KeyValuePair<string, CallData>>.Remove(KeyValuePair<string, CallData> item)
+        {
+            return ((IDictionary<string, CallData>)lib).Remove(item);
+        }
+
+        void ICollection<KeyValuePair<string, CallData>>.Add(KeyValuePair<string, CallData> item)
+        {
+            ((IDictionary<string, CallData>)lib).Add(item);
+        }
+
+        bool ICollection<KeyValuePair<string, CallData>>.Contains(KeyValuePair<string, CallData> item)
+        {
+            return ((IDictionary<string, CallData>)lib).Contains(item);
         }
     }
 }

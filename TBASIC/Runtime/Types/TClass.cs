@@ -103,9 +103,9 @@ namespace Tbasic.Runtime
             runtime.Runtime.Context = instance;
             runtime.Runtime.Execute(Constructor); // this is to initialize all the variables
 
-            TBasicFunction ctor;
+            CallData ctor;
             if (TryGetFunction("<>ctor", out ctor)) {
-                ctor(runtime); // do the user defined constructor
+                ctor.Function(runtime); // do the user defined constructor
             }
 
             runtime.Runtime.Context = old;

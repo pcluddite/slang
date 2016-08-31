@@ -136,7 +136,7 @@ namespace Tbasic.Libraries
             TBasic e = new TBasic(); // local execution
             e.Global.LoadStandardOperators();
             e.Global.AddLibrary(new MathLibrary(e.Global)); // only allow math libs
-            e.Global.SetFunction("eval", null); // that's a no-no
+            e.Global.RemoveFunction("eval"); // that's a no-no
             return ExpressionEvaluator.Evaluate(new StringSegment(expr), e);
         }
     }

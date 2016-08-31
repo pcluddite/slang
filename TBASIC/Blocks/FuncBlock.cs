@@ -41,8 +41,8 @@ namespace Tbasic
             for (int index = 1; index < Prototype.ParameterCount; index++) {
                 runtime.Context.SetVariable((string)Prototype.GetAt(index), stackdat.GetAt(index));
             }
-            runtime.Context.SetCommand("return", Return);
-            runtime.Context.SetFunction("SetStatus", SetStatus);
+            runtime.Context.AddCommand("return", Return);
+            runtime.Context.AddCommand("SetStatus", SetStatus);
 
             stackdat.CopyFrom(runtime.Execute(Body));
             runtime.HonorBreak();

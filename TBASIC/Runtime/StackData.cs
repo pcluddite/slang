@@ -223,7 +223,7 @@ namespace Tbasic.Runtime
         public T GetAt<T>(int index)
         {
             T ret;
-            if (ObjectConvert.TryConvert(GetAt(index), out ret, Runtime.Options))
+            if (TypeConvert.TryConvert(GetAt(index), out ret, Runtime.Options))
                 return ret;
             throw ThrowHelper.InvalidParamType(index, typeof(T).Name);
         }
@@ -231,7 +231,7 @@ namespace Tbasic.Runtime
         internal object ConvertAt(int index, Type type)
         {
             object ret;
-            if (ObjectConvert.TryConvert(GetAt(index), type, out ret, Runtime.Options))
+            if (TypeConvert.TryConvert(GetAt(index), type, out ret, Runtime.Options))
                 return ret;
             throw ThrowHelper.InvalidParamType(index, type.Name);
         }

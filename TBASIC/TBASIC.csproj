@@ -74,10 +74,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ObjectContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\ObjectConvert.cs">
+    <Compile Include="Types\TypeConvert.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ObjectConvert.tt</DependentUpon>
+      <DependentUpon>TypeConvert.tt</DependentUpon>
     </Compile>
     <Compile Include="Runtime\Evaluator\Statement.cs" />
     <Compile Include="Runtime\Parsing\DefaultScanner.GroupParser.cs" />
@@ -145,9 +145,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ObjectContext.Generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Types\ObjectConvert.tt">
+    <Content Include="Types\TypeConvert.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ObjectConvert.cs</LastGenOutput>
+      <LastGenOutput>TypeConvert.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

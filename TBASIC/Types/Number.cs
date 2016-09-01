@@ -99,7 +99,7 @@ namespace Tbasic.Types
         public static bool IsNumber(object o, ExecuterOption opts)
         {
             double d;
-            return ObjectConvert.TryConvert(o, out d, opts);
+            return TypeConvert.TryConvert(o, out d, opts);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Tbasic.Types
         public static Number? AsNumber(object o, ExecuterOption opts)
         {
             double d;
-            if (ObjectConvert.TryConvert(o, out d, opts)) {
+            if (TypeConvert.TryConvert(o, out d, opts)) {
                 return d;
             }
             else {
@@ -127,7 +127,7 @@ namespace Tbasic.Types
         public static Number Convert(object o)
         {
             double d;
-            if (!ObjectConvert.TryConvert(o, out d, strict: false, parseStrings: false)) // this should always obey these rules
+            if (!TypeConvert.TryConvert(o, out d, strict: false, parseStrings: false)) // this should always obey these rules
                 throw ThrowHelper.InvalidTypeInExpression(o?.ToString(), nameof(Number));
             return d;
         }

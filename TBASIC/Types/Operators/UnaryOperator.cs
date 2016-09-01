@@ -4,6 +4,7 @@
 //
 // ======
 using System;
+using Tbasic.Runtime;
 
 namespace Tbasic.Types
 {
@@ -30,9 +31,10 @@ namespace Tbasic.Types
         /// <summary>
         /// A delegate that represents the method which processes the operand. 
         /// </summary>
+        /// <param name="runtime">the current runtime</param>
         /// <param name="value">the operand</param>
         /// <returns>the result of the operator</returns>
-        public delegate object UnaryOpDelegate(object value);
+        public delegate object UnaryOpDelegate(TBasic runtime, object value);
 
         /// <summary>
         /// Gets the string representation of the operator

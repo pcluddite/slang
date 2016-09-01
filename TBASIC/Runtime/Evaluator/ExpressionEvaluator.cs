@@ -200,7 +200,7 @@ namespace Tbasic.Runtime
                 UnaryOperator? op = x.Value as UnaryOperator?;
                 if (op != null) {
                     var node = op.Value.Side == UnaryOperator.OperandSide.Right ? x.Next : x.Previous;
-                    x.Value = PerformUnaryOp(op.Value, node?.Value);
+                    x.Value = PerformUnaryOp(Runtime, op.Value, node?.Value);
                     if (node != null)
                         list.Remove(node);
                 }
@@ -226,6 +226,7 @@ namespace Tbasic.Runtime
             BinOpNodePair nodePair;
             while (opqueue.Dequeue(out nodePair)) {
                 nodePair.Node.Value = PerformBinaryOp(
+                    Runtime,
                     nodePair.Operator,
                     nodePair.Node.Previous?.Value,
                     nodePair.Node.Next?.Value
@@ -259,14 +260,14 @@ namespace Tbasic.Runtime
             return expression.Evaluate();
         }
 
-        public static object PerformUnaryOp(UnaryOperator op, object operand)
+        public static object PerformUnaryOp(TBasic runtime, UnaryOperator op, object operand)
         {
             IExpressionEvaluator tempv = operand as IExpressionEvaluator;
             if (tempv != null)
                 operand = tempv.Evaluate();
 
             try {
-                return op.ExecuteOperator(operand);
+                return op.ExecuteOperator(runtime, operand);
             }
             catch(InvalidCastException) when (operand is IOperator) {
                 throw new ArgumentException("Unary operand cannot be " + operand.GetType().Name);
@@ -277,13 +278,9 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
-        /// This routine will actually execute an operation and return its value
+        /// Performs a binary operation
         /// </summary>
-        /// <param name="op">Operator Information</param>
-        /// <param name="left">left operand</param>
-        /// <param name="right">right operand</param>
-        /// <returns>v1 (op) v2</returns>
-        public static object PerformBinaryOp(BinaryOperator op, object left, object right)
+        public static object PerformBinaryOp(TBasic runtime, BinaryOperator op, object left, object right)
         {
             if (op.EvaulatedOperand.HasFlag(BinaryOperator.OperandPosition.Left)) {
                 IExpressionEvaluator tv = left as IExpressionEvaluator;
@@ -327,7 +324,7 @@ namespace Tbasic.Runtime
                         right = tv.Evaluate();
                 }
                 
-                return op.ExecuteOperator(left, right);
+                return op.ExecuteOperator(runtime, left, right);
             }
             catch (Exception ex) when (ex is InvalidCastException || ex is FormatException || ex is ArgumentException || ex is OverflowException) {
                 throw new FormatException(string.Format(

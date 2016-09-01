@@ -7,7 +7,7 @@ using System;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
 
-namespace Tbasic
+namespace Tbasic.Types
 {
     internal class ForBlock : CodeBlock
     {

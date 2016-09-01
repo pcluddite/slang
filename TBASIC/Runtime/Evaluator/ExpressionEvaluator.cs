@@ -7,10 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Tbasic.Parsing;
 using Tbasic.Components;
 using Tbasic.Errors;
-using Tbasic.Operators;
+using Tbasic.Parsing;
+using Tbasic.Types;
 
 namespace Tbasic.Runtime
 {

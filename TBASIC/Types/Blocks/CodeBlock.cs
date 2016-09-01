@@ -6,7 +6,7 @@
 using Tbasic.Parsing;
 using Tbasic.Runtime;
 
-namespace Tbasic
+namespace Tbasic.Types
 {
 
     /// <summary>

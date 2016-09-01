@@ -5,7 +5,7 @@
 // ======
 using System;
 
-namespace Tbasic.Operators
+namespace Tbasic.Types
 {
     /// <summary>
     /// Represents an operator that takes one operand

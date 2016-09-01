@@ -3,7 +3,7 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
-namespace Tbasic.Operators
+namespace Tbasic.Types
 {
     /// <summary>
     /// Represents an operator

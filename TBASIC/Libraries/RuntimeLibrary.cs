@@ -4,9 +4,10 @@
 //
 // ======
 using System;
-using Tbasic.Runtime;
-using Tbasic.Errors;
 using System.Linq;
+using Tbasic.Errors;
+using Tbasic.Runtime;
+using Tbasic.Types;
 
 namespace Tbasic.Libraries
 {

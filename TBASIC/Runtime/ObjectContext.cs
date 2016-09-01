@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using Tbasic.Errors;
 using Tbasic.Libraries;
-using Tbasic.Operators;
+using Tbasic.Types;
 
 namespace Tbasic.Runtime
 {

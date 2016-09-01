@@ -61,20 +61,20 @@
     <Compile Include="Libraries\ArrayLibrary.cs" />
     <Compile Include="Libraries\StringLibrary.cs" />
     <Compile Include="Libraries\SystemLibrary.cs" />
-    <Compile Include="Operators\BinaryOperator.cs" />
-    <Compile Include="Operators\BinOpDicationary.cs" />
-    <Compile Include="Operators\BinOpNodePair.cs" />
-    <Compile Include="Operators\IOperator.cs" />
-    <Compile Include="Operators\OperatorDictionary.cs" />
-    <Compile Include="Operators\UnaryOpDictionary.cs" />
-    <Compile Include="Operators\UnaryOperator.cs" />
+    <Compile Include="Types\Operators\BinaryOperator.cs" />
+    <Compile Include="Types\Operators\BinOpDicationary.cs" />
+    <Compile Include="Types\Operators\BinOpNodePair.cs" />
+    <Compile Include="Types\Operators\IOperator.cs" />
+    <Compile Include="Types\Operators\OperatorDictionary.cs" />
+    <Compile Include="Types\Operators\UnaryOpDictionary.cs" />
+    <Compile Include="Types\Operators\UnaryOperator.cs" />
     <Compile Include="Runtime\ExecuterOption.cs" />
     <Compile Include="Runtime\ObjectContext.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ObjectContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Runtime\ObjectConvert.cs">
+    <Compile Include="Types\ObjectConvert.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ObjectConvert.tt</DependentUpon>
@@ -102,13 +102,13 @@
     <Compile Include="Components\Win32\Win32Window.cs" />
     <Compile Include="Libraries\MathLibrary.cs" />
     <Compile Include="Libraries\RuntimeLibrary.cs" />
-    <Compile Include="Blocks\DoBlock.cs" />
-    <Compile Include="Blocks\ForBlock.cs" />
-    <Compile Include="Blocks\FuncBlock.cs" />
-    <Compile Include="Blocks\SelectBlock.cs" />
-    <Compile Include="Blocks\WhileBlock.cs" />
-    <Compile Include="Blocks\IfBlock.cs" />
-    <Compile Include="Blocks\CodeBlock.cs" />
+    <Compile Include="Types\Blocks\DoBlock.cs" />
+    <Compile Include="Types\Blocks\ForBlock.cs" />
+    <Compile Include="Types\Blocks\FuncBlock.cs" />
+    <Compile Include="Types\Blocks\SelectBlock.cs" />
+    <Compile Include="Types\Blocks\WhileBlock.cs" />
+    <Compile Include="Types\Blocks\IfBlock.cs" />
+    <Compile Include="Types\Blocks\CodeBlock.cs" />
     <Compile Include="Runtime\Parsing\Line.cs" />
     <Compile Include="Components\ImageCompression.cs" />
     <Compile Include="Components\Win32\UnmanagedTypes.cs" />
@@ -124,9 +124,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Errors\LineException.cs" />
-    <Compile Include="Runtime\Types\CallData.cs" />
-    <Compile Include="Runtime\Types\Number.cs" />
-    <Compile Include="Runtime\Types\TClass.cs" />
+    <Compile Include="Types\CallData.cs" />
+    <Compile Include="Types\Number.cs" />
+    <Compile Include="Types\TClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -145,7 +145,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ObjectContext.Generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Runtime\ObjectConvert.tt">
+    <Content Include="Types\ObjectConvert.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ObjectConvert.cs</LastGenOutput>
     </Content>

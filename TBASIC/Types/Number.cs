@@ -5,8 +5,9 @@
 // ======
 using System;
 using Tbasic.Errors;
+using Tbasic.Runtime;
 
-namespace Tbasic.Runtime
+namespace Tbasic.Types
 {
     /// <summary>
     /// Represents a generic number (this is a double at its core)

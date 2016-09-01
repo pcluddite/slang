@@ -6,7 +6,7 @@
 using System;
 using System.Globalization;
 
-namespace Tbasic.Operators
+namespace Tbasic.Types
 {
     internal class UnaryOpDictionary : OperatorDictionary<UnaryOperator>
     {

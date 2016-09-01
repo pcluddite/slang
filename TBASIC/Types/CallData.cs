@@ -5,8 +5,9 @@
 // ======
 using System;
 using System.Reflection;
+using Tbasic.Runtime;
 
-namespace Tbasic.Runtime
+namespace Tbasic.Types
 {
     /// <summary>
     /// Delegate for processing a TBasic function

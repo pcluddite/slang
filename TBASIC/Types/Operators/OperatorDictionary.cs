@@ -8,7 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Tbasic.Operators
+namespace Tbasic.Types
 {
     internal abstract class OperatorDictionary<T> : IDictionary<string, T>
         where T : IOperator

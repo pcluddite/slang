@@ -5,7 +5,7 @@
 // ======
 using System.Collections.Generic;
 
-namespace Tbasic.Operators
+namespace Tbasic.Types
 {
     internal struct BinOpNodePair
     {

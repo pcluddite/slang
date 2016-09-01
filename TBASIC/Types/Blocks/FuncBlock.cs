@@ -4,13 +4,11 @@
 //
 // ======
 using System;
-using System.Collections.Generic;
 using Tbasic.Components;
-using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
 
-namespace Tbasic
+namespace Tbasic.Types
 {
     internal class FuncBlock : CodeBlock
     {

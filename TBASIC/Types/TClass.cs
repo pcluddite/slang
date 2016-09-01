@@ -6,8 +6,9 @@
 using System;
 using System.Collections.Generic;
 using Tbasic.Parsing;
+using Tbasic.Runtime;
 
-namespace Tbasic.Runtime
+namespace Tbasic.Types
 {
     /// <summary>
     /// Represents a tbasic class

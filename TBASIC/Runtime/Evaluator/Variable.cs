@@ -3,10 +3,10 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
-using System;
 using System.Text;
 using Tbasic.Components;
 using Tbasic.Errors;
+using Tbasic.Types;
 
 namespace Tbasic.Runtime
 {

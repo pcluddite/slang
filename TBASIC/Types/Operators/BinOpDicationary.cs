@@ -8,7 +8,7 @@ using System.Globalization;
 using Tbasic.Runtime;
 using Tbasic.Errors;
 
-namespace Tbasic.Operators
+namespace Tbasic.Types
 {
     internal class BinOpDictionary : OperatorDictionary<BinaryOperator>
     {

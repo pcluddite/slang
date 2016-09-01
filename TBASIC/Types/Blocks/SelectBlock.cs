@@ -10,7 +10,7 @@ using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
 
-namespace Tbasic
+namespace Tbasic.Types
 {
     internal class SelectBlock : CodeBlock
     {

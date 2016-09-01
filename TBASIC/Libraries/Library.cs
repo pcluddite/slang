@@ -6,7 +6,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Tbasic.Runtime;
+using Tbasic.Types;
 
 namespace Tbasic.Libraries
 {

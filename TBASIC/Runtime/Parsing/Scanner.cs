@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Tbasic.Components;
-using Tbasic.Operators;
 using Tbasic.Runtime;
+using Tbasic.Types;
 
 namespace Tbasic.Parsing
 {

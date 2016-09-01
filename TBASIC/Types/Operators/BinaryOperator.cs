@@ -4,6 +4,7 @@
 //
 // ======
 using System;
+using Tbasic.Runtime;
 
 namespace Tbasic.Types
 {
@@ -39,10 +40,11 @@ namespace Tbasic.Types
         /// <summary>
         /// A delegate that represents the method which processes the operands
         /// </summary>
+        /// <param name="runtime">the current runtime</param>
         /// <param name="left">the left operand</param>
         /// <param name="right">the right operand</param>
         /// <returns>the result of the operator</returns>
-        public delegate object BinaryOpDelegate(object left, object right);
+        public delegate object BinaryOpDelegate(TBasic runtime, object left, object right);
 
         /// <summary>
         /// Gets which operand should be evaluated

@@ -167,8 +167,9 @@ namespace Tbasic.Parsing
         /// Gets the next unsigned number in the buffer
         /// </summary>
         /// <param name="num"></param>
+        /// <param name="fast">whether or not this is a fast number</param>
         /// <returns></returns>
-        public abstract bool NextUnsignedNumber(out Number num);
+        public abstract bool NextUnsignedNumber(out INumber num, bool fast);
         /// <summary>
         /// Gets the next hexadecimal value in the buffer
         /// </summary>

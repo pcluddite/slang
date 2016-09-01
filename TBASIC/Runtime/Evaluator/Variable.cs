@@ -82,12 +82,12 @@ namespace Tbasic.Runtime
             int[] indices = new int[Indices.Length];
             for (int index = 0; index < indices.Length; ++index) {
                 object o = eval.Evaluate(Indices[index]);
-                Number? num = Number.AsNumber(o, Runtime.Options);
+                INumber num = Number.AsNumber(o, Runtime.Options);
                 if (num == null) {
                     throw ThrowHelper.InvalidTypeInExpression(o.GetType().Name, typeof(Number).Name);
                 }
                 else {
-                    indices[index] = (int)num; // this will fail if there's a fractional part
+                    indices[index] = num.ForceToInt(); // this will fail if there's a fractional part
                 }
             }
             return indices;

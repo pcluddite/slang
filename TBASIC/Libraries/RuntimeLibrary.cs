@@ -55,9 +55,9 @@ namespace Tbasic.Libraries
                 if (bool.TryParse(stackdat.GetAt<string>(1), out b)) {
                     return b;
                 }
-                Number n;
-                if (Number.TryParse(stackdat.GetAt<string>(1), out n)) {
-                    return (n != 0); // non-zero is true, zero is false
+                INumber n;
+                if (Number.TryParse(stackdat.GetAt<string>(1), out n, stackdat.Runtime.Options)) {
+                    return !n.IsZero(); // non-zero is true, zero is false
                 }
                 throw new InvalidCastException();
             }
@@ -69,20 +69,23 @@ namespace Tbasic.Libraries
         private object CNum(StackData stackdat)
         {
             stackdat.AssertCount(2);
+            INumber n;
             try {
-                Number n;
-                if (Number.TryParse(stackdat.GetAt<string>(1), out n)) {
+                if (Number.TryParse(stackdat.GetAt<string>(1), out n, stackdat.Runtime.Options)) {
                     return n;
                 }
                 bool b;
                 if (bool.TryParse(stackdat.GetAt<string>(1), out b)) {
                     return b ? 1 : 0;
                 }
+            }
+            catch(InvalidCastException) {
+            }
+            n = Number.AsNumber(stackdat.GetAt(1), stackdat.Runtime.Options);
+            if (n == null) {
                 throw new InvalidCastException();
             }
-            catch (InvalidCastException) {
-                return Number.Convert(stackdat.GetAt(1));
-            }
+            return n;
         }
 
         private object SizeOf(StackData stackdat)
@@ -96,7 +99,7 @@ namespace Tbasic.Libraries
                 return obj.ToString().Length;
             }
             else if (obj is Number) {
-                return Number.SIZE;
+                return Number.GetSize(stackdat.Runtime.Options);
             }
             else if (obj is bool) {
                 return sizeof(bool);
@@ -121,7 +124,7 @@ namespace Tbasic.Libraries
         private object IsNum(StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return Number.IsNumber(stackdat.GetAt(1), stackdat.Runtime.Options);
+            return Number.AsNumber(stackdat.GetAt(1), stackdat.Runtime.Options) != null;
         }
 
         private object IsString(StackData stackdat)

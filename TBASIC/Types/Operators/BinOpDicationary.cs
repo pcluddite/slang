@@ -59,7 +59,7 @@ namespace Tbasic.Types
             return operators[strOp].Precedence;
         }
 
-        private static object Dot(object left, object right)
+        private static object Dot(TBasic runtime, object left, object right)
         {
             if (left == null || right == null) {
                 throw new UndefinedObjectException("The dot operator does not accept null operands");
@@ -80,32 +80,28 @@ namespace Tbasic.Types
             }
         }
 
-        private static object Multiply(object left, object right)
+        private static object Multiply(TBasic runtime, object left, object right)
         {
-            return Number.Convert(left) *
-                   Number.Convert(right);
+            return Number.Convert(left, runtime.Options).Multiply(Number.Convert(right, runtime.Options));
         }
 
-        private static object Divide(object left, object right)
+        private static object Divide(TBasic runtime, object left, object right)
         {
-            return Number.Convert(left) /
-                   Number.Convert(right);
+            return Number.Convert(left, runtime.Options).Divide(Number.Convert(right, runtime.Options));
         }
 
-        private static object Modulo(object left, object right)
+        private static object Modulo(TBasic runtime, object left, object right)
         {
-            return Convert.ToInt64(left, CultureInfo.CurrentCulture) %
-                   Convert.ToInt64(right, CultureInfo.CurrentCulture);
+            return Number.Convert(left, runtime.Options).Mod(Number.Convert(right, runtime.Options));
         }
 
-        private static object Add(object left, object right)
+        private static object Add(TBasic runtime, object left, object right)
         {
             string str1 = left as string,
                    str2 = right as string;
             if (str1 != null || str2 != null)
                 return StringAdd(left, right, str1, str2);
-            return Number.Convert(left) +
-                   Number.Convert(right);
+            return Number.Convert(left, runtime.Options).Add(Number.Convert(right, runtime.Options));
         }
 
         private static string StringAdd(object left, object right, string str1, string str2)
@@ -114,42 +110,37 @@ namespace Tbasic.Types
             return str1 + str2;
         }
 
-        private static object Subtract(object left, object right)
+        private static object Subtract(TBasic runtime, object left, object right)
         {
-            return Number.Convert(left) -
-                   Number.Convert(right);
+            return Number.Convert(left, runtime.Options).Subtract(Number.Convert(right, runtime.Options));
         }
 
-        private static object LessThan(object left, object right)
+        private static object LessThan(TBasic runtime, object left, object right)
         {
-            return Number.Convert(left) <
-                   Number.Convert(right);
+            return Number.Convert(left, runtime.Options).LessThan(Number.Convert(right, runtime.Options));
         }
 
-        private static object LessThanOrEqual(object left, object right)
+        private static object LessThanOrEqual(TBasic runtime, object left, object right)
         {
-            return Number.Convert(left) <=
-                   Number.Convert(right);
+            return Number.Convert(left, runtime.Options).LessThanOrEqualTo(Number.Convert(right, runtime.Options));
         }
 
-        private static object GreaterThan(object left, object right)
+        private static object GreaterThan(TBasic runtime, object left, object right)
         {
-            return Number.Convert(left) >
-                   Number.Convert(right);
+            return Number.Convert(left, runtime.Options).GreaterThan(Number.Convert(right, runtime.Options));
         }
 
-        private static object GreaterThanOrEqual(object left, object right)
+        private static object GreaterThanOrEqual(TBasic runtime, object left, object right)
         {
-            return Number.Convert(left) >=
-                   Number.Convert(right);
+            return Number.Convert(left, runtime.Options).GreaterThanOrEqualTo(Number.Convert(right, runtime.Options));
         }
 
-        private static object EqualTo(object left, object right)
+        private static object EqualTo(TBasic runtime, object left, object right)
         {
-            return BoolEqualTo(left, right);
+            return BoolEqualTo(runtime, left, right);
         }
 
-        private static bool BoolEqualTo(object left, object right) // separate method so that it won't be boxed and unboxed unnecessarily 8/8/16
+        private static bool BoolEqualTo(TBasic runtime, object left, object right) // separate method so that it won't be boxed and unboxed unnecessarily 8/8/16
         {
             if (left == right)
                 return true;
@@ -168,36 +159,36 @@ namespace Tbasic.Types
                 str2 = ExpressionEvaluator.GetStringRepresentation(right);
         }
 
-        private static object SortaEquals(object left, object right)
+        private static object SortaEquals(TBasic runtime, object left, object right)
         {
             if (left == null ^ right == null) // exclusive or
                 return false;
             if (left.GetType() == right.GetType())
-                return EqualTo(left, right);
+                return EqualTo(runtime, left, right);
 
             string str_left = left as string;
             if (str_left != null)
-                return StrSortaEqualsObj(str_left, right);
+                return StrSortaEqualsObj(str_left, right, runtime.Options);
             string str_right = right as string;
             if (str_right != null)
-                return StrSortaEqualsObj(str_right, left);
+                return StrSortaEqualsObj(str_right, left, runtime.Options);
 
             return false;
         }
 
         private const ExecuterOption SortaEqualsOptions = ExecuterOption.None;
 
-        private static bool StrSortaEqualsObj(string str_left, object right)
+        private static bool StrSortaEqualsObj(string str_left, object right, ExecuterOption opts)
         {
-            Number? n_right = Number.AsNumber(right, SortaEqualsOptions);
+            INumber n_right = Number.AsNumber(right, SortaEqualsOptions);
             if (n_right != null) {
-                Number n_left;
-                if (Number.TryParse(str_left, out n_left)) {
-                    return n_left == n_right.Value;
+                INumber n_left;
+                if (Number.TryParse(str_left, out n_left, opts)) {
+                    return n_left.Equals(n_right);
                 }
                 bool b_left;
                 if (bool.TryParse(str_left, out b_left)) {
-                    return (n_right != 0) == b_left;
+                    return !n_right.IsZero() == b_left;
                 }
             }
             bool b_right;
@@ -206,17 +197,17 @@ namespace Tbasic.Types
                 if (bool.TryParse(str_left, out b_left)) {
                     return b_left == b_right;
                 }
-                Number n_left;
-                if (Number.TryParse(str_left, out n_left)) {
-                    return (n_left != 0) == b_right;
+                INumber n_left;
+                if (Number.TryParse(str_left, out n_left, opts)) {
+                    return !n_right.IsZero() == b_right;
                 }
             }
             return false;
         }
 
-        private static object NotEqualTo(object left, object right)
+        private static object NotEqualTo(TBasic runtime, object left, object right)
         {
-            return !BoolEqualTo(left, right);
+            return !BoolEqualTo(runtime, left, right);
         }
 
         private static bool StrNotEqualTo(object left, object right, string str1, string str2)
@@ -225,37 +216,37 @@ namespace Tbasic.Types
             return str1 != str2;
         }
 
-        private static object ShiftLeft(object left, object right)
+        private static object ShiftLeft(TBasic runtime, object left, object right)
         {
             return Convert.ToInt64(left, CultureInfo.CurrentCulture) <<
                    Convert.ToInt32(right, CultureInfo.CurrentCulture);
         }
 
-        private static object ShiftRight(object left, object right)
+        private static object ShiftRight(TBasic runtime, object left, object right)
         {
             return Convert.ToInt64(left, CultureInfo.CurrentCulture) >>
                    Convert.ToInt32(right, CultureInfo.CurrentCulture);
         }
 
-        private static object BitAnd(object left, object right)
+        private static object BitAnd(TBasic runtime, object left, object right)
         {
             return Convert.ToUInt64(left, CultureInfo.CurrentCulture) &
                    Convert.ToUInt64(right, CultureInfo.CurrentCulture);
         }
 
-        private static object BitXor(object left, object right)
+        private static object BitXor(TBasic runtime, object left, object right)
         {
             return Convert.ToUInt64(left, CultureInfo.CurrentCulture) ^
                    Convert.ToUInt64(right, CultureInfo.CurrentCulture);
         }
 
-        private static object BitOr(object left, object right)
+        private static object BitOr(TBasic runtime, object left, object right)
         {
             return Convert.ToUInt64(left, CultureInfo.CurrentCulture) |
                    Convert.ToUInt64(right, CultureInfo.CurrentCulture);
         }
 
-        private static object NotImplemented(object left, object right)
+        private static object NotImplemented(TBasic runtime, object left, object right)
         {
             throw new NotImplementedException();
         }

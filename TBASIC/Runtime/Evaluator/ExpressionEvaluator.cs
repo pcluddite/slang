@@ -148,8 +148,8 @@ namespace Tbasic.Runtime
             }
 
             // check numeric
-            Number num;
-            if (scanner.NextUnsignedNumber(out num)) {
+            INumber num;
+            if (scanner.NextUnsignedNumber(out num, !Runtime.IsEnforced(ExecuterOption.PreciseNumbers))) {
                 return AddObjectToExprList(num, startIndex, scanner);
             }
 
@@ -226,6 +226,7 @@ namespace Tbasic.Runtime
             BinOpNodePair nodePair;
             while (opqueue.Dequeue(out nodePair)) {
                 nodePair.Node.Value = PerformBinaryOp(
+                    Runtime,
                     nodePair.Operator,
                     nodePair.Node.Previous?.Value,
                     nodePair.Node.Next?.Value
@@ -277,13 +278,9 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
-        /// This routine will actually execute an operation and return its value
+        /// Performs a binary operation
         /// </summary>
-        /// <param name="op">Operator Information</param>
-        /// <param name="left">left operand</param>
-        /// <param name="right">right operand</param>
-        /// <returns>v1 (op) v2</returns>
-        public static object PerformBinaryOp(BinaryOperator op, object left, object right)
+        public static object PerformBinaryOp(TBasic runtime, BinaryOperator op, object left, object right)
         {
             if (op.EvaulatedOperand.HasFlag(BinaryOperator.OperandPosition.Left)) {
                 IExpressionEvaluator tv = left as IExpressionEvaluator;
@@ -327,7 +324,7 @@ namespace Tbasic.Runtime
                         right = tv.Evaluate();
                 }
                 
-                return op.ExecuteOperator(left, right);
+                return op.ExecuteOperator(runtime, left, right);
             }
             catch (Exception ex) when (ex is InvalidCastException || ex is FormatException || ex is ArgumentException || ex is OverflowException) {
                 throw new FormatException(string.Format(
@@ -416,9 +413,9 @@ namespace Tbasic.Runtime
             if (_oObj is bool)
                 return _oObj;
 
-            Number? _nObj = Number.AsNumber(_oObj, opts);
+            INumber _nObj = Number.AsNumber(_oObj, opts);
             if (_nObj != null) {
-                return _nObj.Value;
+                return _nObj.ToPrimitive();
             }
             
             IntPtr? _pObj = _oObj as IntPtr?;

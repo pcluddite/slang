@@ -19,11 +19,11 @@ namespace Tbasic.Types
     {
 <# BuildAll(); #>
 
-        internal static object ConvertFromString(string str)
+        internal static object ConvertFromString(string str, bool fast)
         {
             // now we've just got to parse the supported types until we find a match...
-            Number n;
-            if (Number.TryParse(str, out n))
+            INumber n;
+            if (Number.TryParse(str, out n, fast ? ExecuterOption.None : ExecuterOption.PreciseNumbers))
                 return n;
             bool b;
             if (bool.TryParse(str, out b))
@@ -116,13 +116,13 @@ namespace Tbasic.Types
     {
         #>
 
-        private static bool TryConvertNonStrict<#= genericParam #>(object obj, <#= extraParam #> out <#= typename #> result, bool parseStrings = true)
+        private static bool TryConvertNonStrict<#= genericParam #>(object obj, <#= extraParam #> out <#= typename #> result, bool parseStrings = true, bool fastMath = true)
         {
             result = default(<#= typename #>);
             if (parseStrings) {
                 string str = obj as string; // maybe we can convert it from a string?
                 if (str != null) {
-                    obj = ConvertFromString(str);
+                    obj = ConvertFromString(str, fastMath);
                     if (obj == null)
                         return false;
                     return TryConvert(obj, out result, strict: false, parseStrings: false); // it's a good old fashion type now. try again.
@@ -135,9 +135,9 @@ namespace Tbasic.Types
                 }
                 catch(InvalidCastException) {
                     if (<#= getType #>.IsEnum) {
-                        Number? n = obj as Number?;
+                        INumber n = obj as INumber;
                         if (n != null) {
-                            return TryConvert((int)n, out result, strict: true, parseStrings: false); // if we don't turn on strict, we'll have infinite recursion 8/22/16
+                            return TryConvert(n.ForceToInt(), out result, strict: true, parseStrings: false); // if we don't turn on strict, we'll have infinite recursion 8/22/16
                         }
                     }
                     return false;

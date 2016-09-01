@@ -22,11 +22,11 @@ namespace Tbasic.Parsing
             InternalBuffer = buffer;
         }
 
-        public override bool NextUnsignedNumber(out Number num)
+        public override bool NextUnsignedNumber(out INumber num, bool fast)
         {
             int originalPos = IntPosition;
             try {
-                num = default(Number);
+                num = default(INumber);
                 if (EndOfStream)
                     return false;
                 int endPos = FindConsecutiveDigits(InternalBuffer, IntPosition);
@@ -45,7 +45,7 @@ namespace Tbasic.Parsing
                 else {
                     return false;
                 }
-                num = Number.Parse(InternalBuffer.Substring(IntPosition, endPos - IntPosition));
+                num = Number.Parse(InternalBuffer.Substring(IntPosition, endPos - IntPosition), fast);
                 IntPosition = endPos;
                 return true;
             }

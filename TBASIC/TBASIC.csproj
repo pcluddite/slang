@@ -61,6 +61,13 @@
     <Compile Include="Libraries\ArrayLibrary.cs" />
     <Compile Include="Libraries\StringLibrary.cs" />
     <Compile Include="Libraries\SystemLibrary.cs" />
+    <Compile Include="Types\INumber.cs" />
+    <Compile Include="Types\Number.cs" />
+    <Compile Include="Types\NumberTypes.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NumberTypes.tt</DependentUpon>
+    </Compile>
     <Compile Include="Types\Operators\BinaryOperator.cs" />
     <Compile Include="Types\Operators\BinOpDicationary.cs" />
     <Compile Include="Types\Operators\BinOpNodePair.cs" />
@@ -125,7 +132,6 @@
     </Compile>
     <Compile Include="Errors\LineException.cs" />
     <Compile Include="Types\CallData.cs" />
-    <Compile Include="Types\Number.cs" />
     <Compile Include="Types\TClass.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +150,10 @@
     <Content Include="Runtime\ObjectContext.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ObjectContext.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Types\NumberTypes.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>NumberTypes.cs</LastGenOutput>
     </Content>
     <Content Include="Types\TypeConvert.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

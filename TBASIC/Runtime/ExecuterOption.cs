@@ -32,6 +32,10 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Nulls should implicitly be converted to zero (this does nothing if Strict is set)
         /// </summary>
-        NullIsZero = 0x08
+        NullIsZero = 0x08,
+        /// <summary>
+        /// Whether or not numbers should be stored using binary or decimal floating point
+        /// </summary>
+        PreciseNumbers = 0x16
     }
 }

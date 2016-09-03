@@ -60,9 +60,9 @@
     <Compile Include="Libraries\ArrayLibrary.cs" />
     <Compile Include="Libraries\StringLibrary.cs" />
     <Compile Include="Libraries\SystemLibrary.cs" />
-    <Compile Include="Runtime\Parsing\IScanner.cs" />
-    <Compile Include="Runtime\Parsing\Scanners.cs" />
-    <Compile Include="Runtime\Parsing\StringSegment.cs" />
+    <Compile Include="Parsing\IScanner.cs" />
+    <Compile Include="Parsing\Scanners.cs" />
+    <Compile Include="Parsing\StringSegment.cs" />
     <Compile Include="Types\Operators\BinaryOperator.cs" />
     <Compile Include="Types\Operators\BinOpDicationary.cs" />
     <Compile Include="Types\Operators\BinOpNodePair.cs" />
@@ -82,14 +82,13 @@
       <DependentUpon>TypeConvert.tt</DependentUpon>
     </Compile>
     <Compile Include="Runtime\Evaluator\Statement.cs" />
-    <Compile Include="Runtime\Parsing\DefaultScanner.GroupParser.cs" />
+    <Compile Include="Parsing\DefaultScanner.GroupParser.cs" />
     <Compile Include="Runtime\Evaluator\ExpressionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\BinaryOpQueue.cs" />
     <Compile Include="Runtime\Evaluator\Function.cs" />
     <Compile Include="Runtime\Evaluator\IExpressionEvaluator.cs" />
-    <Compile Include="Runtime\Parsing\LineCollection.cs" />
-    <Compile Include="Runtime\Parsing\DefaultScanner.cs" />
-    <Compile Include="Runtime\Parsing\AbstractScanner.cs" />
+    <Compile Include="Parsing\LineCollection.cs" />
+    <Compile Include="Parsing\DefaultScanner.cs" />
     <Compile Include="Runtime\Preprocessor.cs" />
     <Compile Include="Runtime\ObjectContext.cs" />
     <Compile Include="Runtime\Evaluator\Variable.cs" />
@@ -111,7 +110,7 @@
     <Compile Include="Types\Blocks\WhileBlock.cs" />
     <Compile Include="Types\Blocks\IfBlock.cs" />
     <Compile Include="Types\Blocks\CodeBlock.cs" />
-    <Compile Include="Runtime\Parsing\Line.cs" />
+    <Compile Include="Parsing\Line.cs" />
     <Compile Include="Components\ImageCompression.cs" />
     <Compile Include="Components\Win32\UnmanagedTypes.cs" />
     <Compile Include="Components\Win32\User32.cs" />

@@ -121,7 +121,7 @@ namespace Tbasic.Libraries
             scanner.SkipWhiteSpace();
 
             Variable v;
-            if (!AbstractScanner.NextVariable(scanner, stackdat.Runtime, out v))
+            if (!DefaultScanner.NextVariable(scanner, stackdat.Runtime, out v))
                 throw ThrowHelper.InvalidVariableName();
 
             string name = v.Name.ToString();
@@ -201,7 +201,7 @@ namespace Tbasic.Libraries
             scanner.Position += stackdat.Name.Length;
 
             Variable v;
-            if (!AbstractScanner.NextVariable(scanner, stackdat.Runtime, out v))
+            if (!DefaultScanner.NextVariable(scanner, stackdat.Runtime, out v))
                 throw ThrowHelper.InvalidVariableName();
             
             if (!scanner.Next("="))

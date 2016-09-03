@@ -119,7 +119,7 @@ namespace Tbasic.Runtime
 
             // check function
             Function func;
-            if (AbstractScanner.NextFunctionInternal(scanner, Runtime, out func)) {
+            if (DefaultScanner.NextFunctionInternal(scanner, Runtime, out func)) {
                 return AddObjectToExprList(func, startIndex, scanner);
             }
 
@@ -130,7 +130,7 @@ namespace Tbasic.Runtime
 
             // check variable
             Variable variable;
-            if (AbstractScanner.NextVariable(scanner, Runtime, out variable)) {
+            if (DefaultScanner.NextVariable(scanner, Runtime, out variable)) {
                 return AddObjectToExprList(variable, startIndex, scanner);
             }
 

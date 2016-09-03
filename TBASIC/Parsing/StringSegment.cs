@@ -58,7 +58,7 @@ namespace Tbasic.Components
         /// Constructs a new string segment with a given string
         /// </summary>
         /// <param name="fullStr">the string for this segment</param>
-        public StringSegment(string fullStr)
+        private StringSegment(string fullStr)
             : this(fullStr, 0)
         {
         }
@@ -68,7 +68,7 @@ namespace Tbasic.Components
         /// </summary>
         /// <param name="fullStr">the entire string</param>
         /// <param name="offset">the index at which to start the segment</param>
-        public StringSegment(string fullStr, int offset)
+        private StringSegment(string fullStr, int offset)
             : this(fullStr, offset, fullStr.Length - offset)
         {
         }
@@ -79,13 +79,20 @@ namespace Tbasic.Components
         /// <param name="fullStr">the entire string</param>
         /// <param name="offset">the index at which to start the segment</param>
         /// <param name="count">the number of characters to include in this segment</param>
-        public StringSegment(string fullStr, int offset, int count)
+        private StringSegment(string fullStr, int offset, int count)
         {
-            if (count > fullStr.Length - offset)
-                throw new ArgumentOutOfRangeException(nameof(count));
             full = fullStr;
             this.offset = offset;
             len = count;
+        }
+
+        public static IEnumerable<char> Create(string fullStr, int offset, int count)
+        {
+            if (count > fullStr.Length - offset)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (offset == fullStr.Length - 1)
+                return string.Empty;
+            return new StringSegment(fullStr, offset, count);
         }
 
         /// <summary>

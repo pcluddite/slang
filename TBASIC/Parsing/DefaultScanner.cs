@@ -15,12 +15,131 @@ namespace Tbasic.Parsing
     /// <summary>
     /// The default implementation of Scanner
     /// </summary>
-    internal partial class DefaultScanner : AbstractScanner
+    internal partial class DefaultScanner : IScanner
     {
         protected static readonly Regex rxNumeric = new Regex(@"^((?:[0-9]+)?(?:\.[0-9]+)?(?:[eE]-?[0-9]+)?)", RegexOptions.Compiled);
         protected static readonly Regex rxHex = new Regex(@"^(0x([0-9a-fA-F]+))", RegexOptions.Compiled);
-        protected static readonly Regex rxId = new Regex(@"^((_|[a-zA-Z])\w+)", RegexOptions.Compiled);
-        
+        protected static readonly Regex rxId = new Regex(@"^((_|[a-zA-Z])\w+)", RegexOptions.Compiled); protected Tuple<int, string> TokenBuffer = null;
+
+        /// <summary>
+        /// The internal buffer for this scanner
+        /// </summary>
+        protected string InternalBuffer;
+
+        /// <summary>
+        /// Gets a value indicating whether the end of the stream has been reached
+        /// </summary>
+        public bool EndOfStream
+        {
+            get {
+                return Position >= InternalBuffer.Length;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the current position of the stream as an integer
+        /// </summary>
+        public int Position { get; set; }
+
+        /// <summary>
+        /// Gets the length of this stream as an integer
+        /// </summary>
+        public int Length
+        {
+            get {
+                return InternalBuffer.Length;
+            }
+        }
+
+        public virtual int Current
+        {
+            get { return CharAt(Position); }
+        }
+
+        protected virtual int CharAt(int pos)
+        {
+            if (EndOfStream)
+                return -1;
+            return InternalBuffer[pos];
+        }
+
+        /// <summary>
+        /// Skips all leading whitespace
+        /// </summary>
+        public virtual void SkipWhiteSpace()
+        {
+            if (EndOfStream)
+                return;
+            Position = FindNonWhiteSpace();
+        }
+
+        protected virtual int FindNonWhiteSpace()
+        {
+            int pos = Position;
+            while (pos < Length && char.IsWhiteSpace(InternalBuffer[pos])) {
+                ++pos;
+            }
+            return pos;
+        }
+
+        /// <summary>
+        /// Gets the next token from the buffer. If the next token is not buffered, then it will be.
+        /// </summary>
+        protected string BuffNextWord()
+        {
+            int start = FindNonWhiteSpace(),
+                pos = start;
+            if (TokenBuffer == null || TokenBuffer.Item1 != pos) {
+                while (pos < Length && !char.IsWhiteSpace(InternalBuffer[pos])) {
+                    ++pos;
+                }
+                if (pos - start > 0) {
+                    TokenBuffer = new Tuple<int, string>(start, InternalBuffer.Substring(start, pos - start));
+                }
+                else {
+                    return null;
+                }
+            }
+            return TokenBuffer.Item2;
+        }
+
+        /// <summary>
+        /// Advances the scanner to the end of the next token
+        /// </summary>
+        protected void AdvanceScanner(string matchedToken)
+        {
+            AdvanceScanner(matchedToken.Length);
+        }
+
+        /// <summary>
+        /// Advances the scanner to the end of the next token
+        /// </summary>
+        protected void AdvanceScanner(int tokenLen)
+        {
+            Position = tokenLen + TokenBuffer.Item1;
+        }
+
+        /// <summary>
+        /// Gets the next token in the buffer
+        /// </summary>
+        public virtual IEnumerable<char> Next()
+        {
+            return NextSegment();
+        }
+
+        /// <summary>
+        /// Gets the next token in the buffer as a IEnumerable&lt;char&gt;
+        /// </summary>
+        /// <returns></returns>
+        public virtual IEnumerable<char> NextSegment()
+        {
+            string word = BuffNextWord();
+            if (word != null) {
+                AdvanceScanner(word);
+            }
+            return word;
+        }
+
         public DefaultScanner(string buffer)
         {
             InternalBuffer = buffer;
@@ -30,7 +149,7 @@ namespace Tbasic.Parsing
         {
         }
 
-        public override bool NextNumber(out Number num)
+        public bool NextNumber(out Number num)
         {
             Match m = rxNumeric.Match(BuffNextWord() ?? string.Empty);
             if (m.Success && Number.TryParse(m.Value, out num)) {
@@ -43,7 +162,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextHexadecimal(out long hex)
+        public bool NextHexadecimal(out long hex)
         {
             Match m = rxHex.Match(BuffNextWord() ?? string.Empty);
             if (m.Success) {
@@ -57,7 +176,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool Next(string pattern, bool ignoreCase)
+        public bool Next(string pattern, bool ignoreCase)
         {
             string token = BuffNextWord();
             if (!string.IsNullOrEmpty(token) && token.StartsWith(pattern, ignoreCase, CultureInfo.CurrentCulture)) {
@@ -69,7 +188,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextStringOrToken(out IEnumerable<char> token)
+        public bool NextStringOrToken(out IEnumerable<char> token)
         {
             token = null;
             int pos = FindNonWhiteSpace();
@@ -88,7 +207,7 @@ namespace Tbasic.Parsing
             return (sztoken != null);
         }
 
-        public override bool NextString(out string parsed)
+        public bool NextString(out string parsed)
         {
             int pos = FindNonWhiteSpace();
             if (pos >= Length || !IsQuote(InternalBuffer[pos])) {
@@ -100,7 +219,7 @@ namespace Tbasic.Parsing
             return (parsed != null);
         }
 
-        public override bool SkipString()
+        public bool SkipString()
         {
             int pos = FindNonWhiteSpace();
             if (pos >= Length || !IsQuote(InternalBuffer[pos])) {
@@ -122,7 +241,7 @@ namespace Tbasic.Parsing
             return (c == '\"' || c == '\'');
         }
 
-        public override bool NextGroup(out IList<IEnumerable<char>> args)
+        public bool NextGroup(out IList<IEnumerable<char>> args)
         {
             int start = FindNonWhiteSpace();
             int pos = GetGroup(start, out args);
@@ -144,7 +263,7 @@ namespace Tbasic.Parsing
             return pos;
         }
 
-        public override bool SkipGroup()
+        public bool SkipGroup()
         {
             int pos = FindNonWhiteSpace();
             if (pos >= Length || !IsGroupChar(InternalBuffer[pos])) {
@@ -156,7 +275,7 @@ namespace Tbasic.Parsing
             }
         }
         
-        public override bool NextValidIdentifier(out IEnumerable<char> name)
+        public bool NextValidIdentifier(out IEnumerable<char> name)
         {
             Match m = rxId.Match(BuffNextWord() ?? string.Empty);
             if (m.Success) {
@@ -169,7 +288,7 @@ namespace Tbasic.Parsing
             return (name != null);
         }
 
-        public override bool NextFunction(out IEnumerable<char> name, out IList<IEnumerable<char>> args)
+        public bool NextFunction(out IEnumerable<char> name, out IList<IEnumerable<char>> args)
         {
             int start = Position;
             if (NextValidIdentifier(out name) && NextGroup(out args)) {
@@ -182,7 +301,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextVariable(out IEnumerable<char> name, out IList<IEnumerable<char>> indices)
+        public bool NextVariable(out IEnumerable<char> name, out IList<IEnumerable<char>> indices)
         {
             name = null; indices = null;
             string token = BuffNextWord();
@@ -191,7 +310,7 @@ namespace Tbasic.Parsing
             Match m = rxId.Match(token);
             if (m.Success && CharAt(TokenBuffer.Item1 + m.Length) == '$') {
                 name = InternalBuffer.Substring(TokenBuffer.Item1, m.Length + 1);
-                AdvanceScanner(token.Length + 1);
+                AdvanceScanner(m.Length + 1);
                 NextIndices(out indices);
             }
             else if (token[0] == '@') {
@@ -223,7 +342,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextIndices(out IList<IEnumerable<char>> indices)
+        public bool NextIndices(out IList<IEnumerable<char>> indices)
         {
             int pos = Position;
             if (Current == '[' && NextGroup(out indices)) {
@@ -251,7 +370,33 @@ namespace Tbasic.Parsing
             }
         }
 
-        public override bool NextBool(out bool b)
+        internal static bool NextFunctionInternal(IScanner scanner, TBasic exec, out Function func)
+        {
+            IEnumerable<char> name;
+            IList<IEnumerable<char>> args;
+            if (scanner.NextFunction(out name, out args)) {
+                func = new Function(exec, name.ToString(), args);
+            }
+            else {
+                func = null;
+            }
+            return (func != null);
+        }
+
+        internal static bool NextVariable(IScanner scanner, TBasic exec, out Variable variable)
+        {
+            IEnumerable<char> name;
+            IList<IEnumerable<char>> indices;
+            if (scanner.NextVariable(out name, out indices)) {
+                variable = new Variable(name.ToString(), indices, exec);
+            }
+            else {
+                variable = null;
+            }
+            return (variable != null);
+        }
+
+        public bool NextBool(out bool b)
         {
             string token = BuffNextWord();
             if (string.IsNullOrEmpty(token))
@@ -269,7 +414,7 @@ namespace Tbasic.Parsing
             return b = false;
         }
 
-        public override bool NextBinaryOp(ObjectContext context, out BinaryOperator foundOp)
+        public bool NextBinaryOp(ObjectContext context, out BinaryOperator foundOp)
         {
             foundOp = default(BinaryOperator);
             string token = BuffNextWord();
@@ -283,7 +428,7 @@ namespace Tbasic.Parsing
             return false;
         }
 
-        public override bool NextUnaryOp(ObjectContext context, object last, out UnaryOperator foundOp)
+        public bool NextUnaryOp(ObjectContext context, object last, out UnaryOperator foundOp)
         {
             foundOp = default(UnaryOperator);
             if (!(last == null || last is BinaryOperator)) // unary operators can really only come after a binary operator or the beginning of the expression
@@ -315,9 +460,33 @@ namespace Tbasic.Parsing
             return foundStr != null;
         }
         
-        public override IScanner Scan(IEnumerable<char> buffer)
+        public virtual IScanner Scan(IEnumerable<char> buffer)
         {
             return new DefaultScanner(buffer.ToString());
+        }
+
+        public virtual IEnumerable<char> Range(int start, int count)
+        {
+            return InternalBuffer.Substring(start, count);
+        }
+
+        public virtual IEnumerable<char> Range(int start)
+        {
+            return InternalBuffer.Substring(start);
+        }
+
+        public void Skip(int count)
+        {
+            Position += count;
+        }
+
+        /// <summary>
+        /// Converts this scanner's buffer to a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return InternalBuffer.ToString();
         }
     }
 }

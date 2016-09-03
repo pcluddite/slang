@@ -31,9 +31,9 @@ namespace Tbasic.Runtime
 
         #region Properties
         /// <summary>
-        /// Gets or sets the scanner creation delegate
+        /// Gets or sets the scanner
         /// </summary>
-        public CreateScannerDelegate ScannerDelegate { get; set; } = Scanner.Default;
+        public IScanner Scanner { get; set; } = Scanners.Default;
 
         /// <summary>
         /// The global context for this object
@@ -185,7 +185,7 @@ namespace Tbasic.Runtime
             }
             else {
                 runtime = new StackData(exec);
-                ExpressionEvaluator eval = new ExpressionEvaluator(new StringSegment(codeLine.Text), exec);
+                ExpressionEvaluator eval = new ExpressionEvaluator(codeLine.Text, exec);
                 exec.Context.PersistReturns(runtime);
                 runtime.Data = eval.Evaluate();
             }

@@ -103,13 +103,13 @@ namespace Tbasic.Runtime
 
         private StackData GetPrototype(Line header)
         {
-            Scanner scanner = runtime.ScannerDelegate(new StringSegment(header.Text));
+            IScanner scanner = runtime.Scanner.Scan(header.Text);
             scanner.Next("FUNCTION");
             scanner.SkipWhiteSpace();
-            StringSegment funcname;
+            IEnumerable<char> funcname;
             if (!scanner.NextValidIdentifier(out funcname))
                 throw new InvalidDefinitionException("Name contains invalid characters or was not present", "function");
-            IList<StringSegment> args;
+            IList<IEnumerable<char>> args;
             scanner.NextGroup(out args);
             StackData stackdat = new StackData(null, args.TB_ToStrings());
             stackdat.Name = funcname.ToString();
@@ -122,10 +122,10 @@ namespace Tbasic.Runtime
         private int ProcessClassBlock(TextReader reader, Line current, out TClass tclass)
         {
             int nline = current.LineNumber + 1;
-            Scanner scanner = runtime.ScannerDelegate(new StringSegment(current.Text));
+            IScanner scanner = runtime.Scanner.Scan(current.Text);
             scanner.Next("CLASS");
             scanner.SkipWhiteSpace();
-            StringSegment classname;
+            IEnumerable<char> classname;
             if (!scanner.NextValidIdentifier(out classname))
                 throw new InvalidDefinitionException("Name contains invalid characters or was not present", "class");
 
@@ -150,7 +150,7 @@ namespace Tbasic.Runtime
                     tclass.SetFunction("<>ctor", ctor.CreateDelegate());
                 }
                 else {
-                    throw new UnexpectedTokenExceptiopn(current.Text);
+                    throw new InvalidTokenExceptiopn(current.Text);
                 }
             }
 

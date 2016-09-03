@@ -26,11 +26,11 @@ namespace Tbasic.Types
 
         public override void Execute(TBasic runtime)
         {
-            Statement line = new Statement(runtime.ScannerDelegate, Header.Text);
+            Statement line = new Statement(runtime.Scanner.Scan(Header.Text));
             if (line.Count < 2) {
                 throw ThrowHelper.NoCondition();
             }
-            object obj = ExpressionEvaluator.Evaluate(new StringSegment(Header.Text, Header.Name.Length), runtime);
+            object obj = ExpressionEvaluator.Evaluate(Header.Text.Substring(Header.Name.Length), runtime);
             CodeBlock _default;
             var dict = ToDictionary(runtime, out _default);
             if (obj != null && dict.ContainsKey(obj)) {
@@ -85,20 +85,20 @@ namespace Tbasic.Types
                 }
             }
 
-            public StringSegment Condition { get; private set; }
+            public string Condition { get; private set; }
 
             private CaseBlock(TBasic runtime, LineCollection body)
             {
                 Header = body[0];
-                Statement parms = new Statement(runtime.ScannerDelegate, Header.Text);
+                Statement parms = new Statement(runtime.Scanner.Scan(Header.Text));
                 if (parms[0].EqualsIgnoreCase("DEFAULT")) {
-                    Condition = new StringSegment("default");
+                    Condition = "default";
                 }
                 else if (parms.Count < 2) {
                     throw ThrowHelper.NoCondition();
                 }
                 else {
-                    Condition = new StringSegment(Header.Text, Header.Name.Length);
+                    Condition = Header.Text.Substring(Header.Name.Length);
                 }
                 body.RemoveAt(0);
                 Body = body;

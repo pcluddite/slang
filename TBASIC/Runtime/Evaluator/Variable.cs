@@ -3,8 +3,8 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
+using System.Collections.Generic;
 using System.Text;
-using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Types;
 
@@ -12,26 +12,12 @@ namespace Tbasic.Runtime
 {
     internal class Variable : IExpressionEvaluator
     {
-        private StringSegment _expression = null;
+        private string _name = null;
 
         #region Properties
 
-        public StringSegment[] Indices { get; private set; }
-
-        public bool IsMacro
-        {
-            get {
-                return Name[0] == '@';
-            }
-        }
-
-        public bool IsValid
-        {
-            get {
-                return Name[Name.Length - 1] == '$';
-            }
-        }
-
+        public IList<IEnumerable<char>> Indices { get; private set; }
+        
         public ObjectContext CurrentContext
         {
             get {
@@ -40,38 +26,46 @@ namespace Tbasic.Runtime
         }
 
         public TBasic Runtime { get; set; }
-        public StringSegment Name { get; private set; }
 
-        public StringSegment Expression
+        public IEnumerable<char> Expression
         {
             get {
-                return _expression;
+                return _name;
             }
             set {
-                _expression = value.Trim();
+                _name = value?.ToString();
+            }
+        }
+
+        public string Name
+        {
+            get {
+                return _name;
+            }
+            set {
+                _name = value;
             }
         }
 
         #endregion
 
-        public Variable(StringSegment full, StringSegment name, StringSegment[] indices, TBasic exec)
+        public Variable(string name, IList<IEnumerable<char>> indices, TBasic exec)
         {
             Runtime = exec;
-            _expression = full;
-            Name = name;
+            _name = name;
             Indices = indices;
         }
 
         public override string ToString()
         {
-            return _expression.ToString();
+            return _name.ToString();
         }
 
         public object Evaluate()
         {
-            object obj = CurrentContext.GetVariable(Name.ToString());
+            object obj = CurrentContext.GetVariable(_name);
             if (Indices != null) {
-                obj = CurrentContext.GetArrayAt(Name.ToString(), EvaluateIndices());
+                obj = CurrentContext.GetArrayAt(_name, EvaluateIndices());
             }
             return obj;
         }
@@ -79,7 +73,7 @@ namespace Tbasic.Runtime
         public int[] EvaluateIndices()
         {
             ExpressionEvaluator eval = new ExpressionEvaluator(Runtime);
-            int[] indices = new int[Indices.Length];
+            int[] indices = new int[Indices.Count];
             for (int index = 0; index < indices.Length; ++index) {
                 object o = eval.Evaluate(Indices[index]);
                 Number? num = Number.AsNumber(o, Runtime.Options);

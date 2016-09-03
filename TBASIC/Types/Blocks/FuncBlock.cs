@@ -4,7 +4,7 @@
 //
 // ======
 using System;
-using Tbasic.Components;
+using System.Linq;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
 
@@ -54,7 +54,7 @@ namespace Tbasic.Types
                 stackFrame.AssertCount(2);
             }
             ExpressionEvaluator e = new ExpressionEvaluator(
-                new StringSegment(stackFrame.Text, stackFrame.Name.Length),
+                stackFrame.Text.Substring(stackFrame.Name.Length),
                 stackFrame.Runtime);
             stackFrame.Runtime.RequestBreak();
             return stackFrame.Data = e.Evaluate();

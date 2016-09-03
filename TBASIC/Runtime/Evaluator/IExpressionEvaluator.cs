@@ -3,7 +3,7 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
-using Tbasic.Components;
+using System.Collections.Generic;
 
 namespace Tbasic.Runtime
 {
@@ -12,7 +12,7 @@ namespace Tbasic.Runtime
     /// </summary>
     internal interface IExpressionEvaluator
     {
-        StringSegment Expression { get; set; }
+        IEnumerable<char> Expression { get; set; }
         object Evaluate();
         TBasic Runtime { get; set; }
     }

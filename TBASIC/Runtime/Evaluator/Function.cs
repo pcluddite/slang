@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Types;
+using System.Linq;
 
 namespace Tbasic.Runtime
 {
@@ -18,9 +19,8 @@ namespace Tbasic.Runtime
     {
         #region Private Members
 
-        private StringSegment _expression;
-        private StringSegment _function;
-        private IList<StringSegment> _params;
+        private string _name;
+        private IList<IEnumerable<char>> _params;
 
         #endregion
 
@@ -30,32 +30,16 @@ namespace Tbasic.Runtime
         /// Gets or sets the expression to be evaluated
         /// </summary>
         /// <value></value>
-        public StringSegment Expression
+        public IEnumerable<char> Expression
         {
             get {
-                return _expression;
+                return _name;
             }
             set {
-                _expression = value.Trim();
+                _name = value?.ToString();
             }
         }
-
-        public int LastIndex { get; private set; }
-
-        public StringSegment Name
-        {
-            get {
-                if (StringSegment.IsNullOrEmpty(_function)) {
-                    int index = _expression.IndexOf('(');
-                    if (index < 1) {
-                        throw new FormatException("string is not a function");
-                    }
-                    _function = _expression.Remove(index);
-                }
-                return _function;
-            }
-        }
-
+        
         public ObjectContext CurrentContext { get { return Runtime.Context; } }
 
         public TBasic Runtime { get; set; }
@@ -64,12 +48,11 @@ namespace Tbasic.Runtime
 
         #region Construction
         
-        public Function(StringSegment expr, TBasic runtime, StringSegment name, IList<StringSegment> parameters)
+        public Function(TBasic runtime, string name, IList<IEnumerable<char>> parameters)
         {
             Runtime = runtime;
-            _expression = expr;
+            _name = name;
             _params = parameters;
-            _function = name;
         }
 
         #endregion
@@ -79,7 +62,7 @@ namespace Tbasic.Runtime
         
         public object Evaluate()
         {
-            return ExecuteFunction(_function, _params);
+            return ExecuteFunction(_name, _params);
         }
         
         public override string ToString()
@@ -87,9 +70,8 @@ namespace Tbasic.Runtime
             return Expression.ToString();
         }
         
-        private object ExecuteFunction(StringSegment _name, IList<StringSegment> l_params)
+        private object ExecuteFunction(string name, IList<IEnumerable<char>> l_params)
         {
-            string name = _name.Trim().ToString();
             CallData func;
             if (CurrentContext.TryGetFunction(name, out func)) {
                 StackData stackdat = new StackData(Runtime, l_params.TB_ToStrings());

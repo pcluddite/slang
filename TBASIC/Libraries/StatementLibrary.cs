@@ -5,7 +5,7 @@
 // ======
 using System;
 using System.IO;
-using Tbasic.Components;
+using System.Linq;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
@@ -115,14 +115,13 @@ namespace Tbasic.Libraries
         internal object DIM(StackData stackdat)
         {
             stackdat.AssertAtLeast(2);
-
-            StringSegment text = new StringSegment(stackdat.Text);
-            Scanner scanner = stackdat.Runtime.ScannerDelegate(text);
-            scanner.IntPosition += stackdat.Name.Length;
+            
+            IScanner scanner = stackdat.Runtime.Scanner.Scan(stackdat.Text);
+            scanner.Position += stackdat.Name.Length;
             scanner.SkipWhiteSpace();
 
             Variable v;
-            if (!scanner.NextVariableInternal(stackdat.Runtime, out v))
+            if (!AbstractScanner.NextVariable(scanner, stackdat.Runtime, out v))
                 throw ThrowHelper.InvalidVariableName();
 
             string name = v.Name.ToString();
@@ -132,7 +131,8 @@ namespace Tbasic.Libraries
                     stackdat.Context.SetVariable(name, array_alloc(v.EvaluateIndices(), 0));
                 }
                 else {
-                    if (!scanner.EndOfStream && scanner.Next() == "=") {
+                    scanner.SkipWhiteSpace();
+                    if (!scanner.EndOfStream && scanner.Next("=")) {
                         SetVariable(stackdat, false);
                     }
                     else {
@@ -196,24 +196,18 @@ namespace Tbasic.Libraries
         private object SetVariable(StackData stackdat, bool constant)
         {
             stackdat.AssertAtLeast(2);
-            StringSegment text = new StringSegment(stackdat.Text);
 
-            Scanner scanner = stackdat.Runtime.ScannerDelegate(text);
-            scanner.IntPosition += stackdat.Name.Length;
-            scanner.SkipWhiteSpace();
+            IScanner scanner = stackdat.Runtime.Scanner.Scan(stackdat.Text);
+            scanner.Position += stackdat.Name.Length;
 
             Variable v;
-            if (!scanner.NextVariableInternal(stackdat.Runtime, out v))
+            if (!AbstractScanner.NextVariable(scanner, stackdat.Runtime, out v))
                 throw ThrowHelper.InvalidVariableName();
-
-            if (v.IsMacro)
-                throw ThrowHelper.MacroRedefined();
-
-            scanner.SkipWhiteSpace();
+            
             if (!scanner.Next("="))
                 throw ThrowHelper.InvalidDefinitionOperator();
 
-            ExpressionEvaluator e = new ExpressionEvaluator(text.Subsegment(scanner.IntPosition), stackdat.Runtime);
+            ExpressionEvaluator e = new ExpressionEvaluator(stackdat.Text.Substring(scanner.Position + 1), stackdat.Runtime);
             object data = e.Evaluate();
 
             if (v.Indices == null) {

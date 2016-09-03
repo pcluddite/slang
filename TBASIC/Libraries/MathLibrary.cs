@@ -137,7 +137,7 @@ namespace Tbasic.Libraries
             e.Global.LoadStandardOperators();
             e.Global.AddLibrary(new MathLibrary(e.Global)); // only allow math libs
             e.Global.RemoveFunction("eval"); // that's a no-no
-            return ExpressionEvaluator.Evaluate(new StringSegment(expr), e);
+            return ExpressionEvaluator.Evaluate(expr, e);
         }
     }
 }

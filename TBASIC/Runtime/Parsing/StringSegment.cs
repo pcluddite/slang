@@ -13,7 +13,7 @@ namespace Tbasic.Components
     /// <summary>
     /// This class is used to avoid string copying. It keeps a reference to the original string and accesses only a segment of it. This class is immutable.
     /// </summary>
-    public sealed class StringSegment : IEnumerable<char>, IEquatable<StringSegment>, IEquatable<string>
+    internal sealed class StringSegment : IEnumerable<char>, IEquatable<StringSegment>, IEquatable<string>
     {
         /// <summary>
         /// Represents an empty string

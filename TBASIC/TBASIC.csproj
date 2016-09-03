@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NO_EXCEPT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\tbasic.xml</DocumentationFile>
@@ -46,7 +46,6 @@
     <Compile Include="Components\Extensions.cs" />
     <Compile Include="Components\WinRegistry.cs" />
     <Compile Include="Components\ScreenCapture.cs" />
-    <Compile Include="Components\StringSegment.cs" />
     <Compile Include="Components\StructReference.cs" />
     <Compile Include="Components\Win32\GDI32.cs" />
     <Compile Include="Components\Win32\Impersonate.cs" />
@@ -61,6 +60,9 @@
     <Compile Include="Libraries\ArrayLibrary.cs" />
     <Compile Include="Libraries\StringLibrary.cs" />
     <Compile Include="Libraries\SystemLibrary.cs" />
+    <Compile Include="Runtime\Parsing\IScanner.cs" />
+    <Compile Include="Runtime\Parsing\Scanners.cs" />
+    <Compile Include="Runtime\Parsing\StringSegment.cs" />
     <Compile Include="Types\Operators\BinaryOperator.cs" />
     <Compile Include="Types\Operators\BinOpDicationary.cs" />
     <Compile Include="Types\Operators\BinOpNodePair.cs" />
@@ -87,7 +89,7 @@
     <Compile Include="Runtime\Evaluator\IExpressionEvaluator.cs" />
     <Compile Include="Runtime\Parsing\LineCollection.cs" />
     <Compile Include="Runtime\Parsing\DefaultScanner.cs" />
-    <Compile Include="Runtime\Parsing\Scanner.cs" />
+    <Compile Include="Runtime\Parsing\AbstractScanner.cs" />
     <Compile Include="Runtime\Preprocessor.cs" />
     <Compile Include="Runtime\ObjectContext.cs" />
     <Compile Include="Runtime\Evaluator\Variable.cs" />

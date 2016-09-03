@@ -91,9 +91,9 @@ namespace Tbasic.Types
             }
 
             ExpressionEvaluator eval = new ExpressionEvaluator(
-                new StringSegment(Header.Text,
-                Header.Text.IndexOf(' ') + 1, // Get rid of the IF
-                Header.Text.LastIndexOf(' ') - 2), // Get rid of the THEN
+                Header.Text.TB_Segment(
+                    Header.Text.IndexOf(' ') + 1, // Get rid of the IF
+                    Header.Text.LastIndexOf(' ') - 2), // Get rid of the THEN
                 runtime
             );
 

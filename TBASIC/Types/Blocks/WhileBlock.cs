@@ -3,7 +3,6 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
-using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
@@ -24,13 +23,13 @@ namespace Tbasic.Types
 
         public override void Execute(TBasic runtime)
         {
-            Statement line = new Statement(runtime.ScannerDelegate, Header.Text);
+            Statement line = new Statement(runtime.Scanner.Scan(Header.Text));
 
             if (line.Count < 2) {
                 throw ThrowHelper.NoCondition();
             }
 
-            StringSegment condition = new StringSegment(Header.Text, Header.Text.IndexOf(' '));
+            string condition = Header.Text.Substring(Header.Text.IndexOf(' '));
 
             ExpressionEvaluator eval = new ExpressionEvaluator(condition, runtime);
 

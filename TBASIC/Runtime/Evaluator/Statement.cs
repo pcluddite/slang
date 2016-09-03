@@ -48,27 +48,24 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Constructs and parses a statement
         /// </summary>
-        /// <param name="scannerCreator">the scanner constructor for parsing arguments</param>
-        /// <param name="line"></param>
-        public Statement(CreateScannerDelegate scannerCreator, string line)
+        public Statement(IScanner scanner)
         {
-            ParseArguments(scannerCreator, line);
+            ParseArguments(scanner);
         }
         
-        private void ParseArguments(CreateScannerDelegate CreateScanner, string line)
+        private void ParseArguments(IScanner scanner)
         {
             if (args.Count > 0)
                 args.Clear();
 
-            if (string.IsNullOrEmpty(line))
+            if (scanner.Length == 0)
                 return;
-
-            Scanner scanner = CreateScanner((StringSegment)line);
+            
             scanner.SkipWhiteSpace();
-            Add(scanner.Next());
+            Add(scanner.Next().ToString());
             scanner.SkipWhiteSpace();
 
-            StringSegment arg;
+            IEnumerable<char> arg;
             while(scanner.NextStringOrToken(out arg)) {
                 Add(arg.ToString());
                 scanner.SkipWhiteSpace();

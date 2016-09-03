@@ -20,7 +20,7 @@ namespace Tbasic.Runtime
     internal partial class ExpressionEvaluator : IExpressionEvaluator
     {
         private LinkedList<object> _tokens = new LinkedList<object>();
-        private StringSegment _expression = StringSegment.Empty;
+        private IEnumerable<char> _expression = string.Empty;
         private bool _parsed;
         
         public ExpressionEvaluator(TBasic runtime)
@@ -28,7 +28,7 @@ namespace Tbasic.Runtime
             Runtime = runtime;
         }
         
-        public ExpressionEvaluator(StringSegment expression, TBasic exec)
+        public ExpressionEvaluator(IEnumerable<char> expression, TBasic exec)
         {
             Runtime = exec;
             Expression = expression;
@@ -36,11 +36,11 @@ namespace Tbasic.Runtime
 
         #region Properties
         
-        public StringSegment Expression
+        public IEnumerable<char> Expression
         {
             get { return _expression; }
             set {
-                _expression = value.Trim();
+                _expression = value;
                 _parsed = false;
                 _tokens.Clear();
             }
@@ -70,7 +70,7 @@ namespace Tbasic.Runtime
 
         #endregion
         
-        public object Evaluate(StringSegment expr)
+        public object Evaluate(IEnumerable<char> expr)
         {
             Expression = expr;
             return Evaluate();
@@ -78,11 +78,11 @@ namespace Tbasic.Runtime
 
         public object Evaluate()
         {
-            if (StringSegment.IsNullOrEmpty(Expression)) 
+            if (Expression == null || Expression.ToString() == string.Empty) 
                 return 0;
             
             if (!_parsed) {
-                Scanner scanner = Runtime.ScannerDelegate(_expression);
+                IScanner scanner = Runtime.Scanner.Scan(_expression);
                 while (!scanner.EndOfStream)
                     NextToken(scanner);
                 _parsed = true;
@@ -96,10 +96,9 @@ namespace Tbasic.Runtime
             return Convert.ToBoolean(Evaluate());
         }
         
-        private int NextToken(Scanner scanner)
+        private int NextToken(IScanner scanner)
         {
-            scanner.SkipWhiteSpace();
-            int startIndex = scanner.IntPosition;
+            int startIndex = scanner.Position;
 
             // check group
             if (scanner.Next("(")) {
@@ -120,7 +119,7 @@ namespace Tbasic.Runtime
 
             // check function
             Function func;
-            if (scanner.NextFunctionInternal(Runtime, out func)) {
+            if (AbstractScanner.NextFunctionInternal(scanner, Runtime, out func)) {
                 return AddObjectToExprList(func, startIndex, scanner);
             }
 
@@ -131,7 +130,7 @@ namespace Tbasic.Runtime
 
             // check variable
             Variable variable;
-            if (scanner.NextVariableInternal(Runtime, out variable)) {
+            if (AbstractScanner.NextVariable(scanner, Runtime, out variable)) {
                 return AddObjectToExprList(variable, startIndex, scanner);
             }
 
@@ -149,7 +148,7 @@ namespace Tbasic.Runtime
 
             // check numeric
             Number num;
-            if (scanner.NextUnsignedNumber(out num)) {
+            if (scanner.NextNumber(out num)) {
                 return AddObjectToExprList(num, startIndex, scanner);
             }
 
@@ -162,22 +161,22 @@ namespace Tbasic.Runtime
             // couldn't be parsed
 
             if (RuntimeContext.FindFunctionContext(_expression.ToString()) == null) {
-                throw new ArgumentException("Invalid expression '" + _expression + "'");
+                throw new InvalidTokenExceptiopn(scanner.Next()?.ToString());
             }
             else {
                 throw new FormatException("Poorly formed function call");
             }
         }
 
-        private int AddObjectToExprList(object val, int startIndex, Scanner scanner)
+        private int AddObjectToExprList(object val, int startIndex, IScanner scanner)
         {
             if (Equals(val, "(")) {
-                scanner.IntPosition = startIndex;
+                scanner.Position = startIndex;
                 scanner.SkipWhiteSpace();
                 scanner.SkipGroup();
 
                 ExpressionEvaluator eval = new ExpressionEvaluator(
-                    _expression.Subsegment(startIndex + 1, scanner.IntPosition - startIndex - 2),
+                    scanner.Range(startIndex + 1, scanner.Position - startIndex - 2),
                     Runtime // share the wealth
                 );
                 _tokens.AddLast(eval);
@@ -185,8 +184,8 @@ namespace Tbasic.Runtime
             else {
                 _tokens.AddLast(val);
             }
-
-            return scanner.IntPosition;
+            scanner.SkipWhiteSpace();
+            return scanner.Position;
         }
         
         private object EvaluateList()
@@ -254,7 +253,7 @@ namespace Tbasic.Runtime
         /// <param name="expressionString">expression to be evaluated</param>
         /// <param name="exec">the current execution</param>
         /// <returns></returns>
-        public static object Evaluate(StringSegment expressionString, TBasic exec)
+        public static object Evaluate(IEnumerable<char> expressionString, TBasic exec)
         {
             ExpressionEvaluator expression = new ExpressionEvaluator(expressionString, exec);
             return expression.Evaluate();

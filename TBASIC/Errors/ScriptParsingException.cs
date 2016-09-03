@@ -65,15 +65,15 @@ namespace Tbasic.Errors
     /// <summary>
     /// Occours when an invalid token was parsed
     /// </summary>
-    public class UnexpectedTokenExceptiopn : ScriptParsingException
+    public class InvalidTokenExceptiopn : ScriptParsingException
     {
         /// <summary>
         /// Initializes a new exception
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="prependGeneric"></param>
-        public UnexpectedTokenExceptiopn(string msg, bool prependGeneric = true)
-            : base(prependGeneric ? ("Unexpected token in expression: " + msg) : msg)
+        public InvalidTokenExceptiopn(string msg, bool prependGeneric = true)
+            : base(prependGeneric ? ($"Unexpected token in expression [ {msg} ]") : msg)
         {
         }
     }
@@ -81,7 +81,7 @@ namespace Tbasic.Errors
     /// <summary>
     /// Occours when an invalid or unexpected operator was parsed
     /// </summary>
-    public class InvalidOperatorException : UnexpectedTokenExceptiopn
+    public class InvalidOperatorException : InvalidTokenExceptiopn
     {
         /// <summary>
         /// Initializes a new exception

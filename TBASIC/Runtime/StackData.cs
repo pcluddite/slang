@@ -123,7 +123,7 @@ namespace Tbasic.Runtime
         public StackData(TBasic runtime, string text)
             : this(runtime)
         {
-            Statement line = new Statement(runtime.ScannerDelegate, text);
+            Statement line = new Statement(runtime.Scanner.Scan(text));
             Text = text;
             _params.AddRange(line);
         }
@@ -290,7 +290,7 @@ namespace Tbasic.Runtime
         {
             string param = GetAt(index) as string;
             if (param != null)
-                _params[index] = ExpressionEvaluator.Evaluate(new StringSegment(param), Runtime);
+                _params[index] = ExpressionEvaluator.Evaluate(param, Runtime);
             return _params[index];
         }
         
@@ -301,7 +301,7 @@ namespace Tbasic.Runtime
         {
             string param = GetAt(index) as string;
             if (param != null)
-                _params[index] = ExpressionEvaluator.Evaluate(new StringSegment(param), Runtime);
+                _params[index] = ExpressionEvaluator.Evaluate(param, Runtime);
             return GetAt<T>(index);
         }
 
@@ -314,7 +314,7 @@ namespace Tbasic.Runtime
             for (int index = 1; index < _params.Count; ++index) {
                 string arg = _params[index] as string;
                 if (arg != null)
-                    _params[index] = eval.Evaluate(new StringSegment(arg));
+                    _params[index] = eval.Evaluate(arg);
             }
         }
 

@@ -5,8 +5,8 @@
 // ======
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Tbasic.Components;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using Tbasic.Runtime;
 using Tbasic.Types;
 
@@ -15,359 +15,231 @@ namespace Tbasic.Parsing
     /// <summary>
     /// The default implementation of Scanner
     /// </summary>
-    internal partial class DefaultScanner : Scanner
+    internal partial class DefaultScanner : AbstractScanner
     {
-        public DefaultScanner(StringSegment buffer)
+        protected static readonly Regex rxNumeric = new Regex(@"^((?:[0-9]+)?(?:\.[0-9]+)?(?:[eE]-?[0-9]+)?)", RegexOptions.Compiled);
+        protected static readonly Regex rxHex = new Regex(@"^(0x([0-9a-fA-F]+))", RegexOptions.Compiled);
+        protected static readonly Regex rxId = new Regex(@"^((_|[a-zA-Z])\w+)", RegexOptions.Compiled);
+        
+        public DefaultScanner(string buffer)
         {
             InternalBuffer = buffer;
         }
 
-        public override bool NextUnsignedNumber(out Number num)
+        public DefaultScanner()
         {
-            int originalPos = IntPosition;
-            try {
+        }
+
+        public override bool NextNumber(out Number num)
+        {
+            Match m = rxNumeric.Match(BuffNextWord() ?? string.Empty);
+            if (m.Success && Number.TryParse(m.Value, out num)) {
+                AdvanceScanner(m.Value);
+                return true;
+            }
+            else {
                 num = default(Number);
-                if (EndOfStream)
-                    return false;
-                int endPos = FindConsecutiveDigits(InternalBuffer, IntPosition);
-                if (endPos > IntPosition) {
-                    if (endPos < InternalBuffer.Length && InternalBuffer[endPos] == '.') {
-                        endPos = FindConsecutiveDigits(InternalBuffer, endPos + 1);
-                    }
-                    if (endPos < InternalBuffer.Length && (InternalBuffer[endPos] == 'e' || InternalBuffer[endPos] == 'E')) {
-                        if (++endPos >= InternalBuffer.Length)
-                            return false;
-                        if (InternalBuffer[endPos] == '-')
-                            ++endPos;
-                        endPos = FindConsecutiveDigits(InternalBuffer, endPos);
-                    }
-                }
-                else {
-                    return false;
-                }
-                num = Number.Parse(InternalBuffer.Substring(IntPosition, endPos - IntPosition));
-                IntPosition = endPos;
+                return false;
+            }
+        }
+
+        public override bool NextHexadecimal(out long hex)
+        {
+            Match m = rxHex.Match(BuffNextWord() ?? string.Empty);
+            if (m.Success) {
+                hex = Convert.ToInt64(m.Value, 16);
+                AdvanceScanner(m.Value);
                 return true;
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
+            else {
+                hex = default(long);
+                return false;
             }
         }
 
-        public override bool NextHexadecimal(out long number)
+        public override bool Next(string pattern, bool ignoreCase)
         {
-            int originalPos = IntPosition;
-            try {
-                number = default(long);
-
-                int endPos = IntPosition;
-                if (EndOfStream || InternalBuffer[endPos++] != '0' ||
-                    endPos >= InternalBuffer.Length || InternalBuffer[endPos++] != 'x') {
-                    IntPosition = originalPos;
-                    return false;
-                }
-                endPos = FindConsecutiveHex(InternalBuffer, endPos);
-                number = Convert.ToInt64(InternalBuffer.Substring(IntPosition, endPos - IntPosition), 16);
-                IntPosition = endPos;
+            string token = BuffNextWord();
+            if (!string.IsNullOrEmpty(token) && token.StartsWith(pattern, ignoreCase, CultureInfo.CurrentCulture)) {
+                AdvanceScanner(pattern);
                 return true;
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
+            else {
+                return false;
             }
         }
 
-        private static unsafe int FindConsecutiveDigits(StringSegment expr, int start)
+        public override bool NextStringOrToken(out IEnumerable<char> token)
         {
-            fixed (char* lpfullstr = expr.FullString)
-            {
-                char* lpseg = lpfullstr + expr.Offset;
-                int len = expr.Length;
-                int index = start;
-                for (; index < len; ++index) {
-                    if (!char.IsDigit(lpseg[index])) {
-                        return index;
-                    }
-                }
-                return index;
+            token = null;
+            int pos = FindNonWhiteSpace();
+            if (pos >= Length)
+                return false;
+            string sztoken = null;
+            if (IsQuote(CharAt(pos))) {
+                int end = IndexString(InternalBuffer, pos) + 1;
+                token = sztoken = InternalBuffer.Substring(pos, end - pos);
+                Position = pos + sztoken.Length;
             }
-        }
-
-        private static unsafe int FindConsecutiveHex(StringSegment expr, int start)
-        {
-            fixed (char* lpfullstr = expr.FullString)
-            {
-                char* lpseg = lpfullstr + expr.Offset;
-                int len = expr.Length;
-                int index = start;
-                for (; index < len; ++index) {
-                    if (!IsHexDigit(lpseg[index])) {
-                        return index;
-                    }
-                }
-                return index;
+            else {
+                token = sztoken = BuffNextWord();
+                AdvanceScanner(sztoken);
             }
-        }
-
-        private static bool IsHexDigit(char c)
-        {
-            return char.IsDigit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
-        }
-
-        public override bool Next(string pattern, bool ignoreCase = true)
-        {
-            int originalPos = IntPosition;
-            try {
-                if (EndOfStream || !InternalBuffer.Subsegment(IntPosition).StartsWith(pattern, ignoreCase)) {
-                    IntPosition = originalPos;
-                    return false;
-                }
-                IntPosition += pattern.Length;
-                return true;
-            }
-            catch {
-                IntPosition = originalPos;
-                throw;
-            }
-        }
-
-        public override bool NextStringOrToken(out StringSegment token)
-        {
-            int originalPos = IntPosition;
-            try {
-                if (EndOfStream) {
-                    token = null;
-                    return false;
-                }
-                if (InternalBuffer[IntPosition] == '\"' || InternalBuffer[IntPosition] == '\'') {
-                    IntPosition = IndexString(InternalBuffer, IntPosition) + 1;
-                    token = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
-                }
-                else {
-                    token = NextSegment();
-                }
-                
-                return true;
-            }
-            catch {
-                IntPosition = originalPos;
-                throw;
-            }
+            return (sztoken != null);
         }
 
         public override bool NextString(out string parsed)
         {
-            int originalPos = IntPosition;
-            try {
-                if (EndOfStream || (InternalBuffer[IntPosition] != '\"' && InternalBuffer[IntPosition] != '\'')) {
-                    parsed = null;
-                    IntPosition = originalPos;
-                    return false;
-                }
-                int endPos = ReadString(InternalBuffer, IntPosition, out parsed) + 1;
-                IntPosition = endPos;
-                return true;
+            int pos = FindNonWhiteSpace();
+            if (pos >= Length || !IsQuote(InternalBuffer[pos])) {
+                parsed = null;
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
+            else {
+                Position = ReadString(InternalBuffer, pos, out parsed) + 1;
             }
+            return (parsed != null);
         }
 
         public override bool SkipString()
         {
-            int originalPos = IntPosition;
-            try {
-                if (EndOfStream || (InternalBuffer[IntPosition] != '\"' && InternalBuffer[IntPosition] != '\'')) {
-                    return false;
-                }
-                int endPos = IndexString(InternalBuffer, IntPosition) + 1;
-                IntPosition = endPos;
-                return true;
+            int pos = FindNonWhiteSpace();
+            if (pos >= Length || !IsQuote(InternalBuffer[pos])) {
+                return false;
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
+            else {
+                Position = IndexString(InternalBuffer, pos);
+                return true;
             }
         }
 
-        public override bool NextGroup(out IList<StringSegment> args)
+        protected static bool IsGroupChar(int c)
         {
-            int originalPos = IntPosition;
-            try {
-                if (EndOfStream || (InternalBuffer[IntPosition] != '(' && InternalBuffer[IntPosition] != '[')) {
-                    args = null;
-                    IntPosition = originalPos;
-                    return false;
-                }
-                IntPosition = ReadGroup(InternalBuffer, IntPosition, out args) + 1;
+            return (c == '(' || c == '[');
+        }
+
+        protected static bool IsQuote(int c)
+        {
+            return (c == '\"' || c == '\'');
+        }
+
+        public override bool NextGroup(out IList<IEnumerable<char>> args)
+        {
+            int start = FindNonWhiteSpace();
+            int pos = GetGroup(start, out args);
+            if (pos != start) {
+                Position = pos;
                 return true;
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
+            return false;
+        }
+
+        protected int GetGroup(int pos, out IList<IEnumerable<char>> args)
+        {
+            if (pos >= Length || !IsGroupChar(InternalBuffer[pos])) {
+                args = null;
             }
+            else {
+                pos = ReadGroup(InternalBuffer, pos, out args) + 1;
+            }
+            return pos;
         }
 
         public override bool SkipGroup()
         {
-            int originalPos = IntPosition;
-            try {
-                if (EndOfStream || (InternalBuffer[IntPosition] != '(' && InternalBuffer[IntPosition] != '[')) {
-                    return false;
-                }
-                int endPos = IndexGroup(InternalBuffer, IntPosition) + 1;
-                IntPosition = endPos;
+            int pos = FindNonWhiteSpace();
+            if (pos >= Length || !IsGroupChar(InternalBuffer[pos])) {
+                return false;
+            }
+            else {
+                Position = IndexGroup(InternalBuffer, pos) + 1;
                 return true;
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
-            }
         }
-
-        public override bool NextValidIdentifier(out StringSegment name)
+        
+        public override bool NextValidIdentifier(out IEnumerable<char> name)
         {
-            int originalPos = IntPosition;
-            try {
+            Match m = rxId.Match(BuffNextWord() ?? string.Empty);
+            if (m.Success) {
+                name = m.Value;
+                AdvanceScanner(m.Length);
+            }
+            else {
                 name = null;
-                if (EndOfStream)
-                    return false;
-                if (char.IsLetter(InternalBuffer[IntPosition]) || InternalBuffer[IntPosition] == '_') {
-                    IntPosition = FindAcceptableFuncChars(InternalBuffer, ++IntPosition);
-                    if (IntPosition <= InternalBuffer.Length) {
-                        name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
-                        return true;
-                    }
-                }
-                IntPosition = originalPos;
-                return false;
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
-            }
+            return (name != null);
         }
 
-        public override bool NextFunction(out StringSegment name, out StringSegment func, out IList<StringSegment> args)
+        public override bool NextFunction(out IEnumerable<char> name, out IList<IEnumerable<char>> args)
         {
-            int originalPos = IntPosition;
-            try {
-                func = null;
+            int start = Position;
+            if (NextValidIdentifier(out name) && NextGroup(out args)) {
+                return true;
+            }
+            else {
+                Position = start;
                 args = null;
-                name = null;
-                if (EndOfStream)
-                    return false;
-                if (char.IsLetter(InternalBuffer[IntPosition]) || InternalBuffer[IntPosition] == '_') {
-                    IntPosition = FindAcceptableFuncChars(InternalBuffer, ++IntPosition);
-                    if (IntPosition < InternalBuffer.Length) {
-                        name = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
-                        SkipWhiteSpace();
-                        if (NextGroup(out args)) {
-                            func = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
-                            return true;
-                        }
-                    }
-                }
-                IntPosition = originalPos;
                 return false;
-            }
-            catch {
-                IntPosition = originalPos;
-                throw;
             }
         }
 
-        public override bool NextVariable(out StringSegment variable, out StringSegment name, out StringSegment[] indices)
+        public override bool NextVariable(out IEnumerable<char> name, out IList<IEnumerable<char>> indices)
         {
-            int originalPos = IntPosition;
-            try {
-                int start = IntPosition;
-                variable = null;
-                indices = null;
-                name = null;
-                if (EndOfStream)
-                    return false;
-                if (char.IsLetter(InternalBuffer[IntPosition]) || InternalBuffer[IntPosition] == '_') {
-                    IntPosition = FindAcceptableFuncChars(InternalBuffer, ++IntPosition);
-                    if (!EndOfStream && InternalBuffer[IntPosition++] == '$') {
-                        name = InternalBuffer.Subsegment(start, IntPosition - start);
-                        SkipWhiteSpace();
-                        if (!NextIndices(out indices))
-                            indices = null;
-                        variable = InternalBuffer.Subsegment(originalPos, IntPosition - originalPos);
-                        return true;
-                    }
-                }
-                else if (InternalBuffer[IntPosition] == '@') { // it's a macro
-                    return NextMacro(out variable, out name, out indices);
-                }
-                IntPosition = originalPos;
+            name = null; indices = null;
+            string token = BuffNextWord();
+            if (string.IsNullOrEmpty(token))
                 return false;
+            Match m = rxId.Match(token);
+            if (m.Success && CharAt(TokenBuffer.Item1 + m.Length) == '$') {
+                name = InternalBuffer.Substring(TokenBuffer.Item1, m.Length + 1);
+                AdvanceScanner(token.Length + 1);
+                NextIndices(out indices);
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
+            else if (token[0] == '@') {
+                return NextMacro(out name, out indices);
             }
+            return (name != null);
         }
 
         /// <summary>
         /// This assumes that the first char has already been checked to be an '@'!
         /// </summary>
-        private bool NextMacro(out StringSegment variable, out StringSegment name, out StringSegment[] indices)
+        private bool NextMacro(out IEnumerable<char> name, out IList<IEnumerable<char>> indices)
         {
-            int originalPos = IntPosition;
-            try {
-                SkipWhiteSpace();
-                int start = IntPosition;
-                if (++IntPosition < InternalBuffer.Length) {
-                    IntPosition = FindAcceptableFuncChars(InternalBuffer, IntPosition);
-                    name = InternalBuffer.Subsegment(start, IntPosition - start);
-                    SkipWhiteSpace();
-                    if (!NextIndices(out indices))
-                        indices = null;
-                    variable = InternalBuffer.Subsegment(originalPos, IntPosition);
-                    return true;
-                }
-                variable = null;
-                name = null;
-                indices = null;
-                IntPosition = originalPos;
+            name = null; indices = null;
+            int start = Position++;
+            string token = BuffNextWord();
+            if (string.IsNullOrEmpty(token))
                 return false;
+            Match m = rxId.Match(token);
+            if (m.Success) {
+                name = InternalBuffer.Substring(start, token.Length + 1);
+                AdvanceScanner(token.Length + 1);
+                NextIndices(out indices);
+                return true;
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
+            else {
+                Position = start;
+                return false;
             }
         }
 
-        public override bool NextIndices(out StringSegment[] indices)
+        public override bool NextIndices(out IList<IEnumerable<char>> indices)
         {
-            int originalPos = IntPosition;
-            try {
-                IList<StringSegment> args;
-                indices = null;
-                if (!EndOfStream && InternalBuffer[IntPosition] == '[' && NextGroup(out args)) {
-                    indices = args.ToArray();
-                    return true;
-                }
-                else {
-                    IntPosition = originalPos;
-                    return false;
-                }
+            int pos = Position;
+            if (Current == '[' && NextGroup(out indices)) {
+                return true;
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
+            else {
+                Position = pos;
+                indices = null;
+                return false;
             }
         }
         
-        private static unsafe int FindAcceptableFuncChars(StringSegment expr, int start)
+        private static unsafe int FindAcceptableFuncChars(string expr, int start)
         {
-            fixed (char* lpfullstr = expr.FullString)
+            fixed (char* lpseg = expr)
             {
-                char* lpseg = lpfullstr + expr.Offset;
                 int len = expr.Length;
                 int index = start;
                 for (; index < len; ++index) {
@@ -381,83 +253,71 @@ namespace Tbasic.Parsing
 
         public override bool NextBool(out bool b)
         {
-            int originalPos = IntPosition;
-            try {
-                if (EndOfStream) {
-                    b = default(bool);
-                    return false;
-                }
-                int currPos = IntPosition;
-                if (Next(bool.TrueString)) {
-                    b = true;
-                    return true;
-                }
-                IntPosition = currPos; // reset the the pos when method was called
-                if (Next(bool.FalseString)) {
-                    b = false;
-                    return true;
-                }
-                b = default(bool);
-                IntPosition = originalPos;
-                return false;
+            string token = BuffNextWord();
+            if (string.IsNullOrEmpty(token))
+                return b = false;
+
+            if (token.StartsWith(bool.TrueString, StringComparison.CurrentCultureIgnoreCase)) {
+                AdvanceScanner(bool.TrueString);
+                return b = true;
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
+            else if (token.StartsWith(bool.FalseString, StringComparison.CurrentCultureIgnoreCase)) {
+                AdvanceScanner(bool.FalseString);
+                b = false;
+                return true;
             }
+            return b = false;
         }
 
         public override bool NextBinaryOp(ObjectContext context, out BinaryOperator foundOp)
         {
-            int originalPos = IntPosition;
-            try {
-                if (EndOfStream || !MatchOperator(InternalBuffer, IntPosition, context, out foundOp)) {
-                    foundOp = default(BinaryOperator);
-                    IntPosition = originalPos;
-                    return false;
-                }
-                IntPosition += foundOp.OperatorString.Length;
+            foundOp = default(BinaryOperator);
+            string token = BuffNextWord();
+            if (string.IsNullOrEmpty(token))
+                return false;
+
+            if (MatchOperator(token, context, out foundOp)) {
+                AdvanceScanner(foundOp.OperatorString.Length);
                 return true;
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
-            }
+            return false;
         }
 
         public override bool NextUnaryOp(ObjectContext context, object last, out UnaryOperator foundOp)
         {
-            int originalPos = IntPosition;
-            try {
-                if (EndOfStream || (last != null && !(last is BinaryOperator))) {
-                    foundOp = default(UnaryOperator);
-                    return false;
-                }
-                if (!MatchOperator(InternalBuffer, IntPosition, context, out foundOp)) {
-                    IntPosition = originalPos;
-                    return false;
-                }
-                IntPosition += foundOp.OperatorString.Length;
+            foundOp = default(UnaryOperator);
+            if (!(last == null || last is BinaryOperator)) // unary operators can really only come after a binary operator or the beginning of the expression
+                return false;
+
+            string token = BuffNextWord();
+            if (string.IsNullOrEmpty(token))
+                return false;
+
+            if (MatchOperator(token, context, out foundOp)) {
+                AdvanceScanner(foundOp.OperatorString.Length);
                 return true;
             }
-            catch {
-                IntPosition = originalPos;
-                throw;
-            }
+
+            return false;
         }
 
-        private static bool MatchOperator<T>(StringSegment expr, int index, ObjectContext context, out T foundOp) where T : IOperator
+        private static bool MatchOperator<T>(string token, ObjectContext context, out T foundOp) where T : IOperator
         {
             string foundStr = null;
             foundOp = default(T);
             foreach (var op in context.GetAllOperators<T>()) {
                 string opStr = op.OperatorString;
-                if (expr.StartsWith(opStr, index, ignoreCase: true)) {
+                if (token.StartsWith(opStr, StringComparison.CurrentCultureIgnoreCase)) {
                     foundOp = op;
                     foundStr = opStr;
                 }
             }
             return foundStr != null;
+        }
+        
+        public override IScanner Scan(IEnumerable<char> buffer)
+        {
+            return new DefaultScanner(buffer.ToString());
         }
     }
 }

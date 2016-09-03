@@ -8,13 +8,13 @@ using System.Globalization;
 using System.Text;
 using Tbasic.Components;
 using Tbasic.Errors;
-using Tbasic.Runtime;
+using System.Linq;
 
 namespace Tbasic.Parsing
 {
     internal partial class DefaultScanner
     {
-        private static int IndexString(StringSegment fullstr, int index)
+        private static int IndexString(string fullstr, int index)
         {
             char quote = fullstr[index++]; // The first character should be the quote
 
@@ -59,7 +59,7 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedString();
         }
 
-        private static int ReadString(StringSegment fullstr, int index, out string s_parsed)
+        private static int ReadString(string fullstr, int index, out string s_parsed)
         {
             char quote = fullstr[index++]; // The first character should be the quote
 
@@ -110,7 +110,7 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedString();
         }
 
-        private static int IndexGroup(StringSegment fullstr, int index)
+        private static int IndexGroup(string fullstr, int index)
         {
             char c_open = fullstr[index]; // The first character should be the grouping character (i.e. '(' or '[')
             char c_close = c_open == '(' ? ')' : ']';
@@ -149,14 +149,14 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedGroup();
         }
 
-        private static int ReadGroup(StringSegment fullstr, int index, out IList<StringSegment> args)
+        private static int ReadGroup(string fullstr, int index, out IList<IEnumerable<char>> args)
         {
             return ReadGroup(fullstr, index, ',', out args);
         }
 
-        private static int ReadGroup(StringSegment fullstr, int index, char separator, out IList<StringSegment> args)
+        private static int ReadGroup(string fullstr, int index, char separator, out IList<IEnumerable<char>> args)
         {
-            List<StringSegment> result = new List<StringSegment>();
+            List<IEnumerable<char>> result = new List<IEnumerable<char>>();
             char c_open = fullstr[index];
             char c_close = c_open == '(' ? ')' : ']';
             int expected = 0;
@@ -188,10 +188,8 @@ namespace Tbasic.Parsing
 
                 if ((expected == 1 && cur == separator) // The separators in between other parentheses are not ours.
                     || expected == 0) {
-                    StringSegment _param = fullstr.Subsegment(last + 1, index - last - 1).Trim();
-                    if (!StringSegment.Equals(_param, "")) {
-                        result.Add(_param);
-                    }
+                    IEnumerable<char> _param = fullstr.TB_Segment(last + 1, index - last - 1);
+                    result.Add(_param);
                     last = index;
                     if (expected == 0) { // fin
                         args = result;

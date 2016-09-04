@@ -50,7 +50,7 @@ namespace Tbasic.Libraries
                 }
                 if (p.Classes.Count > 0) {
                     foreach (TClass t in p.Classes) {
-                        stackdat.Context.AddType(t);
+                        stackdat.Context.AddType(t.Name, t);
                     }
                 }
             }

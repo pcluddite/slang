@@ -29,7 +29,6 @@ namespace Tbasic.Runtime
     BuildGroup("UnaryOperator", "UnaryOperator", "_unaryOps", list: false);
 #>
         #region Misc Generated
-
 <#
 
     BuildFindContext("Variable", "object", "_variables");
@@ -180,7 +179,12 @@ namespace Tbasic.Runtime
         /// </summary>
         public void Add<#= name #>(string name, <#= type #> value)
         {
-            <#= dict #>.Add(name, value);
+			try {
+				<#= dict #>.Add(name, value);
+			}
+			catch(ArgumentException) {
+				throw new DuplicateDefinitionException(name);
+			}
         }
 <#+
     }

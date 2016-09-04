@@ -151,7 +151,7 @@ namespace Tbasic.Parsing
                     current.Text = "FUNCTION " + current.Text; // this is just to satisfy the parser. Try to fix later. 8/26/16
                     FunctionBlock ctor;
                     nline = ProcessFuncBlock(reader, current, out ctor);
-                    tclass.SetFunction("<>ctor", ctor.Execute);
+                    tclass.AddFunction("<>ctor", ctor.Execute);
                 }
                 else {
                     throw new InvalidTokenExceptiopn(current.Text);

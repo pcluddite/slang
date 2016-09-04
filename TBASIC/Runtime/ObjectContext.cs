@@ -311,17 +311,25 @@ namespace Tbasic.Runtime
 
         #endregion
 
-        #region Add
-
-        internal void AddType(TClass type)
+        #region Specialized
+        
+        /// <summary>
+        /// Tries to get a variable or constant from this context
+        /// </summary>
+        /// <returns>true if the variable was found, otherwise false.</returns>
+        public bool TryGetVariable(string name, out object value)
         {
-            _prototypes.Add(type.Name, type);
+            if (_variables.TryGetValue(name, out value) || _constants.TryGetValue(name, out value)) {
+                return true;
+            }
+            else if (_super == null) {
+                return false;
+            }
+            else {
+                return _super.TryGetVariable(name, out value);
+            }
         }
-
-        #endregion
-
-        #region Get
-
+        
         /// <summary>
         /// Gets a variable or constant that has been declared in this context
         /// </summary>
@@ -372,10 +380,6 @@ namespace Tbasic.Runtime
             return obj;
         }
 
-        #endregion
-
-        #region Set
-
         internal void SetReturns(StackData _sframe)
         {
             SetVariable("@lasterror", _sframe.Status);
@@ -386,9 +390,10 @@ namespace Tbasic.Runtime
 
         internal void PersistReturns(StackData _sframe)
         {
-            ObjectContext context = FindVariableContext("@error");
-            if (context != null)
-                _sframe.Status = (int)context.GetVariable("@error");
+            object status;
+            if (TryGetVariable("@error", out status)) {
+                _sframe.Status = (int)status;
+            }
         }
 
         /// <summary>

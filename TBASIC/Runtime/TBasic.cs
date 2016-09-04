@@ -112,7 +112,7 @@ namespace Tbasic.Runtime
             }
             if (p.Classes.Count > 0) {
                 foreach(TClass t in p.Classes) {
-                    Global.AddType(t);
+                    Global.AddType(t.Name, t);
                 }
             }
             Execute(p.Lines);
@@ -155,12 +155,12 @@ namespace Tbasic.Runtime
                 TbasicRuntimeException runEx;
                 try {
 #endif
-                    ObjectContext blockContext = Context.FindBlockContext(current.Name);
-                    if (blockContext == null) {
+                    BlockCreator block_init;
+                    if (Context.TryGetBlock(current.Name, out block_init)) {
                         runtime = Execute(this, current);
                     }
                     else {
-                        CodeBlock block = blockContext.GetBlock(current.Name).Invoke(index, lines);
+                        CodeBlock block = block_init(index, lines);
                         Context = Context.CreateSubContext();
                         block.Execute(this);
                         Context = Context.Collect();

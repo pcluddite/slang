@@ -35,7 +35,12 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddFunction(string name, CallData value)
         {
-            _functions.Add(name, value);
+			try {
+				_functions.Add(name, value);
+			}
+			catch(ArgumentException) {
+				throw new DuplicateDefinitionException(name);
+			}
         }
 
         /// <summary>
@@ -150,7 +155,12 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddCommand(string name, CallData value)
         {
-            _commands.Add(name, value);
+			try {
+				_commands.Add(name, value);
+			}
+			catch(ArgumentException) {
+				throw new DuplicateDefinitionException(name);
+			}
         }
 
         /// <summary>
@@ -265,7 +275,12 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddFunction(string name, TBasicFunction value)
         {
-            _functions.Add(name, value);
+			try {
+				_functions.Add(name, value);
+			}
+			catch(ArgumentException) {
+				throw new DuplicateDefinitionException(name);
+			}
         }
 
         /// <summary>
@@ -312,7 +327,12 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddCommand(string name, TBasicFunction value)
         {
-            _commands.Add(name, value);
+			try {
+				_commands.Add(name, value);
+			}
+			catch(ArgumentException) {
+				throw new DuplicateDefinitionException(name);
+			}
         }
 
         /// <summary>
@@ -359,7 +379,12 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddBlock(string name, BlockCreator value)
         {
-            _blocks.Add(name, value);
+			try {
+				_blocks.Add(name, value);
+			}
+			catch(ArgumentException) {
+				throw new DuplicateDefinitionException(name);
+			}
         }
 
         /// <summary>
@@ -474,7 +499,12 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddType(string name, TClass value)
         {
-            _prototypes.Add(name, value);
+			try {
+				_prototypes.Add(name, value);
+			}
+			catch(ArgumentException) {
+				throw new DuplicateDefinitionException(name);
+			}
         }
 
         /// <summary>
@@ -589,7 +619,12 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddBinaryOperator(string name, BinaryOperator value)
         {
-            _binaryOps.Add(name, value);
+			try {
+				_binaryOps.Add(name, value);
+			}
+			catch(ArgumentException) {
+				throw new DuplicateDefinitionException(name);
+			}
         }
 
         /// <summary>
@@ -680,7 +715,12 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddUnaryOperator(string name, UnaryOperator value)
         {
-            _unaryOps.Add(name, value);
+			try {
+				_unaryOps.Add(name, value);
+			}
+			catch(ArgumentException) {
+				throw new DuplicateDefinitionException(name);
+			}
         }
 
         /// <summary>
@@ -750,7 +790,6 @@ namespace Tbasic.Runtime
         #endregion
 
         #region Misc Generated
-
         /// <summary>
         /// Searches for the context in which a Variable is declared. If the Variable cannot be found, null is returned.
         /// </summary>

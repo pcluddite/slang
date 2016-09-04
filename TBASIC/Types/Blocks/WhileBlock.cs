@@ -3,6 +3,7 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
+using System.Collections.Generic;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
@@ -11,11 +12,10 @@ namespace Tbasic.Types
 {
     internal class WhileBlock : CodeBlock
     {
-        public WhileBlock(int index, LineCollection code)
+        public WhileBlock(int index, IList<Line> code)
         {
             LoadFromCollection(
-                code.ParseBlock(
-                    index,
+                LineCollection.ParseBlock(index, code,
                     c => c.Name.EqualsIgnoreCase("WHILE"),
                     c => c.Text.EqualsIgnoreCase("WEND")
                 ));

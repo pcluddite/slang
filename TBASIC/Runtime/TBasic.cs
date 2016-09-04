@@ -9,6 +9,8 @@ using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Types;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Tbasic.Runtime
 {
@@ -34,6 +36,10 @@ namespace Tbasic.Runtime
         /// Gets or sets the scanner
         /// </summary>
         public IScanner Scanner { get; set; } = Scanners.Default;
+        /// <summary>
+        /// Gets or sets the preprocessor
+        /// </summary>
+        public IPreprocessor Preprocessor { get; set; } = Preprocessors.Default;
 
         /// <summary>
         /// The global context for this object
@@ -98,16 +104,14 @@ namespace Tbasic.Runtime
         /// <param name="lines">the lines of the script to process</param>
         public void Execute(TextReader lines)
         {
-            Preprocessor p = Preprocessor.Preprocess(lines, this);
+            IPreprocessor p = Preprocessor.Preprocess(this, lines);
             if (p.Functions.Count > 0) {
-                foreach (FuncBlock func in p.Functions) {
-                    if (Global.FindFunctionContext(func.Prototype.Name) != null)
-                        throw ThrowHelper.AlreadyDefined(func.Prototype.Name + "()");
-                    Global.SetFunction(func.Prototype.Name, func.CreateDelegate());
+                foreach (FunctionBlock func in p.Functions) {
+                    Global.AddFunction(func.Prototype.First(), func.Execute);
                 }
             }
-            if (p.Types.Count > 0) {
-                foreach(TClass t in p.Types) {
+            if (p.Classes.Count > 0) {
+                foreach(TClass t in p.Classes) {
                     Global.AddType(t);
                 }
             }
@@ -138,7 +142,7 @@ namespace Tbasic.Runtime
 #endif
         }
 
-        internal StackData Execute(LineCollection lines)
+        internal StackData Execute(IList<Line> lines)
         {
             StackData runtime = null;
             for (int index = 0; index < lines.Count; index++) {
@@ -151,7 +155,7 @@ namespace Tbasic.Runtime
                 TbasicRuntimeException runEx;
                 try {
 #endif
-                ObjectContext blockContext = Context.FindBlockContext(current.Name);
+                    ObjectContext blockContext = Context.FindBlockContext(current.Name);
                     if (blockContext == null) {
                         runtime = Execute(this, current);
                     }
@@ -191,6 +195,25 @@ namespace Tbasic.Runtime
             }
             runtime.Context.SetReturns(runtime);
             return runtime;
+        }
+
+        internal StackData ExecuteInContext(ObjectContext newcontext, IList<Line> lines)
+        {
+            ObjectContext old = Context;
+            StackData ret;
+            Context = newcontext;
+            ret = Execute(lines);
+            Context = old;
+            return ret;
+        }
+
+        internal StackData ExecuteInSubContext(IList<Line> lines)
+        {
+            StackData ret;
+            Context = Context.CreateSubContext();
+            ret = Execute(lines);
+            Context = Context.Collect();
+            return ret;
         }
 
         private void HandleError(Line current, StackData runtime, TbasicRuntimeException ex)

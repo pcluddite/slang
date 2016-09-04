@@ -38,17 +38,19 @@ namespace Tbasic.Libraries
             string path = Path.GetFullPath(stackdat.EvaluateAt<string>(1));
 
             try {
-                Preprocessor p;
+                IPreprocessor p;
                 using (StreamReader reader = new StreamReader(File.OpenRead(path))) {
-                    p = Preprocessor.Preprocess(reader, stackdat.Runtime);
+                    p = stackdat.Runtime.Preprocessor.Preprocess(stackdat.Runtime, reader);
                 }
 
                 if (p.Functions.Count > 0) {
-                    foreach (FuncBlock func in p.Functions) {
-                        ObjectContext context = stackdat.Context.FindFunctionContext(func.Prototype.Name);
-                        if (context != null)
-                            throw ThrowHelper.AlreadyDefined(func.Prototype.Name + "()");
-                        stackdat.Context.SetFunction(func.Prototype.Name, func.CreateDelegate());
+                    foreach (FunctionBlock func in p.Functions) {
+                        stackdat.Context.AddFunction(func.Prototype.First(), func.Execute);
+                    }
+                }
+                if (p.Classes.Count > 0) {
+                    foreach (TClass t in p.Classes) {
+                        stackdat.Context.AddType(t);
                     }
                 }
             }

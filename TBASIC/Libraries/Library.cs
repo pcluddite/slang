@@ -15,7 +15,7 @@ namespace Tbasic.Libraries
     /// </summary>
     public class Library : IDictionary<string, CallData>
     {
-        private Dictionary<string, CallData> lib = new Dictionary<string, CallData>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, CallData> lib = new Dictionary<string, CallData>(StringComparer.CurrentCultureIgnoreCase);
         
         /// <summary>
         /// Initializes a new Tbasic Library object

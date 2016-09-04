@@ -45,15 +45,20 @@ namespace Tbasic.Parsing
         /// <returns>a Tbasic.LineCollection of the extracted lines</returns>
         public LineCollection ParseBlock(int index, Predicate<Line> startPredicate, Predicate<Line> endPredicate)
         {
+            return ParseBlock(index, this, startPredicate, endPredicate);
+        }
+
+        internal static LineCollection ParseBlock(int index, IList<Line> allLines, Predicate<Line> start, Predicate<Line> end)
+        {
             LineCollection blockLines = new LineCollection();
 
             int expected = 0;
-            for (; index < this.Count; index++) {
-                Line current = this[index];
-                if (startPredicate.Invoke(current)) {
+            for (; index < allLines.Count; index++) {
+                Line current = allLines[index];
+                if (start.Invoke(current)) {
                     expected++;
                 }
-                if (endPredicate.Invoke(current)) {
+                if (end.Invoke(current)) {
                     expected--;
                 }
                 blockLines.Add(current);

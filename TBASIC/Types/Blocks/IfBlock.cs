@@ -8,6 +8,7 @@ using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
+using System.Collections.Generic;
 
 namespace Tbasic.Types
 {
@@ -34,7 +35,7 @@ namespace Tbasic.Types
             }
         }
 
-        public IfBlock(int index, LineCollection fullCode)
+        public IfBlock(int index, IList<Line> fullCode)
         {
             Else = null;
             Header = fullCode[index];

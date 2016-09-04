@@ -7,36 +7,37 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Tbasic.Components;
 using Tbasic.Errors;
-using Tbasic.Parsing;
+using Tbasic.Runtime;
 using Tbasic.Types;
 
-namespace Tbasic.Runtime
+namespace Tbasic.Parsing
 {
-    internal class Preprocessor
+    internal class DefaultPreprocessor : IPreprocessor
     {
         public const char CommentChar = ';';
         public const char ContinueChar = '_';
 
-        public ICollection<FuncBlock> Functions { get; } = new List<FuncBlock>();
-        public ICollection<TClass> Types { get; } = new List<TClass>();
+        public ICollection<FunctionBlock> Functions { get; } = new List<FunctionBlock>();
+        public ICollection<TClass> Classes { get; } = new List<TClass>();
         public LineCollection Lines { get; } = new LineCollection();
 
         private TBasic runtime;
 
-        private Preprocessor(TextReader reader, TBasic runtime)
+        public DefaultPreprocessor()
         {
+        }
+
+        public IPreprocessor Preprocess(TBasic runtime, TextReader reader)
+        {
+            Functions.Clear();
+            Classes.Clear();
+            Lines.Clear();
             this.runtime = runtime;
             ScanLines(reader);
-            this.runtime = null; // don't hold onto it on my account 8/26/16
+            return this;
         }
-
-        public static Preprocessor Preprocess(TextReader reader, TBasic runtime)
-        {
-            return new Preprocessor(reader, runtime);
-        }
-
+        
         private void ScanLines(TextReader reader)
         {
             int lineNumber = 1;
@@ -45,15 +46,15 @@ namespace Tbasic.Runtime
                 if (string.IsNullOrEmpty(line.Text) || line.Text[0] == CommentChar)
                     continue;
 
-                if (FuncBlock.CheckBegin(line)) {
-                    FuncBlock func;
+                if (FunctionBlock.CheckBegin(line)) {
+                    FunctionBlock func;
                     lineNumber = ProcessFuncBlock(reader, line, out func);
                     Functions.Add(func);
                 }
                 else if (ClassBegin(line)) {
                     TClass tclass;
                     lineNumber = ProcessClassBlock(reader, line, out tclass);
-                    Types.Add(tclass);
+                    Classes.Add(tclass);
                 }
                 else {
                     Lines.Add(line);
@@ -87,21 +88,21 @@ namespace Tbasic.Runtime
             return line;
         }
 
-        private int ProcessFuncBlock(TextReader reader, Line current, out FuncBlock block)
+        private int ProcessFuncBlock(TextReader reader, Line current, out FunctionBlock block)
         {
             Line header = current;
             LineCollection body = new LineCollection();
             int lineNumber = current.LineNumber + 1;
-            while((current = ProcessCodeLine(reader, lineNumber++)) != null && !FuncBlock.CheckEnd(current)) {
+            while((current = ProcessCodeLine(reader, lineNumber++)) != null && !FunctionBlock.CheckEnd(current)) {
                 body.Add(current);
             }
             if (current == null)
                 throw ThrowHelper.UnterminatedBlock("FUNCTION");
-            block = new FuncBlock(GetPrototype(header), header, body, current);
+            block = new FunctionBlock(GetPrototype(header), header, current, body);
             return lineNumber;
         }
 
-        private StackData GetPrototype(Line header)
+        private IList<string> GetPrototype(Line header)
         {
             IScanner scanner = runtime.Scanner.Scan(header.Text);
             scanner.Next("FUNCTION");
@@ -111,9 +112,12 @@ namespace Tbasic.Runtime
                 throw new InvalidDefinitionException("Name contains invalid characters or was not present", "function");
             IList<IEnumerable<char>> args;
             scanner.NextGroup(out args);
-            StackData stackdat = new StackData(null, args.TB_ToStrings());
-            stackdat.Name = funcname.ToString();
-            return stackdat;
+            string[] ret = new string[args.Count + 1];
+            ret[0] = funcname.ToString();
+            for(int i = 1; i < ret.Length; ++i) {
+                ret[i] = args[i - 1].ToString();
+            }
+            return ret;
         }
 
         private static readonly Predicate<Line> ClassBegin = (o => o.Name.EqualsIgnoreCase("CLASS"));
@@ -138,16 +142,16 @@ namespace Tbasic.Runtime
                 if (current.Name.EqualsIgnoreCase("DIM")) {
                     tclass.Constructor.Add(current);
                 }
-                else if (FuncBlock.CheckBegin(current)) {
-                    FuncBlock func;
+                else if (FunctionBlock.CheckBegin(current)) {
+                    FunctionBlock func;
                     nline = ProcessFuncBlock(reader, current, out func);
-                    tclass.SetFunction(func.Prototype.Name, func.CreateDelegate());
+                    tclass.SetFunction(func.Prototype[0], func.Execute);
                 }
                 else if (current.Name.EqualsIgnoreCase(tclass.Name)) {
                     current.Text = "FUNCTION " + current.Text; // this is just to satisfy the parser. Try to fix later. 8/26/16
-                    FuncBlock ctor;
+                    FunctionBlock ctor;
                     nline = ProcessFuncBlock(reader, current, out ctor);
-                    tclass.SetFunction("<>ctor", ctor.CreateDelegate());
+                    tclass.SetFunction("<>ctor", ctor.Execute);
                 }
                 else {
                     throw new InvalidTokenExceptiopn(current.Text);

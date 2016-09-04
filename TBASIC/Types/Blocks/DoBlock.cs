@@ -4,6 +4,7 @@
 //
 // ======
 using System;
+using System.Collections.Generic;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
@@ -12,11 +13,10 @@ namespace Tbasic.Types
 {
     internal class DoBlock : CodeBlock
     {
-        public DoBlock(int index, LineCollection code)
+        public DoBlock(int index, IList<Line> code)
         {
             LoadFromCollection(
-                code.ParseBlock(
-                    index,
+                LineCollection.ParseBlock(index, code,
                     c => c.Name.EqualsIgnoreCase("DO"),
                     c => c.Name.EqualsIgnoreCase("LOOP")
                 ));

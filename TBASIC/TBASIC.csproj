@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NO_EXCEPT</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\tbasic.xml</DocumentationFile>
@@ -60,7 +60,9 @@
     <Compile Include="Libraries\ArrayLibrary.cs" />
     <Compile Include="Libraries\StringLibrary.cs" />
     <Compile Include="Libraries\SystemLibrary.cs" />
+    <Compile Include="Parsing\IPreprocessor.cs" />
     <Compile Include="Parsing\IScanner.cs" />
+    <Compile Include="Parsing\Preprocessors.cs" />
     <Compile Include="Parsing\Scanners.cs" />
     <Compile Include="Parsing\StringSegment.cs" />
     <Compile Include="Types\Operators\BinaryOperator.cs" />
@@ -89,7 +91,7 @@
     <Compile Include="Runtime\Evaluator\IExpressionEvaluator.cs" />
     <Compile Include="Parsing\LineCollection.cs" />
     <Compile Include="Parsing\DefaultScanner.cs" />
-    <Compile Include="Runtime\Preprocessor.cs" />
+    <Compile Include="Parsing\DefaultPreprocessor.cs" />
     <Compile Include="Runtime\ObjectContext.cs" />
     <Compile Include="Runtime\Evaluator\Variable.cs" />
     <Compile Include="Runtime\TBasic.cs" />
@@ -105,8 +107,7 @@
     <Compile Include="Libraries\RuntimeLibrary.cs" />
     <Compile Include="Types\Blocks\DoBlock.cs" />
     <Compile Include="Types\Blocks\ForBlock.cs" />
-    <Compile Include="Types\Blocks\FuncBlock.cs" />
-    <Compile Include="Types\Blocks\SelectBlock.cs" />
+    <Compile Include="Types\Blocks\FunctionBlock.cs" />
     <Compile Include="Types\Blocks\WhileBlock.cs" />
     <Compile Include="Types\Blocks\IfBlock.cs" />
     <Compile Include="Types\Blocks\CodeBlock.cs" />

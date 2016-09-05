@@ -40,7 +40,10 @@ namespace Tbasic.Runtime
             }
         }
         
-        public ObjectContext CurrentContext { get { return Runtime.Context; } }
+        /// <summary>
+        /// Gets or sets the context in which this function should be run. This is the global context by default.
+        /// </summary>
+        public ObjectContext CurrentContext { get; set; }
 
         public TBasic Runtime { get; set; }
 
@@ -51,6 +54,7 @@ namespace Tbasic.Runtime
         public Function(TBasic runtime, string name, IList<IEnumerable<char>> parameters)
         {
             Runtime = runtime;
+            CurrentContext = runtime.Global;
             _name = name;
             _params = parameters;
         }
@@ -79,8 +83,7 @@ namespace Tbasic.Runtime
                 if (func.Evaluate) {
                     stackdat.EvaluateAll();
                 }
-                stackdat.Data = func.Function(stackdat);
-                CurrentContext.SetReturns(stackdat);
+                Runtime.ExecuteInContext(func.Function, stackdat, CurrentContext);
                 return stackdat.Data;
             }
             else {

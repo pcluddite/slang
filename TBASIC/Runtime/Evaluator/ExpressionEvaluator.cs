@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Types;
@@ -46,10 +45,13 @@ namespace Tbasic.Runtime
             }
         }
 
-        public ObjectContext RuntimeContext
+        public ObjectContext CurrentContext
         {
             get {
                 return Runtime.Context;
+            }
+            set {
+                throw new NotImplementedException(); // this shouldn't be set
             }
         }
 
@@ -113,7 +115,7 @@ namespace Tbasic.Runtime
 
             // check unary op
             UnaryOperator unaryOp;
-            if (scanner.NextUnaryOp(RuntimeContext, _tokens.Last?.Value, out unaryOp)) {
+            if (scanner.NextUnaryOp(CurrentContext, _tokens.Last?.Value, out unaryOp)) {
                 return AddObjectToExprList(unaryOp, startIndex, scanner);
             }
 
@@ -154,13 +156,13 @@ namespace Tbasic.Runtime
 
             // check binary operator
             BinaryOperator binOp;
-            if (scanner.NextBinaryOp(RuntimeContext, out binOp)) {
+            if (scanner.NextBinaryOp(CurrentContext, out binOp)) {
                 return AddObjectToExprList(binOp, startIndex, scanner);
             }
 
             // couldn't be parsed
 
-            if (RuntimeContext.FindFunctionContext(_expression.ToString()) == null) {
+            if (CurrentContext.FindFunctionContext(_expression.ToString()) == null) {
                 throw new InvalidTokenExceptiopn(scanner.Next()?.ToString());
             }
             else {

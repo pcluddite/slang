@@ -3,6 +3,7 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Tbasic.Errors;
@@ -22,6 +23,9 @@ namespace Tbasic.Runtime
         {
             get {
                 return Runtime.Context;
+            }
+            set {
+                throw new NotImplementedException();
             }
         }
 

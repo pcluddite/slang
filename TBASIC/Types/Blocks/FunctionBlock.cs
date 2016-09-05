@@ -53,7 +53,8 @@ namespace Tbasic.Types
         {
             stackdat.AssertCount(Prototype.Count);
 
-            ObjectContext context = stackdat.Runtime.Global.CreateSubContext(); // use global, we don't care about the context that called us
+            ObjectContext context = stackdat.Context;
+            TBasic runtime = stackdat.Runtime;
 
             int index = 0;
             foreach(string param in Prototype.Skip(1)) { // skip the first item in the collection, which is assumed to be the name
@@ -63,9 +64,9 @@ namespace Tbasic.Types
             context.AddCommand("return", Return);
             context.AddCommand("SetStatus", SetStatus);
 
-            StackData ret = stackdat.Runtime.ExecuteInContext(context, Body);
+            StackData ret = runtime.Execute(Body);
             stackdat.CopyFrom(ret);
-            stackdat.Runtime.HonorBreak();
+            runtime.HonorBreak();
             return stackdat.Data;
         }
 

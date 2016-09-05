@@ -69,11 +69,8 @@ namespace Tbasic.Types
                 throw new TbasicRuntimeException("The dot operator cannot be used on primitive types");
             IExpressionEvaluator e = right as IExpressionEvaluator;
             if (e != null) {
-                ObjectContext old = e.Runtime.Context;
-                e.Runtime.Context = n;
-                object result = e.Evaluate();
-                e.Runtime.Context = old;
-                return result;
+                e.CurrentContext = n; // set the context to the scope of the class
+                return e.Evaluate();
             }
             else {
                 throw ThrowHelper.InvalidExpression($"{n.Name}.{right}");

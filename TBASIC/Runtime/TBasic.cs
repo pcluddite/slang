@@ -155,14 +155,14 @@ namespace Tbasic.Runtime
 #endif
                     BlockCreator block_init;
                     if (Context.TryGetBlock(current.Name, out block_init)) {
-                        runtime = Execute(this, current);
-                    }
-                    else {
                         CodeBlock block = block_init(index, lines);
                         Context = Context.CreateSubContext();
                         block.Execute(this);
                         Context = Context.Collect();
                         index += block.Length - 1; // skip the length of the executed block
+                    }
+                    else {
+                        runtime = Execute(this, current);
                     }
 #if !NO_EXCEPT
                 }
@@ -195,14 +195,14 @@ namespace Tbasic.Runtime
             return runtime;
         }
 
-        internal StackData ExecuteInContext(ObjectContext newcontext, IList<Line> lines)
+        internal object ExecuteInContext(TBasicFunction func, StackData args, ObjectContext newcontext)
         {
             ObjectContext old = Context;
-            StackData ret;
-            Context = newcontext;
-            ret = Execute(lines);
+            Context = newcontext.CreateSubContext();
+            args.Data = func(args);
+            Context.SetReturns(args);
             Context = old;
-            return ret;
+            return args.Data;
         }
 
         internal StackData ExecuteInSubContext(IList<Line> lines)

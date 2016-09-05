@@ -1,0 +1,66 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".Generated.cs" #>
+// ======
+//
+// Copyright (c) Timothy Baxendale. All Rights Reserved.
+//
+// ======
+using System;
+using Tbasic.Runtime;
+using Tbasic.Types;
+
+namespace Tbasic.Parsing
+{
+	internal partial class DefaultScanner
+	{
+        public bool NextBinaryOp(ObjectContext context, out BinaryOperator foundOp)
+        {
+            foundOp = default(BinaryOperator);
+            <# BuildNextOpBody("BinaryOperator"); #>
+        }
+
+        public bool NextUnaryOp(ObjectContext context, object last, out UnaryOperator foundOp)
+        {
+            foundOp = default(UnaryOperator);
+            if (!(last == null || last is BinaryOperator)) // unary operators can really only come after a binary operator or the beginning of the expression
+                return false;
+
+            <# BuildNextOpBody("UnaryOperator"); #>
+        }
+<# BuildMatchOp("BinaryOperator"); #>
+<# BuildMatchOp("UnaryOperator"); #>
+	}
+}
+
+<#+ private void BuildNextOpBody(string opName) { #>
+			string token = BuffNextWord();
+            if (string.IsNullOrEmpty(token))
+                return false;
+
+            if (Match<#= opName #>(token, context, out foundOp)) {
+                AdvanceScanner(foundOp.OperatorString.Length);
+                return true;
+            }
+
+			return false;
+<#+ } #>
+<#+ private void BuildMatchOp(string opName) { #>
+
+        private static bool Match<#= opName #>(string token, ObjectContext context, out <#= opName #> foundOp)
+        {
+            string foundStr = null;
+            foundOp = default(<#= opName #>);
+            foreach (var op in context.GetAll<#= opName #>s()) {
+                string opStr = op.OperatorString;
+                if (token.StartsWith(opStr, StringComparison.CurrentCultureIgnoreCase)) {
+                    foundOp = op;
+                    foundStr = opStr;
+                }
+            }
+            return foundStr != null;
+        }
+<#+ } #>

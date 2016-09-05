@@ -15,5 +15,6 @@ namespace Tbasic.Runtime
         IEnumerable<char> Expression { get; set; }
         object Evaluate();
         TBasic Runtime { get; set; }
+        ObjectContext CurrentContext { get; set; }
     }
 }

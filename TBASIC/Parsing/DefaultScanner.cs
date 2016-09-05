@@ -58,7 +58,7 @@ namespace Tbasic.Parsing
 
         protected virtual int CharAt(int pos)
         {
-            if (EndOfStream)
+            if (pos < 0 || pos >= InternalBuffer.Length)
                 return -1;
             return InternalBuffer[pos];
         }
@@ -226,7 +226,7 @@ namespace Tbasic.Parsing
                 return false;
             }
             else {
-                Position = IndexString(InternalBuffer, pos);
+                Position = IndexString(InternalBuffer, pos) + 1;
                 return true;
             }
         }
@@ -465,16 +465,11 @@ namespace Tbasic.Parsing
             return new DefaultScanner(buffer.ToString());
         }
 
-        public virtual IEnumerable<char> Range(int start, int count)
+        public virtual IEnumerable<char> Read(int start, int count)
         {
-            return InternalBuffer.Substring(start, count);
+            return StringSegment.Create(InternalBuffer, start, count);
         }
-
-        public virtual IEnumerable<char> Range(int start)
-        {
-            return InternalBuffer.Substring(start);
-        }
-
+        
         public void Skip(int count)
         {
             Position += count;
@@ -486,7 +481,7 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public override string ToString()
         {
-            return InternalBuffer.ToString();
+            return InternalBuffer;
         }
     }
 }

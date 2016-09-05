@@ -99,13 +99,9 @@ namespace Tbasic.Parsing
         /// </summary>
         IScanner Scan(IEnumerable<char> buffer);
         /// <summary>
-        /// Takes a range of characters from the buffer
+        /// Reads a number of characters from the buffer
         /// </summary>
-        IEnumerable<char> Range(int start, int count);
-        /// <summary>
-        /// Takes a range of characters from the buffer
-        /// </summary>
-        IEnumerable<char> Range(int start);
+        IEnumerable<char> Read(int start, int count);
         /// <summary>
         /// Advances the scanner a given number of characters
         /// </summary>

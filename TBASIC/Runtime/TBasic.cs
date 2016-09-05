@@ -4,13 +4,11 @@
 //
 // ======
 using System;
+using System.Collections.Generic;
 using System.IO;
-using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Types;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Tbasic.Runtime
 {
@@ -107,7 +105,7 @@ namespace Tbasic.Runtime
             IPreprocessor p = Preprocessor.Preprocess(this, lines);
             if (p.Functions.Count > 0) {
                 foreach (FunctionBlock func in p.Functions) {
-                    Global.AddFunction(func.Prototype.First(), func.Execute);
+                    Global.AddFunction(func.Prototype[0], func.Execute);
                 }
             }
             if (p.Classes.Count > 0) {

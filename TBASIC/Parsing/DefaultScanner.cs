@@ -17,9 +17,11 @@ namespace Tbasic.Parsing
     /// </summary>
     internal partial class DefaultScanner : IScanner
     {
-        protected static readonly Regex rxNumeric = new Regex(@"^((?:[0-9]+)?(?:\.[0-9]+)?(?:[eE]-?[0-9]+)?)", RegexOptions.Compiled);
+        protected static readonly Regex rxNumeric = new Regex(@"^([+-]?\d+(\.\d+)?([Ee][+-]?\d+)?)", RegexOptions.Compiled);
         protected static readonly Regex rxHex = new Regex(@"^(0x([0-9a-fA-F]+))", RegexOptions.Compiled);
-        protected static readonly Regex rxId = new Regex(@"^((_|[a-zA-Z])\w+)", RegexOptions.Compiled); protected Tuple<int, string> TokenBuffer = null;
+        protected static readonly Regex rxId = new Regex(@"^((_|[a-zA-Z])\w+)", RegexOptions.Compiled);
+
+        protected Tuple<int, string> TokenBuffer = null;
 
         /// <summary>
         /// The internal buffer for this scanner
@@ -51,14 +53,14 @@ namespace Tbasic.Parsing
             }
         }
 
-        public virtual int Current
+        public int Current
         {
             get { return CharAt(Position); }
         }
 
-        protected virtual int CharAt(int pos)
+        protected int CharAt(int pos)
         {
-            if (EndOfStream)
+            if (pos < 0 || pos >= InternalBuffer.Length)
                 return -1;
             return InternalBuffer[pos];
         }
@@ -149,7 +151,7 @@ namespace Tbasic.Parsing
         {
         }
 
-        public bool NextNumber(out Number num)
+        public virtual bool NextNumber(out Number num)
         {
             Match m = rxNumeric.Match(BuffNextWord() ?? string.Empty);
             if (m.Success && Number.TryParse(m.Value, out num)) {
@@ -162,7 +164,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public bool NextHexadecimal(out long hex)
+        public virtual bool NextHexadecimal(out long hex)
         {
             Match m = rxHex.Match(BuffNextWord() ?? string.Empty);
             if (m.Success) {
@@ -176,7 +178,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public bool Next(string pattern, bool ignoreCase)
+        public virtual bool Next(string pattern, bool ignoreCase)
         {
             string token = BuffNextWord();
             if (!string.IsNullOrEmpty(token) && token.StartsWith(pattern, ignoreCase, CultureInfo.CurrentCulture)) {
@@ -188,7 +190,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public bool NextStringOrToken(out IEnumerable<char> token)
+        public virtual bool NextStringOrToken(out IEnumerable<char> token)
         {
             token = null;
             int pos = FindNonWhiteSpace();
@@ -207,7 +209,7 @@ namespace Tbasic.Parsing
             return (sztoken != null);
         }
 
-        public bool NextString(out string parsed)
+        public virtual bool NextString(out string parsed)
         {
             int pos = FindNonWhiteSpace();
             if (pos >= Length || !IsQuote(InternalBuffer[pos])) {
@@ -219,14 +221,14 @@ namespace Tbasic.Parsing
             return (parsed != null);
         }
 
-        public bool SkipString()
+        public virtual bool SkipString()
         {
             int pos = FindNonWhiteSpace();
             if (pos >= Length || !IsQuote(InternalBuffer[pos])) {
                 return false;
             }
             else {
-                Position = IndexString(InternalBuffer, pos);
+                Position = IndexString(InternalBuffer, pos) + 1;
                 return true;
             }
         }
@@ -241,7 +243,7 @@ namespace Tbasic.Parsing
             return (c == '\"' || c == '\'');
         }
 
-        public bool NextGroup(out IList<IEnumerable<char>> args)
+        public virtual bool NextGroup(out IList<IEnumerable<char>> args)
         {
             int start = FindNonWhiteSpace();
             int pos = GetGroup(start, out args);
@@ -252,7 +254,7 @@ namespace Tbasic.Parsing
             return false;
         }
 
-        protected int GetGroup(int pos, out IList<IEnumerable<char>> args)
+        protected virtual int GetGroup(int pos, out IList<IEnumerable<char>> args)
         {
             if (pos >= Length || !IsGroupChar(InternalBuffer[pos])) {
                 args = null;
@@ -263,7 +265,7 @@ namespace Tbasic.Parsing
             return pos;
         }
 
-        public bool SkipGroup()
+        public virtual bool SkipGroup()
         {
             int pos = FindNonWhiteSpace();
             if (pos >= Length || !IsGroupChar(InternalBuffer[pos])) {
@@ -275,7 +277,7 @@ namespace Tbasic.Parsing
             }
         }
         
-        public bool NextValidIdentifier(out IEnumerable<char> name)
+        public virtual bool NextValidIdentifier(out IEnumerable<char> name)
         {
             Match m = rxId.Match(BuffNextWord() ?? string.Empty);
             if (m.Success) {
@@ -288,7 +290,7 @@ namespace Tbasic.Parsing
             return (name != null);
         }
 
-        public bool NextFunction(out IEnumerable<char> name, out IList<IEnumerable<char>> args)
+        public virtual bool NextFunction(out IEnumerable<char> name, out IList<IEnumerable<char>> args)
         {
             int start = Position;
             if (NextValidIdentifier(out name) && NextGroup(out args)) {
@@ -301,7 +303,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        public bool NextVariable(out IEnumerable<char> name, out IList<IEnumerable<char>> indices)
+        public virtual bool NextVariable(out IEnumerable<char> name, out IList<IEnumerable<char>> indices)
         {
             name = null; indices = null;
             string token = BuffNextWord();
@@ -342,9 +344,10 @@ namespace Tbasic.Parsing
             }
         }
 
-        public bool NextIndices(out IList<IEnumerable<char>> indices)
+        public virtual bool NextIndices(out IList<IEnumerable<char>> indices)
         {
             int pos = Position;
+            SkipWhiteSpace();
             if (Current == '[' && NextGroup(out indices)) {
                 return true;
             }
@@ -352,21 +355,6 @@ namespace Tbasic.Parsing
                 Position = pos;
                 indices = null;
                 return false;
-            }
-        }
-        
-        private static unsafe int FindAcceptableFuncChars(string expr, int start)
-        {
-            fixed (char* lpseg = expr)
-            {
-                int len = expr.Length;
-                int index = start;
-                for (; index < len; ++index) {
-                    if (!char.IsLetterOrDigit(lpseg[index]) && lpseg[index] != '_') {
-                        return index;
-                    }
-                }
-                return index;
             }
         }
 
@@ -396,7 +384,7 @@ namespace Tbasic.Parsing
             return (variable != null);
         }
 
-        public bool NextBool(out bool b)
+        public virtual bool NextBool(out bool b)
         {
             string token = BuffNextWord();
             if (string.IsNullOrEmpty(token))
@@ -413,68 +401,17 @@ namespace Tbasic.Parsing
             }
             return b = false;
         }
-
-        public bool NextBinaryOp(ObjectContext context, out BinaryOperator foundOp)
-        {
-            foundOp = default(BinaryOperator);
-            string token = BuffNextWord();
-            if (string.IsNullOrEmpty(token))
-                return false;
-
-            if (MatchOperator(token, context, out foundOp)) {
-                AdvanceScanner(foundOp.OperatorString.Length);
-                return true;
-            }
-            return false;
-        }
-
-        public bool NextUnaryOp(ObjectContext context, object last, out UnaryOperator foundOp)
-        {
-            foundOp = default(UnaryOperator);
-            if (!(last == null || last is BinaryOperator)) // unary operators can really only come after a binary operator or the beginning of the expression
-                return false;
-
-            string token = BuffNextWord();
-            if (string.IsNullOrEmpty(token))
-                return false;
-
-            if (MatchOperator(token, context, out foundOp)) {
-                AdvanceScanner(foundOp.OperatorString.Length);
-                return true;
-            }
-
-            return false;
-        }
-
-        private static bool MatchOperator<T>(string token, ObjectContext context, out T foundOp) where T : IOperator
-        {
-            string foundStr = null;
-            foundOp = default(T);
-            foreach (var op in context.GetAllOperators<T>()) {
-                string opStr = op.OperatorString;
-                if (token.StartsWith(opStr, StringComparison.CurrentCultureIgnoreCase)) {
-                    foundOp = op;
-                    foundStr = opStr;
-                }
-            }
-            return foundStr != null;
-        }
         
         public virtual IScanner Scan(IEnumerable<char> buffer)
         {
             return new DefaultScanner(buffer.ToString());
         }
 
-        public virtual IEnumerable<char> Range(int start, int count)
+        public virtual IEnumerable<char> Read(int start, int count)
         {
-            return InternalBuffer.Substring(start, count);
+            return StringSegment.Create(InternalBuffer, start, count);
         }
-
-        public virtual IEnumerable<char> Range(int start)
-        {
-            return InternalBuffer.Substring(start);
-        }
-
+        
         public void Skip(int count)
         {
             Position += count;
@@ -486,7 +423,7 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public override string ToString()
         {
-            return InternalBuffer.ToString();
+            return InternalBuffer;
         }
     }
 }

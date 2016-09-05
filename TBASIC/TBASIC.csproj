@@ -39,8 +39,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Extensions.cs" />
@@ -60,6 +58,11 @@
     <Compile Include="Libraries\ArrayLibrary.cs" />
     <Compile Include="Libraries\StringLibrary.cs" />
     <Compile Include="Libraries\SystemLibrary.cs" />
+    <Compile Include="Parsing\DefaultScanner.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefaultScanner.tt</DependentUpon>
+    </Compile>
     <Compile Include="Parsing\IPreprocessor.cs" />
     <Compile Include="Parsing\IScanner.cs" />
     <Compile Include="Parsing\Preprocessors.cs" />
@@ -84,7 +87,9 @@
       <DependentUpon>TypeConvert.tt</DependentUpon>
     </Compile>
     <Compile Include="Runtime\Evaluator\Statement.cs" />
-    <Compile Include="Parsing\DefaultScanner.GroupParser.cs" />
+    <Compile Include="Parsing\DefaultScanner.GroupParser.cs">
+      <DependentUpon>DefaultScanner.cs</DependentUpon>
+    </Compile>
     <Compile Include="Runtime\Evaluator\ExpressionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\BinaryOpQueue.cs" />
     <Compile Include="Runtime\Evaluator\Function.cs" />
@@ -143,6 +148,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Parsing\DefaultScanner.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DefaultScanner.Generated.cs</LastGenOutput>
+      <DependentUpon>DefaultScanner.cs</DependentUpon>
+    </Content>
     <Content Include="Runtime\ObjectContext.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ObjectContext.Generated.cs</LastGenOutput>

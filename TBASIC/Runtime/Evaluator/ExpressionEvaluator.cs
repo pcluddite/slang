@@ -176,7 +176,7 @@ namespace Tbasic.Runtime
                 scanner.SkipGroup();
 
                 ExpressionEvaluator eval = new ExpressionEvaluator(
-                    scanner.Range(startIndex + 1, scanner.Position - startIndex - 2),
+                    scanner.Read(startIndex + 1, scanner.Position - startIndex - 2),
                     Runtime // share the wealth
                 );
                 _tokens.AddLast(eval);

@@ -282,33 +282,6 @@ namespace Tbasic.Runtime
                 yield return unop;
         }
 
-        /// <summary>
-        /// This is a workaround for some generic programming. I don't like it.
-        /// </summary>
-        internal IEnumerable<T> GetAllOperators<T>() where T : IOperator
-        {
-            ObjectContext context = this;
-            while (context != null) {
-                foreach (var op  in context.GetLocalOperators<T>()) {
-                    yield return op;
-                }
-                context = context._super;
-            }
-        }
-
-        /// <summary>
-        /// This is another workaround for generic programming. I still don't like it.
-        /// </summary>
-        internal IEnumerable<T> GetLocalOperators<T>() where T : IOperator
-        {
-            if (typeof(T) == typeof(BinaryOperator)) {
-                return (IEnumerable<T>)GetLocalBinaryOperators();
-            }
-            else {
-                return (IEnumerable<T>)GetLocalUnaryOperators();
-            }
-        }
-
         #endregion
 
         #region Specialized

@@ -62,7 +62,7 @@ namespace Tbasic.Types
                 throw ThrowHelper.ExpectedToken("UNTIL' or 'WHILE");
             }
 
-            ExpressionEvaluator eval = new ExpressionEvaluator(scanner.Range(scanner.Position, scanner.Length - scanner.Position), runtime);
+            ExpressionEvaluator eval = new ExpressionEvaluator(scanner.Read(scanner.Position, scanner.Length - scanner.Position), runtime);
 
             if (doLoop) {
                 do {

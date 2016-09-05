@@ -6,9 +6,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Tbasic.Components;
 using Tbasic.Errors;
-using System.Linq;
 
 namespace Tbasic.Parsing
 {

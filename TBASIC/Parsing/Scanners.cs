@@ -22,6 +22,6 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Gets the default BASIC scanner
         /// </summary>
-        public static readonly IScanner Default = new DefaultScanner();
+        public static readonly IScanner Default = new DefaultScanner(string.Empty);
     }
 }

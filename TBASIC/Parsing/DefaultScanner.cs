@@ -13,14 +13,25 @@ using Tbasic.Types;
 namespace Tbasic.Parsing
 {
     /// <summary>
-    /// The default implementation of Scanner
+    /// The default implementation of Scanner. This can be extended and modified for custom implementations.
     /// </summary>
-    internal partial class DefaultScanner : IScanner
+    public partial class DefaultScanner : IScanner
     {
+        /// <summary>
+        /// A regular expression for matching numbers
+        /// </summary>
         protected static readonly Regex rxNumeric = new Regex(@"^([+-]?\d+(\.\d+)?([Ee][+-]?\d+)?)", RegexOptions.Compiled);
+        /// <summary>
+        /// A regular expression for matching hexadecimal
+        /// </summary>
         protected static readonly Regex rxHex = new Regex(@"^(0x([0-9a-fA-F]+))", RegexOptions.Compiled);
+        /// <summary>
+        /// A regular expression for matching identifiers (function, variable, class and other names)
+        /// </summary>
         protected static readonly Regex rxId = new Regex(@"^((_|[a-zA-Z])\w+)", RegexOptions.Compiled);
-
+        /// <summary>
+        /// The buffered token
+        /// </summary>
         protected Tuple<int, string> TokenBuffer = null;
 
         /// <summary>
@@ -53,11 +64,17 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Gets the character at the current position. If the position is out of bounds, -1 is returned
+        /// </summary>
         public int Current
         {
             get { return CharAt(Position); }
         }
 
+        /// <summary>
+        /// Gets a character at a given position. If the position is out of bounds, -1 is returned
+        /// </summary>
         protected int CharAt(int pos)
         {
             if (pos < 0 || pos >= InternalBuffer.Length)
@@ -75,7 +92,10 @@ namespace Tbasic.Parsing
             Position = FindNonWhiteSpace();
         }
 
-        protected virtual int FindNonWhiteSpace()
+        /// <summary>
+        /// Finds the next instance of a non-whitespace character without advancing the reader
+        /// </summary>
+        protected int FindNonWhiteSpace()
         {
             int pos = Position;
             while (pos < Length && char.IsWhiteSpace(InternalBuffer[pos])) {
@@ -142,15 +162,25 @@ namespace Tbasic.Parsing
             return word;
         }
 
+        /// <summary>
+        /// Initializes a DefaultScanner with a given string buffer
+        /// </summary>
+        /// <param name="buffer"></param>
         public DefaultScanner(string buffer)
         {
             InternalBuffer = buffer;
         }
 
-        public DefaultScanner()
+        /// <summary>
+        /// Initializes a DefaultScanner without a buffer
+        /// </summary>
+        protected DefaultScanner()
         {
         }
 
+        /// <summary>
+        /// Tries to match a number from the buffer and advances the reader to the end of that number
+        /// </summary>
         public virtual bool NextNumber(out Number num)
         {
             Match m = rxNumeric.Match(BuffNextWord() ?? string.Empty);
@@ -164,6 +194,9 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Tries to match a hex number from the buffer and advances the reader to the end of that number
+        /// </summary>
         public virtual bool NextHexadecimal(out long hex)
         {
             Match m = rxHex.Match(BuffNextWord() ?? string.Empty);
@@ -178,6 +211,9 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Tries to match a token from the buffer and advances the reader to the end of that token
+        /// </summary>
         public virtual bool Next(string pattern, bool ignoreCase)
         {
             string token = BuffNextWord();
@@ -190,6 +226,9 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Tries to match a token or a string from the buffer and advances the reader to the end of that token or string
+        /// </summary>
         public virtual bool NextStringOrToken(out IEnumerable<char> token)
         {
             token = null;
@@ -209,6 +248,9 @@ namespace Tbasic.Parsing
             return (sztoken != null);
         }
 
+        /// <summary>
+        /// Tries to match a quoted and escaped string from the buffer
+        /// </summary>
         public virtual bool NextString(out string parsed)
         {
             int pos = FindNonWhiteSpace();
@@ -221,6 +263,9 @@ namespace Tbasic.Parsing
             return (parsed != null);
         }
 
+        /// <summary>
+        /// Advances the buffer to the end of a quoted string without parsing it
+        /// </summary>
         public virtual bool SkipString()
         {
             int pos = FindNonWhiteSpace();
@@ -233,16 +278,25 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Checks if a character is an opening group character
+        /// </summary>
         protected static bool IsGroupChar(int c)
         {
             return (c == '(' || c == '[');
         }
 
+        /// <summary>
+        /// Checks if a character is a valid quote character
+        /// </summary>
         protected static bool IsQuote(int c)
         {
             return (c == '\"' || c == '\'');
         }
 
+        /// <summary>
+        /// Tries to match a group from the buffer and advances the reader to the end of that group
+        /// </summary>
         public virtual bool NextGroup(out IList<IEnumerable<char>> args)
         {
             int start = FindNonWhiteSpace();
@@ -254,6 +308,9 @@ namespace Tbasic.Parsing
             return false;
         }
 
+        /// <summary>
+        /// Tries to match a number from the buffer without advancing the reader
+        /// </summary>
         protected virtual int GetGroup(int pos, out IList<IEnumerable<char>> args)
         {
             if (pos >= Length || !IsGroupChar(InternalBuffer[pos])) {
@@ -265,6 +322,9 @@ namespace Tbasic.Parsing
             return pos;
         }
 
+        /// <summary>
+        /// Advances the buffer to the end of a group without advancing it
+        /// </summary>
         public virtual bool SkipGroup()
         {
             int pos = FindNonWhiteSpace();
@@ -276,7 +336,10 @@ namespace Tbasic.Parsing
                 return true;
             }
         }
-        
+
+        /// <summary>
+        /// Tries to match an identifier from the buffer and advances the reader to the end of that identifier
+        /// </summary>
         public virtual bool NextValidIdentifier(out IEnumerable<char> name)
         {
             Match m = rxId.Match(BuffNextWord() ?? string.Empty);
@@ -290,6 +353,9 @@ namespace Tbasic.Parsing
             return (name != null);
         }
 
+        /// <summary>
+        /// Tries to match a function from the buffer and advances the reader to the end of that function
+        /// </summary>
         public virtual bool NextFunction(out IEnumerable<char> name, out IList<IEnumerable<char>> args)
         {
             int start = Position;
@@ -303,6 +369,9 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Tries to match a variable from the buffer and advances the reader to the end of that variable
+        /// </summary>
         public virtual bool NextVariable(out IEnumerable<char> name, out IList<IEnumerable<char>> indices)
         {
             name = null; indices = null;
@@ -344,6 +413,9 @@ namespace Tbasic.Parsing
             }
         }
 
+        /// <summary>
+        /// Tries to match a group of indices from the buffer and advances the reader to the end of that group
+        /// </summary>
         public virtual bool NextIndices(out IList<IEnumerable<char>> indices)
         {
             int pos = Position;
@@ -384,6 +456,9 @@ namespace Tbasic.Parsing
             return (variable != null);
         }
 
+        /// <summary>
+        /// Tries to match boolean value from the buffer and advances the reader to the end of that boolean
+        /// </summary>
         public virtual bool NextBool(out bool b)
         {
             string token = BuffNextWord();
@@ -402,16 +477,25 @@ namespace Tbasic.Parsing
             return b = false;
         }
         
+        /// <summary>
+        /// Creates a new scanner with a given buffer
+        /// </summary>
         public virtual IScanner Scan(IEnumerable<char> buffer)
         {
             return new DefaultScanner(buffer.ToString());
         }
 
+        /// <summary>
+        /// Reads a number of characters from the buffer
+        /// </summary>
         public virtual IEnumerable<char> Read(int start, int count)
         {
             return StringSegment.Create(InternalBuffer, start, count);
         }
         
+        /// <summary>
+        /// Advances the reader a number of characters
+        /// </summary>
         public void Skip(int count)
         {
             Position += count;

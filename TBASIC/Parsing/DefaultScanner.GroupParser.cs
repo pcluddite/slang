@@ -10,7 +10,7 @@ using Tbasic.Errors;
 
 namespace Tbasic.Parsing
 {
-    internal partial class DefaultScanner
+    public partial class DefaultScanner
     {
         private static int IndexString(string fullstr, int index)
         {

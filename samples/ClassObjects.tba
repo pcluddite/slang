@@ -20,8 +20,8 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
-first$ = CreateObject("MyMessage", "This is an object-oriented program")
-second$ = CreateObject("MyMessage", "Hello, World!")
+first$ = new MyMessage("This is an object-oriented program")
+second$ = new MyMessage("Hello, World!")
 second$.ShowMsg()
 first$.ShowMsg()
 

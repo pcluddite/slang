@@ -47,6 +47,13 @@ namespace Tbasic.Runtime
 
         public TBasic Runtime { get; set; }
 
+        public IList<IEnumerable<char>> Parameters
+        {
+            get {
+                return _params;
+            }
+        }
+
         #endregion
 
         #region Construction

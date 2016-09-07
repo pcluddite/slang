@@ -201,7 +201,7 @@ namespace Tbasic.Runtime
             while (x != null) {
                 UnaryOperator? op = x.Value as UnaryOperator?;
                 if (op != null) {
-                    var node = op.Value.Side == UnaryOperator.OperandSide.Right ? x.Next : x.Previous;
+                    var node = x.Next;
                     x.Value = PerformUnaryOp(Runtime, op.Value, node?.Value);
                     if (node != null)
                         list.Remove(node);
@@ -264,18 +264,17 @@ namespace Tbasic.Runtime
 
         public static object PerformUnaryOp(TBasic runtime, UnaryOperator op, object operand)
         {
-            IExpressionEvaluator tempv = operand as IExpressionEvaluator;
-            if (tempv != null)
-                operand = tempv.Evaluate();
+            if (op.EvaluateOperand) {
+                IExpressionEvaluator tempv = operand as IExpressionEvaluator;
+                if (tempv != null)
+                    operand = tempv.Evaluate();
+            }
 
             try {
                 return op.ExecuteOperator(runtime, operand);
             }
-            catch(InvalidCastException) when (operand is IOperator) {
+            catch(InvalidCastException) {
                 throw new ArgumentException("Unary operand cannot be " + operand.GetType().Name);
-            }
-            catch (Exception ex) when (ex is InvalidCastException || ex is FormatException || ex is ArgumentException || ex is OverflowException) {
-                throw new ArgumentException("Unary operator '" + op.OperatorString + "' not defined.");
             }
         }
 

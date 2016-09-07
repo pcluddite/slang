@@ -6,7 +6,7 @@
 using System;
 using System.Globalization;
 using Tbasic.Runtime;
-using Tbasic.Components;
+using Tbasic.Errors;
 
 namespace Tbasic.Types
 {
@@ -23,7 +23,7 @@ namespace Tbasic.Types
 
         public override void LoadStandardOperators()
         {
-            operators.Add("NEW", new UnaryOperator("NEW", New));
+            operators.Add("NEW", new UnaryOperator("NEW", New, evaluate: false));
             operators.Add("+", new UnaryOperator("+", Plus));
             operators.Add("-", new UnaryOperator("-", Minus));
             operators.Add("NOT ", new UnaryOperator("NOT ", Not));
@@ -32,12 +32,18 @@ namespace Tbasic.Types
 
         private static object New(TBasic runtime, object value)
         {
-            /* runtime.ScannerDelegate(new StringSegment(value.ToString()));
+            Function eval = value as Function;
+            if (eval == null) {
+                throw ThrowHelper.InvalidTypeInExpression(value?.GetType().Name, "function");
+            }
+            string name = eval.Expression.ToString();
             TClass prototype;
             if (!runtime.Context.TryGetType(name, out prototype))
                 throw new UndefinedObjectException($"The class {name} is undefined");
-            return prototype.GetInstance(new StackData(stackdat.Runtime, stackdat.Parameters.Skip(1))); */
-            throw new NotImplementedException();
+            StackData stackdat = new StackData(runtime, eval.Parameters.TB_ToStrings());
+            stackdat.Name = eval.Expression.ToString();
+            stackdat.EvaluateAll();
+            return prototype.GetInstance(stackdat);
         }
 
         private static object Plus(TBasic runtime, object value)

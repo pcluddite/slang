@@ -14,21 +14,6 @@ namespace Tbasic.Types
     public struct UnaryOperator : IOperator, IEquatable<UnaryOperator>
     {
         /// <summary>
-        /// Side that the operator uses as its operand
-        /// </summary>
-        public enum OperandSide
-        {
-            /// <summary>
-            /// The operand is on the left
-            /// </summary>
-            Left,
-            /// <summary>
-            /// The operand is on the right
-            /// </summary>
-            Right
-        }
-
-        /// <summary>
         /// A delegate that represents the method which processes the operand. 
         /// </summary>
         /// <param name="runtime">the current runtime</param>
@@ -45,23 +30,23 @@ namespace Tbasic.Types
         /// Gets the method that processes the operands
         /// </summary>
         public UnaryOpDelegate ExecuteOperator { get; private set; }
-
+        
         /// <summary>
-        /// Gets the side that she operand should be on
+        /// Gets whether or not the operand should be evaluated
         /// </summary>
-        public OperandSide Side { get; private set; }
+        public bool EvaluateOperand { get; private set; }
 
         /// <summary>
         /// Creates a new UnaryOperator
         /// </summary>
         /// <param name="strOp">the string representation of the operator</param>
         /// <param name="doOp">the method that processes the operand</param>
-        /// <param name="side">the side that the operand is on</param>
-        public UnaryOperator(string strOp, UnaryOpDelegate doOp, OperandSide side = OperandSide.Right)
+        /// <param name="evaluate">whether or not the operand should be evaluated</param>
+        public UnaryOperator(string strOp, UnaryOpDelegate doOp, bool evaluate = true)
         {
             OperatorString = strOp;
             ExecuteOperator = doOp;
-            Side = side;
+            EvaluateOperand = evaluate;
         }
 
         /// <summary>
@@ -71,7 +56,7 @@ namespace Tbasic.Types
         /// <returns></returns>
         public bool Equals(UnaryOperator other)
         {
-            return OperatorString == other.OperatorString && ExecuteOperator == other.ExecuteOperator && Side == other.Side;
+            return OperatorString == other.OperatorString && ExecuteOperator == other.ExecuteOperator && EvaluateOperand == other.EvaluateOperand;
         }
 
         /// <summary>
@@ -115,7 +100,7 @@ namespace Tbasic.Types
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return OperatorString.GetHashCode() ^ ExecuteOperator.GetHashCode() ^ Side.GetHashCode();
+            return OperatorString.GetHashCode() ^ ExecuteOperator.GetHashCode() ^ EvaluateOperand.GetHashCode();
         }
     }
 }

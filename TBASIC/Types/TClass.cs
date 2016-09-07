@@ -82,8 +82,6 @@ namespace Tbasic.Types
         /// <summary>
         /// Creates an instance of this class for use in TBASIC code
         /// </summary>
-        /// <param name="runtime"></param>
-        /// <returns></returns>
         public TClass GetInstance(StackData runtime)
         {
             TClass instance = Clone();
@@ -98,18 +96,18 @@ namespace Tbasic.Types
             return instance;
         }
 
-        private void Ctor(StackData runtime, TClass instance)
+        private void Ctor(StackData stackdat, TClass instance)
         {
-            ObjectContext old = runtime.Runtime.Context;
-            runtime.Runtime.Context = instance;
-            runtime.Runtime.Execute(Constructor); // this is to initialize all the variables
+            ObjectContext old = stackdat.Runtime.Context;
+            stackdat.Runtime.Context = instance;
+            stackdat.Runtime.Execute(Constructor); // this is to initialize all the variables
 
             CallData ctor;
             if (TryGetFunction("<>ctor", out ctor)) {
-                ctor.Function(runtime); // do the user defined constructor
+                ctor.Function(stackdat); // do the user defined constructor
             }
 
-            runtime.Runtime.Context = old;
+            stackdat.Runtime.Context = old;
         }
 
         internal TClass Clone()

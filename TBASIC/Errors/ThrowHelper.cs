@@ -111,7 +111,7 @@ namespace Tbasic.Errors
 
         public static Exception InvalidTypeInExpression(string expr, string expected)
         {
-            return new ScriptParsingException(string.Format("Invalid type in expression '{0}', expected '{1}'", expr, expected));
+            return new ScriptParsingException(string.Format("Invalid type in expression '{0}', expected '{1}'", expr ?? "null", expected));
         }
 
         public static Exception NoIndexSpecified()

@@ -15,7 +15,6 @@ namespace Tbasic.Libraries
     {
         public RuntimeLibrary(ObjectContext context)
         {
-            Add("CreateObject", CreateObject);
             Add("SizeOf", SizeOf);
             Add("Len", SizeOf);
             Add("IsStr", IsString);
@@ -30,17 +29,7 @@ namespace Tbasic.Libraries
             context.SetConstant("@version", TBasic.VERSION);
             context.SetConstant("@osversion", Environment.OSVersion.VersionString);
         }
-
-        private static object CreateObject(StackData stackdat)
-        {
-            stackdat.AssertAtLeast(2);
-            string name = stackdat.GetAt<string>(1);
-            TClass prototype;
-            if (!stackdat.Context.TryGetType(name, out prototype))
-                throw new UndefinedObjectException($"The class {name} is undefined");
-            return prototype.GetInstance(new StackData(stackdat.Runtime, stackdat.Parameters.Skip(1)));
-        }
-
+        
         private object CStr(StackData stackdat)
         {
             stackdat.AssertCount(2);

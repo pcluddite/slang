@@ -12,7 +12,12 @@ namespace Tbasic.Parsing
 {
     public partial class DefaultScanner
     {
-        private static int IndexString(string fullstr, int index)
+        /// <summary>
+        /// Gets the escape character for this scanner
+        /// </summary>
+        protected virtual char EscapeCharacter { get; } = '\\';
+
+        private int IndexString(string fullstr, int index)
         {
             char quote = fullstr[index++]; // The first character should be the quote
 
@@ -22,33 +27,35 @@ namespace Tbasic.Parsing
                     case '\n':
                     case '\r':
                         throw ThrowHelper.UnterminatedString();
-                    case '\\':
-                        index++;
-                        cur = fullstr[index];
-                        if (index >= fullstr.Length) {
-                            throw ThrowHelper.UnterminatedEscapeSequence();
-                        }
-                        switch (cur) {
-                            case 'b':
-                            case 't':
-                            case 'n':
-                            case 'f':
-                            case 'r':
-                            case '\"':
-                            case '\\':
-                            case '\'': break; // you're golden
-                            case 'u':
-                                index += 4;
-                                if (index >= fullstr.Length) {
-                                    throw ThrowHelper.UnterminatedUnicodeEscape();
-                                }
-                                break;
-                            default:
-                                throw ThrowHelper.UnknownEscapeSequence(cur);
-                        }
-                        break;
                     default:
-                        if (cur == quote) { // We be dun
+                        if (cur == EscapeCharacter) {
+                            index++;
+                            cur = fullstr[index];
+                            if (index >= fullstr.Length) {
+                                throw ThrowHelper.UnterminatedEscapeSequence();
+                            }
+                            switch (cur) {
+                                case 'b':
+                                case 't':
+                                case 'n':
+                                case 'f':
+                                case 'r':
+                                case '\"':
+                                case '\'': break; // you're golden
+                                case 'u':
+                                    index += 4;
+                                    if (index >= fullstr.Length) {
+                                        throw ThrowHelper.UnterminatedUnicodeEscape();
+                                    }
+                                    break;
+                                default:
+                                    if (cur != EscapeCharacter) {
+                                        throw ThrowHelper.UnknownEscapeSequence(cur);
+                                    }
+                                    break;
+                            }
+                        }
+                        else if (cur == quote) { // We be dun
                             return index;
                         }
                         break;
@@ -57,7 +64,7 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedString();
         }
 
-        private static int ReadString(string fullstr, int index, out string s_parsed)
+        private int ReadString(string fullstr, int index, out string s_parsed)
         {
             char quote = fullstr[index++]; // The first character should be the quote
 
@@ -68,34 +75,40 @@ namespace Tbasic.Parsing
                     case '\n':
                     case '\r':
                         throw ThrowHelper.UnterminatedString();
-                    case '\\':
-                        index++;
-                        if (index >= fullstr.Length) {
-                            throw ThrowHelper.UnterminatedEscapeSequence();
-                        }
-                        cur = fullstr[index];
-                        switch (cur) {
-                            case 'b': sb.Append('\b'); break;
-                            case 't': sb.Append('\t'); break;
-                            case 'n': sb.Append('\n'); break;
-                            case 'f': sb.Append('\f'); break;
-                            case 'r': sb.Append('\r'); break;
-                            case '\\': sb.Append('\\'); break;
-                            case '"': sb.Append('"'); break;
-                            case '\'': sb.Append('\''); break;
-                            case 'u':
-                                index += 4;
-                                if (index >= fullstr.Length) {
-                                    throw ThrowHelper.UnterminatedUnicodeEscape();
-                                }
-                                sb.Append((char)ushort.Parse(fullstr.Substring(index - 3, 4), NumberStyles.HexNumber));
-                                break;
-                            default:
-                                throw ThrowHelper.UnknownEscapeSequence(cur);
-                        }
-                        break;
                     default:
-                        if (cur == quote) { // We be dun
+                        if (cur == EscapeCharacter) {
+                            index++;
+                            if (index >= fullstr.Length) {
+                                throw ThrowHelper.UnterminatedEscapeSequence();
+                            }
+                            cur = fullstr[index];
+                            switch (cur) {
+                                case 'b': sb.Append('\b'); break;
+                                case 't': sb.Append('\t'); break;
+                                case 'n': sb.Append('\n'); break;
+                                case 'f': sb.Append('\f'); break;
+                                case 'r': sb.Append('\r'); break;
+                                case '"': sb.Append('"'); break;
+                                case '\'': sb.Append('\''); break;
+                                case 'u':
+                                    index += 4;
+                                    if (index >= fullstr.Length) {
+                                        throw ThrowHelper.UnterminatedUnicodeEscape();
+                                    }
+                                    sb.Append((char)ushort.Parse(fullstr.Substring(index - 3, 4), NumberStyles.HexNumber));
+                                    break;
+                                default:
+                                    if (cur == EscapeCharacter) {
+                                        sb.Append(cur);
+                                    }
+                                    else {
+                                        throw ThrowHelper.UnknownEscapeSequence(cur);
+                                    }
+                                    break;
+                            }
+                            break;
+                        }
+                        else if (cur == quote) { // We be dun
                             s_parsed = sb.ToString();
                             return index;
                         }
@@ -108,7 +121,7 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedString();
         }
 
-        private static int IndexGroup(string fullstr, int index)
+        private int IndexGroup(string fullstr, int index)
         {
             char c_open = fullstr[index]; // The first character should be the grouping character (i.e. '(' or '[')
             char c_close = c_open == '(' ? ')' : ']';
@@ -147,12 +160,12 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedGroup();
         }
 
-        private static int ReadGroup(string fullstr, int index, out IList<IEnumerable<char>> args)
+        private int ReadGroup(string fullstr, int index, out IList<IEnumerable<char>> args)
         {
             return ReadGroup(fullstr, index, ',', out args);
         }
 
-        private static int ReadGroup(string fullstr, int index, char separator, out IList<IEnumerable<char>> args)
+        private int ReadGroup(string fullstr, int index, char separator, out IList<IEnumerable<char>> args)
         {
             List<IEnumerable<char>> result = new List<IEnumerable<char>>();
             char c_open = fullstr[index];

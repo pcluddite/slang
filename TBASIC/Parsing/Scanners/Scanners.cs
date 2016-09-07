@@ -23,5 +23,9 @@ namespace Tbasic.Parsing
         /// Gets the default BASIC scanner
         /// </summary>
         public static readonly IScanner Default = new DefaultScanner(string.Empty);
+        /// <summary>
+        /// Gets a scanner better suited for a command line interface
+        /// </summary>
+        public static readonly IScanner Terminal = new TerminalScanner(string.Empty);
     }
 }

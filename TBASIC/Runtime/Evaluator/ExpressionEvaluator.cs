@@ -10,6 +10,7 @@ using System.Text;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Types;
+using Tbasic.Components;
 
 namespace Tbasic.Runtime
 {
@@ -107,33 +108,22 @@ namespace Tbasic.Runtime
                 return AddObjectToExprList("(", startIndex, scanner);
             }
 
-            // check string
-            string str_parsed;
-            if (scanner.NextString(out str_parsed)) {
-                return AddObjectToExprList(str_parsed, startIndex, scanner);
-            }
-
-            // check unary op
-            UnaryOperator unaryOp;
-            if (scanner.NextUnaryOp(CurrentContext, _tokens.Last?.Value, out unaryOp)) {
-                return AddObjectToExprList(unaryOp, startIndex, scanner);
-            }
-
             // check function
             Function func;
             if (DefaultScanner.NextFunctionInternal(scanner, Runtime, out func)) {
                 return AddObjectToExprList(func, startIndex, scanner);
             }
 
-            // check null
-            if (scanner.Next("null")) {
-                return AddObjectToExprList("null", startIndex, scanner);
-            }
-
             // check variable
             Variable variable;
             if (DefaultScanner.NextVariable(scanner, Runtime, out variable)) {
                 return AddObjectToExprList(variable, startIndex, scanner);
+            }
+
+            // check unary op
+            UnaryOperator unaryOp;
+            if (scanner.NextUnaryOp(CurrentContext, _tokens.Last?.Value, out unaryOp)) {
+                return AddObjectToExprList(unaryOp, startIndex, scanner);
             }
 
             // check hexadecimal
@@ -158,6 +148,17 @@ namespace Tbasic.Runtime
             BinaryOperator binOp;
             if (scanner.NextBinaryOp(CurrentContext, out binOp)) {
                 return AddObjectToExprList(binOp, startIndex, scanner);
+            }
+
+            // check null
+            if (scanner.Next("null")) {
+                return AddObjectToExprList("null", startIndex, scanner);
+            }
+
+            // check string
+            string str_parsed;
+            if (scanner.NextString(out str_parsed)) {
+                return AddObjectToExprList(str_parsed, startIndex, scanner);
             }
 
             // couldn't be parsed

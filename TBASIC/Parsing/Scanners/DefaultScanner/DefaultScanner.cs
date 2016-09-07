@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Tbasic.Runtime;
 using Tbasic.Types;
+using Tbasic.Components;
 
 namespace Tbasic.Parsing
 {
@@ -29,10 +30,15 @@ namespace Tbasic.Parsing
         /// A regular expression for matching identifiers (function, variable, class and other names)
         /// </summary>
         protected static readonly Regex rxId = new Regex(@"^((_|[a-zA-Z])\w+)", RegexOptions.Compiled);
+
         /// <summary>
-        /// The buffered token
+        /// The buffered token. The first item is the index of the token, the second is the token.
         /// </summary>
-        protected Tuple<int, string> TokenBuffer = null;
+        private ValueTuple<int, string> TokenBuffer = new ValueTuple<int, string>(int.MinValue, default(string));
+        /// <summary>
+        /// The next buffered index of the next non whitespace character. The first item is the index of the stream when the character was buffered. The second is the index of the character.
+        /// </summary>
+        private ValueTuple<int, int> NonwsBuffer = new ValueTuple<int, int>(int.MinValue, default(int));
 
         /// <summary>
         /// The internal buffer for this scanner
@@ -75,7 +81,7 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Gets a character at a given position. If the position is out of bounds, -1 is returned
         /// </summary>
-        protected int CharAt(int pos)
+        public int CharAt(int pos)
         {
             if (pos < 0 || pos >= InternalBuffer.Length)
                 return -1;
@@ -97,11 +103,14 @@ namespace Tbasic.Parsing
         /// </summary>
         protected int FindNonWhiteSpace()
         {
-            int pos = Position;
-            while (pos < Length && char.IsWhiteSpace(InternalBuffer[pos])) {
-                ++pos;
+            if (Position != NonwsBuffer.Item1) {
+                int pos = Position;
+                while (pos < Length && char.IsWhiteSpace(InternalBuffer[pos])) {
+                    ++pos;
+                }
+                NonwsBuffer = new ValueTuple<int, int>(Position, pos);
             }
-            return pos;
+            return NonwsBuffer.Item2;
         }
 
         /// <summary>
@@ -111,12 +120,12 @@ namespace Tbasic.Parsing
         {
             int start = FindNonWhiteSpace(),
                 pos = start;
-            if (TokenBuffer == null || TokenBuffer.Item1 != pos) {
+            if (TokenBuffer.Item1 != pos) {
                 while (pos < Length && !char.IsWhiteSpace(InternalBuffer[pos])) {
                     ++pos;
                 }
                 if (pos - start > 0) {
-                    TokenBuffer = new Tuple<int, string>(start, InternalBuffer.Substring(start, pos - start));
+                    TokenBuffer = new ValueTuple<int, string>(start, InternalBuffer.Substring(start, pos - start));
                 }
                 else {
                     return null;

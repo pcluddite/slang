@@ -42,6 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Extensions.cs" />
+    <Compile Include="Components\ValueTuple.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ValueTuple.tt</DependentUpon>
+    </Compile>
     <Compile Include="Components\WinRegistry.cs" />
     <Compile Include="Components\ScreenCapture.cs" />
     <Compile Include="Components\StructReference.cs" />
@@ -58,15 +63,16 @@
     <Compile Include="Libraries\ArrayLibrary.cs" />
     <Compile Include="Libraries\StringLibrary.cs" />
     <Compile Include="Libraries\SystemLibrary.cs" />
-    <Compile Include="Parsing\DefaultScanner.Generated.cs">
+    <Compile Include="Parsing\Scanners\DefaultScanner\DefaultScanner.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DefaultScanner.tt</DependentUpon>
     </Compile>
     <Compile Include="Parsing\IPreprocessor.cs" />
-    <Compile Include="Parsing\IScanner.cs" />
+    <Compile Include="Parsing\Scanners\IScanner.cs" />
     <Compile Include="Parsing\Preprocessors.cs" />
-    <Compile Include="Parsing\Scanners.cs" />
+    <Compile Include="Parsing\Scanners\Scanners.cs" />
+    <Compile Include="Parsing\Scanners\TerminalScanner\TerminalScanner.cs" />
     <Compile Include="Parsing\StringSegment.cs" />
     <Compile Include="Types\Operators\BinaryOperator.cs" />
     <Compile Include="Types\Operators\BinOpDicationary.cs" />
@@ -87,15 +93,13 @@
       <DependentUpon>TypeConvert.tt</DependentUpon>
     </Compile>
     <Compile Include="Runtime\Evaluator\Statement.cs" />
-    <Compile Include="Parsing\DefaultScanner.GroupParser.cs">
-      <DependentUpon>DefaultScanner.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Parsing\Scanners\DefaultScanner\DefaultScanner.GroupParser.cs" />
     <Compile Include="Runtime\Evaluator\ExpressionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\BinaryOpQueue.cs" />
     <Compile Include="Runtime\Evaluator\Function.cs" />
     <Compile Include="Runtime\Evaluator\IExpressionEvaluator.cs" />
     <Compile Include="Parsing\LineCollection.cs" />
-    <Compile Include="Parsing\DefaultScanner.cs" />
+    <Compile Include="Parsing\Scanners\DefaultScanner\DefaultScanner.cs" />
     <Compile Include="Parsing\DefaultPreprocessor.cs" />
     <Compile Include="Runtime\ObjectContext.cs" />
     <Compile Include="Runtime\Evaluator\Variable.cs" />
@@ -148,10 +152,13 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Parsing\DefaultScanner.tt">
+    <Content Include="Components\ValueTuple.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ValueTuple.cs</LastGenOutput>
+    </Content>
+    <Content Include="Parsing\Scanners\DefaultScanner\DefaultScanner.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DefaultScanner.Generated.cs</LastGenOutput>
-      <DependentUpon>DefaultScanner.cs</DependentUpon>
     </Content>
     <Content Include="Runtime\ObjectContext.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -162,6 +169,7 @@
       <LastGenOutput>TypeConvert.cs</LastGenOutput>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

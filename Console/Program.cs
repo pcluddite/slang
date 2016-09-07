@@ -34,6 +34,7 @@ namespace Tbasic.Terminal
             Console.Write("Initializing standard library...");
 
             TBasic runtime = new TBasic();
+            runtime.Scanner = Scanners.Terminal;
             runtime.Global.LoadStandardLibrary();
 
             foreach (var kv in runtime.Global.GetAllFunctions()) {

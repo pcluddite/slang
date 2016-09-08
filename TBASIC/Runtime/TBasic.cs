@@ -215,6 +215,26 @@ namespace Tbasic.Runtime
             return ret;
         }
 
+        /// <summary>
+        /// Executes a function or command with the given arguments
+        /// </summary>
+        public object ExecuteFunction(string name, params object[] args)
+        {
+            CallData calldat;
+            StackData stackdat = new StackData(this, args);
+            stackdat.Name = name;
+
+            if (Context.TryGetFunction(name, out calldat) || Context.TryGetCommand(name, out calldat)) {
+                if (calldat.Evaluate) {
+                    stackdat.EvaluateAll();
+                }
+                return calldat.Function(stackdat);
+            }
+            else {
+                throw ThrowHelper.UndefinedFunction(name);
+            }
+        }
+
         private void HandleError(Line current, StackData runtime, TbasicRuntimeException ex)
         {
             FunctionException cEx = ex as FunctionException;

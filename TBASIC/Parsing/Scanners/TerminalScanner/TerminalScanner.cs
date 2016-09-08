@@ -25,18 +25,5 @@ namespace Tbasic.Parsing
         {
             return new TerminalScanner(buffer.ToString());
         }
-
-        public override bool NextString(out string parsed)
-        {
-            string token = BuffNextWord();
-            if (token == null) {
-                parsed = null;
-            }
-            else if (!base.NextString(out parsed)) {
-                parsed = token;
-                AdvanceScanner(parsed);
-            }
-            return (parsed != null);
-        }
     }
 }

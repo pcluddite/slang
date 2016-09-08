@@ -41,7 +41,7 @@ namespace Tbasic.Terminal
                 runtime.Global.SetCommand(kv.Key, kv.Value);
             }
 
-            runtime.Global.AddCommandLibrary(new ConsoleLibrary(runtime));
+            runtime.Global.AddCommandLibrary(new ConsoleLibrary());
 
             Console.WriteLine("Done.\n");
 

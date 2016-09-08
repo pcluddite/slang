@@ -10,9 +10,9 @@ namespace TLang.Parsing
     /// <summary>
     /// Defines a set of methods and properties for a line of Tbasic code
     /// </summary>
-    public class Line : IComparable<Line>, IEquatable<Line>
+    public struct Line : IComparable<Line>, IEquatable<Line>
     {
-        private string visibleName = null;
+        private string visibleName;
         private string text;
 
         /// <summary>
@@ -65,12 +65,11 @@ namespace TLang.Parsing
         public Line(int id, string line)
         {
             LineNumber = id;
-            Text = line.Trim(); // Ignore leading and trailing whitespace.
+            visibleName = null;
+            text = line.Trim(); // Ignore leading and trailing whitespace.
+            IsFunction = false;
+            Name = null;
             FindAndSetName();
-        }
-
-        private Line()
-        {
         }
 
         internal static Line CreateLineNoTrim(int id, string line)

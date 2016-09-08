@@ -21,9 +21,6 @@ namespace TLang.Types
         /// </summary>
         public virtual IList<string> Prototype { get; set; }
 
-        internal static readonly Predicate<Line> CheckBegin = (line => line.Name.EqualsIgnoreCase("FUNCTION"));
-        internal static readonly Predicate<Line> CheckEnd = (line => line.Text.EqualsIgnoreCase("END FUNCTION"));
-
         /// <summary>
         /// Constructs a function block without initializing any members
         /// </summary>

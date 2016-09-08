@@ -15,5 +15,9 @@ namespace TLang.Parsing
         /// The default BASIC preprocessor
         /// </summary>
         public static readonly IPreprocessor Default = new DefaultPreprocessor();
+        /// <summary>
+        /// A preprocessor better suited for command line environments
+        /// </summary>
+        public static readonly IPreprocessor Terminal = new TerminalPreprocessor();
     }
 }

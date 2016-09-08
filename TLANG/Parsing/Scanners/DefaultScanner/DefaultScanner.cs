@@ -48,6 +48,10 @@ namespace TLang.Parsing
         /// Gets the string that represents a null value
         /// </summary>
         protected virtual string NullString { get; } = "null";
+        /// <summary>
+        /// Gets the string that represents the beginning of a comment
+        /// </summary>
+        protected virtual string Comment { get; } = "#";
 
         /// <summary>
         /// The internal buffer for this scanner
@@ -201,7 +205,16 @@ namespace TLang.Parsing
         /// </summary>
         public virtual bool NextExpressionBreak()
         {
-            return Next(ExpressionBreak, true);
+            return Next(ExpressionBreak, ignoreCase: true);
+        }
+
+        /// <summary>
+        /// Tries to match the next token as a comment character
+        /// </summary>
+        /// <returns></returns>
+        public bool NextComment()
+        {
+            return Next(Comment, ignoreCase: true);
         }
 
         /// <summary>
@@ -210,7 +223,7 @@ namespace TLang.Parsing
         /// <returns></returns>
         public virtual bool NextNull()
         {
-            return Next(NullString, true);
+            return Next(NullString, ignoreCase: true);
         }
 
         /// <summary>

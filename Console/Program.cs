@@ -10,6 +10,7 @@ using System.Text;
 using TLang.Parsing;
 using TLang.Runtime;
 using TLang.Errors;
+using System.IO;
 
 #if DEBUG
 using System.Diagnostics;
@@ -35,11 +36,10 @@ namespace TLang.Terminal
 
             TRuntime runtime = new TRuntime();
             runtime.Scanner = Scanners.Terminal;
+            runtime.Preprocessor = Preprocessors.Terminal;
             runtime.Global.LoadStandardLibrary();
-
-            foreach (var kv in runtime.Global.GetAllFunctions()) {
-                runtime.Global.SetCommand(kv.Key, kv.Value);
-            }
+            runtime.Global.RenameFunction("GetCurrentDirectory", "PWD");
+            runtime.Global.RenameFunction("SetCurrentDirectory", "CD");
 
             runtime.Global.AddCommandLibrary(new ConsoleLibrary());
 

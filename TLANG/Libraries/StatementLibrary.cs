@@ -29,7 +29,7 @@ namespace TLang.Libraries
             Add("CONST", Const);
             Add("EXIT", Exit);
             Add("BREAK", Break);
-            Add("#INCLUDE", Include);
+            Add("IMPORT", Include);
         }
 
         private static object Include(TRuntime runtime, StackData stackdat)

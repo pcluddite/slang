@@ -127,12 +127,6 @@ namespace TLang.Runtime
                 return AddObjectToExprList("(", startIndex, scanner, tokens);
             }
 
-            // check function
-            Function func;
-            if (DefaultScanner.NextFunctionInternal(scanner, Runtime, out func)) {
-                return AddObjectToExprList(func, startIndex, scanner, tokens);
-            }
-
             // check variable
             Variable variable;
             if (DefaultScanner.NextVariable(scanner, Runtime, out variable)) {
@@ -174,14 +168,25 @@ namespace TLang.Runtime
                 return AddObjectToExprList(null, startIndex, scanner, tokens);
             }
 
-            if (scanner.NextExpressionBreak()) {
-                return true;
-            }
-
             // check string
             string str_parsed;
             if (scanner.NextString(out str_parsed)) {
                 return AddObjectToExprList(str_parsed, startIndex, scanner, tokens);
+            }
+
+            // check function
+            Function func;
+            if (DefaultScanner.NextFunctionInternal(scanner, Runtime, out func)) {
+                return AddObjectToExprList(func, startIndex, scanner, tokens);
+            }
+
+            if (scanner.NextComment()) {
+                scanner.Position = scanner.Length; // comments go to the end of the line
+                return false;
+            }
+
+            if (scanner.NextExpressionBreak()) {
+                return true;
             }
 
             // couldn't be parsed

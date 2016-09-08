@@ -25,5 +25,25 @@ namespace TLang.Parsing
         {
             return new TerminalScanner(buffer.ToString());
         }
+
+        public override bool NextFunction(out IEnumerable<char> name, out IList<IEnumerable<char>> args)
+        {
+            int start = Position;
+            if (base.NextFunction(out name, out args)) {
+                return true;
+            }
+            else if (NextValidIdentifier(out name)) {
+                args = new List<IEnumerable<char>>();
+                IEnumerable<char> token;
+                while (NextStringOrToken(out token)) {
+                    args.Add(token);
+                }
+                return true;
+            }
+            else {
+                Position = start;
+                return false;
+            }
+        }
     }
 }

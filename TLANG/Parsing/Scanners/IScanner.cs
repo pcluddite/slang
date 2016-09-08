@@ -114,5 +114,9 @@ namespace TLang.Parsing
         /// Matches the next expression break
         /// </summary>
         bool NextExpressionBreak();
+        /// <summary>
+        /// Matches the next comment character
+        /// </summary>
+        bool NextComment();
     }
 }

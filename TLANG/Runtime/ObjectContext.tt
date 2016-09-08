@@ -64,13 +64,41 @@ namespace TLang.Runtime
             }
             BuildRemove(name, type, dict);
             WriteLine("");
+			BuildAddAlias(name);
+			WriteLine("");
+			BuildRename(name, type, dict);
+			WriteLine("");
         }
 #>
         #endregion
 
-<#+
-    }
-#>
+<#+ } #>
+<#+ private void BuildAddAlias(string name) { #>
+        /// <summary>
+		/// Adds an alias for a <#= name #> in this context
+		/// </summary>
+		/// <param name="name">the name of the <#= name #></param>
+		/// <param name="alias">the alternative name for the <#= name #></param>
+		public void Add<#= name #>Alias(string name, string alias)
+		{
+			Add<#= name #>(alias, Get<#= name #>(name));
+		}
+<#+ } #>
+<#+ private void BuildRename(string name, string type, string dict) { #>
+        /// <summary>
+		/// Assigns a new name for a <#= name #>
+		/// </summary>
+		/// <param name="name">the current name of the <#= name #></param>
+		/// <param name="newname">the new name for the <#= name #></param>
+		public void Rename<#= name #>(string name, string newname)
+		{
+			ObjectContext context = Find<#= name #>Context(name);
+			if (context == null)
+				throw ThrowHelper.UndefinedObject(name);
+			context.<#= dict #>.Add(newname,  context.<#= dict #>[name]);
+			context.<#= dict #>.Remove(name);
+		}
+<#+ } #>
 <#+ private void BuildTryGet(string name, string type, string dict, string castType = null)
     {
 #>

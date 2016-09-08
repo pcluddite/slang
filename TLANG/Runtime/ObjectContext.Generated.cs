@@ -131,6 +131,30 @@ namespace TLang.Runtime
             return _functions.Remove(name);
         }
 
+        /// <summary>
+		/// Adds an alias for a Function in this context
+		/// </summary>
+		/// <param name="name">the name of the Function</param>
+		/// <param name="alias">the alternative name for the Function</param>
+		public void AddFunctionAlias(string name, string alias)
+		{
+			AddFunction(alias, GetFunction(name));
+		}
+
+        /// <summary>
+		/// Assigns a new name for a Function
+		/// </summary>
+		/// <param name="name">the current name of the Function</param>
+		/// <param name="newname">the new name for the Function</param>
+		public void RenameFunction(string name, string newname)
+		{
+			ObjectContext context = FindFunctionContext(name);
+			if (context == null)
+				throw ThrowHelper.UndefinedObject(name);
+			context._functions.Add(newname,  context._functions[name]);
+			context._functions.Remove(name);
+		}
+
         #endregion
 
         #region Generated Command.CallData methods 
@@ -250,6 +274,30 @@ namespace TLang.Runtime
         {
             return _commands.Remove(name);
         }
+
+        /// <summary>
+		/// Adds an alias for a Command in this context
+		/// </summary>
+		/// <param name="name">the name of the Command</param>
+		/// <param name="alias">the alternative name for the Command</param>
+		public void AddCommandAlias(string name, string alias)
+		{
+			AddCommand(alias, GetCommand(name));
+		}
+
+        /// <summary>
+		/// Assigns a new name for a Command
+		/// </summary>
+		/// <param name="name">the current name of the Command</param>
+		/// <param name="newname">the new name for the Command</param>
+		public void RenameCommand(string name, string newname)
+		{
+			ObjectContext context = FindCommandContext(name);
+			if (context == null)
+				throw ThrowHelper.UndefinedObject(name);
+			context._commands.Add(newname,  context._commands[name]);
+			context._commands.Remove(name);
+		}
 
         #endregion
 
@@ -475,6 +523,30 @@ namespace TLang.Runtime
             return _blocks.Remove(name);
         }
 
+        /// <summary>
+		/// Adds an alias for a Block in this context
+		/// </summary>
+		/// <param name="name">the name of the Block</param>
+		/// <param name="alias">the alternative name for the Block</param>
+		public void AddBlockAlias(string name, string alias)
+		{
+			AddBlock(alias, GetBlock(name));
+		}
+
+        /// <summary>
+		/// Assigns a new name for a Block
+		/// </summary>
+		/// <param name="name">the current name of the Block</param>
+		/// <param name="newname">the new name for the Block</param>
+		public void RenameBlock(string name, string newname)
+		{
+			ObjectContext context = FindBlockContext(name);
+			if (context == null)
+				throw ThrowHelper.UndefinedObject(name);
+			context._blocks.Add(newname,  context._blocks[name]);
+			context._blocks.Remove(name);
+		}
+
         #endregion
 
         #region Generated Type.TClass methods 
@@ -595,6 +667,30 @@ namespace TLang.Runtime
             return _prototypes.Remove(name);
         }
 
+        /// <summary>
+		/// Adds an alias for a Type in this context
+		/// </summary>
+		/// <param name="name">the name of the Type</param>
+		/// <param name="alias">the alternative name for the Type</param>
+		public void AddTypeAlias(string name, string alias)
+		{
+			AddType(alias, GetType(name));
+		}
+
+        /// <summary>
+		/// Assigns a new name for a Type
+		/// </summary>
+		/// <param name="name">the current name of the Type</param>
+		/// <param name="newname">the new name for the Type</param>
+		public void RenameType(string name, string newname)
+		{
+			ObjectContext context = FindTypeContext(name);
+			if (context == null)
+				throw ThrowHelper.UndefinedObject(name);
+			context._prototypes.Add(newname,  context._prototypes[name]);
+			context._prototypes.Remove(name);
+		}
+
         #endregion
 
         #region Generated BinaryOperator.BinaryOperator methods 
@@ -691,6 +787,30 @@ namespace TLang.Runtime
             return _binaryOps.Remove(name);
         }
 
+        /// <summary>
+		/// Adds an alias for a BinaryOperator in this context
+		/// </summary>
+		/// <param name="name">the name of the BinaryOperator</param>
+		/// <param name="alias">the alternative name for the BinaryOperator</param>
+		public void AddBinaryOperatorAlias(string name, string alias)
+		{
+			AddBinaryOperator(alias, GetBinaryOperator(name));
+		}
+
+        /// <summary>
+		/// Assigns a new name for a BinaryOperator
+		/// </summary>
+		/// <param name="name">the current name of the BinaryOperator</param>
+		/// <param name="newname">the new name for the BinaryOperator</param>
+		public void RenameBinaryOperator(string name, string newname)
+		{
+			ObjectContext context = FindBinaryOperatorContext(name);
+			if (context == null)
+				throw ThrowHelper.UndefinedObject(name);
+			context._binaryOps.Add(newname,  context._binaryOps[name]);
+			context._binaryOps.Remove(name);
+		}
+
         #endregion
 
         #region Generated UnaryOperator.UnaryOperator methods 
@@ -786,6 +906,30 @@ namespace TLang.Runtime
         {
             return _unaryOps.Remove(name);
         }
+
+        /// <summary>
+		/// Adds an alias for a UnaryOperator in this context
+		/// </summary>
+		/// <param name="name">the name of the UnaryOperator</param>
+		/// <param name="alias">the alternative name for the UnaryOperator</param>
+		public void AddUnaryOperatorAlias(string name, string alias)
+		{
+			AddUnaryOperator(alias, GetUnaryOperator(name));
+		}
+
+        /// <summary>
+		/// Assigns a new name for a UnaryOperator
+		/// </summary>
+		/// <param name="name">the current name of the UnaryOperator</param>
+		/// <param name="newname">the new name for the UnaryOperator</param>
+		public void RenameUnaryOperator(string name, string newname)
+		{
+			ObjectContext context = FindUnaryOperatorContext(name);
+			if (context == null)
+				throw ThrowHelper.UndefinedObject(name);
+			context._unaryOps.Add(newname,  context._unaryOps[name]);
+			context._unaryOps.Remove(name);
+		}
 
         #endregion
 

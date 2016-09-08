@@ -15,8 +15,14 @@ namespace TLang.Parsing
 {
     internal class DefaultPreprocessor : IPreprocessor
     {
-        public const char CommentChar = ';';
+        public const char CommentChar = '#';
         public const char ContinueChar = '_';
+        public const char VarSigil = '$';
+
+        protected virtual Predicate<Line> ClassBegin { get; } = (o => o.Name.EqualsIgnoreCase("CLASS"));
+        protected virtual Predicate<Line> ClassEnd { get; } = (o => o.Text.EqualsIgnoreCase("END CLASS"));
+        protected virtual Predicate<Line> FuncBegin { get; } = (line => line.Name.EqualsIgnoreCase("FUNCTION"));
+        protected virtual Predicate<Line> FuncEnd { get; } = (line => line.Text.EqualsIgnoreCase("END FUNCTION"));
 
         public ICollection<FunctionBlock> Functions { get; } = new List<FunctionBlock>();
         public ICollection<TClass> Classes { get; } = new List<TClass>();
@@ -42,11 +48,11 @@ namespace TLang.Parsing
         {
             int lineNumber = 1;
             Line line;
-            while ((line = ProcessCodeLine(reader, lineNumber++)) != null) {
+            while (ProcessCodeLine(reader, lineNumber++, out line)) {
                 if (string.IsNullOrEmpty(line.Text) || line.Text[0] == CommentChar)
                     continue;
 
-                if (FunctionBlock.CheckBegin(line)) {
+                if (FuncBegin(line)) {
                     FunctionBlock func;
                     lineNumber = ProcessFuncBlock(reader, line, out func);
                     Functions.Add(func);
@@ -62,11 +68,13 @@ namespace TLang.Parsing
             }
         }
 
-        protected virtual Line ProcessCodeLine(TextReader reader, int lineNumber)
+        protected virtual bool ProcessCodeLine(TextReader reader, int lineNumber, out Line line)
         {
             string linestr = reader.ReadLine()?.Trim();
-            if (linestr == null)
-                return null;
+            if (linestr == null) {
+                line = default(Line);
+                return false;
+            }
             if (linestr.Length > 0 && linestr[linestr.Length - 1] == ContinueChar) {
                 Stack<char> chars = new Stack<char>(linestr);
                 do {
@@ -80,12 +88,17 @@ namespace TLang.Parsing
                 while (chars.Peek() == ContinueChar);
                 linestr = new string(chars.Reverse().ToArray());
             }
-            Line line = Line.CreateLineNoTrim(lineNumber, linestr);
-            if (linestr.Length > 0 && (line.Name[line.Name.Length - 1] == '$' || line.Name[line.Name.Length - 1] == '$')) {
+            line = Line.CreateLineNoTrim(lineNumber, linestr);
+            AddImplicitLet(ref line);
+            return true;
+        }
+
+        protected virtual void AddImplicitLet(ref Line line)
+        {
+            if (line.Text.Length > 0 && line.Name[line.Name.Length - 1] == VarSigil) {
                 line.VisibleName = line.Name;
                 line.Text = "LET " + line.Text; // add the word LET if it's an equality, but use the original name as visible name
             }
-            return line;
         }
 
         protected virtual int ProcessFuncBlock(TextReader reader, Line current, out FunctionBlock block)
@@ -93,11 +106,12 @@ namespace TLang.Parsing
             Line header = current;
             LineCollection body = new LineCollection();
             int lineNumber = current.LineNumber + 1;
-            while((current = ProcessCodeLine(reader, lineNumber++)) != null && !FunctionBlock.CheckEnd(current)) {
+            do {
+                if (ProcessCodeLine(reader, lineNumber++, out current))
+                    throw ThrowHelper.UnterminatedBlock("function definition");
                 body.Add(current);
             }
-            if (current == null)
-                throw ThrowHelper.UnterminatedBlock("FUNCTION");
+            while (!FuncEnd(current));
             block = new FunctionBlock(GetPrototype(header), header, current, body);
             return lineNumber;
         }
@@ -114,14 +128,11 @@ namespace TLang.Parsing
             scanner.NextGroup(out args);
             string[] ret = new string[args.Count + 1];
             ret[0] = funcname.ToString();
-            for(int i = 1; i < ret.Length; ++i) {
+            for (int i = 1; i < ret.Length; ++i) {
                 ret[i] = args[i - 1].ToString();
             }
             return ret;
         }
-
-        protected virtual Predicate<Line> ClassBegin { get; } = (o => o.Name.EqualsIgnoreCase("CLASS"));
-        protected virtual Predicate<Line> ClassEnd { get; } = (o => o.Text.EqualsIgnoreCase("END CLASS"));
 
         protected virtual int ProcessClassBlock(TextReader reader, Line current, out TClass tclass)
         {
@@ -135,14 +146,17 @@ namespace TLang.Parsing
 
             tclass = new TClass(classname.ToString(), runtime.Global);
 
-            while ((current = ProcessCodeLine(reader, nline++)) != null && !ClassEnd(current)) {
+            do {
+                if (!ProcessCodeLine(reader, nline++, out current))
+                    throw ThrowHelper.UnterminatedBlock("class definition");
+                
                 if (string.IsNullOrEmpty(current.Text) || current.Text[0] == CommentChar)
                     continue;
 
                 if (current.Name.EqualsIgnoreCase("DIM")) {
                     tclass.Constructor.Add(current);
                 }
-                else if (FunctionBlock.CheckBegin(current)) {
+                else if (FuncBegin(current)) {
                     FunctionBlock func;
                     nline = ProcessFuncBlock(reader, current, out func);
                     tclass.SetFunction(func.Prototype[0], func.Execute);
@@ -157,10 +171,7 @@ namespace TLang.Parsing
                     throw new InvalidTokenExceptiopn(current.Text);
                 }
             }
-
-            if (current == null)
-                throw ThrowHelper.UnterminatedBlock("CLASS");
-            
+            while (!ClassEnd(current));
             return nline;
         }
     }

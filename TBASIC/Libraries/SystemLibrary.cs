@@ -4,9 +4,9 @@
 //
 // ======
 using System;
-using Tbasic.Runtime;
+using TLang.Runtime;
 
-namespace Tbasic.Libraries
+namespace TLang.Libraries
 {
     internal class SystemLibrary : Library
     {
@@ -22,49 +22,49 @@ namespace Tbasic.Libraries
             Add("GetMillisecond", GetMillisecond);
         }
 
-        private object GetMonth(StackData stackdat)
+        private object GetMonth(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             return DateTime.Now.Month;
         }
 
-        private object GetDay(StackData stackdat)
+        private object GetDay(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             return DateTime.Now.Day;
         }
 
-        private object GetDayOfWeek(StackData stackdat)
+        private object GetDayOfWeek(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             return (int)DateTime.Now.DayOfWeek;
         }
 
-        private object GetYear(StackData stackdat)
+        private object GetYear(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             return DateTime.Now.Year;
         }
 
-        private object GetHour(StackData stackdat)
+        private object GetHour(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             return DateTime.Now.Hour;
         }
 
-        private object GetMinute(StackData stackdat)
+        private object GetMinute(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             return DateTime.Now.Minute;
         }
 
-        private object GetSecond(StackData stackdat)
+        private object GetSecond(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             return DateTime.Now.Second;
         }
 
-        private object GetMillisecond(StackData stackdat)
+        private object GetMillisecond(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             return DateTime.Now.Millisecond;

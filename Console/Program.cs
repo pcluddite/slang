@@ -7,15 +7,15 @@ using Newtonsoft.Json;
 using System;
 using System.Globalization;
 using System.Text;
-using Tbasic.Parsing;
-using Tbasic.Runtime;
-using Tbasic.Errors;
+using TLang.Parsing;
+using TLang.Runtime;
+using TLang.Errors;
 
 #if DEBUG
 using System.Diagnostics;
 #endif
 
-namespace Tbasic.Terminal
+namespace TLang.Terminal
 {
     internal class Program
     {
@@ -26,14 +26,14 @@ namespace Tbasic.Terminal
         {
             ResetColor();
             Console.Clear();
-            Console.Title = "TBASIC Terminal";
-            Console.WriteLine("T-BASIC Terminal [{0}]", TBasic.VERSION);
+            Console.Title = "Terminal";
+            Console.WriteLine("T Language Terminal [{0}]", TRuntime.VERSION);
             Console.WriteLine("Copyright (c) Timothy Baxendale. All Rights Reserved.");
             Console.WriteLine();
 
             Console.Write("Initializing standard library...");
 
-            TBasic runtime = new TBasic();
+            TRuntime runtime = new TRuntime();
             runtime.Scanner = Scanners.Terminal;
             runtime.Global.LoadStandardLibrary();
 
@@ -47,7 +47,7 @@ namespace Tbasic.Terminal
 
             int curr = 0;
             string line;
-            while(!TBasic.ExitRequest) {
+            while(!TRuntime.ExitRequest) {
                 Console.Write(">");
                 line = Console.ReadLine();
                 StackData dat;
@@ -61,8 +61,8 @@ namespace Tbasic.Terminal
                     watch.Stop();
                     WriteTime(watch.ElapsedMilliseconds);
 #endif
-                    if (dat.Data != null)
-                        Console.WriteLine(ObjectToString(dat.Data));
+                    if (dat.ReturnValue != null)
+                        Console.WriteLine(ObjectToString(dat.ReturnValue));
                 }
                 catch(TbasicRuntimeException e) {
                     Console.BackgroundColor = ConsoleColor.Black;

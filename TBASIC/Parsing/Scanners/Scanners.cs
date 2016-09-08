@@ -5,7 +5,7 @@
 // ======
 using System.Collections.Generic;
 
-namespace Tbasic.Parsing
+namespace TLang.Parsing
 {
     /// <summary>
     /// A delegate for creating scanner objects

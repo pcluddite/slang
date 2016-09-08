@@ -3,11 +3,11 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
-using Tbasic.Parsing;
-using Tbasic.Runtime;
+using TLang.Parsing;
+using TLang.Runtime;
 using System.Collections.Generic;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     /// <summary>
     /// Delegate for initializing a CodeBlock
@@ -65,6 +65,6 @@ namespace Tbasic.Types
         /// When overridden in a derived class, executes this block
         /// </summary>
         /// <param name="exec">the current execution</param>
-        public abstract void Execute(TBasic exec);
+        public abstract void Execute(TRuntime exec);
     }
 }

@@ -4,9 +4,9 @@
 //
 // ======
 using System;
-using Tbasic.Runtime;
+using TLang.Runtime;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     /// <summary>
     /// Represents an operator that takes two operands
@@ -44,7 +44,7 @@ namespace Tbasic.Types
         /// <param name="left">the left operand</param>
         /// <param name="right">the right operand</param>
         /// <returns>the result of the operator</returns>
-        public delegate object BinaryOpDelegate(TBasic runtime, object left, object right);
+        public delegate object BinaryOpDelegate(TRuntime runtime, object left, object right);
 
         /// <summary>
         /// Gets which operand should be evaluated

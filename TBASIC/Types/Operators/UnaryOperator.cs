@@ -4,9 +4,9 @@
 //
 // ======
 using System;
-using Tbasic.Runtime;
+using TLang.Runtime;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     /// <summary>
     /// Represents an operator that takes one operand
@@ -19,7 +19,7 @@ namespace Tbasic.Types
         /// <param name="runtime">the current runtime</param>
         /// <param name="value">the operand</param>
         /// <returns>the result of the operator</returns>
-        public delegate object UnaryOpDelegate(TBasic runtime, object value);
+        public delegate object UnaryOpDelegate(TRuntime runtime, object value);
 
         /// <summary>
         /// Gets the string representation of the operator

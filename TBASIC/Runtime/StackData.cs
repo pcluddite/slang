@@ -5,12 +5,11 @@
 // ======
 using System;
 using System.Collections.Generic;
-using Tbasic.Components;
-using Tbasic.Errors;
-using Tbasic.Parsing;
-using Tbasic.Types;
+using TLang.Errors;
+using TLang.Parsing;
+using TLang.Types;
 
-namespace Tbasic.Runtime
+namespace TLang.Runtime
 {
     /// <summary>
     /// Manages parameters and other data passed to a function or subroutine
@@ -30,30 +29,17 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
-        /// The executer that called the function
+        /// Gets or sets the options for this StackData
         /// </summary>
-        public TBasic Runtime { get; private set; }
-
+        public ExecuterOption Options { get; set; }
+        
         /// <summary>
-        /// Gets or sets the current context of the runtime
-        /// </summary>
-        public ObjectContext Context
-        {
-            get {
-                return Runtime.Context;
-            }
-            set {
-                Runtime.Context = value;
-            }
-        }
-
-        /// <summary>
-        /// The Tbasic function as text. This value cannot be changed after it has been set in the constructor.
+        /// Gets the Tbasic function as text
         /// </summary>
         public string Text { get; private set; }
 
         /// <summary>
-        /// The name of the function (the first parameter)
+        /// Gets or sets the name of the function (the first parameter)
         /// </summary>
         public string Name
         {
@@ -93,24 +79,24 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Gets or sets the return data for the function
         /// </summary>
-        public object Data { get; set; } = null;
+        public object ReturnValue { get; set; } = null;
 
         /// <summary>
         /// Constructs this object
         /// </summary>
-        /// <param name="runtime">the execution that called the function</param>
-        public StackData(TBasic runtime)
+        /// <param name="options">the runtime options that are currently enforced</param>
+        public StackData(ExecuterOption options)
         {
-            Runtime = runtime;
+            Options = options;
         }
 
         /// <summary>
         /// Constructs this object
         /// </summary>
         /// <param name="parameters">the parameters of the function</param>
-        /// <param name="runtime">the execution that called the function</param>
-        public StackData(TBasic runtime, IEnumerable<object> parameters)
-            : this(runtime)
+        /// <param name="options">the execution that called the function</param>
+        public StackData(ExecuterOption options, IEnumerable<object> parameters)
+            : this(options)
         {
             _params.AddRange(parameters);
         }
@@ -120,8 +106,8 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="text">the line that executed this function, this will be parsed like the Windows Command Prompt</param>
         /// <param name="runtime">the execution that called the function</param>
-        public StackData(TBasic runtime, string text)
-            : this(runtime)
+        public StackData(TRuntime runtime, string text)
+            : this(runtime.Options)
         {
             Statement line = new Statement(runtime.Scanner.Scan(text));
             Text = text;
@@ -133,7 +119,7 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="index">The index of the argument</param>
         /// <param name="data">The new string data to assign</param>
-        public void SetAt(int index, object data)
+        public void Set(int index, object data)
         {
             if (index < _params.Count) {
                 _params[index] = data;
@@ -186,7 +172,7 @@ namespace Tbasic.Runtime
         /// <param name="index">The index of the argument</param>
         /// <exception cref="IndexOutOfRangeException">thrown if the argument is out of range</exception>
         /// <returns></returns>
-        public object GetAt(int index)
+        public object Get(int index)
         {
             try {
                 return _params[index];
@@ -206,7 +192,7 @@ namespace Tbasic.Runtime
         /// <returns></returns>
         public int GetFromRange(int index, int lower, int upper)
         {
-            int n = GetAt<int>(index);
+            int n = Get<int>(index);
             if (n < lower || n > upper) {
                 throw new ArgumentOutOfRangeException(string.Format("Parameter {0} expected to be integer between {1} and {2}", index, lower, upper));
             }
@@ -220,18 +206,18 @@ namespace Tbasic.Runtime
         /// <param name="index">the zero-based index of the parameter</param>
         /// <exception cref="InvalidCastException">object was not able to be converted to given type</exception>
         /// <returns></returns>
-        public T GetAt<T>(int index)
+        public T Get<T>(int index)
         {
             T ret;
-            if (TypeConvert.TryConvert(GetAt(index), out ret, Runtime.Options))
+            if (TypeConvert.TryConvert(Get(index), out ret, Options))
                 return ret;
             throw ThrowHelper.InvalidParamType(index, typeof(T).Name);
         }
 
-        internal object ConvertAt(int index, Type type)
+        internal object Convert(int index, Type type)
         {
             object ret;
-            if (TypeConvert.TryConvert(GetAt(index), type, out ret, Runtime.Options))
+            if (TypeConvert.TryConvert(Get(index), type, out ret, Options))
                 return ret;
             throw ThrowHelper.InvalidParamType(index, type.Name);
         }
@@ -246,7 +232,7 @@ namespace Tbasic.Runtime
         /// <returns></returns>
         public string GetEnum(int index, string typeName, params string[] values)
         {
-            string arg = GetAt<string>(index);
+            string arg = Get<string>(index);
             foreach (string val in values) {
                 if (val.EqualsIgnoreCase(arg)) {
                     return arg;
@@ -286,31 +272,31 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Forces the (re-)evaluation of a string parameter. This is useful for statements, whose parameters don't get evaluated automatically.
         /// </summary>
-        public object EvaluateAt(int index)
+        public object Evaluate(int index, TRuntime runtime)
         {
-            string param = GetAt(index) as string;
+            string param = Get(index) as string;
             if (param != null)
-                _params[index] = ExpressionEvaluator.Evaluate(param, Runtime);
+                _params[index] = ExpressionEvaluator.Evaluate(param, runtime);
             return _params[index];
         }
         
         /// <summary>
         /// Forces the (re-)evaluation of a string parameter. This is useful for statements, whose parameters don't get evaluated automatically. This will replace the old parameter value on success.
         /// </summary>
-        public T EvaluateAt<T>(int index)
+        public T Evaluate<T>(int index, TRuntime runtime)
         {
-            string param = GetAt(index) as string;
+            string param = Get(index) as string;
             if (param != null)
-                _params[index] = ExpressionEvaluator.Evaluate(param, Runtime);
-            return GetAt<T>(index);
+                _params[index] = ExpressionEvaluator.Evaluate(param, runtime);
+            return Get<T>(index);
         }
 
         /// <summary>
         /// Forces the (re-)evaluation of all prarameters excluding the name. If the parameter is not a string, it's value is kept. This is useful for statements, whose parameters don't get evaluated automatically.
         /// </summary>
-        public void EvaluateAll()
+        public void EvaluateAll(TRuntime runtime)
         {
-            ExpressionEvaluator eval = new ExpressionEvaluator(Runtime);
+            ExpressionEvaluator eval = new ExpressionEvaluator(runtime);
             for (int index = 1; index < _params.Count; ++index) {
                 string arg = _params[index] as string;
                 if (arg != null)
@@ -324,7 +310,7 @@ namespace Tbasic.Runtime
         /// <returns>A new object with the same data</returns>
         public StackData Clone()
         {
-            StackData clone = new StackData(Runtime);
+            StackData clone = new StackData(Options);
             clone.Text = Text;
             if (_params == null) {
                 clone._params = new List<object>();
@@ -333,7 +319,7 @@ namespace Tbasic.Runtime
                 clone._params.AddRange(_params);
             }
             clone.Status = Status;
-            clone.Data = Data;
+            clone.ReturnValue = ReturnValue;
             return clone;
         }
 
@@ -344,16 +330,16 @@ namespace Tbasic.Runtime
         public void CopyFrom(StackData other)
         {
             StackData clone = other.Clone();
-            Runtime = clone.Runtime;
+            Options = clone.Options;
             Text = clone.Text;
             _params = clone._params;
             Status = clone.Status;
-            Data = clone.Data;
+            ReturnValue = clone.ReturnValue;
         }
 
         object ICloneable.Clone()
         {
-            return this.Clone();
+            return Clone();
         }
     }
 }

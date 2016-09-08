@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Tbasic.Parsing
+namespace TLang.Parsing
 {
     internal class TerminalPreprocessor : DefaultPreprocessor
     {

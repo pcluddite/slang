@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Tbasic.Runtime
+namespace TLang.Runtime
 {
     /// <summary>
     /// An expression evaluator
@@ -15,7 +15,7 @@ namespace Tbasic.Runtime
     {
         IEnumerable<char> Expression { get; set; }
         object Evaluate();
-        TBasic Runtime { get; set; }
+        TRuntime Runtime { get; set; }
         ObjectContext CurrentContext { get; set; }
     }
 }

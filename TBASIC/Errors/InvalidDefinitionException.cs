@@ -5,7 +5,7 @@
 // ======
 using System;
 
-namespace Tbasic.Errors
+namespace TLang.Errors
 {
     /// <summary>
     /// Occours when any definable symbol cannot be defined by the preprocessor due to syntax

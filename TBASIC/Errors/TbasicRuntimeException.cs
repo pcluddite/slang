@@ -5,7 +5,7 @@
 // ======
 using System;
 
-namespace Tbasic.Errors
+namespace TLang.Errors
 {
     /// <summary>
     /// Occours when an exception happens at runtime

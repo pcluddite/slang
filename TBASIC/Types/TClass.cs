@@ -5,10 +5,10 @@
 // ======
 using System;
 using System.Collections.Generic;
-using Tbasic.Parsing;
-using Tbasic.Runtime;
+using TLang.Parsing;
+using TLang.Runtime;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     /// <summary>
     /// Represents a tbasic class
@@ -82,7 +82,7 @@ namespace Tbasic.Types
         /// <summary>
         /// Creates an instance of this class for use in TBASIC code
         /// </summary>
-        public TClass GetInstance(StackData runtime)
+        public TClass GetInstance(TRuntime runtime, StackData stackdat)
         {
             TClass instance = Clone();
             instance.SetVariable("@this", instance);
@@ -90,24 +90,24 @@ namespace Tbasic.Types
 
             Stack<TClass> lineage = GetLineage();
             do {
-                lineage.Pop().Ctor(runtime, instance); // construct all ancestors
+                lineage.Pop().Ctor(instance, runtime, stackdat); // construct all ancestors
             }
             while (lineage.Count > 0);
             return instance;
         }
 
-        private void Ctor(StackData stackdat, TClass instance)
+        private void Ctor(TClass instance, TRuntime runtime, StackData stackdat)
         {
-            ObjectContext old = stackdat.Runtime.Context;
-            stackdat.Runtime.Context = instance;
-            stackdat.Runtime.Execute(Constructor); // this is to initialize all the variables
+            ObjectContext old = runtime.Context;
+            runtime.Context = instance;
+            runtime.Execute(Constructor); // this is to initialize all the variables
 
             CallData ctor;
             if (TryGetFunction("<>ctor", out ctor)) {
-                ctor.Function(stackdat); // do the user defined constructor
+                ctor.Function(runtime, stackdat); // do the user defined constructor
             }
 
-            stackdat.Runtime.Context = old;
+            runtime.Context = old;
         }
 
         internal TClass Clone()

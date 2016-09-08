@@ -6,10 +6,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Tbasic.Libraries;
-using Tbasic.Runtime;
+using TLang.Libraries;
+using TLang.Runtime;
 
-namespace Tbasic.Terminal
+namespace TLang.Terminal
 {
     public class ConsoleLibrary : Library
     {
@@ -36,13 +36,13 @@ namespace Tbasic.Terminal
             }
         }
 
-        public static object Exit(StackData stackdat)
+        public static object Exit(TRuntime runtime, StackData stackdat)
         {
-            stackdat.Runtime.RequestExit();
+            runtime.RequestExit();
             return null;
         }
 
-        public static object Hello(StackData stackdat)
+        public static object Hello(TRuntime runtime, StackData stackdat)
         {
             return "Hey";
         }

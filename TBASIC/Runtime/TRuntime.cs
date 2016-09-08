@@ -6,12 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Tbasic.Errors;
-using Tbasic.Parsing;
-using Tbasic.Types;
-using System.Linq;
+using TLang.Errors;
+using TLang.Parsing;
+using TLang.Types;
 
-namespace Tbasic.Runtime
+namespace TLang.Runtime
 {
     /// <summary>
     /// An event handler for a user exit
@@ -23,12 +22,12 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Executes a script and stores information on the current runtime
     /// </summary>
-    public class TBasic
+    public class TRuntime
     {
         /// <summary>
         /// A string containing information on this version of TBasic
         /// </summary>
-        public const string VERSION = "TBASIC 2.5.2016 Beta";
+        public const string VERSION = "TLANG 3.0.2016 Beta";
 
         #region Properties
         /// <summary>
@@ -80,7 +79,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Initializes a new object to execute scripts or single lines of code
         /// </summary>
-        public TBasic()
+        public TRuntime()
         {
             Global = new ObjectContext(null);
             Context = Global;
@@ -168,42 +167,42 @@ namespace Tbasic.Runtime
 #if !NO_EXCEPT
                 }
                 catch (Exception ex) when ((runEx = TbasicRuntimeException.WrapException(ex)) != null) { // only catch errors that we understand 8/16/16
-                    HandleError(current, runtime ?? new StackData(this), runEx);
+                    HandleError(current, runtime ?? new StackData(Options), runEx);
                 }
 #endif
             }
-            return runtime ?? new StackData(this);
+            return runtime ?? new StackData(Options);
         }
 
-        internal static StackData Execute(TBasic exec, Line codeLine)
+        internal static StackData Execute(TRuntime runtime, Line codeLine)
         {
-            StackData runtime;
-            CallData data;
-            if (!codeLine.IsFunction && exec.Context.TryGetCommand(codeLine.Name, out data)) {
-                runtime = new StackData(exec, codeLine.Text);
-                if (data.Evaluate) {
-                    runtime.EvaluateAll();
+            StackData stackdat;
+            CallData calldat;
+            if (!codeLine.IsFunction && runtime.Context.TryGetCommand(codeLine.Name, out calldat)) {
+                stackdat = new StackData(runtime, codeLine.Text);
+                if (calldat.ShouldEvaluate) {
+                    stackdat.EvaluateAll(runtime);
                 }
-                runtime.Data = data.Function(runtime);
+                stackdat.ReturnValue = calldat.Function(runtime, stackdat);
             }
             else {
-                runtime = new StackData(exec);
-                ExpressionEvaluator eval = new ExpressionEvaluator(codeLine.Text, exec);
-                exec.Context.PersistReturns(runtime);
-                runtime.Data = eval.Evaluate();
+                stackdat = new StackData(runtime.Options);
+                ExpressionEvaluator eval = new ExpressionEvaluator(codeLine.Text, runtime);
+                runtime.Context.PersistReturns(stackdat);
+                stackdat.ReturnValue = eval.Evaluate();
             }
-            runtime.Context.SetReturns(runtime);
-            return runtime;
+            runtime.Context.SetReturns(stackdat);
+            return stackdat;
         }
 
-        internal object ExecuteInContext(TBasicFunction func, StackData args, ObjectContext newcontext)
+        internal object ExecuteInContext(ObjectContext newcontext, TBasicFunction func, StackData stackdat)
         {
             ObjectContext old = Context;
             Context = newcontext.CreateSubContext();
-            args.Data = func(args);
-            Context.SetReturns(args);
+            stackdat.ReturnValue = func(this, stackdat);
+            Context.SetReturns(stackdat);
             Context = old;
-            return args.Data;
+            return stackdat.ReturnValue;
         }
 
         internal StackData ExecuteInSubContext(IList<Line> lines)
@@ -221,32 +220,32 @@ namespace Tbasic.Runtime
         public object ExecuteFunction(string name, params object[] args)
         {
             CallData calldat;
-            StackData stackdat = new StackData(this, args);
+            StackData stackdat = new StackData(Options, args);
             stackdat.Name = name;
 
             if (Context.TryGetFunction(name, out calldat) || Context.TryGetCommand(name, out calldat)) {
-                if (calldat.Evaluate) {
-                    stackdat.EvaluateAll();
+                if (calldat.ShouldEvaluate) {
+                    stackdat.EvaluateAll(this);
                 }
-                return calldat.Function(stackdat);
+                return calldat.Function(this, stackdat);
             }
             else {
                 throw ThrowHelper.UndefinedFunction(name);
             }
         }
 
-        private void HandleError(Line current, StackData runtime, TbasicRuntimeException ex)
+        private void HandleError(Line current, StackData stackdat, TbasicRuntimeException ex)
         {
             FunctionException cEx = ex as FunctionException;
             if (cEx != null) {
                 int status = cEx.Status;
-                string msg = runtime.Data as string;
+                string msg = stackdat.ReturnValue as string;
                 if (string.IsNullOrEmpty(msg)) {
                     msg = cEx.Message;
                 }
-                runtime.Status = status;
-                runtime.Data = msg;
-                runtime.Context.SetReturns(runtime);
+                stackdat.Status = status;
+                stackdat.ReturnValue = msg;
+                Context.SetReturns(stackdat);
                 if (Options.HasFlag(ExecuterOption.ThrowErrors)) { // throw errors if the user wants it
                     throw new LineException(current.LineNumber, current.VisibleName, cEx);
                 }

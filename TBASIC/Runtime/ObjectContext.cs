@@ -5,11 +5,11 @@
 // ======
 using System;
 using System.Collections.Generic;
-using Tbasic.Errors;
-using Tbasic.Libraries;
-using Tbasic.Types;
+using TLang.Errors;
+using TLang.Libraries;
+using TLang.Types;
 
-namespace Tbasic.Runtime
+namespace TLang.Runtime
 {
     /// <summary>
     /// Manages the variables, functions, and commands declared in a given context

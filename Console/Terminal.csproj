@@ -7,7 +7,7 @@
     <ProjectGuid>{BAA9C2B6-B371-4B01-8C24-C9D4786866B7}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tbasic.Terminal</RootNamespace>
+    <RootNamespace>TLang.Terminal</RootNamespace>
     <AssemblyName>TBasic Terminal</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -37,7 +37,7 @@
     <ApplicationIcon>Console.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Tbasic.Terminal.Program</StartupObject>
+    <StartupObject>TLang.Terminal.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -56,9 +56,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TBASIC\TBASIC.csproj">
+    <ProjectReference Include="..\TBASIC\TLANG.csproj">
       <Project>{86ec7054-1d77-4dee-854f-ad7377fc27aa}</Project>
-      <Name>TBASIC</Name>
+      <Name>TLANG</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

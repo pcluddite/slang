@@ -5,7 +5,7 @@
 // ======
 using System.Collections.Generic;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     internal struct BinOpNodePair
     {

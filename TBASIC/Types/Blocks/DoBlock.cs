@@ -5,11 +5,11 @@
 // ======
 using System;
 using System.Collections.Generic;
-using Tbasic.Errors;
-using Tbasic.Parsing;
-using Tbasic.Runtime;
+using TLang.Errors;
+using TLang.Parsing;
+using TLang.Runtime;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     internal class DoBlock : CodeBlock
     {
@@ -22,7 +22,7 @@ namespace Tbasic.Types
                 ));
         }
 
-        public override void Execute(TBasic runtime)
+        public override void Execute(TRuntime runtime)
         {
             IScanner scanner;
             bool doLoop;

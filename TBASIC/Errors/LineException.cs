@@ -6,7 +6,7 @@
 using System;
 using System.Text;
 
-namespace Tbasic.Errors
+namespace TLang.Errors
 {
     /// <summary>
     /// Represents a parsing exception that occoured on a specific line

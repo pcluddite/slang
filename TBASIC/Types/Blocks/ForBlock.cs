@@ -4,10 +4,10 @@
 //
 // ======
 using System;
-using Tbasic.Parsing;
-using Tbasic.Runtime;
+using TLang.Parsing;
+using TLang.Runtime;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     internal class ForBlock : CodeBlock
     {
@@ -21,7 +21,7 @@ namespace Tbasic.Types
                 ));
         }
 
-        public override void Execute(TBasic exec)
+        public override void Execute(TRuntime exec)
         {
             throw new NotImplementedException();
         }

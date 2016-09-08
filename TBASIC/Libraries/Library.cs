@@ -6,9 +6,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Tbasic.Types;
+using TLang.Types;
 
-namespace Tbasic.Libraries
+namespace TLang.Libraries
 {
     /// <summary>
     /// A library for storing and processing TBasic functions

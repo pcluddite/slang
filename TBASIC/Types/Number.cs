@@ -4,10 +4,10 @@
 //
 // ======
 using System;
-using Tbasic.Errors;
-using Tbasic.Runtime;
+using TLang.Errors;
+using TLang.Runtime;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     /// <summary>
     /// Represents a generic number (this is a double at its core)

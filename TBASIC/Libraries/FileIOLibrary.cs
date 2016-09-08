@@ -7,10 +7,10 @@ using Microsoft.VisualBasic.FileIO;
 using System;
 using System.IO;
 using System.Text;
-using Tbasic.Runtime;
-using Tbasic.Errors;
+using TLang.Errors;
+using TLang.Runtime;
 
-namespace Tbasic.Libraries
+namespace TLang.Libraries
 {
     /// <summary>
     /// A library used to write and read to files or the file system
@@ -55,83 +55,83 @@ namespace Tbasic.Libraries
             Directory.SetCurrentDirectory(dir);
         }
 
-        private static object DirExists(StackData stackdat)
+        private static object DirExists(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return Directory.Exists(stackdat.GetAt<string>(1));
+            return Directory.Exists(stackdat.Get<string>(1));
         }
 
-        private static object FileExists(StackData stackdat)
+        private static object FileExists(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return File.Exists(stackdat.GetAt<string>(1));
+            return File.Exists(stackdat.Get<string>(1));
         }
 
-        private static object FileMove(StackData stackdat)
+        private static object FileMove(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(3);
-            File.Move(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2));
+            File.Move(stackdat.Get<string>(1), stackdat.Get<string>(2));
             return null;
         }
 
-        private static object FileCopy(StackData stackdat)
+        private static object FileCopy(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(3);
-            File.Copy(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2));
+            File.Copy(stackdat.Get<string>(1), stackdat.Get<string>(2));
             return null;
         }
 
-        private static object FileDelete(StackData stackdat)
+        private static object FileDelete(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            File.Delete(stackdat.GetAt<string>(1));
+            File.Delete(stackdat.Get<string>(1));
             return null;
         }
 
-        private static object DirDelete(StackData stackdat)
+        private static object DirDelete(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            Directory.Delete(stackdat.GetAt<string>(1));
+            Directory.Delete(stackdat.Get<string>(1));
             return null;
         }
 
-        private static object DirMove(StackData stackdat)
+        private static object DirMove(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(3);
-            Directory.Move(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2));
+            Directory.Move(stackdat.Get<string>(1), stackdat.Get<string>(2));
             return null;
         }
 
-        private static object DirCreate(StackData stackdat)
+        private static object DirCreate(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            Directory.CreateDirectory(stackdat.GetAt<string>(1));
+            Directory.CreateDirectory(stackdat.Get<string>(1));
             return null;
         }
 
-        private static object DirGetFileList(StackData stackdat)
+        private static object DirGetFileList(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return Directory.GetFiles(stackdat.GetAt<string>(1));
+            return Directory.GetFiles(stackdat.Get<string>(1));
         }
 
-        private static object DirGetDirList(StackData stackdat)
+        private static object DirGetDirList(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return Directory.GetDirectories(stackdat.GetAt<string>(1));
+            return Directory.GetDirectories(stackdat.Get<string>(1));
         }
 
-        private static object FileReadAll(StackData stackdat)
+        private static object FileReadAll(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return File.ReadAllText(stackdat.GetAt<string>(1));
+            return File.ReadAllText(stackdat.Get<string>(1));
         }
 
-        private static object FileWriteAll(StackData stackdat)
+        private static object FileWriteAll(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(3);
-            string path = stackdat.GetAt<string>(1);
-            object data = stackdat.GetAt(2);
+            string path = stackdat.Get<string>(1);
+            object data = stackdat.Get(2);
 
             string sData = data as string;
             if (sData != null) {
@@ -165,30 +165,30 @@ namespace Tbasic.Libraries
             FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
         }
 
-        private static object Recycle(StackData stackdat)
+        private static object Recycle(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            Recycle(stackdat.GetAt<string>(1));
+            Recycle(stackdat.Get<string>(1));
             return null;
         }
 
-        private static object FileGetAttributes(StackData stackdat)
+        private static object FileGetAttributes(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            string path = stackdat.GetAt<string>(1);
+            string path = stackdat.Get<string>(1);
             FileAttributes current = File.GetAttributes(path);
             return GetStringFromAttributes(current);
         }
 
-        private static object FileSetAttributes(StackData stackdat)
+        private static object FileSetAttributes(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(3);
-            string path = stackdat.GetAt<string>(1);
+            string path = stackdat.Get<string>(1);
             FileAttributes current = File.GetAttributes(path);
             if ((current & FileAttributes.ReadOnly) == FileAttributes.ReadOnly) {
                 File.SetAttributes(path, current & ~FileAttributes.ReadOnly);
             }
-            FileAttributes attributes = GetAttributesFromString(stackdat.GetAt<string>(2));
+            FileAttributes attributes = GetAttributesFromString(stackdat.Get<string>(2));
             File.SetAttributes(path, attributes);
             return null;
         }
@@ -223,17 +223,17 @@ namespace Tbasic.Libraries
             return result;
         }
 
-        private static object FileSetAccessDate(StackData stackdat)
+        private static object FileSetAccessDate(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(3);
-            string path = stackdat.GetAt<string>(1);
+            string path = stackdat.Get<string>(1);
             try {
                 if (File.Exists(path)) {
-                    File.SetLastAccessTime(path, DateTime.Parse(stackdat.GetAt<string>(2)));
+                    File.SetLastAccessTime(path, DateTime.Parse(stackdat.Get<string>(2)));
                     return File.GetLastAccessTime(path).ToString();
                 }
                 else if (Directory.Exists(path)) {
-                    Directory.SetLastAccessTime(path, DateTime.Parse(stackdat.GetAt<string>(2)));
+                    Directory.SetLastAccessTime(path, DateTime.Parse(stackdat.Get<string>(2)));
                     return Directory.GetLastAccessTime(path).ToString();
                 }
                 throw new FileNotFoundException();
@@ -243,17 +243,17 @@ namespace Tbasic.Libraries
             }
         }
 
-        private static object FileSetModifiedDate(StackData stackdat)
+        private static object FileSetModifiedDate(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(3);
-            string path = stackdat.GetAt<string>(1);
+            string path = stackdat.Get<string>(1);
             try {
                 if (File.Exists(path)) {
-                    File.SetLastWriteTime(path, DateTime.Parse(stackdat.GetAt<string>(2)));
+                    File.SetLastWriteTime(path, DateTime.Parse(stackdat.Get<string>(2)));
                     return File.GetLastWriteTime(path).ToString();
                 }
                 else if (Directory.Exists(path)) {
-                    Directory.SetLastWriteTime(path, DateTime.Parse(stackdat.GetAt<string>(2)));
+                    Directory.SetLastWriteTime(path, DateTime.Parse(stackdat.Get<string>(2)));
                     return Directory.GetLastWriteTime(path).ToString();
                 }
                 throw new FileNotFoundException();
@@ -263,17 +263,17 @@ namespace Tbasic.Libraries
             }
         }
 
-        private static object FileSetCreatedDate(StackData stackdat)
+        private static object FileSetCreatedDate(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(3);
-            string path = stackdat.GetAt<string>(1);
+            string path = stackdat.Get<string>(1);
             try {
                 if (File.Exists(path)) {
-                    File.SetCreationTime(path, DateTime.Parse(stackdat.GetAt<string>(2)));
+                    File.SetCreationTime(path, DateTime.Parse(stackdat.Get<string>(2)));
                     return File.GetCreationTime(path).ToString();
                 }
                 else if (Directory.Exists(path)) {
-                    Directory.SetCreationTime(path, DateTime.Parse(stackdat.GetAt<string>(2)));
+                    Directory.SetCreationTime(path, DateTime.Parse(stackdat.Get<string>(2)));
                     return Directory.GetCreationTime(path).ToString();
                 }
                 throw new FileNotFoundException();
@@ -318,11 +318,11 @@ namespace Tbasic.Libraries
             return Shell(cmd, Directory.GetCurrentDirectory(), out output);
         }
 
-        private static object Shell(StackData stackdat)
+        private static object Shell(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
             string output;
-            stackdat.Status = Shell(stackdat.GetAt<string>(1), out output);
+            stackdat.Status = Shell(stackdat.Get<string>(1), out output);
             return output;
         }
     }

@@ -5,9 +5,9 @@
 // ======
 using System;
 using System.Collections.Generic;
-using Tbasic.Parsing;
+using TLang.Parsing;
 
-namespace Tbasic
+namespace TLang
 {
     internal static class Extensions
     {

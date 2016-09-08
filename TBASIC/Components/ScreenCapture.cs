@@ -5,9 +5,9 @@
 // ======
 using System;
 using System.Drawing;
-using Tbasic.Win32;
+using TLang.Win32;
 
-namespace Tbasic.Components
+namespace TLang.Components
 {
     /// <summary>
     /// Class for getting a screen shot of the whole screen or a specific window

@@ -4,10 +4,10 @@
 //
 // ======
 using System.Collections.Generic;
-using Tbasic.Runtime;
-using Tbasic.Types;
+using TLang.Runtime;
+using TLang.Types;
 
-namespace Tbasic.Parsing
+namespace TLang.Parsing
 {
     /// <summary>
     /// An inteface for a TBasic scanner

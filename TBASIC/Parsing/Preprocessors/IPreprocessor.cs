@@ -5,10 +5,10 @@
 // ======
 using System.Collections.Generic;
 using System.IO;
-using Tbasic.Runtime;
-using Tbasic.Types;
+using TLang.Runtime;
+using TLang.Types;
 
-namespace Tbasic.Parsing
+namespace TLang.Parsing
 {
     /// <summary>
     /// An interface for scanning lines before they are executed
@@ -33,6 +33,6 @@ namespace Tbasic.Parsing
         /// <param name="runtime">the current runtime, which may not yet be fully initialized</param>
         /// <param name="reader">the reader for the script</param>
         /// <returns>the preprocessor</returns>
-        IPreprocessor Preprocess(TBasic runtime, TextReader reader);
+        IPreprocessor Preprocess(TRuntime runtime, TextReader reader);
     }
 }

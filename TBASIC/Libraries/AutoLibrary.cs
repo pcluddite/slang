@@ -6,12 +6,12 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Tbasic.Win32;
-using Tbasic.Errors;
+using TLang.Errors;
+using TLang.Runtime;
+using TLang.Win32;
 using Forms = System.Windows.Forms;
-using Tbasic.Runtime;
 
-namespace Tbasic.Libraries
+namespace TLang.Libraries
 {
     /// <summary>
     /// A library used to automate and manipulate key strokes, mouse clicks and other input
@@ -64,7 +64,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object MouseClick(StackData stackdat)
+        private object MouseClick(TRuntime runtime, StackData stackdat)
         {
             if (stackdat.ParameterCount == 4) {
                 stackdat.Add(1);
@@ -75,10 +75,10 @@ namespace Tbasic.Libraries
             }
             stackdat.AssertCount(6);
 
-            int x = stackdat.GetAt<int>(2),
-                y = stackdat.GetAt<int>(3),
-                clicks = stackdat.GetAt<int>(4),
-                speed = stackdat.GetAt<int>(5);
+            int x = stackdat.Get<int>(2),
+                y = stackdat.Get<int>(3),
+                clicks = stackdat.Get<int>(4),
+                speed = stackdat.Get<int>(5);
 
             MouseButton button;
             if (stackdat.GetEnum(1, "button", "LEFT", "RIGHT").EqualsIgnoreCase("LEFT")) {
@@ -91,16 +91,16 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object MouseMove(StackData stackdat)
+        private object MouseMove(TRuntime runtime, StackData stackdat)
         {
             if (stackdat.ParameterCount == 3) {
                 stackdat.Add(1);
             }
             stackdat.AssertCount(4);
 
-            MouseMove(stackdat.GetAt<int>(1),
-                      stackdat.GetAt<int>(2),
-                      stackdat.GetAt<int>(3));
+            MouseMove(stackdat.Get<int>(1),
+                      stackdat.Get<int>(2),
+                      stackdat.Get<int>(3));
 
             return null;
         }
@@ -155,10 +155,10 @@ namespace Tbasic.Libraries
             return User32.BlockInput(blocked);
         }
 
-        private object BlockInput(StackData stackdat)
+        private object BlockInput(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            if (!BlockInput(stackdat.GetAt<bool>(1))) {
+            if (!BlockInput(stackdat.Get<bool>(1))) {
                 stackdat.Status = ErrorClient.Forbidden;
             }
             return null;
@@ -173,10 +173,10 @@ namespace Tbasic.Libraries
             SendKeys.SendWait(keys);
         }
 
-        private object Send(StackData stackdat)
+        private object Send(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            Send(stackdat.GetAt<string>(1));
+            Send(stackdat.Get<string>(1));
             return null;
         }
 
@@ -191,13 +191,13 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object VolumeUp(StackData stackdat)
+        private object VolumeUp(TRuntime runtime, StackData stackdat)
         {
             if (stackdat.ParameterCount == 1) {
                 stackdat.Add(1);
             }
             stackdat.AssertCount(2);
-            VolumeUp(stackdat.GetAt<int>(1));
+            VolumeUp(stackdat.Get<int>(1));
             return null;
         }
 
@@ -212,13 +212,13 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object VolumeDown(StackData stackdat)
+        private object VolumeDown(TRuntime runtime, StackData stackdat)
         {
             if (stackdat.ParameterCount == 1) {
                 stackdat.Add(1);
             }
             stackdat.AssertCount(2);
-            VolumeDown(stackdat.GetAt<int>(1));
+            VolumeDown(stackdat.Get<int>(1));
             return null;
         }
 
@@ -230,7 +230,7 @@ namespace Tbasic.Libraries
             User32.keybd_event((byte)Forms.Keys.VolumeMute, 0, 0, 0);
         }
 
-        private object VolumeMute(StackData stackdat)
+        private object VolumeMute(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             VolumeMute();

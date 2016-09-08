@@ -5,13 +5,11 @@
 // ======
 using Microsoft.Win32;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Tbasic.Components;
-using Tbasic.Errors;
-using Tbasic.Runtime;
+using TLang.Components;
+using TLang.Errors;
+using TLang.Runtime;
 
-namespace Tbasic.Libraries
+namespace TLang.Libraries
 {
     /// <summary>
     /// Library for interacting with Windows registry.
@@ -31,63 +29,63 @@ namespace Tbasic.Libraries
             Add("RegWrite", RegWrite);
         }
         
-        private object RegValueKind(StackData stackdat)
+        private object RegValueKind(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(3);
-            return WinRegistry.GetValueKind(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2)).ToString();
+            return WinRegistry.GetValueKind(stackdat.Get<string>(1), stackdat.Get<string>(2)).ToString();
         }
 
-        private object RegRead(StackData stackdat)
+        private object RegRead(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(atLeast: 3, atMost: 4);
 
             if (stackdat.ParameterCount == 3)
                 stackdat.Add(null);
             
-            return WinRegistry.Read(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2), stackdat.GetAt<string>(3));
+            return WinRegistry.Read(stackdat.Get<string>(1), stackdat.Get<string>(2), stackdat.Get<string>(3));
         }
 
-        private object RegDelete(StackData stackdat)
+        private object RegDelete(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(3);
-            WinRegistry.Delete(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2));
+            WinRegistry.Delete(stackdat.Get<string>(1), stackdat.Get<string>(2));
             return null;
         }
 
-        private object RegRename(StackData stackdat)
+        private object RegRename(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(4);
-            WinRegistry.Rename(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2), stackdat.GetAt<string>(3));
+            WinRegistry.Rename(stackdat.Get<string>(1), stackdat.Get<string>(2), stackdat.Get<string>(3));
             return null;
         }
 
-        private object RegDeleteKey(StackData stackdat)
+        private object RegDeleteKey(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            WinRegistry.DeleteKey(stackdat.GetAt<string>(1));
+            WinRegistry.DeleteKey(stackdat.Get<string>(1));
             return null;
         }
 
-        private object RegRenameKey(StackData stackdat)
+        private object RegRenameKey(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(3);
-            WinRegistry.RenameKey(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2));
+            WinRegistry.RenameKey(stackdat.Get<string>(1), stackdat.Get<string>(2));
             return null;
         }
 
-        private object RegCreateKey(StackData stackdat)
+        private object RegCreateKey(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(3);
-            WinRegistry.RenameKey(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2));
+            WinRegistry.RenameKey(stackdat.Get<string>(1), stackdat.Get<string>(2));
             stackdat.Status = ErrorSuccess.Created;
             return null;
         }
         
-        private object RegEnumValues(StackData stackdat)
+        private object RegEnumValues(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
 
-            object[][] values = WinRegistry.EnumerateValues(stackdat.GetAt<string>(1));
+            object[][] values = WinRegistry.EnumerateValues(stackdat.Get<string>(1));
             if (values.Length == 0) {
                 stackdat.Status = ErrorSuccess.NoContent;
                 return null;
@@ -97,30 +95,30 @@ namespace Tbasic.Libraries
             }
         }
 
-        private static object RegEnumKeys(StackData stackdat)
+        private static object RegEnumKeys(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return WinRegistry.EnumeratKeys(stackdat.GetAt<string>(1));
+            return WinRegistry.EnumeratKeys(stackdat.Get<string>(1));
         }
 
-        private object RegWrite(StackData stackdat)
+        private object RegWrite(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(5);
 
-            object value = stackdat.GetAt(3);
-            RegistryValueKind kind = stackdat.GetAt<RegistryValueKind>(4);
+            object value = stackdat.Get(3);
+            RegistryValueKind kind = stackdat.Get<RegistryValueKind>(4);
 
             switch (kind) {
                 case RegistryValueKind.Binary:
-                    value = Convert.FromBase64String(stackdat.GetAt<string>(3));
+                    value = Convert.FromBase64String(stackdat.Get<string>(3));
                     break;
                 case RegistryValueKind.MultiString:
                     string strval = value as string;
                     if (value is string) {
-                        value = stackdat.GetAt<string>(3).Replace("\r\n", "\n").Split('\n');
+                        value = stackdat.Get<string>(3).Replace("\r\n", "\n").Split('\n');
                     }
                     else if (value is string[]) {
-                        value = stackdat.GetAt<string[]>(3);
+                        value = stackdat.Get<string[]>(3);
                     }
                     else {
                         throw new ArgumentException("Parameter is not a valid multi-string");
@@ -134,7 +132,7 @@ namespace Tbasic.Libraries
                 default:
                     throw new ArgumentException("Registry value of type '" + kind + "' is unsupported");
             }
-            WinRegistry.Write(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2), value, kind);
+            WinRegistry.Write(stackdat.Get<string>(1), stackdat.Get<string>(2), value, kind);
             return null;
         }
     }

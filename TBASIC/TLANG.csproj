@@ -7,8 +7,8 @@
     <ProjectGuid>{86EC7054-1D77-4DEE-854F-AD7377FC27AA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tbasic</RootNamespace>
-    <AssemblyName>tbasic</AssemblyName>
+    <RootNamespace>TLang</RootNamespace>
+    <AssemblyName>tlang</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -21,7 +21,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\tbasic.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\tlang.xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -104,7 +104,7 @@
     <Compile Include="Parsing\Preprocessors\DefaultPreprocessor.cs" />
     <Compile Include="Runtime\ObjectContext.cs" />
     <Compile Include="Runtime\Evaluator\Variable.cs" />
-    <Compile Include="Runtime\TBasic.cs" />
+    <Compile Include="Runtime\TRuntime.cs" />
     <Compile Include="Libraries\AutoLibrary.cs" />
     <Compile Include="Libraries\FileIOLibrary.cs" />
     <Compile Include="Libraries\ProcessLibrary.cs" />

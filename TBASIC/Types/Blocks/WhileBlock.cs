@@ -4,11 +4,11 @@
 //
 // ======
 using System.Collections.Generic;
-using Tbasic.Errors;
-using Tbasic.Parsing;
-using Tbasic.Runtime;
+using TLang.Errors;
+using TLang.Parsing;
+using TLang.Runtime;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     internal class WhileBlock : CodeBlock
     {
@@ -21,7 +21,7 @@ namespace Tbasic.Types
                 ));
         }
 
-        public override void Execute(TBasic runtime)
+        public override void Execute(TRuntime runtime)
         {
             Statement line = new Statement(runtime.Scanner.Scan(Header.Text));
 

@@ -4,11 +4,9 @@
 //
 // ======
 using System;
-using Tbasic.Components;
-using Tbasic.Errors;
-using Tbasic.Runtime;
+using TLang.Runtime;
 
-namespace Tbasic.Libraries
+namespace TLang.Libraries
 {
     /// <summary>
     /// A library containing several mathmatical functions
@@ -92,17 +90,17 @@ namespace Tbasic.Libraries
             return Random(upperBound - lowerBound) + lowerBound;
         }
 
-        private object Random(StackData stackdat)
+        private object Random(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(atLeast: 1, atMost: 3);
             if (stackdat.ParameterCount == 1) {
                 return Random();
             }
             else if (stackdat.ParameterCount == 2) {
-                return Random(stackdat.GetAt<int>(1));
+                return Random(stackdat.Get<int>(1));
             }
             else {
-                return Random(stackdat.GetAt<int>(1), stackdat.GetAt<int>(2));
+                return Random(stackdat.Get<int>(1), stackdat.Get<int>(2));
             }
         }
 
@@ -133,7 +131,7 @@ namespace Tbasic.Libraries
         /// <returns>the evaluated expression</returns>
         public static object Eval(string expr)
         {
-            TBasic e = new TBasic(); // local execution
+            TRuntime e = new TRuntime(); // local execution
             e.Global.LoadStandardOperators();
             e.Global.AddLibrary(new MathLibrary(e.Global)); // only allow math libs
             e.Global.RemoveFunction("eval"); // that's a no-no

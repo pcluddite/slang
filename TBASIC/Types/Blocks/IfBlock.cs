@@ -4,13 +4,13 @@
 //
 // ======
 using System;
-using Tbasic.Components;
-using Tbasic.Errors;
-using Tbasic.Parsing;
-using Tbasic.Runtime;
+using TLang.Components;
+using TLang.Errors;
+using TLang.Parsing;
+using TLang.Runtime;
 using System.Collections.Generic;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     internal class IfBlock : CodeBlock
     {
@@ -85,7 +85,7 @@ namespace Tbasic.Types
             throw ThrowHelper.UnterminatedBlock(Header.VisibleName);
         }
 
-        public override void Execute(TBasic runtime)
+        public override void Execute(TRuntime runtime)
         {
             if (!Header.Text.EndsWithIgnoreCase(" then")) {
                 throw ThrowHelper.ExpectedToken("THEN");
@@ -115,7 +115,7 @@ namespace Tbasic.Types
                 Footer = lines[lines.Count - 1];
             }
 
-            public override void Execute(TBasic exec)
+            public override void Execute(TRuntime exec)
             {
                 throw new NotImplementedException();
             }

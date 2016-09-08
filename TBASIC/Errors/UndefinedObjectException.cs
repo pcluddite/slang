@@ -5,7 +5,7 @@
 // ======
 using System;
 
-namespace Tbasic.Errors
+namespace TLang.Errors
 {
     /// <summary>
     /// Thrown when a function, variable or other symbol is not defined within the current scope

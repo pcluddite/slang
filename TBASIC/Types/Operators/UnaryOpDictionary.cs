@@ -5,10 +5,10 @@
 // ======
 using System;
 using System.Globalization;
-using Tbasic.Runtime;
-using Tbasic.Errors;
+using TLang.Runtime;
+using TLang.Errors;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     internal class UnaryOpDictionary : OperatorDictionary<UnaryOperator>
     {
@@ -30,7 +30,7 @@ namespace Tbasic.Types
             operators.Add("~", new UnaryOperator("~", BitNot));
         }
 
-        private static object New(TBasic runtime, object value)
+        private static object New(TRuntime runtime, object value)
         {
             Function eval = value as Function;
             if (eval == null) {
@@ -40,28 +40,28 @@ namespace Tbasic.Types
             TClass prototype;
             if (!runtime.Context.TryGetType(name, out prototype))
                 throw new UndefinedObjectException($"The class {name} is undefined");
-            StackData stackdat = new StackData(runtime, eval.Parameters.TB_ToStrings());
+            StackData stackdat = new StackData(runtime.Options, eval.Parameters.TB_ToStrings());
             stackdat.Name = eval.Expression.ToString();
-            stackdat.EvaluateAll();
-            return prototype.GetInstance(stackdat);
+            stackdat.EvaluateAll(runtime);
+            return prototype.GetInstance(runtime, stackdat);
         }
 
-        private static object Plus(TBasic runtime, object value)
+        private static object Plus(TRuntime runtime, object value)
         {
             return +Convert.ToDouble(value, CultureInfo.CurrentCulture);
         }
 
-        private static object Minus(TBasic runtime, object value)
+        private static object Minus(TRuntime runtime, object value)
         {
             return -Convert.ToDouble(value, CultureInfo.CurrentCulture);
         }
 
-        private static object Not(TBasic runtime, object value)
+        private static object Not(TRuntime runtime, object value)
         {
             return !Convert.ToBoolean(value, CultureInfo.CurrentCulture);
         }
 
-        private static object BitNot(TBasic runtime, object value)
+        private static object BitNot(TRuntime runtime, object value)
         {
             return ~Convert.ToUInt64(value, CultureInfo.CurrentCulture);
         }

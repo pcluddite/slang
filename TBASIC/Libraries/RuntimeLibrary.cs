@@ -4,12 +4,11 @@
 //
 // ======
 using System;
-using System.Linq;
-using Tbasic.Errors;
-using Tbasic.Runtime;
-using Tbasic.Types;
+using TLang.Errors;
+using TLang.Runtime;
+using TLang.Types;
 
-namespace Tbasic.Libraries
+namespace TLang.Libraries
 {
     internal class RuntimeLibrary : Library
     {
@@ -26,58 +25,58 @@ namespace Tbasic.Libraries
             Add("CBool", CBool);
             AddLibrary(new StringLibrary());
             AddLibrary(new ArrayLibrary());
-            context.SetConstant("@version", TBasic.VERSION);
+            context.SetConstant("@version", TRuntime.VERSION);
             context.SetConstant("@osversion", Environment.OSVersion.VersionString);
         }
         
-        private object CStr(StackData stackdat)
+        private object CStr(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return stackdat.GetAt(1)?.ToString(); // return null if it is null
+            return stackdat.Get(1)?.ToString(); // return null if it is null
         }
 
-        private object CBool(StackData stackdat)
+        private object CBool(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
             try {
                 bool b;
-                if (bool.TryParse(stackdat.GetAt<string>(1), out b)) {
+                if (bool.TryParse(stackdat.Get<string>(1), out b)) {
                     return b;
                 }
                 Number n;
-                if (Number.TryParse(stackdat.GetAt<string>(1), out n)) {
+                if (Number.TryParse(stackdat.Get<string>(1), out n)) {
                     return (n != 0); // non-zero is true, zero is false
                 }
                 throw new InvalidCastException();
             }
             catch(InvalidCastException) {
-                return Convert.ToBoolean(stackdat.GetAt(1));
+                return Convert.ToBoolean(stackdat.Get(1));
             }
         }
 
-        private object CNum(StackData stackdat)
+        private object CNum(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
             try {
                 Number n;
-                if (Number.TryParse(stackdat.GetAt<string>(1), out n)) {
+                if (Number.TryParse(stackdat.Get<string>(1), out n)) {
                     return n;
                 }
                 bool b;
-                if (bool.TryParse(stackdat.GetAt<string>(1), out b)) {
+                if (bool.TryParse(stackdat.Get<string>(1), out b)) {
                     return b ? 1 : 0;
                 }
                 throw new InvalidCastException();
             }
             catch (InvalidCastException) {
-                return Number.Convert(stackdat.GetAt(1));
+                return Number.Convert(stackdat.Get(1));
             }
         }
 
-        private object SizeOf(StackData stackdat)
+        private object SizeOf(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            object obj = stackdat.GetAt(1);
+            object obj = stackdat.Get(1);
             if (obj == null) {
                 return 0;
             }
@@ -107,29 +106,29 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object IsNum(StackData stackdat)
+        private object IsNum(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return Number.IsNumber(stackdat.GetAt(1), stackdat.Runtime.Options);
+            return Number.IsNumber(stackdat.Get(1), runtime.Options);
         }
 
-        private object IsString(StackData stackdat)
+        private object IsString(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return stackdat.GetAt(1) is string;
+            return stackdat.Get(1) is string;
         }
 
-        private object IsBool(StackData stackdat)
+        private object IsBool(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return stackdat.GetAt(1) is bool;
+            return stackdat.Get(1) is bool;
         }
         
-        private object IsDefined(StackData stackdat)
+        private object IsDefined(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            string name = stackdat.GetAt<string>(1);
-            ObjectContext context = stackdat.Context.FindContext(name);
+            string name = stackdat.Get<string>(1);
+            ObjectContext context = runtime.Context.FindContext(name);
             return context != null;
         }
     }

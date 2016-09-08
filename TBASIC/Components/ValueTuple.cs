@@ -4,7 +4,7 @@
 //
 // ======
 
-namespace Tbasic.Components
+namespace TLang.Components
 {
     /// <summary>
     /// A tuple that is a value type and holds 1 type(s)

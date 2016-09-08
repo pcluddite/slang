@@ -4,9 +4,9 @@
 //
 // ======
 using System.Linq;
-using Tbasic.Runtime;
+using TLang.Runtime;
 
-namespace Tbasic.Libraries
+namespace TLang.Libraries
 {
     internal class ArrayLibrary : Library
     {
@@ -18,15 +18,15 @@ namespace Tbasic.Libraries
             //Add("ArrayResize", ArrayResize);
         }
 
-        private object ArrayContains(StackData stackdat)
+        private object ArrayContains(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return stackdat.GetAt<object[]>(1).Contains(stackdat.GetAt(2));
+            return stackdat.Get<object[]>(1).Contains(stackdat.Get(2));
         }
 
-        private object ArrayIndexOf(StackData stackdat)
+        private object ArrayIndexOf(TRuntime runtime, StackData stackdat)
         {
-            object[] arr = stackdat.GetAt<object[]>(1);
+            object[] arr = stackdat.Get<object[]>(1);
             if (stackdat.ParameterCount == 3) {
                 stackdat.Add(0);
             }
@@ -34,9 +34,9 @@ namespace Tbasic.Libraries
                 stackdat.Add(arr.Length);
             }
             stackdat.AssertCount(5);
-            object o = stackdat.GetAt(2);
-            int i = stackdat.GetAt<int>(3);
-            int count = stackdat.GetAt<int>(5);
+            object o = stackdat.Get(2);
+            int i = stackdat.Get<int>(3);
+            int count = stackdat.Get<int>(5);
             for (; i < arr.Length && i < count; i++) {
                 if (arr[i] == o) {
                     return i;
@@ -45,9 +45,9 @@ namespace Tbasic.Libraries
             return -1;
         }
 
-        private object ArrayLastIndexOf(StackData stackdat)
+        private object ArrayLastIndexOf(TRuntime runtime, StackData stackdat)
         {
-            object[] arr = stackdat.GetAt<object[]>(1);
+            object[] arr = stackdat.Get<object[]>(1);
             if (stackdat.ParameterCount == 3) {
                 stackdat.Add(0);
             }
@@ -55,9 +55,9 @@ namespace Tbasic.Libraries
                 stackdat.Add(arr.Length);
             }
             stackdat.AssertCount(5);
-            int i = stackdat.GetAt<int>(3);
-            object o = stackdat.GetAt(2);
-            int count = stackdat.GetAt<int>(5);
+            int i = stackdat.Get<int>(3);
+            object o = stackdat.Get(2);
+            int count = stackdat.Get<int>(5);
             for (; i >= 0 && i > count; i--) {
                 if (arr[i] == o) {
                     return i;

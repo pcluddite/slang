@@ -7,11 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Tbasic.Runtime;
-using Tbasic.Types;
-using Tbasic.Components;
+using TLang.Runtime;
+using TLang.Types;
+using TLang.Components;
 
-namespace Tbasic.Parsing
+namespace TLang.Parsing
 {
     /// <summary>
     /// The default implementation of Scanner. This can be extended and modified for custom implementations.
@@ -465,7 +465,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        internal static bool NextFunctionInternal(IScanner scanner, TBasic exec, out Function func)
+        internal static bool NextFunctionInternal(IScanner scanner, TRuntime exec, out Function func)
         {
             IEnumerable<char> name;
             IList<IEnumerable<char>> args;
@@ -478,7 +478,7 @@ namespace Tbasic.Parsing
             return (func != null);
         }
 
-        internal static bool NextVariable(IScanner scanner, TBasic exec, out Variable variable)
+        internal static bool NextVariable(IScanner scanner, TRuntime exec, out Variable variable)
         {
             IEnumerable<char> name;
             IList<IEnumerable<char>> indices;

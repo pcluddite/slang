@@ -6,10 +6,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tbasic.Parsing;
-using Tbasic.Runtime;
+using TLang.Parsing;
+using TLang.Runtime;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     /// <summary>
     /// A code block that sores information on a function
@@ -49,49 +49,48 @@ namespace Tbasic.Types
         /// <summary>
         /// Executes the body of the function
         /// </summary>
-        public virtual object Execute(StackData stackdat)
+        public virtual object Execute(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(Prototype.Count);
 
-            ObjectContext context = stackdat.Context;
-            TBasic runtime = stackdat.Runtime;
+            ObjectContext context = runtime.Context;
 
             int index = 0;
             foreach(string param in Prototype.Skip(1)) { // skip the first item in the collection, which is assumed to be the name
-                context.SetVariable(param, stackdat.GetAt(++index));
+                context.SetVariable(param, stackdat.Get(++index));
             }
             
             context.AddCommand("return", Return);
-            context.AddCommand("SetStatus", SetStatus);
+            context.AddCommand("raise", SetStatus);
 
             StackData ret = runtime.Execute(Body);
             stackdat.CopyFrom(ret);
             runtime.HonorBreak();
-            return stackdat.Data;
+            return stackdat.ReturnValue;
         }
 
-        private object Return(StackData stackFrame)
+        private object Return(TRuntime runtime, StackData stackdat)
         {
-            if (stackFrame.ParameterCount < 2) {
-                stackFrame.AssertCount(2);
+            if (stackdat.ParameterCount < 2) {
+                stackdat.AssertCount(2);
             }
             ExpressionEvaluator e = new ExpressionEvaluator(
-                stackFrame.Text.Substring(stackFrame.Name.Length),
-                stackFrame.Runtime);
-            stackFrame.Runtime.RequestBreak();
-            return stackFrame.Data = e.Evaluate();
+                stackdat.Text.Substring(stackdat.Name.Length),
+                runtime);
+            runtime.RequestBreak();
+            return stackdat.ReturnValue = e.Evaluate();
         }
 
-        private object SetStatus(StackData stackFrame)
+        private object SetStatus(TRuntime runtime, StackData stackdat)
         {
-            stackFrame.AssertCount(2);
-            return stackFrame.Status = stackFrame.GetAt<int>(1);
+            stackdat.AssertCount(2);
+            return stackdat.Status = stackdat.Get<int>(1);
         }
 
         /// <summary>
         /// Do not call this method. This is not implemented by default.
         /// </summary>
-        public override void Execute(TBasic exec)
+        public override void Execute(TRuntime runtime)
         {
             throw new NotImplementedException();
         }

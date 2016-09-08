@@ -6,10 +6,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Tbasic.Errors;
-using Tbasic.Types;
+using TLang.Errors;
+using TLang.Types;
 
-namespace Tbasic.Runtime
+namespace TLang.Runtime
 {
     internal class Variable : IExpressionEvaluator
     {
@@ -29,7 +29,7 @@ namespace Tbasic.Runtime
             }
         }
 
-        public TBasic Runtime { get; set; }
+        public TRuntime Runtime { get; set; }
 
         public IEnumerable<char> Expression
         {
@@ -53,7 +53,7 @@ namespace Tbasic.Runtime
 
         #endregion
 
-        public Variable(string name, IList<IEnumerable<char>> indices, TBasic exec)
+        public Variable(string name, IList<IEnumerable<char>> indices, TRuntime exec)
         {
             Runtime = exec;
             _name = name;

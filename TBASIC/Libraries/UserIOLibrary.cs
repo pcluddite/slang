@@ -8,10 +8,10 @@ using System;
 using System.Speech.Synthesis;
 using System.Threading;
 using System.Windows.Forms;
-using Tbasic.Errors;
-using Tbasic.Runtime;
+using TLang.Errors;
+using TLang.Runtime;
 
-namespace Tbasic.Libraries
+namespace TLang.Libraries
 {
     /// <summary>
     /// A library for basic user input and output operations
@@ -35,39 +35,39 @@ namespace Tbasic.Libraries
             Add("StdPause", ConsolePause);
         }
 
-        private object ConsoleWriteline(StackData stackdat)
+        private object ConsoleWriteline(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            Console.WriteLine(stackdat.GetAt(1));
+            Console.WriteLine(stackdat.Get(1));
             return null;
         }
 
-        private object ConsoleWrite(StackData stackdat)
+        private object ConsoleWrite(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            Console.Write(stackdat.GetAt(1));
+            Console.Write(stackdat.Get(1));
             return null;
         }
 
-        private object ConsoleRead(StackData stackdat)
+        private object ConsoleRead(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             return Console.Read();
         }
 
-        private object ConsoleReadLine(StackData stackdat)
+        private object ConsoleReadLine(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             return Console.ReadLine();
         }
 
-        private object ConsoleReadKey(StackData stackdat)
+        private object ConsoleReadKey(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             return Console.ReadKey().KeyChar;
         }
 
-        private object ConsolePause(StackData stackdat)
+        private object ConsolePause(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(1);
             return Console.ReadKey(true).KeyChar;
@@ -87,7 +87,7 @@ namespace Tbasic.Libraries
             return Interaction.InputBox(prompt, title, defaultResponse, x, y);
         }
 
-        private object Input(StackData stackdat)
+        private object Input(TRuntime runtime, StackData stackdat)
         {
             if (stackdat.ParameterCount == 2) {
                 stackdat.AddRange("TBASIC", -1, -1);
@@ -100,10 +100,10 @@ namespace Tbasic.Libraries
             }
             stackdat.AssertCount(5);
 
-            int x = stackdat.GetAt<int>(3),
-                y = stackdat.GetAt<int>(4);
+            int x = stackdat.Get<int>(3),
+                y = stackdat.Get<int>(4);
 
-            string resp = InputBox(stackdat.GetAt<string>(1), stackdat.GetAt<string>(2), "", x, y);
+            string resp = InputBox(stackdat.Get<string>(1), stackdat.Get<string>(2), "", x, y);
 
             if (string.IsNullOrEmpty(resp)) { 
                 stackdat.Status = ErrorSuccess.NoContent; // -1 no input 2/24
@@ -127,7 +127,7 @@ namespace Tbasic.Libraries
             t.Start(new object[] { timeout, icon, text, title });
         }
 
-        private object TrayTip(StackData stackdat)
+        private object TrayTip(TRuntime runtime, StackData stackdat)
         {
             if (stackdat.ParameterCount == 2) {
                 stackdat.Add(""); // title
@@ -142,7 +142,7 @@ namespace Tbasic.Libraries
                 stackdat.Add(5000); // timeout
             }
             stackdat.AssertCount(5);
-            TrayTip(text: stackdat.GetAt<string>(1), title: stackdat.GetAt<string>(2), icon: stackdat.GetAt<ToolTipIcon>(3), timeout: stackdat.GetAt<int>(4));
+            TrayTip(text: stackdat.Get<string>(1), title: stackdat.Get<string>(2), icon: stackdat.Get<ToolTipIcon>(3), timeout: stackdat.Get<int>(4));
             return null;
         }
 
@@ -182,16 +182,16 @@ namespace Tbasic.Libraries
             return Interaction.MsgBox(prompt, (MsgBoxStyle)buttons, title).ToString();
         }
 
-        private object MsgBox(StackData stackdat)
+        private object MsgBox(TRuntime runtime, StackData stackdat)
         {
             if (stackdat.ParameterCount == 3) {
                 stackdat.Add("");
             }
             stackdat.AssertCount(4);
 
-            int flag = stackdat.GetAt<int>(1);
-            string text = stackdat.GetAt<string>(2),
-                   title = stackdat.GetAt<string>(3);
+            int flag = stackdat.Get<int>(1);
+            string text = stackdat.Get<string>(2),
+                   title = stackdat.Get<string>(3);
 
             return MsgBox(buttons: flag, prompt: text, title: title);
         }
@@ -206,10 +206,10 @@ namespace Tbasic.Libraries
             t.Start(text);
         }
 
-        private object Say(StackData stackdat)
+        private object Say(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            Say(stackdat.GetAt<string>(1));
+            Say(stackdat.Get<string>(1));
             return null;
         }
 

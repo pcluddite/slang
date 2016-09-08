@@ -5,7 +5,7 @@
 // ======
 using System;
 
-namespace Tbasic.Runtime
+namespace TLang.Runtime
 {
     /// <summary>
     /// A list of flags to define the runtime environment

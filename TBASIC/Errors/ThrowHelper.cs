@@ -5,7 +5,7 @@
 // ======
 using System;
 
-namespace Tbasic.Errors
+namespace TLang.Errors
 {
     internal class ThrowHelper
     {

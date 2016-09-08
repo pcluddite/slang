@@ -5,15 +5,16 @@
 // ======
 using System;
 using System.Reflection;
-using Tbasic.Runtime;
+using TLang.Runtime;
 
-namespace Tbasic.Types
+namespace TLang.Types
 {
     /// <summary>
     /// Delegate for processing a TBasic function
     /// </summary>
-    /// <param name="stack">The object containing parameter and execution information</param>
-    public delegate object TBasicFunction(StackData stack);
+    /// <param name="runtime">the runtime that called this function</param>
+    /// <param name="stackdat">The object containing parameter and execution information</param>
+    public delegate object TBasicFunction(TRuntime runtime, StackData stackdat);
 
     /// <summary>
     /// Contains call information for each function or command
@@ -39,7 +40,7 @@ namespace Tbasic.Types
         /// <summary>
         /// Gets a value indicating whether or not this function's arguments should be evaluated
         /// </summary>
-        public bool Evaluate { get; }
+        public bool ShouldEvaluate { get; }
 
         /// <summary>
         /// Constructs a CallData object
@@ -52,7 +53,7 @@ namespace Tbasic.Types
             NativeDelegate = null;
             ArgumentCount = -1;
             Returns = true;
-            Evaluate = evaluate;
+            ShouldEvaluate = evaluate;
         }
 
         /// <summary>
@@ -66,20 +67,20 @@ namespace Tbasic.Types
             ArgumentCount = args;
             NativeDelegate = d;
             Returns = (d.Method.ReturnType != null);
-            Evaluate = evaluate;
+            ShouldEvaluate = evaluate;
             Function = null; // squelching error message about not all fields assigned 8/18/16
             Function = NativeFuncWrapper;
         }
 
-        private object NativeFuncWrapper(StackData runtime)
+        private object NativeFuncWrapper(TRuntime runtime, StackData stackdat)
         {
-            runtime.AssertCount(ArgumentCount + 1); // plus 1 for the name
+            stackdat.AssertCount(ArgumentCount + 1); // plus 1 for the name
 
-            object[] args = new object[runtime.ParameterCount - 1];
+            object[] args = new object[stackdat.ParameterCount - 1];
             ParameterInfo[] expectedArgs = NativeDelegate.Method.GetParameters();
 
-            for (int index = 1; index < runtime.ParameterCount; ++index) // make sure the types are correct for each parameter
-                args[index - 1] = runtime.ConvertAt(index, expectedArgs[index - 1].ParameterType);
+            for (int index = 1; index < stackdat.ParameterCount; ++index) // make sure the types are correct for each parameter
+                args[index - 1] = stackdat.Convert(index, expectedArgs[index - 1].ParameterType);
 
             if (Returns) {
                 return NativeDelegate.DynamicInvoke(args);

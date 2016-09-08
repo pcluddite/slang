@@ -7,7 +7,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 
-namespace Tbasic.Components.Win32
+namespace TLang.Components.Win32
 {
     internal class Impersonate
     {

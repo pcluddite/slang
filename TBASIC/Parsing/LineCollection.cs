@@ -6,9 +6,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Tbasic.Errors;
+using TLang.Errors;
 
-namespace Tbasic.Parsing
+namespace TLang.Parsing
 {
     /// <summary>
     /// A collection of Tbasic.Line objects sorted by line number

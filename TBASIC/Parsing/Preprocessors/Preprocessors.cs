@@ -4,7 +4,7 @@
 //
 // ======
 
-namespace Tbasic.Parsing
+namespace TLang.Parsing
 {
     /// <summary>
     /// A static class with some preprocessors

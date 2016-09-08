@@ -7,11 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Tbasic.Errors;
-using Tbasic.Runtime;
-using Tbasic.Types;
+using TLang.Errors;
+using TLang.Runtime;
+using TLang.Types;
 
-namespace Tbasic.Parsing
+namespace TLang.Parsing
 {
     internal class DefaultPreprocessor : IPreprocessor
     {
@@ -22,13 +22,13 @@ namespace Tbasic.Parsing
         public ICollection<TClass> Classes { get; } = new List<TClass>();
         public LineCollection Lines { get; } = new LineCollection();
 
-        private TBasic runtime;
+        private TRuntime runtime;
 
         public DefaultPreprocessor()
         {
         }
 
-        public virtual IPreprocessor Preprocess(TBasic runtime, TextReader reader)
+        public virtual IPreprocessor Preprocess(TRuntime runtime, TextReader reader)
         {
             Functions.Clear();
             Classes.Clear();

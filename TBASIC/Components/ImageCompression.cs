@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace Tbasic.Components
+namespace TLang.Components
 {
     internal class Compress
     {

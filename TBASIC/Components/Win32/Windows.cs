@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Tbasic.Win32
+namespace TLang.Win32
 {
     /// <summary>
     /// A managed wrapper for common win32 window functions

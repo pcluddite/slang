@@ -4,11 +4,11 @@
 //
 // ======
 using System.Collections.Generic;
-using Tbasic.Errors;
-using Tbasic.Types;
+using TLang.Errors;
+using TLang.Types;
 using System;
 
-namespace Tbasic.Runtime
+namespace TLang.Runtime
 {
     /// <summary>
     /// Class for evaluating a function
@@ -43,7 +43,7 @@ namespace Tbasic.Runtime
         /// </summary>
         public ObjectContext CurrentContext { get; set; }
 
-        public TBasic Runtime { get; set; }
+        public TRuntime Runtime { get; set; }
 
         public IList<IEnumerable<char>> Parameters
         {
@@ -56,7 +56,7 @@ namespace Tbasic.Runtime
 
         #region Construction
         
-        public Function(TBasic runtime, string name, IList<IEnumerable<char>> parameters)
+        public Function(TRuntime runtime, string name, IList<IEnumerable<char>> parameters)
         {
             Runtime = runtime;
             CurrentContext = runtime.Global;
@@ -82,13 +82,13 @@ namespace Tbasic.Runtime
         {
             CallData func;
             if (CurrentContext.TryGetFunction(name, out func)) {
-                StackData stackdat = new StackData(Runtime, l_params.TB_ToStrings());
+                StackData stackdat = new StackData(Runtime.Options, l_params.TB_ToStrings());
                 stackdat.Name = name; // if this isn't before evaluation, EvaluateAll() won't eval properly 8/30/16
-                if (func.Evaluate) {
-                    stackdat.EvaluateAll();
+                if (func.ShouldEvaluate) {
+                    stackdat.EvaluateAll(Runtime);
                 }
-                Runtime.ExecuteInContext(func.Function, stackdat, CurrentContext);
-                return stackdat.Data;
+                Runtime.ExecuteInContext(CurrentContext, func.Function, stackdat: stackdat);
+                return stackdat.ReturnValue;
             }
             else {
                 throw ThrowHelper.UndefinedFunction(name);

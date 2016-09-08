@@ -10,10 +10,10 @@
 //
 // ======
 using System;
-using Tbasic.Runtime;
-using Tbasic.Types;
+using TLang.Runtime;
+using TLang.Types;
 
-namespace Tbasic.Parsing
+namespace TLang.Parsing
 {
 	public partial class DefaultScanner
 	{

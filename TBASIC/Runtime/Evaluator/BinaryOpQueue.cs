@@ -4,9 +4,9 @@
 //
 // ======
 using System.Collections.Generic;
-using Tbasic.Types;
+using TLang.Types;
 
-namespace Tbasic.Runtime
+namespace TLang.Runtime
 {
     internal class BinaryOpQueue
     {

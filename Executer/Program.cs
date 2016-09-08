@@ -6,10 +6,10 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using Tbasic.Runtime;
-using Tbasic.Errors;
+using TLang.Runtime;
+using TLang.Errors;
 
-namespace Tbasic.Runner
+namespace TLang.Runner
 {
     public class Program
     {
@@ -38,7 +38,7 @@ namespace Tbasic.Runner
         public static void RunScript(string filename)
         {
             try {
-                TBasic runtime = new TBasic();
+                TRuntime runtime = new TRuntime();
                 runtime.Global.LoadStandardLibrary();
                 using (StreamReader fstream = new StreamReader(File.OpenRead(filename))) {
                     runtime.Execute(fstream);

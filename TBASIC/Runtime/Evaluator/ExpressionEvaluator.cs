@@ -7,12 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Tbasic.Errors;
-using Tbasic.Parsing;
-using Tbasic.Types;
+using TLang.Errors;
+using TLang.Parsing;
+using TLang.Types;
 using System.Linq;
 
-namespace Tbasic.Runtime
+namespace TLang.Runtime
 {
     /// <summary>
     /// General purpose evaluator for functions, variables, math, booleans, etc.
@@ -22,12 +22,12 @@ namespace Tbasic.Runtime
         private object[] results = null;
         private IEnumerable<char> _expression = string.Empty;
         
-        public ExpressionEvaluator(TBasic runtime)
+        public ExpressionEvaluator(TRuntime runtime)
         {
             Runtime = runtime;
         }
         
-        public ExpressionEvaluator(IEnumerable<char> expression, TBasic exec)
+        public ExpressionEvaluator(IEnumerable<char> expression, TRuntime exec)
         {
             Runtime = exec;
             Expression = expression;
@@ -54,7 +54,7 @@ namespace Tbasic.Runtime
             }
         }
 
-        public TBasic Runtime { get; set; }
+        public TRuntime Runtime { get; set; }
 
         public bool Parsed
         {
@@ -279,13 +279,13 @@ namespace Tbasic.Runtime
         /// <param name="expressionString">expression to be evaluated</param>
         /// <param name="exec">the current execution</param>
         /// <returns></returns>
-        public static object Evaluate(IEnumerable<char> expressionString, TBasic exec)
+        public static object Evaluate(IEnumerable<char> expressionString, TRuntime exec)
         {
             ExpressionEvaluator expression = new ExpressionEvaluator(expressionString, exec);
             return expression.Evaluate();
         }
 
-        public static object PerformUnaryOp(TBasic runtime, UnaryOperator op, object operand)
+        public static object PerformUnaryOp(TRuntime runtime, UnaryOperator op, object operand)
         {
             if (op.EvaluateOperand) {
                 IExpressionEvaluator tempv = operand as IExpressionEvaluator;
@@ -304,7 +304,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Performs a binary operation
         /// </summary>
-        public static object PerformBinaryOp(TBasic runtime, BinaryOperator op, object left, object right)
+        public static object PerformBinaryOp(TRuntime runtime, BinaryOperator op, object left, object right)
         {
             if (op.EvaulatedOperand.HasFlag(BinaryOperator.OperandPosition.Left)) {
                 IExpressionEvaluator tv = left as IExpressionEvaluator;

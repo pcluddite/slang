@@ -59,7 +59,7 @@ namespace TLang.Runtime
         public Function(TRuntime runtime, string name, IList<IEnumerable<char>> parameters)
         {
             Runtime = runtime;
-            CurrentContext = runtime.Global;
+            CurrentContext = runtime.Context;
             _name = name;
             _params = parameters;
         }

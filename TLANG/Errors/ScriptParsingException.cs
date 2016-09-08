@@ -65,14 +65,14 @@ namespace TLang.Errors
     /// <summary>
     /// Occours when an invalid token was parsed
     /// </summary>
-    public class InvalidTokenExceptiopn : ScriptParsingException
+    public class InvalidTokenException : ScriptParsingException
     {
         /// <summary>
         /// Initializes a new exception
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="prependGeneric"></param>
-        public InvalidTokenExceptiopn(string msg, bool prependGeneric = true)
+        public InvalidTokenException(string msg, bool prependGeneric = true)
             : base(prependGeneric ? ($"Unexpected token in expression [ {msg} ]") : msg)
         {
         }
@@ -81,7 +81,7 @@ namespace TLang.Errors
     /// <summary>
     /// Occours when an invalid or unexpected operator was parsed
     /// </summary>
-    public class InvalidOperatorException : InvalidTokenExceptiopn
+    public class InvalidOperatorException : InvalidTokenException
     {
         /// <summary>
         /// Initializes a new exception

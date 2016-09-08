@@ -192,7 +192,7 @@ namespace TLang.Runtime
             // couldn't be parsed
 
             if (CurrentContext.FindFunctionContext(_expression.ToString()) == null) {
-                throw new InvalidTokenExceptiopn(scanner.Next()?.ToString());
+                throw new InvalidTokenException(scanner.Next()?.ToString());
             }
             else {
                 throw new FormatException("Poorly formed function call");

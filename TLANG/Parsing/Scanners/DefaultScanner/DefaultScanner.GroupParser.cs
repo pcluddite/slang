@@ -199,7 +199,7 @@ namespace TLang.Parsing
 
                 if ((expected == 1 && cur == separator) // The separators in between other parentheses are not ours.
                     || expected == 0) {
-                    IEnumerable<char> _param = fullstr.TB_Segment(last + 1, index - last - 1);
+                    IEnumerable<char> _param = StringSegment.Create(fullstr, last + 1, index - last - 1).Trim();
                     result.Add(_param);
                     last = index;
                     if (expected == 0) { // fin

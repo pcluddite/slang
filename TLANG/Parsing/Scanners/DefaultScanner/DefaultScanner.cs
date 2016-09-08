@@ -426,14 +426,14 @@ namespace TLang.Parsing
             string token = BuffNextWord();
             if (string.IsNullOrEmpty(token))
                 return false;
+            if (token[0] == '@') {
+                return NextMacro(out name, out indices);
+            }
             Match m = rxId.Match(token);
             if (m.Success && CharAt(TokenBuffer.Item1 + m.Length) == '$') {
                 name = InternalBuffer.Substring(TokenBuffer.Item1, m.Length + 1);
                 AdvanceScanner(m.Length + 1);
                 NextIndices(out indices);
-            }
-            else if (token[0] == '@') {
-                return NextMacro(out name, out indices);
             }
             return (name != null);
         }
@@ -444,7 +444,9 @@ namespace TLang.Parsing
         private bool NextMacro(out IEnumerable<char> name, out IList<IEnumerable<char>> indices)
         {
             name = null; indices = null;
-            int start = Position++;
+            int start = Position;
+            SkipWhiteSpace();
+            Position += 1;
             string token = BuffNextWord();
             if (string.IsNullOrEmpty(token))
                 return false;

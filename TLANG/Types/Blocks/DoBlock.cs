@@ -34,7 +34,7 @@ namespace TLang.Types
                     throw ThrowHelper.NoCondition();
                 }
                 if (Footer.Name != Footer.Text) {
-                    throw new InvalidTokenExceptiopn("Unexpected arguments in loop footer", prependGeneric: false);
+                    throw new InvalidTokenException("Unexpected arguments in loop footer", prependGeneric: false);
                 }
                 scanner = runtime.Scanner.Scan(Header.Text);
                 scanner.Skip(Header.Text.IndexOf(' ', Header.Name.Length) + 1);
@@ -42,7 +42,7 @@ namespace TLang.Types
             }
             else {
                 if (Header.Name != Header.Text) {
-                    throw new InvalidTokenExceptiopn("Unexpected arguments in loop header", prependGeneric: false);
+                    throw new InvalidTokenException("Unexpected arguments in loop header", prependGeneric: false);
                 }
                 scanner = runtime.Scanner.Scan(Footer.Text);
                 scanner.Skip(Footer.Text.IndexOf(' ', Footer.Name.Length) + 1);

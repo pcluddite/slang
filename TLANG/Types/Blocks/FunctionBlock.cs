@@ -57,7 +57,7 @@ namespace TLang.Types
                 context.SetVariable(param, stackdat.Get(++index));
             }
             
-            context.AddCommand("return", Return);
+            context.AddCommand("return", new CallData(Return, evaluate: false));
             context.AddCommand("raise", SetStatus);
 
             StackData ret = runtime.Execute(Body);

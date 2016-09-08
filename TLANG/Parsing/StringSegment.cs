@@ -86,12 +86,12 @@ namespace TLang.Parsing
             len = count;
         }
 
-        public static IEnumerable<char> Create(string fullStr, int offset, int count)
+        public static StringSegment Create(string fullStr, int offset, int count)
         {
             if (count > fullStr.Length - offset)
                 throw new ArgumentOutOfRangeException(nameof(count));
             if (offset == fullStr.Length - 1)
-                return string.Empty;
+                return Empty;
             return new StringSegment(fullStr, offset, count);
         }
 

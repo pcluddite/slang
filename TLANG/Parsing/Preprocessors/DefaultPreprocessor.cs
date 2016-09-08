@@ -106,12 +106,11 @@ namespace TLang.Parsing
             Line header = current;
             LineCollection body = new LineCollection();
             int lineNumber = current.LineNumber + 1;
-            do {
-                if (ProcessCodeLine(reader, lineNumber++, out current))
-                    throw ThrowHelper.UnterminatedBlock("function definition");
+            while (ProcessCodeLine(reader, lineNumber++, out current) && !FuncEnd(current)) {
                 body.Add(current);
             }
-            while (!FuncEnd(current));
+            if (current.Text == null)
+                throw ThrowHelper.UnterminatedBlock("function");
             block = new FunctionBlock(GetPrototype(header), header, current, body);
             return lineNumber;
         }
@@ -146,10 +145,7 @@ namespace TLang.Parsing
 
             tclass = new TClass(classname.ToString(), runtime.Global);
 
-            do {
-                if (!ProcessCodeLine(reader, nline++, out current))
-                    throw ThrowHelper.UnterminatedBlock("class definition");
-                
+            while (ProcessCodeLine(reader, nline++, out current) && !ClassEnd(current)) {
                 if (string.IsNullOrEmpty(current.Text) || current.Text[0] == CommentChar)
                     continue;
 
@@ -159,7 +155,7 @@ namespace TLang.Parsing
                 else if (FuncBegin(current)) {
                     FunctionBlock func;
                     nline = ProcessFuncBlock(reader, current, out func);
-                    tclass.SetFunction(func.Prototype[0], func.Execute);
+                    tclass.AddFunction(func.Prototype[0], func.Execute);
                 }
                 else if (current.Name.EqualsIgnoreCase(tclass.Name)) {
                     current.Text = "FUNCTION " + current.Text; // this is just to satisfy the parser. Try to fix later. 8/26/16
@@ -168,10 +164,12 @@ namespace TLang.Parsing
                     tclass.AddFunction("<>ctor", ctor.Execute);
                 }
                 else {
-                    throw new InvalidTokenExceptiopn(current.Text);
+                    throw new InvalidTokenException(current.Text);
                 }
             }
-            while (!ClassEnd(current));
+            if (current.Text == null)
+                throw ThrowHelper.UnterminatedBlock("class");
+            
             return nline;
         }
     }

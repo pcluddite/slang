@@ -106,5 +106,13 @@ namespace Tbasic.Parsing
         /// Advances the scanner a given number of characters
         /// </summary>
         void Skip(int count);
+        /// <summary>
+        /// Matches the null value
+        /// </summary>
+        bool NextNull();
+        /// <summary>
+        /// Matches the next expression break
+        /// </summary>
+        bool NextExpressionBreak();
     }
 }

@@ -28,7 +28,7 @@ namespace Tbasic.Parsing
         {
         }
 
-        public IPreprocessor Preprocess(TBasic runtime, TextReader reader)
+        public virtual IPreprocessor Preprocess(TBasic runtime, TextReader reader)
         {
             Functions.Clear();
             Classes.Clear();
@@ -37,8 +37,8 @@ namespace Tbasic.Parsing
             ScanLines(reader);
             return this;
         }
-        
-        private void ScanLines(TextReader reader)
+
+        protected virtual void ScanLines(TextReader reader)
         {
             int lineNumber = 1;
             Line line;
@@ -62,7 +62,7 @@ namespace Tbasic.Parsing
             }
         }
 
-        private static Line ProcessCodeLine(TextReader reader, int lineNumber)
+        protected virtual Line ProcessCodeLine(TextReader reader, int lineNumber)
         {
             string linestr = reader.ReadLine()?.Trim();
             if (linestr == null)
@@ -88,7 +88,7 @@ namespace Tbasic.Parsing
             return line;
         }
 
-        private int ProcessFuncBlock(TextReader reader, Line current, out FunctionBlock block)
+        protected virtual int ProcessFuncBlock(TextReader reader, Line current, out FunctionBlock block)
         {
             Line header = current;
             LineCollection body = new LineCollection();
@@ -102,7 +102,7 @@ namespace Tbasic.Parsing
             return lineNumber;
         }
 
-        private IList<string> GetPrototype(Line header)
+        protected virtual IList<string> GetPrototype(Line header)
         {
             IScanner scanner = runtime.Scanner.Scan(header.Text);
             scanner.Next("FUNCTION");
@@ -120,10 +120,10 @@ namespace Tbasic.Parsing
             return ret;
         }
 
-        private static readonly Predicate<Line> ClassBegin = (o => o.Name.EqualsIgnoreCase("CLASS"));
-        private static readonly Predicate<Line> ClassEnd = (o => o.Text.EqualsIgnoreCase("END CLASS"));
+        protected virtual Predicate<Line> ClassBegin { get; } = (o => o.Name.EqualsIgnoreCase("CLASS"));
+        protected virtual Predicate<Line> ClassEnd { get; } = (o => o.Text.EqualsIgnoreCase("END CLASS"));
 
-        private int ProcessClassBlock(TextReader reader, Line current, out TClass tclass)
+        protected virtual int ProcessClassBlock(TextReader reader, Line current, out TClass tclass)
         {
             int nline = current.LineNumber + 1;
             IScanner scanner = runtime.Scanner.Scan(current.Text);

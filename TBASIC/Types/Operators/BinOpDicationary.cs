@@ -7,6 +7,7 @@ using System;
 using System.Globalization;
 using Tbasic.Runtime;
 using Tbasic.Errors;
+using System.Linq;
 
 namespace Tbasic.Types
 {

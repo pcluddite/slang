@@ -41,6 +41,15 @@ namespace Tbasic.Parsing
         private ValueTuple<int, int> NonwsBuffer = new ValueTuple<int, int>(int.MinValue, default(int));
 
         /// <summary>
+        /// Gets the string that separates expressions
+        /// </summary>
+        protected virtual string ExpressionBreak { get; } = ";";
+        /// <summary>
+        /// Gets the string that represents a null value
+        /// </summary>
+        protected virtual string NullString { get; } = "null";
+
+        /// <summary>
         /// The internal buffer for this scanner
         /// </summary>
         protected string InternalBuffer;
@@ -76,6 +85,22 @@ namespace Tbasic.Parsing
         public int Current
         {
             get { return CharAt(Position); }
+        }
+
+        /// <summary>
+        /// Initializes a DefaultScanner with a given string buffer
+        /// </summary>
+        /// <param name="buffer"></param>
+        public DefaultScanner(string buffer)
+        {
+            InternalBuffer = buffer;
+        }
+
+        /// <summary>
+        /// Initializes a DefaultScanner without a buffer
+        /// </summary>
+        protected DefaultScanner()
+        {
         }
 
         /// <summary>
@@ -172,19 +197,20 @@ namespace Tbasic.Parsing
         }
 
         /// <summary>
-        /// Initializes a DefaultScanner with a given string buffer
+        /// Tries to match the next line breaking character
         /// </summary>
-        /// <param name="buffer"></param>
-        public DefaultScanner(string buffer)
+        public virtual bool NextExpressionBreak()
         {
-            InternalBuffer = buffer;
+            return Next(ExpressionBreak, true);
         }
 
         /// <summary>
-        /// Initializes a DefaultScanner without a buffer
+        /// Tries to match the next null value
         /// </summary>
-        protected DefaultScanner()
+        /// <returns></returns>
+        public virtual bool NextNull()
         {
+            return Next(NullString, true);
         }
 
         /// <summary>

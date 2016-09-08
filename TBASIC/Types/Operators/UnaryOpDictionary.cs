@@ -26,7 +26,7 @@ namespace Tbasic.Types
             operators.Add("NEW", new UnaryOperator("NEW", New, evaluate: false));
             operators.Add("+", new UnaryOperator("+", Plus));
             operators.Add("-", new UnaryOperator("-", Minus));
-            operators.Add("NOT ", new UnaryOperator("NOT ", Not));
+            operators.Add("NOT", new UnaryOperator("NOT", Not));
             operators.Add("~", new UnaryOperator("~", BitNot));
         }
 

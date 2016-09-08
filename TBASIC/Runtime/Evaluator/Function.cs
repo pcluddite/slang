@@ -3,12 +3,10 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
-using System;
 using System.Collections.Generic;
-using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Types;
-using System.Linq;
+using System;
 
 namespace Tbasic.Runtime
 {
@@ -69,7 +67,6 @@ namespace Tbasic.Runtime
         #endregion
 
         #region Methods
-        
         
         public object Evaluate()
         {

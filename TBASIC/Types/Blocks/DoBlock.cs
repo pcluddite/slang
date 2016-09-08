@@ -71,7 +71,7 @@ namespace Tbasic.Types
                         runtime.HonorBreak();
                         break;
                     }
-                    eval.Evaluated = true;
+                    eval.Parsed = false;
                 }
                 while (condition(eval));
             }
@@ -82,7 +82,7 @@ namespace Tbasic.Types
                         runtime.HonorBreak();
                         break;
                     }
-                    eval.Evaluated = true;
+                    eval.Parsed = false;
                 }
             }
         }

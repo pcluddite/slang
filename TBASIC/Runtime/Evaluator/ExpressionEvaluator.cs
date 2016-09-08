@@ -10,7 +10,7 @@ using System.Text;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Types;
-using Tbasic.Components;
+using System.Linq;
 
 namespace Tbasic.Runtime
 {
@@ -19,9 +19,8 @@ namespace Tbasic.Runtime
     /// </summary>
     internal partial class ExpressionEvaluator : IExpressionEvaluator
     {
-        private LinkedList<object> _tokens = new LinkedList<object>();
+        private object[] results = null;
         private IEnumerable<char> _expression = string.Empty;
-        private bool _parsed;
         
         public ExpressionEvaluator(TBasic runtime)
         {
@@ -41,8 +40,7 @@ namespace Tbasic.Runtime
             get { return _expression; }
             set {
                 _expression = value;
-                _parsed = false;
-                _tokens.Clear();
+                results = null;
             }
         }
 
@@ -58,21 +56,20 @@ namespace Tbasic.Runtime
 
         public TBasic Runtime { get; set; }
 
-        public bool Evaluated
+        public bool Parsed
         {
             get {
-                return !_parsed;
+                return (results != null);
             }
             set {
-                if (_parsed && value) {
-                    _tokens.Clear();
-                    _parsed = !value;
+                if (Parsed && !value) {
+                    results = null;
                 }
             }
         }
 
         #endregion
-        
+
         public object Evaluate(IEnumerable<char> expr)
         {
             Expression = expr;
@@ -81,17 +78,39 @@ namespace Tbasic.Runtime
 
         public object Evaluate()
         {
-            if (Expression == null || Expression.ToString() == string.Empty) 
-                return 0;
-            
-            if (!_parsed) {
-                IScanner scanner = Runtime.Scanner.Scan(_expression);
-                while (!scanner.EndOfStream)
-                    NextToken(scanner);
-                _parsed = true;
-            }
+            object[] results = EvaluateAll();
 
-            return ConvertToSimpleType(EvaluateList(), Runtime.Options);
+            if (results.Length == 1) {
+                return results[0];
+            }
+            else {
+                return results;
+            }
+        }
+
+        private object[] EvaluateAll()
+        {
+            if (Parsed) {
+                return results;
+            }
+            else if (Expression == null || Expression.ToString() == string.Empty) {
+                return (results = new object[1]);
+            }
+            else {
+                IScanner scanner = Runtime.Scanner.Scan(_expression);
+                LinkedList<object> tokens = new LinkedList<object>();
+                List<object> lResults = new List<object>();
+
+                while (!scanner.EndOfStream) {
+                    if (NextToken(tokens, scanner)) {
+                        lResults.Add(ConvertToSimpleType(EvaluateList(tokens), Runtime.Options));
+                        tokens = new LinkedList<object>();
+                    }
+                }
+
+                lResults.Add(ConvertToSimpleType(EvaluateList(tokens), Runtime.Options));
+                return (results = lResults.ToArray());
+            }
         }
 
         public bool EvaluateBool()
@@ -99,66 +118,70 @@ namespace Tbasic.Runtime
             return Convert.ToBoolean(Evaluate());
         }
         
-        private int NextToken(IScanner scanner)
+        private bool NextToken(LinkedList<object> tokens, IScanner scanner)
         {
             int startIndex = scanner.Position;
 
             // check group
             if (scanner.Next("(")) {
-                return AddObjectToExprList("(", startIndex, scanner);
+                return AddObjectToExprList("(", startIndex, scanner, tokens);
             }
 
             // check function
             Function func;
             if (DefaultScanner.NextFunctionInternal(scanner, Runtime, out func)) {
-                return AddObjectToExprList(func, startIndex, scanner);
+                return AddObjectToExprList(func, startIndex, scanner, tokens);
             }
 
             // check variable
             Variable variable;
             if (DefaultScanner.NextVariable(scanner, Runtime, out variable)) {
-                return AddObjectToExprList(variable, startIndex, scanner);
+                return AddObjectToExprList(variable, startIndex, scanner, tokens);
             }
 
             // check unary op
             UnaryOperator unaryOp;
-            if (scanner.NextUnaryOp(CurrentContext, _tokens.Last?.Value, out unaryOp)) {
-                return AddObjectToExprList(unaryOp, startIndex, scanner);
-            }
-
-            // check hexadecimal
-            long hex;
-            if (scanner.NextHexadecimal(out hex)) {
-                return AddObjectToExprList(hex, startIndex, scanner);
-            }
-
-            // check boolean
-            bool b;
-            if (scanner.NextBool(out b)) {
-                return AddObjectToExprList(b, startIndex, scanner);
-            }
-
-            // check numeric
-            Number num;
-            if (scanner.NextNumber(out num)) {
-                return AddObjectToExprList(num, startIndex, scanner);
+            if (scanner.NextUnaryOp(CurrentContext, tokens.Last?.Value, out unaryOp)) {
+                return AddObjectToExprList(unaryOp, startIndex, scanner, tokens);
             }
 
             // check binary operator
             BinaryOperator binOp;
             if (scanner.NextBinaryOp(CurrentContext, out binOp)) {
-                return AddObjectToExprList(binOp, startIndex, scanner);
+                return AddObjectToExprList(binOp, startIndex, scanner, tokens);
+            }
+
+            // check hexadecimal
+            long hex;
+            if (scanner.NextHexadecimal(out hex)) {
+                return AddObjectToExprList(hex, startIndex, scanner, tokens);
+            }
+
+            // check boolean
+            bool b;
+            if (scanner.NextBool(out b)) {
+                return AddObjectToExprList(b, startIndex, scanner, tokens);
+            }
+
+            // check numeric
+            Number num;
+            if (scanner.NextNumber(out num)) {
+                return AddObjectToExprList(num, startIndex, scanner, tokens);
             }
 
             // check null
-            if (scanner.Next("null")) {
-                return AddObjectToExprList("null", startIndex, scanner);
+            if (scanner.NextNull()) {
+                return AddObjectToExprList(null, startIndex, scanner, tokens);
+            }
+
+            if (scanner.NextExpressionBreak()) {
+                return true;
             }
 
             // check string
             string str_parsed;
             if (scanner.NextString(out str_parsed)) {
-                return AddObjectToExprList(str_parsed, startIndex, scanner);
+                return AddObjectToExprList(str_parsed, startIndex, scanner, tokens);
             }
 
             // couldn't be parsed
@@ -171,7 +194,7 @@ namespace Tbasic.Runtime
             }
         }
 
-        private int AddObjectToExprList(object val, int startIndex, IScanner scanner)
+        private bool AddObjectToExprList(object val, int startIndex, IScanner scanner, LinkedList<object> tokens)
         {
             if (Equals(val, "(")) {
                 scanner.Position = startIndex;
@@ -182,16 +205,16 @@ namespace Tbasic.Runtime
                     scanner.Read(startIndex + 1, scanner.Position - startIndex - 2),
                     Runtime // share the wealth
                 );
-                _tokens.AddLast(eval);
+                tokens.AddLast(eval);
             }
             else {
-                _tokens.AddLast(val);
+                tokens.AddLast(val);
             }
             scanner.SkipWhiteSpace();
-            return scanner.Position;
+            return false;
         }
         
-        private object EvaluateList()
+        private object EvaluateList(LinkedList<object> _tokens)
         {
             LinkedList<object> list = new LinkedList<object>(_tokens);
 

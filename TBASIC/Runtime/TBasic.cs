@@ -9,6 +9,7 @@ using System.IO;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Types;
+using System.Linq;
 
 namespace Tbasic.Runtime
 {

@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TLang.Runner</RootNamespace>
-    <AssemblyName>TBasic Runner</AssemblyName>
+    <AssemblyName>TExecuter</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -52,13 +52,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TBASIC\TLANG.csproj">
+    <Content Include="StoredProcedureScript.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TLANG\TLANG.csproj">
       <Project>{86ec7054-1d77-4dee-854f-ad7377fc27aa}</Project>
       <Name>TLANG</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="StoredProcedureScript.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -66,7 +66,7 @@ namespace TLang.Parsing
             scanner.SkipWhiteSpace();
 
             IEnumerable<char> arg;
-            while(scanner.NextStringOrToken(out arg)) {
+            while(scanner.NextWordOrString(out arg)) {
                 Add(arg.ToString());
                 scanner.SkipWhiteSpace();
             }

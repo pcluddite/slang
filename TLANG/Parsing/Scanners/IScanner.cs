@@ -31,13 +31,13 @@ namespace TLang.Parsing
         /// </summary>
         void SkipWhiteSpace();
         /// <summary>
-        /// Gets the next token in the buffer as a string
+        /// Gets the next word in the buffer as a string
         /// </summary>
         IEnumerable<char> Next();
         /// <summary>
-        /// Parses the next escaped string or token
+        /// Parses the next escaped string or word
         /// </summary>
-        bool NextStringOrToken(out IEnumerable<char> token);
+        bool NextWordOrString(out IEnumerable<char> token);
         /// <summary>
         /// Gets the next unsigned number in the buffer
         /// </summary>
@@ -47,7 +47,7 @@ namespace TLang.Parsing
         /// </summary>
         bool NextHexadecimal(out long number);
         /// <summary>
-        /// Matches the next string in the buffer
+        /// Tries to match a set of characeters from the buffer and advances the reader to the end of those characters
         /// </summary>
         bool Next(string pattern, bool ignoreCase = true);
         /// <summary>

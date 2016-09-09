@@ -35,7 +35,7 @@ namespace TLang.Parsing
             else if (NextValidIdentifier(out name)) {
                 args = new List<IEnumerable<char>>();
                 IEnumerable<char> token;
-                while (NextStringOrToken(out token)) {
+                while (NextWordOrString(out token)) {
                     args.Add(token);
                 }
                 return true;

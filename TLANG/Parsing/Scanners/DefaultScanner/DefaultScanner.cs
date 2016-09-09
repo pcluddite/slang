@@ -32,9 +32,9 @@ namespace TLang.Parsing
         protected static readonly Regex rxId = new Regex(@"^((_|[a-zA-Z])\w+)", RegexOptions.Compiled);
 
         /// <summary>
-        /// The buffered token. The first item is the index of the token, the second is the token.
+        /// The buffered word. The first item is the index of the word, the second is the word itself.
         /// </summary>
-        private ValueTuple<int, string> TokenBuffer = new ValueTuple<int, string>(int.MinValue, default(string));
+        private ValueTuple<int, string> WordBuffer = new ValueTuple<int, string>(int.MinValue, default(string));
         /// <summary>
         /// The next buffered index of the next non whitespace character. The first item is the index of the stream when the character was buffered. The second is the index of the character.
         /// </summary>
@@ -143,28 +143,28 @@ namespace TLang.Parsing
         }
 
         /// <summary>
-        /// Gets the next token from the buffer. If the next token is not buffered, then it will be.
+        /// Gets the next set of characters until the first instance of whitespace or the end of the is reached.
         /// </summary>
         protected string BuffNextWord()
         {
             int start = FindNonWhiteSpace(),
                 pos = start;
-            if (TokenBuffer.Item1 != pos) {
+            if (WordBuffer.Item1 != pos) {
                 while (pos < Length && !char.IsWhiteSpace(InternalBuffer[pos])) {
                     ++pos;
                 }
                 if (pos - start > 0) {
-                    TokenBuffer = new ValueTuple<int, string>(start, InternalBuffer.Substring(start, pos - start));
+                    WordBuffer = new ValueTuple<int, string>(start, InternalBuffer.Substring(start, pos - start));
                 }
                 else {
                     return null;
                 }
             }
-            return TokenBuffer.Item2;
+            return WordBuffer.Item2;
         }
 
         /// <summary>
-        /// Advances the scanner to the end of the next token
+        /// Advances the scanner to the end of the next token parsed from the buffered word
         /// </summary>
         protected void AdvanceScanner(string matchedToken)
         {
@@ -172,26 +172,17 @@ namespace TLang.Parsing
         }
 
         /// <summary>
-        /// Advances the scanner to the end of the next token
+        /// Advances the scanner to the end of the next token parsed from the buffered word
         /// </summary>
         protected void AdvanceScanner(int tokenLen)
         {
-            Position = tokenLen + TokenBuffer.Item1;
+            Position = tokenLen + WordBuffer.Item1;
         }
 
         /// <summary>
-        /// Gets the next token in the buffer
+        /// Gets the next word in the buffer
         /// </summary>
         public virtual IEnumerable<char> Next()
-        {
-            return NextSegment();
-        }
-
-        /// <summary>
-        /// Gets the next token in the buffer as a IEnumerable&lt;char&gt;
-        /// </summary>
-        /// <returns></returns>
-        public virtual IEnumerable<char> NextSegment()
         {
             string word = BuffNextWord();
             if (word != null) {
@@ -260,13 +251,13 @@ namespace TLang.Parsing
         }
 
         /// <summary>
-        /// Tries to match a token from the buffer and advances the reader to the end of that token
+        /// Tries to match a set of characeters from the buffer and advances the reader to the end of those characters
         /// </summary>
-        public virtual bool Next(string pattern, bool ignoreCase)
+        public virtual bool Next(string str, bool ignoreCase)
         {
-            string token = BuffNextWord();
-            if (!string.IsNullOrEmpty(token) && token.StartsWith(pattern, ignoreCase, CultureInfo.CurrentCulture)) {
-                AdvanceScanner(pattern);
+            string word = BuffNextWord();
+            if (!string.IsNullOrEmpty(word) && word.StartsWith(str, ignoreCase, CultureInfo.CurrentCulture)) {
+                AdvanceScanner(str);
                 return true;
             }
             else {
@@ -275,9 +266,9 @@ namespace TLang.Parsing
         }
 
         /// <summary>
-        /// Tries to match a token or a string from the buffer and advances the reader to the end of that token or string
+        /// Tries to match a word or a quoted string from the buffer and advances the reader to the end of that string or word
         /// </summary>
-        public virtual bool NextStringOrToken(out IEnumerable<char> token)
+        public virtual bool NextWordOrString(out IEnumerable<char> token)
         {
             token = null;
             int pos = FindNonWhiteSpace();
@@ -423,15 +414,15 @@ namespace TLang.Parsing
         public virtual bool NextVariable(out IEnumerable<char> name, out IList<IEnumerable<char>> indices)
         {
             name = null; indices = null;
-            string token = BuffNextWord();
-            if (string.IsNullOrEmpty(token))
+            string word = BuffNextWord();
+            if (string.IsNullOrEmpty(word))
                 return false;
-            if (token[0] == '@') {
+            if (word[0] == '@') {
                 return NextMacro(out name, out indices);
             }
-            Match m = rxId.Match(token);
-            if (m.Success && CharAt(TokenBuffer.Item1 + m.Length) == '$') {
-                name = InternalBuffer.Substring(TokenBuffer.Item1, m.Length + 1);
+            Match m = rxId.Match(word);
+            if (m.Success && CharAt(WordBuffer.Item1 + m.Length) == '$') {
+                name = InternalBuffer.Substring(WordBuffer.Item1, m.Length + 1);
                 AdvanceScanner(m.Length + 1);
                 NextIndices(out indices);
             }
@@ -447,13 +438,13 @@ namespace TLang.Parsing
             int start = Position;
             SkipWhiteSpace();
             Position += 1;
-            string token = BuffNextWord();
-            if (string.IsNullOrEmpty(token))
+            string word = BuffNextWord();
+            if (string.IsNullOrEmpty(word))
                 return false;
-            Match m = rxId.Match(token);
+            Match m = rxId.Match(word);
             if (m.Success) {
-                name = InternalBuffer.Substring(start, token.Length + 1);
-                AdvanceScanner(token.Length + 1);
+                name = InternalBuffer.Substring(start, word.Length + 1);
+                AdvanceScanner(word.Length + 1);
                 NextIndices(out indices);
                 return true;
             }
@@ -511,15 +502,15 @@ namespace TLang.Parsing
         /// </summary>
         public virtual bool NextBool(out bool b)
         {
-            string token = BuffNextWord();
-            if (string.IsNullOrEmpty(token))
+            string word = BuffNextWord();
+            if (string.IsNullOrEmpty(word))
                 return b = false;
 
-            if (token.StartsWith(bool.TrueString, StringComparison.CurrentCultureIgnoreCase)) {
+            if (word.StartsWith(bool.TrueString, StringComparison.CurrentCultureIgnoreCase)) {
                 AdvanceScanner(bool.TrueString);
                 return b = true;
             }
-            else if (token.StartsWith(bool.FalseString, StringComparison.CurrentCultureIgnoreCase)) {
+            else if (word.StartsWith(bool.FalseString, StringComparison.CurrentCultureIgnoreCase)) {
                 AdvanceScanner(bool.FalseString);
                 b = false;
                 return true;

@@ -29,7 +29,7 @@ namespace TLang.Parsing
         /// <summary>
         /// A regular expression for matching identifiers (function, variable, class and other names)
         /// </summary>
-        protected static readonly Regex rxId = new Regex(@"^((_|[a-zA-Z])\w+)", RegexOptions.Compiled);
+        protected static readonly Regex rxId = new Regex(@"^((_|[a-zA-Z])\w*)", RegexOptions.Compiled);
 
         /// <summary>
         /// The buffered word. The first item is the index of the word, the second is the word itself.

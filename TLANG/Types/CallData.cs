@@ -22,9 +22,9 @@ namespace TLang.Types
     public struct CallData
     {
         /// <summary>
-        /// Gets the argument count for this function (excluding the function name)
+        /// Gets or sets the argument count for this function (excluding the function name). This is only relevant for native functions.
         /// </summary>
-        public int ArgumentCount { get; }
+        public int ArgumentCount { get; set; }
         /// <summary>
         /// Gets the TBasicFunction delegate that is called
         /// </summary>
@@ -38,9 +38,9 @@ namespace TLang.Types
         /// </summary>
         public bool Returns { get; }
         /// <summary>
-        /// Gets a value indicating whether or not this function's arguments should be evaluated
+        /// Gets or sets a value indicating whether or not this function's arguments should be evaluated
         /// </summary>
-        public bool ShouldEvaluate { get; }
+        public bool ShouldEvaluate { get; set; }
 
         /// <summary>
         /// Constructs a CallData object

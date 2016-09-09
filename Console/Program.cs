@@ -10,7 +10,7 @@ using System.Text;
 using TLang.Parsing;
 using TLang.Runtime;
 using TLang.Errors;
-using System.IO;
+using TLang.Types;
 
 #if DEBUG
 using System.Diagnostics;
@@ -33,15 +33,7 @@ namespace TLang.Terminal
             Console.WriteLine();
 
             Console.Write("Initializing standard library...");
-
-            TRuntime runtime = new TRuntime();
-            runtime.Scanner = Scanners.Terminal;
-            runtime.Preprocessor = Preprocessors.Terminal;
-            runtime.Global.LoadStandardLibrary();
-            runtime.Global.RenameFunction("GetCurrentDirectory", "PWD");
-            runtime.Global.RenameFunction("SetCurrentDirectory", "CD");
-
-            runtime.Global.AddCommandLibrary(new ConsoleLibrary());
+            TRuntime runtime = InitRuntime();
 
             Console.WriteLine("Done.\n");
 
@@ -74,6 +66,22 @@ namespace TLang.Terminal
             }
         }
 
+        internal static TRuntime InitRuntime()
+        {
+            TRuntime runtime = new TRuntime();
+            runtime.Scanner = Scanners.Terminal;
+            runtime.Preprocessor = Preprocessors.Terminal;
+            runtime.Global.LoadStandardLibrary();
+            runtime.Global.AddFunctionAlias("GetCurrentDirectory", "PWD");
+
+            CallData cd = runtime.Global.GetFunction("SetCurrentDirectory");
+            cd.ShouldEvaluate = false; // this way we don't have to quote everything all the time
+            runtime.Global.AddFunction("CD", cd);
+
+            runtime.Global.AddCommandLibrary(new ConsoleLibrary());
+            return runtime;
+        }
+
         public static void ResetColor()
         {
             Console.ForegroundColor = FG_COLOR;
@@ -84,57 +92,11 @@ namespace TLang.Terminal
         {
             if (o == null)
                 return "null";
-
-            if (o is string)
-                return "\"" + ToCString(o.ToString(), '\"') + "\"";
-
+            
             if (o.ToString() != o.GetType().ToString()) // checks if ToString() has been implemented
                 return o.ToString();
-
+            JsonSerializerSettings n = new JsonSerializerSettings();
             return JsonConvert.SerializeObject(o, Formatting.Indented); // Maybe json has a way of representing this? (good for arrays)
-        }
-
-        internal static string ToCString(string str, char quote)
-        {
-            StringBuilder sb = new StringBuilder();
-            char last = '\0';
-            foreach (char cur in str) {
-                switch (cur) {
-                    case '\\':
-                        sb.Append('\\');
-                        sb.Append(cur);
-                        break;
-                    case '\'':
-                    case '"':
-                        if (quote == cur) {
-                            sb.Append('\\');
-                        }
-                        sb.Append(cur);
-                        break;
-                    case '/':
-                        if (last == '<') {
-                            sb.Append('\\');
-                        }
-                        sb.Append(cur);
-                        break;
-                    case '\b': sb.Append("\\b"); break;
-                    case '\t': sb.Append("\\t"); break;
-                    case '\n': sb.Append("\\n"); break;
-                    case '\f': sb.Append("\\f"); break;
-                    case '\r': sb.Append("\\r"); break;
-                    default:
-                        if (cur < ' ') {
-                            sb.Append("\\u" + ((int)cur).ToString("x4", CultureInfo.InvariantCulture));
-                        }
-                        else {
-                            sb.Append(cur);
-                        }
-                        break;
-
-                }
-                last = cur;
-            }
-            return sb.ToString();
         }
         
 #if DEBUG

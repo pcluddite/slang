@@ -94,7 +94,7 @@ namespace TLang.Runtime
                 return results;
             }
             else if (Expression == null || Expression.ToString() == string.Empty) {
-                return (results = new object[1]);
+                return (results = new object[0]);
             }
             else {
                 IScanner scanner = Runtime.Scanner.Scan(_expression);

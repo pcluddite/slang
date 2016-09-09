@@ -7,7 +7,7 @@
 namespace TLang.Components
 {
     /// <summary>
-    /// A tuple that is a value type and holds 1 type(s)
+    /// A tuple that is a value type and holds 1 object
     /// </summary>
     /// <typeparam name="T1">the type for Item1</typeparam>
 	internal struct ValueTuple<T1>
@@ -21,7 +21,7 @@ namespace TLang.Components
     }
 
     /// <summary>
-    /// A tuple that is a value type and holds 2 type(s)
+    /// A tuple that is a value type and holds 2 objects
     /// </summary>
     /// <typeparam name="T1">the type for Item1</typeparam>
     /// <typeparam name="T2">the type for Item2</typeparam>
@@ -38,7 +38,7 @@ namespace TLang.Components
     }
 
     /// <summary>
-    /// A tuple that is a value type and holds 3 type(s)
+    /// A tuple that is a value type and holds 3 objects
     /// </summary>
     /// <typeparam name="T1">the type for Item1</typeparam>
     /// <typeparam name="T2">the type for Item2</typeparam>
@@ -58,7 +58,7 @@ namespace TLang.Components
     }
 
     /// <summary>
-    /// A tuple that is a value type and holds 4 type(s)
+    /// A tuple that is a value type and holds 4 objects
     /// </summary>
     /// <typeparam name="T1">the type for Item1</typeparam>
     /// <typeparam name="T2">the type for Item2</typeparam>
@@ -81,7 +81,7 @@ namespace TLang.Components
     }
 
     /// <summary>
-    /// A tuple that is a value type and holds 5 type(s)
+    /// A tuple that is a value type and holds 5 objects
     /// </summary>
     /// <typeparam name="T1">the type for Item1</typeparam>
     /// <typeparam name="T2">the type for Item2</typeparam>
@@ -107,7 +107,7 @@ namespace TLang.Components
     }
 
     /// <summary>
-    /// A tuple that is a value type and holds 6 type(s)
+    /// A tuple that is a value type and holds 6 objects
     /// </summary>
     /// <typeparam name="T1">the type for Item1</typeparam>
     /// <typeparam name="T2">the type for Item2</typeparam>
@@ -136,7 +136,7 @@ namespace TLang.Components
     }
 
     /// <summary>
-    /// A tuple that is a value type and holds 7 type(s)
+    /// A tuple that is a value type and holds 7 objects
     /// </summary>
     /// <typeparam name="T1">the type for Item1</typeparam>
     /// <typeparam name="T2">the type for Item2</typeparam>

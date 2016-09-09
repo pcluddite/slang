@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Extensions.cs" />
-    <Compile Include="Components\ValueTuple.cs">
+    <Compile Include="Components\ValueTuple.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ValueTuple.tt</DependentUpon>
@@ -160,7 +160,7 @@
   <ItemGroup>
     <Content Include="Components\ValueTuple.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ValueTuple.cs</LastGenOutput>
+      <LastGenOutput>ValueTuple.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="Libraries\Library.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

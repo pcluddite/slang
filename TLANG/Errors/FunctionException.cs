@@ -7,12 +7,12 @@ using System;
 using System.IO;
 using System.Security;
 
-namespace TLang.Errors
+namespace Tint.Errors
 {
     /// <summary>
-    /// An exception that occours within a Tbasic function or subroutine and has an associated a status code
+    /// An exception that occours within a Tint function or subroutine and has an associated a status code
     /// </summary>
-    public class FunctionException : TbasicRuntimeException
+    public class FunctionException : TintRuntimeException
     {
         /// <summary>
         /// Gets the status code for this exception
@@ -118,7 +118,7 @@ namespace TLang.Errors
         }
 
         /// <summary>
-        /// Converts some common exceptions into a TbasicException. If it cannot be converted, null is returned.
+        /// Converts some common exceptions into a FunctionException. If it cannot be converted, null is returned.
         /// </summary>
         /// <param name="ex"></param>
         /// <returns></returns>

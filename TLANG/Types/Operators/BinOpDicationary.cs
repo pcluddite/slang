@@ -5,11 +5,11 @@
 // ======
 using System;
 using System.Globalization;
-using TLang.Runtime;
-using TLang.Errors;
+using Tint.Runtime;
+using Tint.Errors;
 using System.Linq;
 
-namespace TLang.Types
+namespace Tint.Types
 {
     internal class BinOpDictionary : OperatorDictionary<BinaryOperator>
     {
@@ -67,7 +67,7 @@ namespace TLang.Types
             }
             TClass n = left as TClass;
             if (n == null)
-                throw new TbasicRuntimeException("The dot operator cannot be used on primitive types");
+                throw new TintRuntimeException("The dot operator cannot be used on primitive types");
             IExpressionEvaluator e = right as IExpressionEvaluator;
             if (e != null) {
                 e.CurrentContext = n; // set the context to the scope of the class

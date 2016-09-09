@@ -4,9 +4,9 @@
 //
 // ======
 using System;
-using TLang.Runtime;
+using Tint.Runtime;
 
-namespace TLang.Types
+namespace Tint.Types
 {
     /// <summary>
     /// Represents an operator that takes two operands

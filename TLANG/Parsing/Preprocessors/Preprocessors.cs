@@ -4,7 +4,7 @@
 //
 // ======
 
-namespace TLang.Parsing
+namespace Tint.Parsing
 {
     /// <summary>
     /// A static class with some preprocessors

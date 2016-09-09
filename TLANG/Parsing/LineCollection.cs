@@ -6,28 +6,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TLang.Errors;
+using Tint.Errors;
 
-namespace TLang.Parsing
+namespace Tint.Parsing
 {
     /// <summary>
-    /// A collection of Tbasic.Line objects sorted by line number
+    /// A collection of Line objects sorted by line number
     /// </summary>
     public class LineCollection : IList<Line>, ICollection<Line>, ICloneable
     {
         private SortedList<int, Line> allLines = new SortedList<int, Line>();
 
         /// <summary>
-        /// Initializes a new Tbasic.LineCollection
+        /// Initializes a new LineCollection
         /// </summary>
         public LineCollection()
         {
         }
 
         /// <summary>
-        /// Initializes a new Tbasic.LineCollection from another collection
+        /// Initializes a new LineCollection from another collection
         /// </summary>
-        /// <param name="lines">the collection to add to this Tbasic.LineCollection</param>
+        /// <param name="lines">the collection to add to this LineCollection</param>
         public LineCollection(ICollection<Line> lines)
             : this()
         {
@@ -37,12 +37,12 @@ namespace TLang.Parsing
         }
 
         /// <summary>
-        /// Extracts Tbasic.Line objects starting at a given index with specified start and stop conditions
+        /// Extracts Line objects starting at a given index with specified start and stop conditions
         /// </summary>
         /// <param name="index">the index to begin parsing</param>
         /// <param name="startPredicate">the condition which confirms the start of the block</param>
         /// <param name="endPredicate">the condition which confirms the end of a block</param>
-        /// <returns>a Tbasic.LineCollection of the extracted lines</returns>
+        /// <returns>a LineCollection of the extracted lines</returns>
         public LineCollection ParseBlock(int index, Predicate<Line> startPredicate, Predicate<Line> endPredicate)
         {
             return ParseBlock(index, this, startPredicate, endPredicate);
@@ -71,7 +71,7 @@ namespace TLang.Parsing
         }
 
         /// <summary>
-        /// Adds a Tbasic.Line and sorts it by its LineNumber
+        /// Adds a Line and sorts it by its LineNumber
         /// </summary>
         /// <param name="item"></param>
         public void Add(Line item)
@@ -88,7 +88,7 @@ namespace TLang.Parsing
         }
 
         /// <summary>
-        /// Determines if this collection contains a a Tbasic.Line (this will return true when the collection contains a Tbasic.Line with the same LineNumber)
+        /// Determines if this collection contains a a Line (this will return true when the collection contains a Line with the same LineNumber)
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
@@ -108,7 +108,7 @@ namespace TLang.Parsing
         }
 
         /// <summary>
-        /// Gets the number of Tbasic.Lines contained in this collection
+        /// Gets the number of Lines contained in this collection
         /// </summary>
         public int Count
         {
@@ -135,7 +135,7 @@ namespace TLang.Parsing
         }
 
         /// <summary>
-        /// Removes a Tbasic.Line from the collection
+        /// Removes a Line from the collection
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>

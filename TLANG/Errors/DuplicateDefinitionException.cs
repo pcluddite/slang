@@ -5,12 +5,12 @@
 // ======
 using System;
 
-namespace TLang.Errors
+namespace Tint.Errors
 {
     /// <summary>
     /// Occours when an object (such as a function) has already been defined
     /// </summary>
-    public class DuplicateDefinitionException : TbasicRuntimeException
+    public class DuplicateDefinitionException : TintRuntimeException
     {
         /// <summary>
         /// Initializes a new instance of this class

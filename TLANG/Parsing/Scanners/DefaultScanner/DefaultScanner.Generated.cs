@@ -4,10 +4,10 @@
 //
 // ======
 using System;
-using TLang.Runtime;
-using TLang.Types;
+using Tint.Runtime;
+using Tint.Types;
 
-namespace TLang.Parsing
+namespace Tint.Parsing
 {
 	public partial class DefaultScanner
 	{

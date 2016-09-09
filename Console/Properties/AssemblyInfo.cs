@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Tbasic Terminal")]
+[assembly: AssemblyTitle("Tint Shell")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Tbasic Terminal")]
+[assembly: AssemblyProduct("T Interpreter Shell")]
 [assembly: AssemblyCopyright("Copyright © 2016 Timothy Baxendale")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

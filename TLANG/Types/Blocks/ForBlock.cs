@@ -4,10 +4,10 @@
 //
 // ======
 using System;
-using TLang.Parsing;
-using TLang.Runtime;
+using Tint.Parsing;
+using Tint.Runtime;
 
-namespace TLang.Types
+namespace Tint.Types
 {
     internal class ForBlock : CodeBlock
     {

@@ -5,7 +5,7 @@
 // ======
 using System;
 
-namespace TLang.Runtime
+namespace Tint.Runtime
 {
     /// <summary>
     /// A list of flags to define the runtime environment

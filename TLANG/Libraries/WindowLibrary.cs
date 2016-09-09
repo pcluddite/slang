@@ -9,12 +9,12 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using TLang.Components;
-using TLang.Errors;
-using TLang.Runtime;
-using TLang.Win32;
+using Tint.Components;
+using Tint.Errors;
+using Tint.Runtime;
+using Tint.Win32;
 
-namespace TLang.Libraries
+namespace Tint.Libraries
 {
     internal class WindowLibrary : Library
     {

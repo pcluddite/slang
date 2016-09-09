@@ -4,11 +4,11 @@
 //
 // ======
 using System.Collections.Generic;
-using TLang.Errors;
-using TLang.Parsing;
-using TLang.Runtime;
+using Tint.Errors;
+using Tint.Parsing;
+using Tint.Runtime;
 
-namespace TLang.Types
+namespace Tint.Types
 {
     internal class WhileBlock : CodeBlock
     {

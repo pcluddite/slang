@@ -7,8 +7,8 @@
     <ProjectGuid>{DB156F57-2EBE-4900-A135-4D5C27944351}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TLang.Runner</RootNamespace>
-    <AssemblyName>TExecuter</AssemblyName>
+    <RootNamespace>Tint.Tbasic.ScriptHost</RootNamespace>
+    <AssemblyName>tscript</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -55,9 +55,9 @@
     <Content Include="StoredProcedureScript.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TLANG\TLANG.csproj">
+    <ProjectReference Include="..\TLANG\tint.csproj">
       <Project>{86ec7054-1d77-4dee-854f-ad7377fc27aa}</Project>
-      <Name>TLANG</Name>
+      <Name>tint</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

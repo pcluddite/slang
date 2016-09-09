@@ -5,10 +5,10 @@
 // ======
 using System;
 using System.Globalization;
-using TLang.Runtime;
-using TLang.Errors;
+using Tint.Runtime;
+using Tint.Errors;
 
-namespace TLang.Types
+namespace Tint.Types
 {
     internal class UnaryOpDictionary : OperatorDictionary<UnaryOperator>
     {

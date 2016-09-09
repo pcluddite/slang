@@ -3,7 +3,7 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
-namespace TLang.Types
+namespace Tint.Types
 {
     /// <summary>
     /// Represents an operator

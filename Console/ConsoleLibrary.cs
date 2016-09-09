@@ -6,10 +6,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using TLang.Libraries;
-using TLang.Runtime;
+using Tint.Libraries;
+using Tint.Runtime;
 
-namespace TLang.Terminal
+namespace Tint.Shell
 {
     public class ConsoleLibrary : Library
     {

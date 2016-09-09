@@ -6,9 +6,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using TLang.Errors;
+using Tint.Errors;
 
-namespace TLang.Parsing
+namespace Tint.Parsing
 {
     public partial class DefaultScanner
     {

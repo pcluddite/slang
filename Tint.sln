@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptRunner", "Executer\ScriptRunner.csproj", "{DB156F57-2EBE-4900-A135-4D5C27944351}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tbasic Script Host", "Executer\Tbasic Script Host.csproj", "{DB156F57-2EBE-4900-A135-4D5C27944351}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terminal", "Console\Terminal.csproj", "{BAA9C2B6-B371-4B01-8C24-C9D4786866B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T Interpreter Shell", "Console\T Interpreter Shell.csproj", "{BAA9C2B6-B371-4B01-8C24-C9D4786866B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLANG", "TLANG\TLANG.csproj", "{86EC7054-1D77-4DEE-854F-AD7377FC27AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tint", "TLANG\tint.csproj", "{86EC7054-1D77-4DEE-854F-AD7377FC27AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

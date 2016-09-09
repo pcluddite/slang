@@ -5,18 +5,16 @@
 // ======
 using Newtonsoft.Json;
 using System;
-using System.Globalization;
-using System.Text;
-using TLang.Parsing;
-using TLang.Runtime;
-using TLang.Errors;
-using TLang.Types;
+using Tint.Parsing;
+using Tint.Runtime;
+using Tint.Errors;
+using Tint.Types;
 
 #if DEBUG
 using System.Diagnostics;
 #endif
 
-namespace TLang.Terminal
+namespace Tint.Shell
 {
     internal class Program
     {
@@ -27,8 +25,8 @@ namespace TLang.Terminal
         {
             ResetColor();
             Console.Clear();
-            Console.Title = "Terminal";
-            Console.WriteLine("T Language Terminal [{0}]", TRuntime.VERSION);
+            Console.Title = "T Interpreter Shell";
+            Console.WriteLine("T Interpreter Shell [{0}]", TRuntime.VERSION);
             Console.WriteLine("Copyright (c) Timothy Baxendale. All Rights Reserved.");
             Console.WriteLine();
 
@@ -56,7 +54,7 @@ namespace TLang.Terminal
                     if (dat.ReturnValue != null)
                         Console.WriteLine(ObjectToString(dat.ReturnValue));
                 }
-                catch(TbasicRuntimeException e) {
+                catch(TintRuntimeException e) {
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(e.Message);

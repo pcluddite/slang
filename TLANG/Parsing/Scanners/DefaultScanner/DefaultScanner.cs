@@ -7,11 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using TLang.Runtime;
-using TLang.Types;
-using TLang.Components;
+using Tint.Runtime;
+using Tint.Types;
+using Tint.Components;
 
-namespace TLang.Parsing
+namespace Tint.Parsing
 {
     /// <summary>
     /// The default implementation of Scanner. This can be extended and modified for custom implementations.

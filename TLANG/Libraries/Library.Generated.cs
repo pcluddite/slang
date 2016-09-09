@@ -4,9 +4,9 @@
 //
 // ======
 using System;
-using TLang.Types;
+using Tint.Types;
 
-namespace TLang.Libraries
+namespace Tint.Libraries
 {
     public partial class Library
 	{

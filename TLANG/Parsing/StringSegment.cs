@@ -8,7 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TLang.Parsing
+namespace Tint.Parsing
 {
     /// <summary>
     /// This class is used to avoid string copying. It keeps a reference to the original string and accesses only a segment of it. This class is immutable.

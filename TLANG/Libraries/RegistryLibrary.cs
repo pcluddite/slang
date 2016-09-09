@@ -5,11 +5,11 @@
 // ======
 using Microsoft.Win32;
 using System;
-using TLang.Components;
-using TLang.Errors;
-using TLang.Runtime;
+using Tint.Components;
+using Tint.Errors;
+using Tint.Runtime;
 
-namespace TLang.Libraries
+namespace Tint.Libraries
 {
     /// <summary>
     /// Library for interacting with Windows registry.

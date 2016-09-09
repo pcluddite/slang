@@ -5,12 +5,12 @@
 // ======
 using System;
 
-namespace TLang.Errors
+namespace Tint.Errors
 {
     /// <summary>
     /// Represents a generic script parsing error
     /// </summary>
-    public class ScriptParsingException : TbasicRuntimeException
+    public class ScriptParsingException : TintRuntimeException
     {
         /// <summary>
         /// Initializes a new exception

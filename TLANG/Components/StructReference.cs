@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TLang.Components
+namespace Tint.Components
 {
     /// <summary>
     /// Can be used to get around some struct copying

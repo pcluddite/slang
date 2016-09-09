@@ -6,12 +6,12 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using TLang.Errors;
-using TLang.Runtime;
-using TLang.Win32;
+using Tint.Errors;
+using Tint.Runtime;
+using Tint.Win32;
 using Forms = System.Windows.Forms;
 
-namespace TLang.Libraries
+namespace Tint.Libraries
 {
     /// <summary>
     /// A library used to automate and manipulate key strokes, mouse clicks and other input

@@ -5,10 +5,10 @@
 // ======
 using System;
 
-namespace TLang.Parsing
+namespace Tint.Parsing
 {
     /// <summary>
-    /// Defines a set of methods and properties for a line of Tbasic code
+    /// Defines a set of methods and properties for a line of Tint code
     /// </summary>
     public struct Line : IComparable<Line>, IEquatable<Line>
     {
@@ -58,7 +58,7 @@ namespace TLang.Parsing
         public string Name { get; private set; }
 
         /// <summary>
-        /// Initializes a line of Tbasic code
+        /// Initializes a line of Tint code
         /// </summary>
         /// <param name="id">The id of the line. This should be the line number.</param>
         /// <param name="line">The text of the line</param>
@@ -111,7 +111,7 @@ namespace TLang.Parsing
         }
 
         /// <summary>
-        /// Compares this Tbasic.Line to another Tbasic.Line by comparing their LineNumber
+        /// Compares this Line to another Line by comparing their LineNumber
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
@@ -143,7 +143,7 @@ namespace TLang.Parsing
         }
 
         /// <summary>
-        /// Determines if two Tbasic.Line objects share the same LineNumber
+        /// Determines if two Line objects share the same LineNumber
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>

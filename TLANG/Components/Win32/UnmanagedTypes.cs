@@ -7,7 +7,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace TLang.Win32
+namespace Tint.Win32
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     internal struct WNDCLASS

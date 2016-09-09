@@ -4,9 +4,9 @@
 //
 // ======
 using System.Linq;
-using TLang.Runtime;
+using Tint.Runtime;
 
-namespace TLang.Libraries
+namespace Tint.Libraries
 {
     internal class ArrayLibrary : Library
     {

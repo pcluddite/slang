@@ -4,7 +4,7 @@
 //
 // ======
 
-namespace TLang.Components
+namespace Tint.Components
 {
     /// <summary>
     /// A tuple that is a value type and holds 1 object

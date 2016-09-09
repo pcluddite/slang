@@ -5,9 +5,9 @@
 // ======
 using System;
 using System.Drawing;
-using TLang.Win32;
+using Tint.Win32;
 
-namespace TLang.Components
+namespace Tint.Components
 {
     /// <summary>
     /// Class for getting a screen shot of the whole screen or a specific window

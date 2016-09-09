@@ -6,7 +6,7 @@
 using Microsoft.Win32;
 using System.Collections.Generic;
 
-namespace TLang.Components
+namespace Tint.Components
 {
     internal static class WinRegistry
     {

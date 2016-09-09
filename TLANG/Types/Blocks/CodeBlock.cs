@@ -3,11 +3,11 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
-using TLang.Parsing;
-using TLang.Runtime;
+using Tint.Parsing;
+using Tint.Runtime;
 using System.Collections.Generic;
 
-namespace TLang.Types
+namespace Tint.Types
 {
     /// <summary>
     /// Delegate for initializing a CodeBlock

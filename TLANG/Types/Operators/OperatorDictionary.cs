@@ -8,7 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TLang.Types
+namespace Tint.Types
 {
     internal abstract class OperatorDictionary<T> : IDictionary<string, T>
         where T : IOperator

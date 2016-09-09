@@ -8,9 +8,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TLang.Components;
+using Tint.Components;
 
-namespace TLang.Parsing
+namespace Tint.Parsing
 {
     /// <summary>
     /// A class for parsing statements, where each argument is an escaped string separated by a space

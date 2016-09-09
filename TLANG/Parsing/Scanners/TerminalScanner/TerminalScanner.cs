@@ -5,7 +5,7 @@
 // ======
 using System.Collections.Generic;
 
-namespace TLang.Parsing
+namespace Tint.Parsing
 {
     internal class TerminalScanner : DefaultScanner
     {

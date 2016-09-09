@@ -7,10 +7,10 @@ using Microsoft.VisualBasic.FileIO;
 using System;
 using System.IO;
 using System.Text;
-using TLang.Errors;
-using TLang.Runtime;
+using Tint.Errors;
+using Tint.Runtime;
 
-namespace TLang.Libraries
+namespace Tint.Libraries
 {
     /// <summary>
     /// A library used to write and read to files or the file system

@@ -7,7 +7,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace TLang.Win32
+namespace Tint.Win32
 {
     internal delegate IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 

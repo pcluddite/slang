@@ -4,10 +4,10 @@
 //
 // ======
 using System;
-using TLang.Errors;
-using TLang.Runtime;
+using Tint.Errors;
+using Tint.Runtime;
 
-namespace TLang.Types
+namespace Tint.Types
 {
     /// <summary>
     /// Represents a generic number (this is a double at its core)

@@ -4,11 +4,11 @@
 //
 // ======
 using System;
-using TLang.Errors;
-using TLang.Runtime;
-using TLang.Types;
+using Tint.Errors;
+using Tint.Runtime;
+using Tint.Types;
 
-namespace TLang.Libraries
+namespace Tint.Libraries
 {
     internal class RuntimeLibrary : Library
     {

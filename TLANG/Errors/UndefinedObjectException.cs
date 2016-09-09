@@ -5,12 +5,12 @@
 // ======
 using System;
 
-namespace TLang.Errors
+namespace Tint.Errors
 {
     /// <summary>
     /// Thrown when a function, variable or other symbol is not defined within the current scope
     /// </summary>
-    public class UndefinedObjectException : TbasicRuntimeException
+    public class UndefinedObjectException : TintRuntimeException
     {
         /// <summary>
         /// Constructs a new UndefinedObjectException

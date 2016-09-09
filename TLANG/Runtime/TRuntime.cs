@@ -6,11 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using TLang.Errors;
-using TLang.Parsing;
-using TLang.Types;
+using Tint.Errors;
+using Tint.Parsing;
+using Tint.Types;
 
-namespace TLang.Runtime
+namespace Tint.Runtime
 {
     /// <summary>
     /// An event handler for a user exit
@@ -25,9 +25,9 @@ namespace TLang.Runtime
     public class TRuntime
     {
         /// <summary>
-        /// A string containing information on this version of TBasic
+        /// A string containing information on this version of Tint
         /// </summary>
-        public const string VERSION = "TLANG 3.0.2016 Beta";
+        public const string VERSION = "TINT 3.0.2016 Beta";
 
         #region Properties
         /// <summary>
@@ -128,13 +128,13 @@ namespace TLang.Runtime
         public StackData Execute(Line codeLine)
         {
 #if !NO_EXCEPT
-            TbasicRuntimeException runEx;
+            TintRuntimeException runEx;
             try {
 #endif
                 return Execute(this, codeLine);
 #if !NO_EXCEPT
             }
-            catch(Exception ex) when ((runEx = TbasicRuntimeException.WrapException(ex)) != null) {
+            catch(Exception ex) when ((runEx = TintRuntimeException.WrapException(ex)) != null) {
                 throw runEx;
             }
 #endif
@@ -150,7 +150,7 @@ namespace TLang.Runtime
                 Line current = lines[index];
                 CurrentLine = current.LineNumber;
 #if !NO_EXCEPT
-                TbasicRuntimeException runEx;
+                TintRuntimeException runEx;
                 try {
 #endif
                     BlockCreator block_init;
@@ -166,7 +166,7 @@ namespace TLang.Runtime
                     }
 #if !NO_EXCEPT
                 }
-                catch (Exception ex) when ((runEx = TbasicRuntimeException.WrapException(ex)) != null) { // only catch errors that we understand 8/16/16
+                catch (Exception ex) when ((runEx = TintRuntimeException.WrapException(ex)) != null) { // only catch errors that we understand 8/16/16
                     HandleError(current, runtime ?? new StackData(Options), runEx);
                 }
 #endif
@@ -195,7 +195,7 @@ namespace TLang.Runtime
             return stackdat;
         }
 
-        internal object ExecuteInContext(ObjectContext newcontext, TBasicFunction func, StackData stackdat)
+        internal object ExecuteInContext(ObjectContext newcontext, TintFunction func, StackData stackdat)
         {
             ObjectContext old = Context;
             Context = newcontext.CreateSubContext();
@@ -234,7 +234,7 @@ namespace TLang.Runtime
             }
         }
 
-        private void HandleError(Line current, StackData stackdat, TbasicRuntimeException ex)
+        private void HandleError(Line current, StackData stackdat, TintRuntimeException ex)
         {
             FunctionException cEx = ex as FunctionException;
             if (cEx != null) {

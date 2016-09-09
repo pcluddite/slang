@@ -6,12 +6,12 @@
 using System;
 using System.IO;
 using System.Linq;
-using TLang.Errors;
-using TLang.Parsing;
-using TLang.Runtime;
-using TLang.Types;
+using Tint.Errors;
+using Tint.Parsing;
+using Tint.Runtime;
+using Tint.Types;
 
-namespace TLang.Libraries
+namespace Tint.Libraries
 {
     internal class StatementLibrary : Library
     {
@@ -54,8 +54,8 @@ namespace TLang.Libraries
                     }
                 }
             }
-            catch(Exception ex) when (ex is TbasicRuntimeException || ex is IOException || ex is UnauthorizedAccessException) {
-                throw new TbasicRuntimeException("Unable to load library. " + ex.Message, ex);
+            catch(Exception ex) when (ex is TintRuntimeException || ex is IOException || ex is UnauthorizedAccessException) {
+                throw new TintRuntimeException("Unable to load library. " + ex.Message, ex);
             }
 
             return NULL(runtime, stackdat);

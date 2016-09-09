@@ -5,13 +5,13 @@
 // ======
 using System;
 using System.Collections.Generic;
-using TLang.Parsing;
-using TLang.Runtime;
+using Tint.Parsing;
+using Tint.Runtime;
 
-namespace TLang.Types
+namespace Tint.Types
 {
     /// <summary>
-    /// Represents a tbasic class
+    /// Represents a Tint class
     /// </summary>
     public class TClass : ObjectContext, ICloneable
     {
@@ -80,7 +80,7 @@ namespace TLang.Types
         }
 
         /// <summary>
-        /// Creates an instance of this class for use in TBASIC code
+        /// Creates an instance of this class for use in Tint code
         /// </summary>
         public TClass GetInstance(TRuntime runtime, StackData stackdat)
         {

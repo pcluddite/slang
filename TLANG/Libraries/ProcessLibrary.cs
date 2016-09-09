@@ -10,11 +10,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using TLang.Errors;
-using TLang.Runtime;
-using TLang.Types;
+using Tint.Errors;
+using Tint.Runtime;
+using Tint.Types;
 
-namespace TLang.Libraries
+namespace Tint.Libraries
 {
     internal class ProcessLibrary : Library
     {
@@ -24,7 +24,7 @@ namespace TLang.Libraries
             Add("ProcClose", ProcessClose);
             Add("ProcKill", ProcessKill);
             Add("ProcExists", ProcessExists);
-            Add("ProcBlockList", new TBasicFunction(BlockedList));
+            Add("ProcBlockList", new TintFunction(BlockedList));
             //Add("ProcBlock", ProcessBlock);
             //Add("ProcRedirect", ProcessRedirect);
             Add("ProcSetDebugger", ProcessSetDebugger);

@@ -4,13 +4,13 @@
 //
 // ======
 using System.Collections.Generic;
-using TLang.Runtime;
-using TLang.Types;
+using Tint.Runtime;
+using Tint.Types;
 
-namespace TLang.Parsing
+namespace Tint.Parsing
 {
     /// <summary>
-    /// An inteface for a TBasic scanner
+    /// An inteface for a Tint scanner
     /// </summary>
     public interface IScanner
     {

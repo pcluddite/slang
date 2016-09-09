@@ -8,10 +8,10 @@ using System;
 using System.Speech.Synthesis;
 using System.Threading;
 using System.Windows.Forms;
-using TLang.Errors;
-using TLang.Runtime;
+using Tint.Errors;
+using Tint.Runtime;
 
-namespace TLang.Libraries
+namespace Tint.Libraries
 {
     /// <summary>
     /// A library for basic user input and output operations
@@ -90,7 +90,7 @@ namespace TLang.Libraries
         private object Input(TRuntime runtime, StackData stackdat)
         {
             if (stackdat.ParameterCount == 2) {
-                stackdat.AddRange("TBASIC", -1, -1);
+                stackdat.AddRange("Tint", -1, -1);
             }
             if (stackdat.ParameterCount == 3) {
                 stackdat.AddRange(-1, -1);

@@ -5,9 +5,9 @@
 // ======
 using System.Text;
 using System.Text.RegularExpressions;
-using TLang.Runtime;
+using Tint.Runtime;
 
-namespace TLang.Libraries
+namespace Tint.Libraries
 {
     internal class StringLibrary : Library
     {

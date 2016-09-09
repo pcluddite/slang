@@ -5,16 +5,16 @@
 // ======
 using System;
 using System.Reflection;
-using TLang.Runtime;
+using Tint.Runtime;
 
-namespace TLang.Types
+namespace Tint.Types
 {
     /// <summary>
-    /// Delegate for processing a TBasic function
+    /// Delegate for processing a Tint function
     /// </summary>
     /// <param name="runtime">the runtime that called this function</param>
     /// <param name="stackdat">The object containing parameter and execution information</param>
-    public delegate object TBasicFunction(TRuntime runtime, StackData stackdat);
+    public delegate object TintFunction(TRuntime runtime, StackData stackdat);
 
     /// <summary>
     /// Contains call information for each function or command
@@ -26,9 +26,9 @@ namespace TLang.Types
         /// </summary>
         public int ArgumentCount { get; set; }
         /// <summary>
-        /// Gets the TBasicFunction delegate that is called
+        /// Gets the TintFunction delegate that is called
         /// </summary>
-        public TBasicFunction Function { get; }
+        public TintFunction Function { get; }
         /// <summary>
         /// Gets the delegate for the native method that is being called. If this is not a direct call to a native method, this value is null.
         /// </summary>
@@ -45,9 +45,9 @@ namespace TLang.Types
         /// <summary>
         /// Constructs a CallData object
         /// </summary>
-        /// <param name="func">the TBasicFunction that is called</param>
+        /// <param name="func">the TintFunction that is called</param>
         /// <param name="evaluate">whether or not its parameters should be evaluated</param>
-        public CallData(TBasicFunction func, bool evaluate)
+        public CallData(TintFunction func, bool evaluate)
         {
             Function = func;
             NativeDelegate = null;
@@ -106,19 +106,19 @@ namespace TLang.Types
         }
 
         /// <summary>
-        /// Converts a TBasicFunction to CallData
+        /// Converts a TintFunction to CallData
         /// </summary>
         /// <param name="func"></param>
-        public static implicit operator CallData(TBasicFunction func)
+        public static implicit operator CallData(TintFunction func)
         {
             return new CallData(func, evaluate: true);
         }
 
         /// <summary>
-        /// Converts CallData to a TBasicFunction. This is by its nature lossy, so it requires explicit conversion.
+        /// Converts CallData to a TintFunction. This is by its nature lossy, so it requires explicit conversion.
         /// </summary>
         /// <param name="data"></param>
-        public static explicit operator TBasicFunction(CallData data)
+        public static explicit operator TintFunction(CallData data)
         {
             return data.Function;
         }

@@ -6,10 +6,10 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using TLang.Runtime;
-using TLang.Errors;
+using Tint.Runtime;
+using Tint.Errors;
 
-namespace TLang.Runner
+namespace Tint.Tbasic.ScriptHost
 {
     public class Program
     {
@@ -26,7 +26,7 @@ namespace TLang.Runner
                     Title = "Open Script",
                     FileName = string.Empty,
                     Multiselect = false,
-                    Filter = "TBASIC Script (*.tba)|*.tba|Text File (*.txt)|*.txt|All Files (*.*)|*.*"
+                    Filter = "Tbasic Script (*.tbs)|*.tbs|Text File (*.txt)|*.txt|All Files (*.*)|*.*"
                 };
                 if (dialog.ShowDialog() != DialogResult.OK)
                     return;
@@ -44,7 +44,7 @@ namespace TLang.Runner
                     runtime.Execute(fstream);
                 }
             }
-            catch (TbasicRuntimeException ex) {
+            catch (TintRuntimeException ex) {
                 ShowError(ex.Message);
             }
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException) {

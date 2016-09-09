@@ -7,8 +7,8 @@
     <ProjectGuid>{BAA9C2B6-B371-4B01-8C24-C9D4786866B7}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TLang.Terminal</RootNamespace>
-    <AssemblyName>TTerminal</AssemblyName>
+    <RootNamespace>Slang.Shell</RootNamespace>
+    <AssemblyName>tish</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -37,7 +37,7 @@
     <ApplicationIcon>Console.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>TLang.Terminal.Program</StartupObject>
+    <StartupObject>Tint.Shell.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -60,9 +60,9 @@
     <Content Include="Newtonsoft.Json.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TLANG\TLANG.csproj">
+    <ProjectReference Include="..\TLANG\tint.csproj">
       <Project>{86ec7054-1d77-4dee-854f-ad7377fc27aa}</Project>
-      <Name>TLANG</Name>
+      <Name>tint</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using Tint.Libraries;
 using Tint.Runtime;
+using Tint.Tbasic;
 
 namespace Tint.Shell
 {
@@ -20,6 +21,7 @@ namespace Tint.Shell
             Add("STOP", Exit); // exit is already declared in stdlib 8/22/16
             Add("HELLO", Hello);
             Add("HI", Hello);
+            Add<string>("tscript", tscript, requiredArgs: 0);
             Add<string, IEnumerable<string>>("LS", Ls, requiredArgs: 0);
         }
 
@@ -45,6 +47,14 @@ namespace Tint.Shell
         public static object Hello(TRuntime runtime, StackData stackdat)
         {
             return "Hey";
+        }
+
+        public static void tscript(string path)
+        {
+            if (path == null && (path = ScriptHost.PromptOpenScript()) == null)
+                return;
+
+            ScriptHost.RunScript(path);
         }
     }
 }

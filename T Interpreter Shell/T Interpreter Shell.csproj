@@ -7,7 +7,7 @@
     <ProjectGuid>{BAA9C2B6-B371-4B01-8C24-C9D4786866B7}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Slang.Shell</RootNamespace>
+    <RootNamespace>Tint.Shell</RootNamespace>
     <AssemblyName>tish</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -46,9 +46,11 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleLibrary.cs" />
+    <Compile Include="ScriptHost.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

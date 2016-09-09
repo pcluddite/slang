@@ -66,16 +66,16 @@ namespace TLang.Parsing
 		/// <returns>true if the token could be matched, false otherwise</returns>
         public static bool MatchBinaryOperator(string token, ObjectContext context, out BinaryOperator foundOp)
         {
-            string foundStr = null;
+            string foundStr = string.Empty;
             foundOp = default(BinaryOperator);
             foreach (var op in context.GetAllBinaryOperators()) {
                 string opStr = op.OperatorString;
-                if (token.StartsWith(opStr, StringComparison.CurrentCultureIgnoreCase)) {
+                if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.CurrentCultureIgnoreCase)) {
                     foundOp = op;
                     foundStr = opStr;
                 }
             }
-            return foundStr != null;
+            return foundStr != string.Empty;
         }
 
 		/// <summary>
@@ -87,16 +87,16 @@ namespace TLang.Parsing
 		/// <returns>true if the token could be matched, false otherwise</returns>
         public static bool MatchUnaryOperator(string token, ObjectContext context, out UnaryOperator foundOp)
         {
-            string foundStr = null;
+            string foundStr = string.Empty;
             foundOp = default(UnaryOperator);
             foreach (var op in context.GetAllUnaryOperators()) {
                 string opStr = op.OperatorString;
-                if (token.StartsWith(opStr, StringComparison.CurrentCultureIgnoreCase)) {
+                if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.CurrentCultureIgnoreCase)) {
                     foundOp = op;
                     foundStr = opStr;
                 }
             }
-            return foundStr != null;
+            return foundStr != string.Empty;
         }
 	}
 }

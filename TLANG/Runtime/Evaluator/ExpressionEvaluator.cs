@@ -267,9 +267,9 @@ namespace TLang.Runtime
                     list.Remove(nodePair.Node.Previous);
             }
 
-            IExpressionEvaluator expr = list.First.Value as IExpressionEvaluator;
+            IExpressionEvaluator expr = list.First?.Value as IExpressionEvaluator;
             if (expr == null) {
-                return list.First.Value;
+                return list.First?.Value;
             }
             else {
                 return expr.Evaluate();
@@ -436,7 +436,12 @@ namespace TLang.Runtime
         public static object ConvertToSimpleType(object _oObj, ExecuterOption opts)
         {
             if (_oObj == null) {
-                return 0;
+                if (opts.HasFlag(ExecuterOption.NullIsZero)) {
+                    return 0;
+                }
+                else {
+                    return null;
+                }
             }
 
             if (_oObj is bool)

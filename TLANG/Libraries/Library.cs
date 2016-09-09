@@ -13,7 +13,7 @@ namespace TLang.Libraries
     /// <summary>
     /// A library for storing and processing TBasic functions
     /// </summary>
-    public class Library : IDictionary<string, CallData>
+    public partial class Library : IDictionary<string, CallData>
     {
         private Dictionary<string, CallData> lib = new Dictionary<string, CallData>(StringComparer.CurrentCultureIgnoreCase);
         
@@ -89,144 +89,20 @@ namespace TLang.Libraries
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
-        public void AddDelegate(string key, Delegate value, bool evaluate = true)
+        /// <param name="requiredArgs">the required number of arguments</param>
+        public void AddDelegate(string key, Delegate value, bool evaluate = true, int requiredArgs = -1)
         {
             TBasicFunction func = value as TBasicFunction;
             if (func != null)
                 Add(key, func);
             if (value.Method.ReturnType == typeof(void))
 
-            lib.Add(key, new CallData(value, CountParameters(value), evaluate));
-        }
-
-        /// <summary>
-        /// Adds a native function that takes no parameters and does not return a result
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
-        public void Add(string key, Action value, bool evaluate = true)
-        {
-            lib.Add(key, new CallData(value, 0, evaluate));
-        }
-
-        /// <summary>
-        /// Adds a native function that takes one parameter and does not return a result
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
-        public void Add<T>(string key, Action<T> value, bool evaluate = true)
-        {
-            lib.Add(key, new CallData(value, 1, evaluate));
-        }
-
-        /// <summary>
-        /// Adds a native function that takes two parameters and does not return a result
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
-        public void Add<T1, T2>(string key, Action<T1, T2> value, bool evaluate = true)
-        {
-            lib.Add(key, new CallData(value, 2, evaluate));
-        }
-
-        /// <summary>
-        /// Adds a native function that takes three parameters and does not return a result
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
-        public void Add<T1, T2, T3>(string key, Action<T1, T2, T3> value, bool evaluate = true)
-        {
-            lib.Add(key, new CallData(value, 3, evaluate));
-        }
-
-        /// <summary>
-        /// Adds a native function that takes four parameters and does not return a result
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
-        public void Add<T1, T2, T3, T4>(string key, Action<T1, T2, T3, T4> value, bool evaluate = true)
-        {
-            lib.Add(key, new CallData(value, 4, evaluate));
+                lib.Add(key, new CallData(value, requiredArgs < 0 ? CountParameters(value) : requiredArgs, evaluate));
         }
 
         private static int CountParameters(Delegate d)
         {
             return d.Method.GetParameters().Length;
-        }
-        
-        /// <summary>
-        /// Adds a native function that takes no parameters and returns a result
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
-        public void Add<TResult>(string key, Func<TResult> value, bool evaluate = true)
-        {
-            lib.Add(key, new CallData(value, 0, evaluate));
-        }
-
-        /// <summary>
-        /// Adds a native function that takes one parameter and returns a result
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
-        public void Add<T, TResult>(string key, Func<T, TResult> value, bool evaluate = true)
-        {
-            lib.Add(key, new CallData(value, 1, evaluate));
-        }
-
-        /// <summary>
-        /// Adds a function that takes two parameters and returns a result
-        /// </summary>
-        /// <typeparam name="T1"></typeparam>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
-        public void Add<T1, T2, TResult>(string key, Func<T1, T2, TResult> value, bool evaluate = true)
-        {
-            lib.Add(key, new CallData(value, 2, evaluate));
-        }
-
-        /// <summary>
-        /// Adds a function that takes three parameters and returns a result
-        /// </summary>
-        /// <typeparam name="T1"></typeparam>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
-        public void Add<T1, T2, T3, TResult>(string key, Func<T1, T2, T3, TResult> value, bool evaluate = true)
-        {
-            lib.Add(key, new CallData(value, 3, evaluate));
-        }
-
-        /// <summary>
-        /// Adds a function that takes four parameters and returns a result
-        /// </summary>
-        /// <typeparam name="T1"></typeparam>
-        /// <typeparam name="T2"></typeparam>
-        /// <typeparam name="T3"></typeparam>
-        /// <typeparam name="T4"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
-        public void Add<T1, T2, T3, T4, TResult>(string key, Func<T1, T2, T3, T4, TResult> value, bool evaluate = true)
-        {
-            lib.Add(key, new CallData(value, 4, evaluate));
         }
 
         /// <summary>

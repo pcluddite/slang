@@ -74,13 +74,27 @@ namespace TLang.Types
 
         private object NativeFuncWrapper(TRuntime runtime, StackData stackdat)
         {
-            stackdat.AssertCount(ArgumentCount + 1); // plus 1 for the name
-
-            object[] args = new object[stackdat.ParameterCount - 1];
             ParameterInfo[] expectedArgs = NativeDelegate.Method.GetParameters();
+            if (expectedArgs.Length == ArgumentCount) {
+                stackdat.AssertCount(ArgumentCount + 1); // plus 1 for the name
+            }
+            else {
+                stackdat.AssertAtLeast(ArgumentCount + 1); // plus 1 for the name
+            }
+            object[] args = new object[expectedArgs.Length];
 
-            for (int index = 1; index < stackdat.ParameterCount; ++index) // make sure the types are correct for each parameter
-                args[index - 1] = stackdat.Convert(index, expectedArgs[index - 1].ParameterType);
+            int index = 0;
+            for (; index < stackdat.ParameterCount - 1; ++index) // make sure the types are correct for each parameter
+                args[index] = stackdat.Convert(index + 1, expectedArgs[index].ParameterType);
+
+            for (; index < expectedArgs.Length; ++index) { // default initialize any remaining values
+                if (expectedArgs[index].ParameterType.IsValueType) {
+                    args[index] = Activator.CreateInstance(expectedArgs[index].ParameterType);
+                }
+                else {
+                    args[index] = null;
+                }
+            }
 
             if (Returns) {
                 return NativeDelegate.DynamicInvoke(args);

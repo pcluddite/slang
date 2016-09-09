@@ -61,6 +61,11 @@
     <Compile Include="Errors\ThrowHelper.cs" />
     <Compile Include="Errors\UndefinedObjectException.cs" />
     <Compile Include="Libraries\ArrayLibrary.cs" />
+    <Compile Include="Libraries\Library.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
     <Compile Include="Libraries\StringLibrary.cs" />
     <Compile Include="Libraries\SystemLibrary.cs" />
     <Compile Include="Parsing\Preprocessors\TerminalPreprocessor.cs" />
@@ -156,6 +161,10 @@
     <Content Include="Components\ValueTuple.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ValueTuple.cs</LastGenOutput>
+    </Content>
+    <Content Include="Libraries\Library.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Library.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="Parsing\Scanners\DefaultScanner\DefaultScanner.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

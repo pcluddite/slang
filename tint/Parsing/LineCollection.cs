@@ -6,9 +6,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Tint.Errors;
+using Tbasic.Errors;
 
-namespace Tint.Parsing
+namespace Tbasic.Parsing
 {
     /// <summary>
     /// A collection of Line objects sorted by line number

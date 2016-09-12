@@ -6,7 +6,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Tint.Win32
+namespace Tbasic.Win32
 {
     internal static class GDI32
     {

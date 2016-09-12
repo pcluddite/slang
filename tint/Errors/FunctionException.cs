@@ -7,12 +7,12 @@ using System;
 using System.IO;
 using System.Security;
 
-namespace Tint.Errors
+namespace Tbasic.Errors
 {
     /// <summary>
-    /// An exception that occours within a Tint function or subroutine and has an associated a status code
+    /// An exception that occours within a Tbasic function or subroutine and has an associated a status code
     /// </summary>
-    public class FunctionException : TintRuntimeException
+    public class FunctionException : TbasicRuntimeException
     {
         /// <summary>
         /// Gets the status code for this exception

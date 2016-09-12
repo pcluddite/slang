@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using Tint.Runtime;
+using Tbasic.Runtime;
 using System.Windows.Forms;
-using Tint.Errors;
+using Tbasic.Errors;
 
-namespace Tint.Tbasic
+namespace Tbasic.Tbasic
 {
     internal static class ScriptHost
     {

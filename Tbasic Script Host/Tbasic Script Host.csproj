@@ -7,7 +7,7 @@
     <ProjectGuid>{DB156F57-2EBE-4900-A135-4D5C27944351}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tint.Tbasic.ScriptHost</RootNamespace>
+    <RootNamespace>Tbasic.ScriptHost</RootNamespace>
     <AssemblyName>tscript</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>TLang.Runner.Program</StartupObject>
+    <StartupObject>Tbasic.ScriptHost.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>StoredProcedureScript.ico</ApplicationIcon>
@@ -55,9 +55,9 @@
     <Content Include="StoredProcedureScript.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\tint\tint.csproj">
+    <ProjectReference Include="..\tint\tbasic.csproj">
       <Project>{86ec7054-1d77-4dee-854f-ad7377fc27aa}</Project>
-      <Name>tint</Name>
+      <Name>tbasic</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

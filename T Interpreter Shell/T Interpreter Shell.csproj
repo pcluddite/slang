@@ -7,7 +7,7 @@
     <ProjectGuid>{BAA9C2B6-B371-4B01-8C24-C9D4786866B7}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tint.Shell</RootNamespace>
+    <RootNamespace>Tbasic.Shell</RootNamespace>
     <AssemblyName>tish</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -37,7 +37,7 @@
     <ApplicationIcon>Console.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Tint.Shell.Program</StartupObject>
+    <StartupObject>Tbasic.Shell.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -62,9 +62,9 @@
     <Content Include="Newtonsoft.Json.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\tint\tint.csproj">
+    <ProjectReference Include="..\tint\tbasic.csproj">
       <Project>{86ec7054-1d77-4dee-854f-ad7377fc27aa}</Project>
-      <Name>tint</Name>
+      <Name>tbasic</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,11 +5,11 @@
 // ======
 using System;
 using System.Collections.Generic;
-using Tint.Errors;
-using Tint.Libraries;
-using Tint.Types;
+using Tbasic.Errors;
+using Tbasic.Libraries;
+using Tbasic.Types;
 
-namespace Tint.Runtime
+namespace Tbasic.Runtime
 {
     /// <summary>
     /// Manages the variables, functions, and commands declared in a given context

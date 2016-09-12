@@ -5,12 +5,12 @@
 // ======
 using System;
 
-namespace Tint.Errors
+namespace Tbasic.Errors
 {
     /// <summary>
     /// Occours when an object (such as a function) has already been defined
     /// </summary>
-    public class DuplicateDefinitionException : TintRuntimeException
+    public class DuplicateDefinitionException : TbasicRuntimeException
     {
         /// <summary>
         /// Initializes a new instance of this class

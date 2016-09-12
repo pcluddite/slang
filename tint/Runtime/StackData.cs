@@ -5,11 +5,11 @@
 // ======
 using System;
 using System.Collections.Generic;
-using Tint.Errors;
-using Tint.Parsing;
-using Tint.Types;
+using Tbasic.Errors;
+using Tbasic.Parsing;
+using Tbasic.Types;
 
-namespace Tint.Runtime
+namespace Tbasic.Runtime
 {
     /// <summary>
     /// Manages parameters and other data passed to a function or subroutine
@@ -34,7 +34,7 @@ namespace Tint.Runtime
         public ExecuterOption Options { get; set; }
         
         /// <summary>
-        /// Gets the Tint function as text
+        /// Gets the Tbasic function as text
         /// </summary>
         public string Text { get; private set; }
 

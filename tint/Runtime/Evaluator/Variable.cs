@@ -6,10 +6,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Tint.Errors;
-using Tint.Types;
+using Tbasic.Errors;
+using Tbasic.Types;
 
-namespace Tint.Runtime
+namespace Tbasic.Runtime
 {
     internal class Variable : IExpressionEvaluator
     {

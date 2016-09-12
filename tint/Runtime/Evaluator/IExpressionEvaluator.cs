@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Tint.Runtime
+namespace Tbasic.Runtime
 {
     /// <summary>
     /// An expression evaluator

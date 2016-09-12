@@ -4,9 +4,9 @@
 //
 // ======
 using System;
-using Tint.Runtime;
+using Tbasic.Runtime;
 
-namespace Tint.Libraries
+namespace Tbasic.Libraries
 {
     /// <summary>
     /// A library containing several mathmatical functions

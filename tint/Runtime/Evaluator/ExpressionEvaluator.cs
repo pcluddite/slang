@@ -7,12 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Tint.Errors;
-using Tint.Parsing;
-using Tint.Types;
+using Tbasic.Errors;
+using Tbasic.Parsing;
+using Tbasic.Types;
 using System.Linq;
 
-namespace Tint.Runtime
+namespace Tbasic.Runtime
 {
     /// <summary>
     /// General purpose evaluator for functions, variables, math, booleans, etc.

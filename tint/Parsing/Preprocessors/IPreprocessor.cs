@@ -5,10 +5,10 @@
 // ======
 using System.Collections.Generic;
 using System.IO;
-using Tint.Runtime;
-using Tint.Types;
+using Tbasic.Runtime;
+using Tbasic.Types;
 
-namespace Tint.Parsing
+namespace Tbasic.Parsing
 {
     /// <summary>
     /// An interface for scanning lines before they are executed

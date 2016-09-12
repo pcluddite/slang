@@ -5,16 +5,16 @@
 // ======
 using Newtonsoft.Json;
 using System;
-using Tint.Parsing;
-using Tint.Runtime;
-using Tint.Errors;
-using Tint.Types;
+using Tbasic.Parsing;
+using Tbasic.Runtime;
+using Tbasic.Errors;
+using Tbasic.Types;
 
 #if DEBUG
 using System.Diagnostics;
 #endif
 
-namespace Tint.Shell
+namespace Tbasic.Shell
 {
     internal class Program
     {
@@ -54,7 +54,7 @@ namespace Tint.Shell
                     if (dat.ReturnValue != null)
                         Console.WriteLine(ObjectToString(dat.ReturnValue));
                 }
-                catch(TintRuntimeException e) {
+                catch(TbasicRuntimeException e) {
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(e.Message);

@@ -5,7 +5,7 @@
 // ======
 using System;
 
-namespace Tint.Errors
+namespace Tbasic.Errors
 {
     internal class ThrowHelper
     {

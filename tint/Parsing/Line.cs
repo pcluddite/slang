@@ -5,10 +5,10 @@
 // ======
 using System;
 
-namespace Tint.Parsing
+namespace Tbasic.Parsing
 {
     /// <summary>
-    /// Defines a set of methods and properties for a line of Tint code
+    /// Defines a set of methods and properties for a line of Tbasic code
     /// </summary>
     public struct Line : IComparable<Line>, IEquatable<Line>
     {
@@ -58,7 +58,7 @@ namespace Tint.Parsing
         public string Name { get; private set; }
 
         /// <summary>
-        /// Initializes a line of Tint code
+        /// Initializes a line of Tbasic code
         /// </summary>
         /// <param name="id">The id of the line. This should be the line number.</param>
         /// <param name="line">The text of the line</param>

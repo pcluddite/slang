@@ -6,10 +6,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tint.Parsing;
-using Tint.Runtime;
+using Tbasic.Parsing;
+using Tbasic.Runtime;
 
-namespace Tint.Types
+namespace Tbasic.Types
 {
     /// <summary>
     /// A code block that sores information on a function

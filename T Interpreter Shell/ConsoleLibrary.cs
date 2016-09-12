@@ -6,11 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Tint.Libraries;
-using Tint.Runtime;
-using Tint.Tbasic;
+using Tbasic.Libraries;
+using Tbasic.Runtime;
+using Tbasic.Tbasic;
 
-namespace Tint.Shell
+namespace Tbasic.Shell
 {
     public class ConsoleLibrary : Library
     {

@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Tint.Win32 {
+namespace Tbasic.Win32 {
     internal enum WindowState : int {
         SW_HIDE = 0,
         SW_SHOWNORMAL = 1,

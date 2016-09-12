@@ -6,10 +6,10 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using Tint.Runtime;
-using Tint.Errors;
+using Tbasic.Errors;
+using Tbasic.Runtime;
 
-namespace Tint.Tbasic.ScriptHost
+namespace Tbasic.ScriptHost
 {
     public class Program
     {
@@ -44,7 +44,7 @@ namespace Tint.Tbasic.ScriptHost
                     runtime.Execute(fstream);
                 }
             }
-            catch (TintRuntimeException ex) {
+            catch (TbasicRuntimeException ex) {
                 ShowError(ex.Message);
             }
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException) {

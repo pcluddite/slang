@@ -10,10 +10,10 @@
 //
 // ======
 using System;
-using Tint.Runtime;
-using Tint.Types;
+using Tbasic.Runtime;
+using Tbasic.Types;
 
-namespace Tint.Parsing
+namespace Tbasic.Parsing
 {
 	public partial class DefaultScanner
 	{

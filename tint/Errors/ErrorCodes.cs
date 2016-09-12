@@ -3,7 +3,7 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
-namespace Tint.Errors
+namespace Tbasic.Errors
 {
     /// <summary>
     /// These codes indicate the at least partial success of a function

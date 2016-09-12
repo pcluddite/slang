@@ -4,9 +4,9 @@
 //
 // ======
 using System;
-using Tint.Types;
+using Tbasic.Types;
 
-namespace Tint.Libraries
+namespace Tbasic.Libraries
 {
     public partial class Library
 	{

@@ -4,10 +4,10 @@
 //
 // ======
 using System;
-using Tint.Errors;
-using Tint.Runtime;
+using Tbasic.Errors;
+using Tbasic.Runtime;
 
-namespace Tint.Types
+namespace Tbasic.Types
 {
     /// <summary>
     /// Represents a generic number (this is a double at its core)

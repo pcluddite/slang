@@ -3,11 +3,11 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
-using Tint.Parsing;
-using Tint.Runtime;
+using Tbasic.Parsing;
+using Tbasic.Runtime;
 using System.Collections.Generic;
 
-namespace Tint.Types
+namespace Tbasic.Types
 {
     /// <summary>
     /// Delegate for initializing a CodeBlock

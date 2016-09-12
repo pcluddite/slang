@@ -5,7 +5,7 @@
 // ======
 using System;
 
-namespace Tint.Errors
+namespace Tbasic.Errors
 {
     /// <summary>
     /// Occours when any definable symbol cannot be defined by the preprocessor due to syntax

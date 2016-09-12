@@ -4,9 +4,9 @@
 //
 // ======
 using System.Collections.Generic;
-using Tint.Types;
+using Tbasic.Types;
 
-namespace Tint.Runtime
+namespace Tbasic.Runtime
 {
     internal class BinaryOpQueue
     {

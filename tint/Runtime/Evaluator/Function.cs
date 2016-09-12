@@ -4,11 +4,11 @@
 //
 // ======
 using System.Collections.Generic;
-using Tint.Errors;
-using Tint.Types;
+using Tbasic.Errors;
+using Tbasic.Types;
 using System;
 
-namespace Tint.Runtime
+namespace Tbasic.Runtime
 {
     /// <summary>
     /// Class for evaluating a function

@@ -7,11 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Tint.Errors;
-using Tint.Runtime;
-using Tint.Types;
+using Tbasic.Errors;
+using Tbasic.Runtime;
+using Tbasic.Types;
 
-namespace Tint.Parsing
+namespace Tbasic.Parsing
 {
     internal class DefaultPreprocessor : IPreprocessor
     {

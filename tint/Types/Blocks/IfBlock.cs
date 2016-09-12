@@ -4,13 +4,13 @@
 //
 // ======
 using System;
-using Tint.Components;
-using Tint.Errors;
-using Tint.Parsing;
-using Tint.Runtime;
+using Tbasic.Components;
+using Tbasic.Errors;
+using Tbasic.Parsing;
+using Tbasic.Runtime;
 using System.Collections.Generic;
 
-namespace Tint.Types
+namespace Tbasic.Types
 {
     internal class IfBlock : CodeBlock
     {

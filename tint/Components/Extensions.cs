@@ -5,9 +5,9 @@
 // ======
 using System;
 using System.Collections.Generic;
-using Tint.Parsing;
+using Tbasic.Parsing;
 
-namespace Tint
+namespace Tbasic
 {
     internal static class Extensions
     {

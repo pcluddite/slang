@@ -6,12 +6,12 @@
 using System;
 using System.Text;
 
-namespace Tint.Errors
+namespace Tbasic.Errors
 {
     /// <summary>
     /// Represents a parsing exception that occoured on a specific line
     /// </summary>
-    public class LineException : TintRuntimeException
+    public class LineException : TbasicRuntimeException
     {
         /// <summary>
         /// The line at which the error occoured

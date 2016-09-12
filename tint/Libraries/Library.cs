@@ -6,26 +6,26 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Tint.Types;
+using Tbasic.Types;
 
-namespace Tint.Libraries
+namespace Tbasic.Libraries
 {
     /// <summary>
-    /// A library for storing and processing Tint functions
+    /// A library for storing and processing Tbasic functions
     /// </summary>
     public partial class Library : IDictionary<string, CallData>
     {
         private Dictionary<string, CallData> lib = new Dictionary<string, CallData>(StringComparer.CurrentCultureIgnoreCase);
         
         /// <summary>
-        /// Initializes a new Tint Library object
+        /// Initializes a new Tbasic Library object
         /// </summary>
         public Library()
         {
         }
 
         /// <summary>
-        /// Initializes a new Tint Library object incorporating the functions from another library
+        /// Initializes a new Tbasic Library object incorporating the functions from another library
         /// </summary>
         public Library(Library other)
         {
@@ -33,7 +33,7 @@ namespace Tint.Libraries
         }
 
         /// <summary>
-        /// Initializes a new Tint Library object
+        /// Initializes a new Tbasic Library object
         /// </summary>
         /// <param name="libs">a collection of Library objects that should be incorporated into this one</param>
         public Library(ICollection<Library> libs)
@@ -43,9 +43,9 @@ namespace Tint.Libraries
         }
 
         /// <summary>
-        /// Adds a Tint Library to this one
+        /// Adds a Tbasic Library to this one
         /// </summary>
-        /// <param name="other">the Tint Library</param>
+        /// <param name="other">the Tbasic Library</param>
         public void AddLibrary(Library other)
         {
             foreach (var kv_entry in other.lib)
@@ -57,7 +57,7 @@ namespace Tint.Libraries
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add(string key, TintFunction value)
+        public void Add(string key, TbasicFunction value)
         {
             lib.Add(key, new CallData(value, evaluate: true));
         }
@@ -78,7 +78,7 @@ namespace Tint.Libraries
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
-        public void Add(string key, TintFunction value, bool evaluate)
+        public void Add(string key, TbasicFunction value, bool evaluate)
         {
             lib.Add(key, new CallData(value, evaluate));
         }
@@ -92,7 +92,7 @@ namespace Tint.Libraries
         /// <param name="requiredArgs">the required number of arguments</param>
         public void AddDelegate(string key, Delegate value, bool evaluate = true, int requiredArgs = -1)
         {
-            TintFunction func = value as TintFunction;
+            TbasicFunction func = value as TbasicFunction;
             if (func != null)
                 Add(key, func);
             if (value.Method.ReturnType == typeof(void))

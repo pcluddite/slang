@@ -4,9 +4,9 @@
 //
 // ======
 using System;
-using Tint.Runtime;
+using Tbasic.Runtime;
 
-namespace Tint.Libraries
+namespace Tbasic.Libraries
 {
     internal class SystemLibrary : Library
     {

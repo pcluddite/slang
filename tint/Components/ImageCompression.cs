@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace Tint.Components
+namespace Tbasic.Components
 {
     internal class Compress
     {

@@ -10,7 +10,6 @@ using System.Text;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Types;
-using System.Linq;
 
 namespace Tbasic.Runtime
 {
@@ -19,7 +18,9 @@ namespace Tbasic.Runtime
     /// </summary>
     internal partial class ExpressionEvaluator : IExpressionEvaluator
     {
-        private object[] results = null;
+        private static readonly object[] EmptyObjectArray = new object[0];
+
+        private LinkedList<LinkedList<object>> subexpressions = null;
         private IEnumerable<char> _expression = string.Empty;
         
         public ExpressionEvaluator(TRuntime runtime)
@@ -40,7 +41,7 @@ namespace Tbasic.Runtime
             get { return _expression; }
             set {
                 _expression = value;
-                results = null;
+                subexpressions = null;
             }
         }
 
@@ -59,11 +60,11 @@ namespace Tbasic.Runtime
         public bool Parsed
         {
             get {
-                return (results != null);
+                return (subexpressions != null);
             }
             set {
                 if (Parsed && !value) {
-                    results = null;
+                    subexpressions = null;
                 }
             }
         }
@@ -90,26 +91,32 @@ namespace Tbasic.Runtime
 
         private object[] EvaluateAll()
         {
-            if (Parsed) {
-                return results;
-            }
-            else if (Expression == null || Expression.ToString() == string.Empty) {
-                return (results = new object[0]);
+            if (Expression == null || Expression.ToString() == string.Empty) {
+                return EmptyObjectArray;
             }
             else {
-                IScanner scanner = Runtime.Scanner.Scan(_expression);
-                LinkedList<object> tokens = new LinkedList<object>();
                 List<object> lResults = new List<object>();
 
-                while (!scanner.EndOfStream) {
-                    if (NextToken(tokens, scanner)) {
-                        lResults.Add(ConvertToSimpleType(EvaluateList(tokens), Runtime.Options));
-                        tokens = new LinkedList<object>();
+                if (!Parsed) {
+                    subexpressions = new LinkedList<LinkedList<object>>();
+
+                    IScanner scanner = Runtime.Scanner.Scan(_expression);
+                    LinkedList<object> tokens = new LinkedList<object>();
+
+                    while (!scanner.EndOfStream) {
+                        if (NextToken(tokens, scanner)) {
+                            subexpressions.AddLast(tokens);
+                            tokens = new LinkedList<object>();
+                        }
                     }
+                    subexpressions.AddLast(tokens);
                 }
 
-                lResults.Add(ConvertToSimpleType(EvaluateList(tokens), Runtime.Options));
-                return (results = lResults.ToArray());
+                foreach(LinkedList<object> tokens in subexpressions) {
+                    lResults.Add(ConvertToSimpleType(EvaluateList(tokens), Runtime.Options));
+                }
+
+                return lResults.ToArray();
             }
         }
 
@@ -127,34 +134,10 @@ namespace Tbasic.Runtime
                 return AddObjectToExprList("(", startIndex, scanner, tokens);
             }
 
-            // check variable
-            Variable variable;
-            if (DefaultScanner.NextVariable(scanner, Runtime, out variable)) {
-                return AddObjectToExprList(variable, startIndex, scanner, tokens);
-            }
-
-            // check unary op
-            UnaryOperator unaryOp;
-            if (scanner.NextUnaryOp(CurrentContext, tokens.Last?.Value, out unaryOp)) {
-                return AddObjectToExprList(unaryOp, startIndex, scanner, tokens);
-            }
-
-            // check binary operator
-            BinaryOperator binOp;
-            if (scanner.NextBinaryOp(CurrentContext, out binOp)) {
-                return AddObjectToExprList(binOp, startIndex, scanner, tokens);
-            }
-
-            // check hexadecimal
-            long hex;
-            if (scanner.NextHexadecimal(out hex)) {
-                return AddObjectToExprList(hex, startIndex, scanner, tokens);
-            }
-
-            // check boolean
-            bool b;
-            if (scanner.NextBool(out b)) {
-                return AddObjectToExprList(b, startIndex, scanner, tokens);
+            // check string
+            string str_parsed;
+            if (scanner.NextString(out str_parsed)) {
+                return AddObjectToExprList(str_parsed, startIndex, scanner, tokens);
             }
 
             // check numeric
@@ -163,15 +146,39 @@ namespace Tbasic.Runtime
                 return AddObjectToExprList(num, startIndex, scanner, tokens);
             }
 
+            // check boolean
+            bool b;
+            if (scanner.NextBool(out b)) {
+                return AddObjectToExprList(b, startIndex, scanner, tokens);
+            }
+
             // check null
             if (scanner.NextNull()) {
                 return AddObjectToExprList(null, startIndex, scanner, tokens);
             }
 
-            // check string
-            string str_parsed;
-            if (scanner.NextString(out str_parsed)) {
-                return AddObjectToExprList(str_parsed, startIndex, scanner, tokens);
+            // check variable
+            Variable variable;
+            if (DefaultScanner.NextVariable(scanner, Runtime, out variable)) {
+                return AddObjectToExprList(variable, startIndex, scanner, tokens);
+            }
+
+            // check hexadecimal
+            long hex;
+            if (scanner.NextHexadecimal(out hex)) {
+                return AddObjectToExprList(hex, startIndex, scanner, tokens);
+            }
+
+            // check binary operator
+            BinaryOperator binOp;
+            if (scanner.NextBinaryOp(CurrentContext, out binOp)) {
+                return AddObjectToExprList(binOp, startIndex, scanner, tokens);
+            }
+
+            // check unary op
+            UnaryOperator unaryOp;
+            if (scanner.NextUnaryOp(CurrentContext, tokens.Last?.Value, out unaryOp)) {
+                return AddObjectToExprList(unaryOp, startIndex, scanner, tokens);
             }
 
             // check function

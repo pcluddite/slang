@@ -128,6 +128,14 @@ namespace Tbasic.Parsing
         }
 
         /// <summary>
+        /// Peeks at the next character after the whitespace. If the position is invalid, a null character is returned.
+        /// </summary>
+        public int PeekNextChar()
+        {
+            return CharAt(FindNonWhiteSpace());
+        }
+
+        /// <summary>
         /// Finds the next instance of a non-whitespace character without advancing the reader
         /// </summary>
         protected int FindNonWhiteSpace()
@@ -222,14 +230,24 @@ namespace Tbasic.Parsing
         /// </summary>
         public virtual bool NextNumber(out Number num)
         {
-            Match m = rxNumeric.Match(BuffNextWord() ?? string.Empty);
-            if (m.Success && Number.TryParse(m.Value, out num)) {
-                AdvanceScanner(m.Value);
-                return true;
+            if (IsDigit(PeekNextChar())) { // regex is expensive, only do it if we have to
+                Match m = rxNumeric.Match(BuffNextWord() ?? string.Empty);
+                if (m.Success && Number.TryParse(m.Value, out num)) {
+                    AdvanceScanner(m.Value);
+                    return true;
+                }
+            }
+            num = default(Number);
+            return false;
+        }
+
+        private static bool IsDigit(int c)
+        {
+            if (c < 0 || c > char.MaxValue) {
+                return false;
             }
             else {
-                num = default(Number);
-                return false;
+                return char.IsDigit((char)c);
             }
         }
 

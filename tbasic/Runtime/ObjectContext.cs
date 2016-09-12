@@ -57,10 +57,10 @@ namespace Tbasic.Runtime
             _super = superContext;
             _functions = new Library();
             _commands = new Library();
-            _variables = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
-            _constants = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
-            _blocks = new Dictionary<string, BlockCreator>(StringComparer.CurrentCultureIgnoreCase);
-            _prototypes = new Dictionary<string, TClass>(StringComparer.CurrentCultureIgnoreCase);
+            _variables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            _constants = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            _blocks = new Dictionary<string, BlockCreator>(StringComparer.OrdinalIgnoreCase);
+            _prototypes = new Dictionary<string, TClass>(StringComparer.OrdinalIgnoreCase);
             if (superContext == null) {
                 _binaryOps = new BinOpDictionary();
                 _unaryOps = new UnaryOpDictionary();
@@ -97,7 +97,7 @@ namespace Tbasic.Runtime
                     new SystemLibrary()
                 });
             _commands = new StatementLibrary();
-            _blocks = new Dictionary<string, BlockCreator>(StringComparer.CurrentCultureIgnoreCase) {
+            _blocks = new Dictionary<string, BlockCreator>(StringComparer.OrdinalIgnoreCase) {
                 { "DO"    , (i, c) => new DoBlock(i, c) },
                 { "WHILE" , (i, c) => new WhileBlock(i, c) },
                 { "IF"    , (i, c) => new IfBlock(i, c) }

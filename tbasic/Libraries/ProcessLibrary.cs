@@ -107,7 +107,7 @@ namespace Tbasic.Libraries
         private Dictionary<string, string> BlockedList()
         {
             using (RegistryKey imgKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options")) {
-                Dictionary<string, string> blocked = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+                Dictionary<string, string> blocked = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                 foreach (string keyName in imgKey.GetSubKeyNames()) {
                     using (RegistryKey app = imgKey.OpenSubKey(keyName)) {
                         if (app.GetValueNames().Contains("Debugger")) {

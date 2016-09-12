@@ -39,7 +39,6 @@ namespace Tbasic.Types
                     runtime.HonorBreak();
                     break;
                 }
-                eval.Parsed = false;
             }
         }
     }

@@ -149,7 +149,7 @@ namespace Tbasic.Runtime
 
         private void AddObjectToExprList(object val, int startIndex, IScanner scanner, LinkedList<object> tokens)
         {
-            if (Equals(val, "(")) {
+            if (val?.ToString() == "(") {
                 scanner.Position = startIndex;
                 scanner.SkipWhiteSpace();
                 scanner.SkipGroup();

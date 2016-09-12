@@ -13,15 +13,16 @@ namespace Tbasic.Types
     internal abstract class OperatorDictionary<T> : IDictionary<string, T>
         where T : IOperator
     {
-        protected Dictionary<string, T> operators = new Dictionary<string, T>(StringComparer.OrdinalIgnoreCase);
+        protected Dictionary<string, T> operators;
 
         protected OperatorDictionary()
         {
+            operators = new Dictionary<string, T>(StringComparer.Ordinal);
         }
 
         protected OperatorDictionary(OperatorDictionary<T> other)
         {
-            operators = new Dictionary<string, T>(other.operators, StringComparer.OrdinalIgnoreCase);
+            operators = new Dictionary<string, T>(other.operators, StringComparer.Ordinal);
         }
 
         public abstract void LoadStandardOperators();

@@ -260,7 +260,7 @@ namespace Tbasic.Types
             if (d != null)
                 return Equals(d.Value);
 
-            return base.Equals(obj);
+            return false;
         }
 
         /// <summary>

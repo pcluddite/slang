@@ -355,10 +355,16 @@ namespace Tbasic.Runtime
 
         internal void SetReturns(StackData _sframe)
         {
-            SetVariable("@lasterror", _sframe.Status);
-            SetVariable("@lasterr", _sframe.Status);
-            SetVariable("@err", _sframe.Status);
-            SetVariable("@error", _sframe.Status);
+            GetGlobal()._constants["@error"] = _sframe.Status;
+        }
+
+        internal ObjectContext GetGlobal()
+        {
+            ObjectContext curr = this;
+            while(curr._super != null) {
+                curr = curr._super;
+            }
+            return curr;
         }
 
         internal void PersistReturns(StackData _sframe)

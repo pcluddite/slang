@@ -27,7 +27,7 @@ namespace Tbasic.Types
             operators.Add(".", new BinaryOperator(".", -1, Dot, BinaryOperator.OperandPosition.Left)); // only evaluate the left operand
             operators.Add("*", new BinaryOperator("*", 0, Multiply));
             operators.Add("/", new BinaryOperator("/", 0, Divide));
-            operators.Add("MOD", new BinaryOperator("MOD", 0, Modulo));
+            operators.Add("%", new BinaryOperator("%", 0, Modulo));
             operators.Add("+", new BinaryOperator("+", 1, Add));
             operators.Add("-", new BinaryOperator("-", 1, Subtract));
             operators.Add(">>", new BinaryOperator(">>", 2, ShiftRight));
@@ -46,8 +46,8 @@ namespace Tbasic.Types
             operators.Add("&", new BinaryOperator("&", 5, BitAnd));
             operators.Add("^", new BinaryOperator("^", 6, BitXor));
             operators.Add("|", new BinaryOperator("|", 7, BitOr));
-            operators.Add("AND", new BinaryOperator("AND", 8, NotImplemented)); // These are special cases that are evaluated with short circuit evalutaion 6/20/16
-            operators.Add("OR", new BinaryOperator("OR", 9, NotImplemented));
+            operators.Add("&&", new BinaryOperator("&&", 8, NotImplemented)); // These are special cases that are evaluated with short circuit evalutaion 6/20/16
+            operators.Add("||", new BinaryOperator("||", 9, NotImplemented));
         }
 
         /// <summary>

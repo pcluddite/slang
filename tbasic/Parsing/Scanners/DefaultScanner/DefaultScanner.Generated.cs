@@ -70,7 +70,7 @@ namespace Tbasic.Parsing
             foundOp = default(BinaryOperator);
             foreach (var op in context.GetAllBinaryOperators()) {
                 string opStr = op.OperatorString;
-                if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.OrdinalIgnoreCase)) {
+                if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.Ordinal)) {
                     foundOp = op;
                     foundStr = opStr;
                 }
@@ -91,7 +91,7 @@ namespace Tbasic.Parsing
             foundOp = default(UnaryOperator);
             foreach (var op in context.GetAllUnaryOperators()) {
                 string opStr = op.OperatorString;
-                if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.OrdinalIgnoreCase)) {
+                if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.Ordinal)) {
                     foundOp = op;
                     foundStr = opStr;
                 }

@@ -109,7 +109,7 @@ namespace Tbasic.Types
         /// <returns></returns>
         public static bool operator ==(BinaryOperator first, BinaryOperator second)
         {
-            return Equals(first, second);
+            return first.Equals(second);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Tbasic.Types
         /// <returns></returns>
         public static bool operator !=(BinaryOperator first, BinaryOperator second)
         {
-            return !Equals(first, second);
+            return !first.Equals(second);
         }
 
         /// <summary>

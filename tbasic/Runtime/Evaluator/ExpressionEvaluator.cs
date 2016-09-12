@@ -104,7 +104,7 @@ namespace Tbasic.Runtime
                     LinkedList<object> tokens = new LinkedList<object>();
 
                     while (!scanner.EndOfStream) {
-                        if (NextToken(tokens, scanner)) {
+                        if (!NextToken(tokens, scanner)) { // expression break time
                             subexpressions.AddLast(tokens);
                             tokens = new LinkedList<object>();
                         }
@@ -128,85 +128,26 @@ namespace Tbasic.Runtime
         private bool NextToken(LinkedList<object> tokens, IScanner scanner)
         {
             int startIndex = scanner.Position;
-
-            // check group
-            if (scanner.Next("(")) {
-                return AddObjectToExprList("(", startIndex, scanner, tokens);
+            object token;
+            TokenType type = scanner.NextToken(Runtime, out token, tokens.Last?.Value);
+            switch(type) {
+                case TokenType.Comment:
+                    return false;
+                case TokenType.ExpressionBreak:
+                    return false;
+                case TokenType.Undefined: // couldn't be parsed
+                    if (CurrentContext.FindFunctionContext(_expression.ToString()) == null) {
+                        throw new InvalidTokenException(scanner.Next()?.ToString());
+                    }
+                    else {
+                        throw new FormatException("Poorly formed function call");
+                    }
             }
-
-            // check string
-            string str_parsed;
-            if (scanner.NextString(out str_parsed)) {
-                return AddObjectToExprList(str_parsed, startIndex, scanner, tokens);
-            }
-
-            // check numeric
-            Number num;
-            if (scanner.NextNumber(out num)) {
-                return AddObjectToExprList(num, startIndex, scanner, tokens);
-            }
-
-            // check boolean
-            bool b;
-            if (scanner.NextBool(out b)) {
-                return AddObjectToExprList(b, startIndex, scanner, tokens);
-            }
-
-            // check null
-            if (scanner.NextNull()) {
-                return AddObjectToExprList(null, startIndex, scanner, tokens);
-            }
-
-            // check variable
-            Variable variable;
-            if (DefaultScanner.NextVariable(scanner, Runtime, out variable)) {
-                return AddObjectToExprList(variable, startIndex, scanner, tokens);
-            }
-
-            // check hexadecimal
-            long hex;
-            if (scanner.NextHexadecimal(out hex)) {
-                return AddObjectToExprList(hex, startIndex, scanner, tokens);
-            }
-
-            // check binary operator
-            BinaryOperator binOp;
-            if (scanner.NextBinaryOp(CurrentContext, out binOp)) {
-                return AddObjectToExprList(binOp, startIndex, scanner, tokens);
-            }
-
-            // check unary op
-            UnaryOperator unaryOp;
-            if (scanner.NextUnaryOp(CurrentContext, tokens.Last?.Value, out unaryOp)) {
-                return AddObjectToExprList(unaryOp, startIndex, scanner, tokens);
-            }
-
-            // check function
-            Function func;
-            if (DefaultScanner.NextFunctionInternal(scanner, Runtime, out func)) {
-                return AddObjectToExprList(func, startIndex, scanner, tokens);
-            }
-
-            if (scanner.NextComment()) {
-                scanner.Position = scanner.Length; // comments go to the end of the line
-                return false;
-            }
-
-            if (scanner.NextExpressionBreak()) {
-                return true;
-            }
-
-            // couldn't be parsed
-
-            if (CurrentContext.FindFunctionContext(_expression.ToString()) == null) {
-                throw new InvalidTokenException(scanner.Next()?.ToString());
-            }
-            else {
-                throw new FormatException("Poorly formed function call");
-            }
+            AddObjectToExprList(token, startIndex, scanner, tokens);
+            return true;
         }
 
-        private bool AddObjectToExprList(object val, int startIndex, IScanner scanner, LinkedList<object> tokens)
+        private void AddObjectToExprList(object val, int startIndex, IScanner scanner, LinkedList<object> tokens)
         {
             if (Equals(val, "(")) {
                 scanner.Position = startIndex;
@@ -223,7 +164,6 @@ namespace Tbasic.Runtime
                 tokens.AddLast(val);
             }
             scanner.SkipWhiteSpace();
-            return false;
         }
         
         private object EvaluateList(LinkedList<object> _tokens)

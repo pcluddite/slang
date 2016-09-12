@@ -10,6 +10,27 @@ using Tbasic.Types;
 namespace Tbasic.Parsing
 {
     /// <summary>
+    /// Values indicating the current status of the scanner
+    /// </summary>
+    public enum TokenType
+    {
+        String,
+        Number,
+        Boolean,
+        Hexadecimal,
+        GroupStart,
+        Function,
+        Variable,
+        BinaryOperator,
+        UnaryOperator,
+        Comment,
+        ExpressionBreak,
+        Null,
+        Undefined,
+        None
+    }
+
+    /// <summary>
     /// An inteface for a Tbasic scanner
     /// </summary>
     public interface IScanner
@@ -118,5 +139,10 @@ namespace Tbasic.Parsing
         /// Matches the next comment character
         /// </summary>
         bool NextComment();
+        /// <summary>
+        /// Gets the next token in the buffer
+        /// </summary>
+        /// <returns></returns>
+        TokenType NextToken(TRuntime runtime, out object token, object lastToken);
     }
 }

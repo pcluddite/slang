@@ -271,7 +271,7 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Tries to match a set of characeters from the buffer and advances the reader to the end of those characters
         /// </summary>
-        public virtual bool Next(string str, bool ignoreCase)
+        public virtual bool Next(string str, bool ignoreCase = true)
         {
             string word = BuffNextWord();
             if (!string.IsNullOrEmpty(word) && word.StartsWith(str, ignoreCase, CultureInfo.CurrentCulture)) {
@@ -567,6 +567,91 @@ namespace Tbasic.Parsing
         public override string ToString()
         {
             return InternalBuffer;
+        }
+
+        public TokenType NextToken(TRuntime runtime, out object token, object lastToken)
+        {
+            // check group
+            if (Next("(", ignoreCase: false)) { // maybe a performance boost?
+                token = "(";
+                return TokenType.GroupStart;
+            }
+
+            // check string
+            string str_parsed;
+            if (NextString(out str_parsed)) {
+                token = str_parsed;
+                return TokenType.String;
+            }
+
+            // check numeric
+            Number num;
+            if (NextNumber(out num)) {
+                token = num;
+                return TokenType.Number;
+            }
+
+            // check boolean
+            bool b;
+            if (NextBool(out b)) {
+                token = b;
+                return TokenType.Boolean;
+            }
+
+            // check null
+            if (NextNull()) {
+                token = NullString;
+                return TokenType.Null;
+            }
+
+            // check variable
+            Variable variable;
+            if (NextVariable(this, runtime, out variable)) {
+                token = variable;
+                return TokenType.Variable;
+            }
+
+            // check hexadecimal
+            long hex;
+            if (NextHexadecimal(out hex)) {
+                token = hex;
+                return TokenType.Hexadecimal;
+            }
+
+            // check binary operator
+            BinaryOperator binOp;
+            if (NextBinaryOp(runtime.Context, out binOp)) {
+                token = binOp;
+                return TokenType.BinaryOperator;
+            }
+
+            // check unary op
+            UnaryOperator unaryOp;
+            if (NextUnaryOp(runtime.Context, lastToken, out unaryOp)) {
+                token = unaryOp;
+                return TokenType.UnaryOperator;
+            }
+
+            // check function
+            Function func;
+            if (NextFunctionInternal(this, runtime, out func)) {
+                token = func;
+                return TokenType.Function;
+            }
+
+            if (NextComment()) {
+                Position = Length; // comments go to the end of the line
+                token = Comment;
+                return TokenType.Comment;
+            }
+
+            if (NextExpressionBreak()) {
+                token = ExpressionBreak;
+                return TokenType.ExpressionBreak;
+            }
+
+            token = null;
+            return TokenType.Undefined;
         }
     }
 }

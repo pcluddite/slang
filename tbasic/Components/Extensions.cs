@@ -73,5 +73,48 @@ namespace Tbasic
         {
             return StringSegment.Create(source, start, count);
         }
+
+        /// <summary>
+        /// Gets a character at an index safely, by returning -1 instead of throwing an IndexOutOfRange exception
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        internal static int CharAt(this string s, int index)
+        {
+            if (index < 0 || index >= s.Length)
+                return -1;
+            return s[index];
+        }
+
+        internal static unsafe bool StartsWithFast(this string source, string test)
+        {
+            if (test.Length > source.Length)
+                return false; // we don't have enough material
+
+            fixed (char* lpsrc = source) fixed (char* lptest = test) {
+                for (int i = 0; i < test.Length; ++i) {
+                    if (lpsrc[i] != test[i]) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        internal static unsafe bool StartsWithFastIgnoreCase(this string source, string test)
+        {
+            if (test.Length > source.Length)
+                return false; // we don't have enough material
+
+            fixed (char* lpsrc = source) fixed (char* lptest = test) {
+                for (int i = 0; i < test.Length; ++i) {
+                    if (char.ToUpper(lpsrc[i]) != char.ToUpper(test[i])) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 }

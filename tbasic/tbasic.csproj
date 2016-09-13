@@ -76,6 +76,7 @@
       <DependentUpon>DefaultScanner.tt</DependentUpon>
     </Compile>
     <Compile Include="Parsing\Preprocessors\IPreprocessor.cs" />
+    <Compile Include="Parsing\Scanners\DefaultScanner\MatchFast.cs" />
     <Compile Include="Parsing\Scanners\IScanner.cs" />
     <Compile Include="Parsing\Preprocessors\Preprocessors.cs" />
     <Compile Include="Parsing\Scanners\Scanners.cs" />

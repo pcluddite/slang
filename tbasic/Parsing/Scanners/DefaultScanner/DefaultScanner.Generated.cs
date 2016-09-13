@@ -68,13 +68,14 @@ namespace Tbasic.Parsing
         {
             string foundStr = string.Empty;
             foundOp = default(BinaryOperator);
-            foreach (var op in context.GetAllBinaryOperators()) {
-                string opStr = op.OperatorString;
-                if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.Ordinal)) {
-                    foundOp = op;
-                    foundStr = opStr;
-                }
-            }
+			var ops = context.GetAllBinaryOperators();
+			for(int i = 0; i < ops.Count; ++i) {
+				string opStr = ops[i].OperatorString;
+				if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.Ordinal)) {
+					foundOp = ops[i];
+					foundStr = opStr;
+				}
+			}
             return foundStr != string.Empty;
         }
 
@@ -89,13 +90,14 @@ namespace Tbasic.Parsing
         {
             string foundStr = string.Empty;
             foundOp = default(UnaryOperator);
-            foreach (var op in context.GetAllUnaryOperators()) {
-                string opStr = op.OperatorString;
-                if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.Ordinal)) {
-                    foundOp = op;
-                    foundStr = opStr;
-                }
-            }
+			var ops = context.GetAllUnaryOperators();
+			for(int i = 0; i < ops.Count; ++i) {
+				string opStr = ops[i].OperatorString;
+				if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.Ordinal)) {
+					foundOp = ops[i];
+					foundStr = opStr;
+				}
+			}
             return foundStr != string.Empty;
         }
 	}

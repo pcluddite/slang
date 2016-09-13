@@ -19,19 +19,6 @@ namespace Tbasic.Parsing
     public partial class DefaultScanner : IScanner
     {
         /// <summary>
-        /// A regular expression for matching numbers
-        /// </summary>
-        protected static readonly Regex rxNumeric = new Regex(@"^([+-]?\d+(\.\d+)?([Ee][+-]?\d+)?)", RegexOptions.Compiled);
-        /// <summary>
-        /// A regular expression for matching hexadecimal
-        /// </summary>
-        protected static readonly Regex rxHex = new Regex(@"^(0x([0-9a-fA-F]+))", RegexOptions.Compiled);
-        /// <summary>
-        /// A regular expression for matching identifiers (function, variable, class and other names)
-        /// </summary>
-        protected static readonly Regex rxId = new Regex(@"^((_|[a-zA-Z])\w*)", RegexOptions.Compiled);
-
-        /// <summary>
         /// The buffered word. The first item is the index of the word, the second is the word itself.
         /// </summary>
         private ValueTuple<int, string> WordBuffer = new ValueTuple<int, string>(int.MinValue, default(string));
@@ -193,7 +180,7 @@ namespace Tbasic.Parsing
         public virtual IEnumerable<char> Next()
         {
             string word = BuffNextWord();
-            if (word != null) {
+            if (!string.IsNullOrEmpty(word)) {
                 AdvanceScanner(word);
             }
             return word;
@@ -230,10 +217,12 @@ namespace Tbasic.Parsing
         /// </summary>
         public virtual bool NextNumber(out Number num)
         {
-            if (IsDigit(PeekNextChar())) { // regex is expensive, only do it if we have to
-                Match m = rxNumeric.Match(BuffNextWord() ?? string.Empty);
-                if (m.Success && Number.TryParse(m.Value, out num)) {
-                    AdvanceScanner(m.Value);
+            string word = BuffNextWord();
+            if (!string.IsNullOrEmpty(word)) {
+                int pos = MatchFast.MatchNumber(word);
+                if (pos > -1) {
+                    num = Number.Parse(word.Substring(0, pos));
+                    AdvanceScanner(pos);
                     return true;
                 }
             }
@@ -241,31 +230,22 @@ namespace Tbasic.Parsing
             return false;
         }
 
-        private static bool IsDigit(int c)
-        {
-            if (c < 0 || c > char.MaxValue) {
-                return false;
-            }
-            else {
-                return char.IsDigit((char)c);
-            }
-        }
-
         /// <summary>
         /// Tries to match a hex number from the buffer and advances the reader to the end of that number
         /// </summary>
         public virtual bool NextHexadecimal(out long hex)
         {
-            Match m = rxHex.Match(BuffNextWord() ?? string.Empty);
-            if (m.Success) {
-                hex = Convert.ToInt64(m.Value, 16);
-                AdvanceScanner(m.Value);
-                return true;
+            string word = BuffNextWord();
+            if (!string.IsNullOrEmpty(word)) {
+                int pos = MatchFast.MatchHex(word);
+                if (pos > -1) {
+                    hex = Convert.ToInt64(word.Substring(0, pos), 16);
+                    AdvanceScanner(pos);
+                    return true;
+                }
             }
-            else {
-                hex = default(long);
-                return false;
-            }
+            hex = default(long);
+            return false;
         }
 
         /// <summary>
@@ -274,7 +254,7 @@ namespace Tbasic.Parsing
         public virtual bool Next(string str, bool ignoreCase = true)
         {
             string word = BuffNextWord();
-            if (!string.IsNullOrEmpty(word) && word.StartsWith(str, ignoreCase, CultureInfo.CurrentCulture)) {
+            if (!string.IsNullOrEmpty(word) && word.StartsWith(str, StringComparison.OrdinalIgnoreCase)) {
                 AdvanceScanner(str);
                 return true;
             }
@@ -399,13 +379,15 @@ namespace Tbasic.Parsing
         /// </summary>
         public virtual bool NextValidIdentifier(out IEnumerable<char> name)
         {
-            Match m = rxId.Match(BuffNextWord() ?? string.Empty);
-            if (m.Success) {
-                name = m.Value;
-                AdvanceScanner(m.Length);
-            }
-            else {
-                name = null;
+            name = null;
+            string word = BuffNextWord();
+            if (string.IsNullOrEmpty(word))
+                return false;
+
+            int end = MatchFast.MatchIdentifier(word);
+            if (end > -1) {
+                name = word.Substring(0, end);
+                AdvanceScanner(end);
             }
             return (name != null);
         }
@@ -435,41 +417,14 @@ namespace Tbasic.Parsing
             string word = BuffNextWord();
             if (string.IsNullOrEmpty(word))
                 return false;
-            if (word[0] == '@') {
-                return NextMacro(out name, out indices);
-            }
-            Match m = rxId.Match(word);
-            if (m.Success && CharAt(WordBuffer.Item1 + m.Length) == '$') {
-                name = InternalBuffer.Substring(WordBuffer.Item1, m.Length + 1);
-                AdvanceScanner(m.Length + 1);
+
+            int pos = MatchFast.MatchVariable(word);
+            if (pos > -1) {
+                name = InternalBuffer.Substring(WordBuffer.Item1, pos);
+                AdvanceScanner(pos);
                 NextIndices(out indices);
             }
             return (name != null);
-        }
-
-        /// <summary>
-        /// This assumes that the first char has already been checked to be an '@'!
-        /// </summary>
-        private bool NextMacro(out IEnumerable<char> name, out IList<IEnumerable<char>> indices)
-        {
-            name = null; indices = null;
-            int start = Position;
-            SkipWhiteSpace();
-            Position += 1;
-            string word = BuffNextWord();
-            if (string.IsNullOrEmpty(word))
-                return false;
-            Match m = rxId.Match(word);
-            if (m.Success) {
-                name = InternalBuffer.Substring(start, word.Length + 1);
-                AdvanceScanner(word.Length + 1);
-                NextIndices(out indices);
-                return true;
-            }
-            else {
-                Position = start;
-                return false;
-            }
         }
 
         /// <summary>
@@ -524,11 +479,11 @@ namespace Tbasic.Parsing
             if (string.IsNullOrEmpty(word))
                 return b = false;
 
-            if (word.StartsWith(bool.TrueString, StringComparison.CurrentCultureIgnoreCase)) {
+            if (word.StartsWith(bool.TrueString, StringComparison.OrdinalIgnoreCase)) {
                 AdvanceScanner(bool.TrueString);
                 return b = true;
             }
-            else if (word.StartsWith(bool.FalseString, StringComparison.CurrentCultureIgnoreCase)) {
+            else if (word.StartsWith(bool.FalseString, StringComparison.OrdinalIgnoreCase)) {
                 AdvanceScanner(bool.FalseString);
                 b = false;
                 return true;
@@ -569,6 +524,9 @@ namespace Tbasic.Parsing
             return InternalBuffer;
         }
 
+        /// <summary>
+        /// Parses the next token in the buffer
+        /// </summary>
         public TokenType NextToken(TRuntime runtime, out object token, object lastToken)
         {
             // check group

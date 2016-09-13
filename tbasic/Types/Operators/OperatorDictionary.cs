@@ -10,31 +10,30 @@ using System.Linq;
 
 namespace Tbasic.Types
 {
-    internal abstract class OperatorDictionary<T> : IDictionary<string, T>
+    internal abstract class OperatorDictionary<T> : IList<T>
         where T : IOperator
     {
-        protected Dictionary<string, T> operators;
+        protected List<T> operators;
 
-        protected OperatorDictionary()
+        protected OperatorDictionary(int capacity = 10)
         {
-            operators = new Dictionary<string, T>(StringComparer.Ordinal);
+            operators = new List<T>(capacity);
         }
 
         protected OperatorDictionary(OperatorDictionary<T> other)
         {
-            operators = new Dictionary<string, T>(other.operators, StringComparer.Ordinal);
+            operators = new List<T>(other.operators);
         }
 
         public abstract void LoadStandardOperators();
 
-        public T this[string key]
+        public T this[int index]
         {
             get {
-                return operators[key];
+                return operators[index];
             }
-
             set {
-                operators[key] = value;
+                operators[index] = value;
             }
         }
 
@@ -45,80 +44,81 @@ namespace Tbasic.Types
             }
         }
 
-        bool ICollection<KeyValuePair<string, T>>.IsReadOnly
-        {
-            get {
-                return ((ICollection<KeyValuePair<string, T>>)operators).IsReadOnly;
-            }
-        }
-
-        public ICollection<string> Keys
-        {
-            get {
-                return operators.Keys;
-            }
-        }
-
-        public ICollection<T> Values
-        {
-            get {
-                return operators.Values;
-            }
-        }
-
-        void ICollection<KeyValuePair<string, T>>.Add(KeyValuePair<string, T> item)
-        {
-            ((ICollection<KeyValuePair<string, T>>)operators).Add(item);
-        }
-
-        public void Add(string key, T value)
-        {
-            operators.Add(key, value);
-        }
-
         public void Clear()
         {
             operators.Clear();
         }
 
-        public bool Contains(KeyValuePair<string, T> item)
+        public int IndexOf(T item)
+        {
+            return operators.IndexOf(item);
+        }
+
+        public int IndexOf(string op)
+        {
+            for (int i = 0; i < operators.Count; ++i) {
+                if (operators[i].OperatorString == op) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public void Insert(int index, T item)
+        {
+            operators.Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            operators.RemoveAt(index);
+        }
+
+        public void Add(T item)
+        {
+            operators.Add(item);
+        }
+
+        public bool Contains(T item)
         {
             return operators.Contains(item);
         }
 
-        public bool ContainsKey(string key)
+        public bool Contains(string key)
         {
-            return operators.ContainsKey(key);
+            return IndexOf(key) > -1;
         }
 
-        void ICollection<KeyValuePair<string, T>>.CopyTo(KeyValuePair<string, T>[] array, int arrayIndex)
+        public void CopyTo(T[] array, int arrayIndex)
         {
-            ((ICollection<KeyValuePair<string, T>>)operators).CopyTo(array, arrayIndex);
+            operators.CopyTo(array, arrayIndex);
         }
 
-        public IEnumerator<KeyValuePair<string, T>> GetEnumerator()
+        public bool Remove(T item)
+        {
+            return operators.Remove(item);
+        }
+
+        public void Remove(string key)
+        {
+            operators.RemoveAt(IndexOf(key));
+        }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return operators.GetEnumerator();
-        }
-
-        bool ICollection<KeyValuePair<string, T>>.Remove(KeyValuePair<string, T> item)
-        {
-            return ((ICollection<KeyValuePair<string, T>>)operators).Remove(item);
-        }
-
-        public bool Remove(string key)
-        {
-            return operators.Remove(key);
-        }
-
-        public bool TryGetValue(string key, out T value)
-        {
-            return operators.TryGetValue(key, out value);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return operators.GetEnumerator();
+        }
+
+        bool ICollection<T>.IsReadOnly
+        {
+            get {
+                return ((IList<T>)operators).IsReadOnly;
+            }
         }
     }
 }

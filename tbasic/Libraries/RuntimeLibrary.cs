@@ -69,7 +69,7 @@ namespace Tbasic.Libraries
                 throw new InvalidCastException();
             }
             catch (InvalidCastException) {
-                return Number.Convert(stackdat.Get(1));
+                return Number.Convert(stackdat.Get(1), runtime.Options);
             }
         }
 

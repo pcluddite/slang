@@ -222,27 +222,27 @@ namespace Tbasic.Runtime
         /// List all unary operators defined
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<UnaryOperator> GetAllUnaryOperators()
+        public IList<UnaryOperator> GetAllUnaryOperators()
         {
-            return _unaryOps.Values;
+            return _unaryOps;
         }
         
         /// <summary>
         /// Lists all binary operators defined
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<BinaryOperator> GetAllBinaryOperators()
+        public IList<BinaryOperator> GetAllBinaryOperators()
         {
-            return _binaryOps.Values;
+            return _binaryOps;
         }
 
         /// <summary>
         /// List the unary operators defined in this context
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<UnaryOperator> GetLocalUnaryOperators()
+        public IList<UnaryOperator> GetLocalUnaryOperators()
         {
-            return _unaryOps.Values;
+            return _unaryOps;
         }
 
 
@@ -250,9 +250,9 @@ namespace Tbasic.Runtime
         /// Lists the binary operators defined in this context
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<BinaryOperator> GetLocalBinaryOperators()
+        public IList<BinaryOperator> GetLocalBinaryOperators()
         {
-            return _binaryOps.Values;
+            return _binaryOps;
         }
 
         /// <summary>
@@ -276,9 +276,9 @@ namespace Tbasic.Runtime
         /// <returns></returns>
         public IEnumerable<IOperator> GetLocalOperators()
         {
-            foreach (var binop in _binaryOps.Values)
+            foreach (var binop in _binaryOps)
                 yield return binop;
-            foreach (var unop in _unaryOps.Values)
+            foreach (var unop in _unaryOps)
                 yield return unop;
         }
 

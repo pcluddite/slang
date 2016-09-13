@@ -6,6 +6,7 @@
 using System;
 using Tbasic.Errors;
 using Tbasic.Runtime;
+using System.Globalization;
 
 namespace Tbasic.Types
 {
@@ -70,7 +71,7 @@ namespace Tbasic.Types
         public static bool TryParse(string s, out Number result)
         {
             double d;
-            if (double.TryParse(s, out d)) {
+            if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out d)) {
                 result = new Number(d);
                 return true;
             }
@@ -122,14 +123,12 @@ namespace Tbasic.Types
         /// <summary>
         /// Converts an object to a Number
         /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        public static Number Convert(object o)
+        public static Number Convert(object o, ExecuterOption opts)
         {
-            double d;
-            if (!TypeConvert.TryConvert(o, out d, strict: false, parseStrings: false)) // this should always obey these rules
+            Number n;
+            if (!TypeConvert.TryConvert(o, out n, opts))
                 throw ThrowHelper.InvalidTypeInExpression(o?.ToString(), nameof(Number));
-            return d;
+            return n;
         }
 
         /// <summary>

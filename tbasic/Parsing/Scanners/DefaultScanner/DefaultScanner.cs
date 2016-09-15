@@ -360,7 +360,7 @@ namespace Tbasic.Parsing
         }
 
         /// <summary>
-        /// Advances the buffer to the end of a group without advancing it
+        /// Advances the buffer to the end of a group without parsing it
         /// </summary>
         public virtual bool SkipGroup()
         {

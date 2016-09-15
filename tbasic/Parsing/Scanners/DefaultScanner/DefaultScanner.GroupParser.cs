@@ -17,7 +17,10 @@ namespace Tbasic.Parsing
         /// </summary>
         protected virtual char EscapeCharacter { get; } = '\\';
 
-        private int IndexString(string fullstr, int index)
+        /// <summary>
+        /// Finds the index of the last quote of a quoted and escaped string
+        /// </summary>
+        protected int IndexString(string fullstr, int index)
         {
             char quote = fullstr[index++]; // The first character should be the quote
 
@@ -64,7 +67,10 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedString();
         }
 
-        private int ReadString(string fullstr, int index, out string s_parsed)
+        /// <summary>
+        /// Parses a quoted and escaped string
+        /// </summary>
+        protected int ReadString(string fullstr, int index, out string s_parsed)
         {
             char quote = fullstr[index++]; // The first character should be the quote
 
@@ -121,7 +127,10 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedString();
         }
 
-        private int IndexGroup(string fullstr, int index)
+        /// <summary>
+        /// Gets the index of the closing group character without finding its arguments
+        /// </summary>
+        protected int IndexGroup(string fullstr, int index)
         {
             char c_open = fullstr[index]; // The first character should be the grouping character (i.e. '(' or '[')
             char c_close = c_open == '(' ? ')' : ']';
@@ -160,7 +169,10 @@ namespace Tbasic.Parsing
             throw ThrowHelper.UnterminatedGroup();
         }
 
-        private int ReadGroup(string fullstr, int index, out IList<IEnumerable<char>> args)
+        /// <summary>
+        /// Gets the arguments of a group from a string with the opening group character at the given index
+        /// </summary>
+        protected int ReadGroup(string fullstr, int index, out IList<IEnumerable<char>> args)
         {
             return ReadGroup(fullstr, index, ',', out args);
         }

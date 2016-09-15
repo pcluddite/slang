@@ -14,6 +14,7 @@ namespace Tbasic.Parsing
     /// </summary>
     public enum TokenType
     {
+#pragma warning disable CS1591
         String,
         Number,
         Boolean,
@@ -28,6 +29,7 @@ namespace Tbasic.Parsing
         Null,
         Undefined,
         None
+#pragma warning restore CS1591
     }
 
     /// <summary>

@@ -21,6 +21,7 @@ namespace Tbasic.Shell
             Add("STOP", Exit); // exit is already declared in stdlib 8/22/16
             Add("HELLO", Hello);
             Add("HI", Hello);
+            Add("HEY", Hello);
             Add<string>("tscript", tscript, requiredArgs: 0);
             Add<string, IEnumerable<string>>("LS", Ls, requiredArgs: 0);
         }

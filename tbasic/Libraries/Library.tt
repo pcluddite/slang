@@ -15,33 +15,33 @@ using Tbasic.Types;
 namespace Tbasic.Libraries
 {
     public partial class Library
-	{
+    {
 <# BuildAll(10); #>
-	}
+    }
 }
 <#+
 
 private void BuildAll(int numArgs)
 {
-	for(int i = 0; i <= numArgs; ++i) {
-		BuildAddFunc(i);
-		WriteLine("");
-		BuildAddAction(i);
-		WriteLine("");
-	}
+    for(int i = 0; i <= numArgs; ++i) {
+        BuildAddFunc(i);
+        WriteLine("");
+        BuildAddAction(i);
+        WriteLine("");
+    }
 
-	
+    
 }
 
 private void BuildAddFunc(int numArgs)
 {
-		string generic;
-		if (numArgs > 0) {
-			generic = ExpandTypeParams(numArgs) + ", ";
-		}
-		else {
-			generic = "";
-		}
+        string generic;
+        if (numArgs > 0) {
+            generic = ExpandTypeParams(numArgs) + ", ";
+        }
+        else {
+            generic = "";
+        }
 #>
         /// <summary>
         /// Adds a native function that returns a result
@@ -50,8 +50,8 @@ private void BuildAddFunc(int numArgs)
         /// <typeparam name="TResult">the type that this function returns</typeparam>
         public void Add<<#= generic #>TResult>(string key, Func<<#= generic #>TResult> value, bool evaluate = true, int requiredArgs = -1)
         {
-			if (requiredArgs < 0)
-				requiredArgs = <#= numArgs #>;
+            if (requiredArgs < 0)
+                requiredArgs = <#= numArgs #>;
             lib.Add(key, new CallData(value, requiredArgs, evaluate));
         }
 <#+
@@ -59,13 +59,13 @@ private void BuildAddFunc(int numArgs)
 
 private void BuildAddAction(int numArgs)
 {
-		string generic;
-		if (numArgs > 0) {
-			generic = $"<{ExpandTypeParams(numArgs)}>";
-		}
-		else {
-			generic = "";
-		}
+        string generic;
+        if (numArgs > 0) {
+            generic = $"<{ExpandTypeParams(numArgs)}>";
+        }
+        else {
+            generic = "";
+        }
 #>
         /// <summary>
         /// Adds a native function that does not return a result
@@ -73,8 +73,8 @@ private void BuildAddAction(int numArgs)
 <#+ BuildDocs(numArgs); #>
         public void Add<#= generic #>(string key, Action<#= generic #> value, bool evaluate = true, int requiredArgs = -1)
         {
-			if (requiredArgs < 0)
-				requiredArgs = <#= numArgs #>;
+            if (requiredArgs < 0)
+                requiredArgs = <#= numArgs #>;
             lib.Add(key, new CallData(value, requiredArgs, evaluate));
         }
 <#+
@@ -86,18 +86,18 @@ private void BuildDocs(int numArgs)
         /// <param name="key">the name of the function</param>
         /// <param name="value">the delegate to the function</param>
         /// <param name="evaluate">True if function should have its arguments evaluated before they are passed, false otherwise</param>
-		/// <param name="requiredArgs">The number of arguments that this function is required to have. Values less than zero mean all arguments are required.</param>
+        /// <param name="requiredArgs">The number of arguments that this function is required to have. Values less than zero mean all arguments are required.</param>
 <#+     for (int i = 0; i < numArgs; ++i) { #>
-		/// <typeparam name="T<#= i + 1 #>">the type for argument <#= i + 1 #></typeparam>
+        /// <typeparam name="T<#= i + 1 #>">the type for argument <#= i + 1 #></typeparam>
 <#+		}
 #>
 <#+
 }
 
 private string ExpandTypeParams(int argCount) {
-	string[] args = new string[argCount];
-	for(int i = 0; i < argCount; ++i) {
-		args[i] = $"T{i + 1}";
-	}
-	return string.Join(", ", args);
+    string[] args = new string[argCount];
+    for(int i = 0; i < argCount; ++i) {
+        args[i] = $"T{i + 1}";
+    }
+    return string.Join(", ", args);
 } #>

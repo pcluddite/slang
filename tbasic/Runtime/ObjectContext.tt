@@ -63,10 +63,10 @@ namespace Tbasic.Runtime
             }
             BuildRemove(name, type, dict);
             WriteLine("");
-			BuildAddAlias(name);
-			WriteLine("");
-			BuildRename(name, type, dict);
-			WriteLine("");
+            BuildAddAlias(name);
+            WriteLine("");
+            BuildRename(name, type, dict);
+            WriteLine("");
         }
 #>
         #endregion
@@ -74,41 +74,41 @@ namespace Tbasic.Runtime
 <#+ } #>
 <#+ private void BuildAddAlias(string name) { #>
         /// <summary>
-		/// Adds an alias for a <#= name #> in this context
-		/// </summary>
-		/// <param name="name">the name of the <#= name #></param>
-		/// <param name="alias">the alternative name for the <#= name #></param>
-		public void Add<#= name #>Alias(string name, string alias)
-		{
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-			if (alias == null)
-				throw new ArgumentNullException(nameof(alias));
-			Contract.EndContractBlock();
+        /// Adds an alias for a <#= name #> in this context
+        /// </summary>
+        /// <param name="name">the name of the <#= name #></param>
+        /// <param name="alias">the alternative name for the <#= name #></param>
+        public void Add<#= name #>Alias(string name, string alias)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            if (alias == null)
+                throw new ArgumentNullException(nameof(alias));
+            Contract.EndContractBlock();
 
-			Add<#= name #>(alias, Get<#= name #>(name));
-		}
+            Add<#= name #>(alias, Get<#= name #>(name));
+        }
 <#+ } #>
 <#+ private void BuildRename(string name, string type, string dict) { #>
         /// <summary>
-		/// Assigns a new name for a <#= name #>
-		/// </summary>
-		/// <param name="name">the current name of the <#= name #></param>
-		/// <param name="newname">the new name for the <#= name #></param>
-		public void Rename<#= name #>(string name, string newname)
-		{
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-			if (newname == null)
-				throw new ArgumentNullException(newname);
-			Contract.EndContractBlock();
+        /// Assigns a new name for a <#= name #>
+        /// </summary>
+        /// <param name="name">the current name of the <#= name #></param>
+        /// <param name="newname">the new name for the <#= name #></param>
+        public void Rename<#= name #>(string name, string newname)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            if (newname == null)
+                throw new ArgumentNullException(newname);
+            Contract.EndContractBlock();
 
-			ObjectContext context = Find<#= name #>Context(name);
-			if (context == null)
-				throw ThrowHelper.UndefinedObject(name);
-			context.<#= dict #>.Add(newname,  context.<#= dict #>[name]);
-			context.<#= dict #>.Remove(name);
-		}
+            ObjectContext context = Find<#= name #>Context(name);
+            if (context == null)
+                throw ThrowHelper.UndefinedObject(name);
+            context.<#= dict #>.Add(newname,  context.<#= dict #>[name]);
+            context.<#= dict #>.Remove(name);
+        }
 <#+ } #>
 <#+ private void BuildTryGet(string name, string type, string dict, string castType = null)
     {
@@ -117,12 +117,12 @@ namespace Tbasic.Runtime
         /// Tries to get a <#= name #> from this context
         /// </summary>
         /// <returns>true if the <#= name #> was found, otherwise false.</returns>
-		[Pure]
+        [Pure]
         public bool TryGet<#= name #>(string name, out <#= type #> value)
         {
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-			Contract.EndContractBlock();
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
 
 <#+ if (castType == null) { #>
             if (<#= dict #>.TryGetValue(name, out value)) {
@@ -156,12 +156,12 @@ namespace Tbasic.Runtime
         /// <param name="name">the <#= name #> as a string</param>
         /// <exception cref="ArgumentException">thrown if the <#= name #> is undefined</exception>
         /// <returns></returns>
-		[Pure]
+        [Pure]
         public <#= type #> Get<#= name #>(string name)
         {
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-			Contract.EndContractBlock();
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
 
             <#= type #> value;
             if (<#= dict #>.TryGetValue(name, out value)) {
@@ -186,9 +186,9 @@ namespace Tbasic.Runtime
         /// </summary>
         public void Set<#= name #>(string name, <#= type #> value)
         {
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-			Contract.EndContractBlock();
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
 
             ObjectContext c = Find<#= name #>Context(name);
             if (c != null) {
@@ -209,12 +209,12 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="name">the block name</param>
         /// <returns>the ObjectContext in which the block is declared</returns>
-		[Pure]
+        [Pure]
         public ObjectContext Find<#= name #>Context(string name)
         {
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-			Contract.EndContractBlock();
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
 
             if (<#= dict #>.ContainsKey(name)) {
                 return this;
@@ -237,16 +237,16 @@ namespace Tbasic.Runtime
         /// </summary>
         public void Add<#= name #>(string name, <#= type #> value)
         {
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-			Contract.EndContractBlock();
-			
-			try {
-				<#= dict #>.Add(name, value);
-			}
-			catch(ArgumentException) {
-				throw new DuplicateDefinitionException(name);
-			}
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+            
+            try {
+                <#= dict #>.Add(name, value);
+            }
+            catch(ArgumentException) {
+                throw new DuplicateDefinitionException(name);
+            }
         }
 <#+
     }
@@ -260,10 +260,10 @@ namespace Tbasic.Runtime
         /// <returns>true if the remove was successful, false otherwise</returns>
         public bool Remove<#= name #>(string name)
         {
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-			Contract.EndContractBlock();
-			
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+            
             return <#= dict #>.Remove(name);
         }
 <#+
@@ -276,7 +276,7 @@ namespace Tbasic.Runtime
         /// Lists all the <#= name #>s currently defined
         /// </summary>
         /// <returns></returns>
-		[Pure]
+        [Pure]
         public IEnumerable<KeyValuePair<string, <#= type #>>> GetAll<#= name #>s()
         {
             ObjectContext context = this;
@@ -297,7 +297,7 @@ namespace Tbasic.Runtime
         /// Lists all the <#= name #>s currently defined in this context
         /// </summary>
         /// <returns></returns>
-		[Pure]
+        [Pure]
         public IEnumerable<KeyValuePair<string, <#= type #>>> GetLocal<#= name #>s()
         {
             return <#= dict #>;

@@ -8,14 +8,16 @@ using System.Collections.Generic;
 using System.Text;
 using Tbasic.Errors;
 using Tbasic.Types;
+using System.Diagnostics.Contracts;
 
 namespace Tbasic.Runtime
 {
     internal class Variable : IExpressionEvaluator
     {
-        private string _name = null;
-
         #region Properties
+
+        [ContractPublicPropertyName(nameof(Name))]
+        private string _name = null;
 
         public IList<IEnumerable<char>> Indices { get; private set; }
         
@@ -53,9 +55,15 @@ namespace Tbasic.Runtime
 
         #endregion
 
-        public Variable(string name, IList<IEnumerable<char>> indices, TRuntime exec)
+        public Variable(string name, IList<IEnumerable<char>> indices, TRuntime runtime)
         {
-            Runtime = exec;
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            Runtime = runtime;
             _name = name;
             Indices = indices;
         }
@@ -76,6 +84,8 @@ namespace Tbasic.Runtime
 
         public int[] EvaluateIndices()
         {
+            Contract.Ensures(Contract.Result<int[]>() != null);
+
             ExpressionEvaluator eval = new ExpressionEvaluator(Runtime);
             int[] indices = new int[Indices.Count];
             for (int index = 0; index < indices.Length; ++index) {

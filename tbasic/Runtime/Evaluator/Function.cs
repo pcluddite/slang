@@ -3,10 +3,11 @@
 // Copyright (c) Timothy Baxendale. All Rights Reserved.
 //
 // ======
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Tbasic.Errors;
 using Tbasic.Types;
-using System;
 
 namespace Tbasic.Runtime
 {
@@ -15,15 +16,13 @@ namespace Tbasic.Runtime
     /// </summary>
     internal class Function : IExpressionEvaluator
     {
-        #region Private Members
-
-        private string _name;
-        private IList<IEnumerable<char>> _params;
-
-        #endregion
-
         #region Properties
 
+        [ContractPublicPropertyName(nameof(Expression))]
+        private string _name;
+
+        [ContractPublicPropertyName(nameof(Parameters))]
+        private IList<IEnumerable<char>> _params;
         /// <summary>
         /// Gets or sets the expression to be evaluated
         /// </summary>
@@ -34,7 +33,10 @@ namespace Tbasic.Runtime
                 return _name;
             }
             set {
-                _name = value?.ToString();
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+                Contract.EndContractBlock();
+                _name = value.ToString();
             }
         }
         
@@ -54,19 +56,21 @@ namespace Tbasic.Runtime
 
         #endregion
 
-        #region Construction
-        
         public Function(TRuntime runtime, string name, IList<IEnumerable<char>> parameters)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            if (parameters == null)
+                throw new ArgumentNullException(nameof(parameters));
+            Contract.EndContractBlock();
+
             Runtime = runtime;
             CurrentContext = runtime.Context;
             _name = name;
             _params = parameters;
         }
-
-        #endregion
-
-        #region Methods
         
         public object Evaluate()
         {
@@ -94,7 +98,5 @@ namespace Tbasic.Runtime
                 throw ThrowHelper.UndefinedFunction(name);
             }
         }
-
-        #endregion
     }
 }

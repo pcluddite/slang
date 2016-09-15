@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics.Contracts;
 
 namespace Tbasic.Types
 {
@@ -17,6 +18,7 @@ namespace Tbasic.Types
 
         protected OperatorDictionary(int capacity = 10)
         {
+            Contract.Requires(capacity >= 0);
             operators = new List<T>(capacity);
         }
 

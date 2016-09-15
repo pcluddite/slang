@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Tbasic.Errors;
+using System.Diagnostics.Contracts;
 
 namespace Tbasic.Parsing
 {
@@ -22,6 +23,10 @@ namespace Tbasic.Parsing
         /// </summary>
         protected int IndexString(string fullstr, int index)
         {
+            Contract.Requires(fullstr != null);
+            Contract.Requires((uint)index < (uint)fullstr.Length);
+            Contract.Requires(IsQuote(fullstr[index]));
+
             char quote = fullstr[index++]; // The first character should be the quote
 
             for (; index < fullstr.Length; index++) {
@@ -72,6 +77,10 @@ namespace Tbasic.Parsing
         /// </summary>
         protected int ReadString(string fullstr, int index, out string s_parsed)
         {
+            Contract.Requires(fullstr != null);
+            Contract.Requires((uint)index < (uint)fullstr.Length);
+            Contract.Requires(IsQuote(fullstr[index]));
+
             char quote = fullstr[index++]; // The first character should be the quote
 
             StringBuilder sb = new StringBuilder();
@@ -132,6 +141,10 @@ namespace Tbasic.Parsing
         /// </summary>
         protected int IndexGroup(string fullstr, int index)
         {
+            Contract.Requires(fullstr != null);
+            Contract.Requires((uint)index < (uint)fullstr.Length);
+            Contract.Requires(IsGroupChar(fullstr[index]));
+
             char c_open = fullstr[index]; // The first character should be the grouping character (i.e. '(' or '[')
             char c_close = c_open == '(' ? ')' : ']';
 
@@ -179,6 +192,10 @@ namespace Tbasic.Parsing
 
         private int ReadGroup(string fullstr, int index, char separator, out IList<IEnumerable<char>> args)
         {
+            Contract.Requires(fullstr != null);
+            Contract.Requires((uint)index < (uint)fullstr.Length);
+            Contract.Requires(IsGroupChar(fullstr[index]));
+
             List<IEnumerable<char>> result = new List<IEnumerable<char>>();
             char c_open = fullstr[index];
             char c_close = c_open == '(' ? ')' : ']';

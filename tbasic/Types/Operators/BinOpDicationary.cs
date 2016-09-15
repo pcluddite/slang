@@ -8,6 +8,7 @@ using System.Globalization;
 using Tbasic.Runtime;
 using Tbasic.Errors;
 using System.Linq;
+using System.Diagnostics.Contracts;
 
 namespace Tbasic.Types
 {
@@ -52,42 +53,58 @@ namespace Tbasic.Types
 
         private static object Dot(TRuntime runtime, object left, object right)
         {
-            if (left == null || right == null) {
+            if (left == null || right == null)
                 throw new UndefinedObjectException("The dot operator does not accept null operands");
-            }
+            
             TClass n = left as TClass;
             if (n == null)
                 throw new TbasicRuntimeException("The dot operator cannot be used on primitive types");
+            
             IExpressionEvaluator e = right as IExpressionEvaluator;
-            if (e != null) {
-                e.CurrentContext = n; // set the context to the scope of the class
-                return e.Evaluate();
-            }
-            else {
+            if (e == null) {
                 throw ThrowHelper.InvalidExpression($"{n.Name}.{right}");
             }
+
+            e.CurrentContext = n; // set the context to the scope of the class
+            return e.Evaluate();
         }
 
         private static object Multiply(TRuntime runtime, object left, object right)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             return Number.Convert(left, runtime.Options) *
                    Number.Convert(right, runtime.Options);
         }
 
         private static object Divide(TRuntime runtime, object left, object right)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             return Number.Convert(left, runtime.Options) /
                    Number.Convert(right, runtime.Options);
         }
 
         private static object Modulo(TRuntime runtime, object left, object right)
         {
-            return Convert.ToInt64(left, CultureInfo.CurrentCulture) %
-                   Convert.ToInt64(right, CultureInfo.CurrentCulture);
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
+            return Convert.ToInt64(left, CultureInfo.InvariantCulture) %
+                   Convert.ToInt64(right, CultureInfo.InvariantCulture);
         }
 
         private static object Add(TRuntime runtime, object left, object right)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             string str1 = left as string,
                    str2 = right as string;
             if (str1 != null || str2 != null)
@@ -104,36 +121,60 @@ namespace Tbasic.Types
 
         private static object Subtract(TRuntime runtime, object left, object right)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             return Number.Convert(left, runtime.Options) -
                    Number.Convert(right, runtime.Options);
         }
 
         private static object LessThan(TRuntime runtime, object left, object right)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             return Number.Convert(left, runtime.Options) <
                    Number.Convert(right, runtime.Options);
         }
 
         private static object LessThanOrEqual(TRuntime runtime, object left, object right)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             return Number.Convert(left, runtime.Options) <=
                    Number.Convert(right, runtime.Options);
         }
 
         private static object GreaterThan(TRuntime runtime, object left, object right)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             return Number.Convert(left, runtime.Options) >
                    Number.Convert(right, runtime.Options);
         }
 
         private static object GreaterThanOrEqual(TRuntime runtime, object left, object right)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             return Number.Convert(left, runtime.Options) >=
                    Number.Convert(right, runtime.Options);
         }
 
         private static object EqualTo(TRuntime runtime, object left, object right)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             return EqualToAsBool(runtime, left, right);
         }
 
@@ -158,6 +199,10 @@ namespace Tbasic.Types
 
         private static object SortaEquals(TRuntime runtime, object left, object right)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             if (left == null ^ right == null) // exclusive or
                 return false;
             if (left.GetType() == right.GetType())
@@ -204,6 +249,10 @@ namespace Tbasic.Types
 
         private static object NotEqualTo(TRuntime runtime, object left, object right)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             return !EqualToAsBool(runtime, left, right);
         }
 
@@ -215,32 +264,32 @@ namespace Tbasic.Types
 
         private static object ShiftLeft(TRuntime runtime, object left, object right)
         {
-            return Convert.ToInt64(left, CultureInfo.CurrentCulture) <<
-                   Convert.ToInt32(right, CultureInfo.CurrentCulture);
+            return Convert.ToInt64(left, CultureInfo.InvariantCulture) <<
+                   Convert.ToInt32(right, CultureInfo.InvariantCulture);
         }
 
         private static object ShiftRight(TRuntime runtime, object left, object right)
         {
-            return Convert.ToInt64(left, CultureInfo.CurrentCulture) >>
-                   Convert.ToInt32(right, CultureInfo.CurrentCulture);
+            return Convert.ToInt64(left, CultureInfo.InvariantCulture) >>
+                   Convert.ToInt32(right, CultureInfo.InvariantCulture);
         }
 
         private static object BitAnd(TRuntime runtime, object left, object right)
         {
-            return Convert.ToUInt64(left, CultureInfo.CurrentCulture) &
-                   Convert.ToUInt64(right, CultureInfo.CurrentCulture);
+            return Convert.ToUInt64(left, CultureInfo.InvariantCulture) &
+                   Convert.ToUInt64(right, CultureInfo.InvariantCulture);
         }
 
         private static object BitXor(TRuntime runtime, object left, object right)
         {
-            return Convert.ToUInt64(left, CultureInfo.CurrentCulture) ^
-                   Convert.ToUInt64(right, CultureInfo.CurrentCulture);
+            return Convert.ToUInt64(left, CultureInfo.InvariantCulture) ^
+                   Convert.ToUInt64(right, CultureInfo.InvariantCulture);
         }
 
         private static object BitOr(TRuntime runtime, object left, object right)
         {
-            return Convert.ToUInt64(left, CultureInfo.CurrentCulture) |
-                   Convert.ToUInt64(right, CultureInfo.CurrentCulture);
+            return Convert.ToUInt64(left, CultureInfo.InvariantCulture) |
+                   Convert.ToUInt64(right, CultureInfo.InvariantCulture);
         }
 
         private static object NotImplemented(TRuntime runtime, object left, object right)

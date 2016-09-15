@@ -5,6 +5,7 @@
 // ======
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using Tbasic.Errors;
 using Tbasic.Parsing;
@@ -93,16 +94,18 @@ namespace Tbasic.Runtime
         /// <param name="script">the full text of the script to process</param>
         public void Execute(string script)
         {
+            Contract.Requires(script != null);
             Execute(new StringReader(script));
         }
 
         /// <summary>
         /// Runs a script
         /// </summary>
-        /// <param name="lines">the lines of the script to process</param>
-        public void Execute(TextReader lines)
+        /// <param name="reader">the lines of the script to process</param>
+        public void Execute(TextReader reader)
         {
-            IPreprocessor p = Preprocessor.Preprocess(this, lines);
+            Contract.Requires(reader != null);
+            IPreprocessor p = Preprocessor.Preprocess(this, reader);
             if (p.Functions.Count > 0) {
                 foreach (FunctionBlock func in p.Functions) {
                     Global.AddFunction(func.Prototype[0], func.Execute);
@@ -314,6 +317,14 @@ namespace Tbasic.Runtime
         private void OnUserExit(EventArgs e)
         {
             OnUserExitRequest?.Invoke(this, e);
+        }
+
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(Preprocessor != null);
+            Contract.Invariant(Scanner != null);
+            Contract.Invariant(Context != null);
         }
     }
 }

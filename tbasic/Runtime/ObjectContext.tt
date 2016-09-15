@@ -11,6 +11,7 @@
 // ======
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Tbasic.Errors;
 using Tbasic.Types;
 
@@ -79,6 +80,12 @@ namespace Tbasic.Runtime
 		/// <param name="alias">the alternative name for the <#= name #></param>
 		public void Add<#= name #>Alias(string name, string alias)
 		{
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			if (alias == null)
+				throw new ArgumentNullException(nameof(alias));
+			Contract.EndContractBlock();
+
 			Add<#= name #>(alias, Get<#= name #>(name));
 		}
 <#+ } #>
@@ -90,6 +97,12 @@ namespace Tbasic.Runtime
 		/// <param name="newname">the new name for the <#= name #></param>
 		public void Rename<#= name #>(string name, string newname)
 		{
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			if (newname == null)
+				throw new ArgumentNullException(newname);
+			Contract.EndContractBlock();
+
 			ObjectContext context = Find<#= name #>Context(name);
 			if (context == null)
 				throw ThrowHelper.UndefinedObject(name);
@@ -104,8 +117,13 @@ namespace Tbasic.Runtime
         /// Tries to get a <#= name #> from this context
         /// </summary>
         /// <returns>true if the <#= name #> was found, otherwise false.</returns>
+		[Pure]
         public bool TryGet<#= name #>(string name, out <#= type #> value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
 <#+ if (castType == null) { #>
             if (<#= dict #>.TryGetValue(name, out value)) {
 <#+ } 
@@ -138,8 +156,13 @@ namespace Tbasic.Runtime
         /// <param name="name">the <#= name #> as a string</param>
         /// <exception cref="ArgumentException">thrown if the <#= name #> is undefined</exception>
         /// <returns></returns>
+		[Pure]
         public <#= type #> Get<#= name #>(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             <#= type #> value;
             if (<#= dict #>.TryGetValue(name, out value)) {
                 return value;
@@ -163,6 +186,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void Set<#= name #>(string name, <#= type #> value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             ObjectContext c = Find<#= name #>Context(name);
             if (c != null) {
                 c.<#= dict #>[name] = value;
@@ -182,8 +209,13 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="name">the block name</param>
         /// <returns>the ObjectContext in which the block is declared</returns>
+		[Pure]
         public ObjectContext Find<#= name #>Context(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             if (<#= dict #>.ContainsKey(name)) {
                 return this;
             }
@@ -205,6 +237,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void Add<#= name #>(string name, <#= type #> value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+			
 			try {
 				<#= dict #>.Add(name, value);
 			}
@@ -224,6 +260,10 @@ namespace Tbasic.Runtime
         /// <returns>true if the remove was successful, false otherwise</returns>
         public bool Remove<#= name #>(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+			
             return <#= dict #>.Remove(name);
         }
 <#+
@@ -236,6 +276,7 @@ namespace Tbasic.Runtime
         /// Lists all the <#= name #>s currently defined
         /// </summary>
         /// <returns></returns>
+		[Pure]
         public IEnumerable<KeyValuePair<string, <#= type #>>> GetAll<#= name #>s()
         {
             ObjectContext context = this;
@@ -256,6 +297,7 @@ namespace Tbasic.Runtime
         /// Lists all the <#= name #>s currently defined in this context
         /// </summary>
         /// <returns></returns>
+		[Pure]
         public IEnumerable<KeyValuePair<string, <#= type #>>> GetLocal<#= name #>s()
         {
             return <#= dict #>;

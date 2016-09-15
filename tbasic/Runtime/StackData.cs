@@ -5,6 +5,7 @@
 // ======
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Types;
@@ -16,6 +17,7 @@ namespace Tbasic.Runtime
     /// </summary>
     public class StackData : ICloneable
     {
+        [ContractPublicPropertyName(nameof(Parameters))]
         private List<object> _params = new List<object>();
 
         /// <summary>
@@ -109,6 +111,9 @@ namespace Tbasic.Runtime
         public StackData(TRuntime runtime, string text)
             : this(runtime.Options)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
             Statement line = new Statement(runtime.Scanner.Scan(text));
             Text = text;
             _params.AddRange(line);
@@ -121,9 +126,10 @@ namespace Tbasic.Runtime
         /// <param name="data">The new string data to assign</param>
         public void Set(int index, object data)
         {
-            if (index < _params.Count) {
-                _params[index] = data;
-            }
+            if ((uint)index >= (uint)_params.Count)
+                throw new ArgumentOutOfRangeException();
+            Contract.EndContractBlock();
+            _params[index] = data;
         }
 
         /// <summary>
@@ -133,6 +139,7 @@ namespace Tbasic.Runtime
         /// <exception cref="ArgumentException">thrown if argument count is not the same as the parameter</exception>
         public void AssertCount(int count)
         {
+            Contract.Requires(count >= 0);
             if (_params.Count != count) {
                 throw new ArgumentException(string.Format("{0} does not take {1} parameter{2}", Name.ToUpper(), _params.Count - 1,
                 _params.Count == 2 ? "" : "s"));
@@ -147,6 +154,8 @@ namespace Tbasic.Runtime
         /// <exception cref="ArgumentException">thrown if argument count is not the same as the parameter</exception>
         public void AssertCount(int atLeast, int atMost)
         {
+            Contract.Requires(atLeast >= 0 && atMost >= 0);
+            Contract.Requires(atLeast < atMost);
             if (_params.Count < atLeast || _params.Count > atMost) {
                 throw new ArgumentException(string.Format("{0} does not take {1} parameter{2}", Name.ToUpper(), _params.Count - 1,
                 _params.Count == 2 ? "" : "s"));
@@ -160,6 +169,7 @@ namespace Tbasic.Runtime
         /// <exception cref="ArgumentException">thrown if argument count is not at least a certain number</exception>
         public void AssertAtLeast(int atLeast)
         {
+            Contract.Requires(atLeast >= 0);
             if (_params.Count < atLeast) {
                 throw new ArgumentException(string.Format("{0} must have at least {1} parameter{2}", Name.ToUpper(), atLeast - 1,
                 atLeast == 2 ? "" : "s"));
@@ -170,16 +180,14 @@ namespace Tbasic.Runtime
         /// Returns the parameter at an index
         /// </summary>
         /// <param name="index">The index of the argument</param>
-        /// <exception cref="IndexOutOfRangeException">thrown if the argument is out of range</exception>
+        /// <exception cref="ArgumentOutOfRangeException">thrown if the argument is out of range</exception>
         /// <returns></returns>
         public object Get(int index)
         {
-            try {
-                return _params[index];
-            }
-            catch(ArgumentOutOfRangeException ex) {
-                throw new IndexOutOfRangeException(ex.Message, ex);
-            }
+            if ((uint)index >= (uint)_params.Count)
+                throw new ArgumentOutOfRangeException();
+            Contract.EndContractBlock();
+            return _params[index];
         }
 
         /// <summary>
@@ -192,6 +200,8 @@ namespace Tbasic.Runtime
         /// <returns></returns>
         public int GetFromRange(int index, int lower, int upper)
         {
+            Contract.Requires(lower >= 0 && upper >= 0);
+            Contract.Requires(lower < upper);
             int n = Get<int>(index);
             if (n < lower || n > upper) {
                 throw new ArgumentOutOfRangeException(string.Format("Parameter {0} expected to be integer between {1} and {2}", index, lower, upper));
@@ -265,8 +275,7 @@ namespace Tbasic.Runtime
         /// <param name="param"></param>
         public void AddRange(IEnumerable<object> param)
         {
-            foreach (object p in param)
-                Add(p);
+            _params.AddRange(param);
         }
 
         /// <summary>
@@ -274,6 +283,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public object Evaluate(int index, TRuntime runtime)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             string param = Get(index) as string;
             if (param != null)
                 _params[index] = ExpressionEvaluator.Evaluate(param, runtime);
@@ -285,6 +298,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public T Evaluate<T>(int index, TRuntime runtime)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             string param = Get(index) as string;
             if (param != null)
                 _params[index] = ExpressionEvaluator.Evaluate(param, runtime);
@@ -296,6 +313,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void EvaluateAll(TRuntime runtime)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             ExpressionEvaluator eval = new ExpressionEvaluator(runtime);
             for (int index = 1; index < _params.Count; ++index) {
                 string arg = _params[index] as string;

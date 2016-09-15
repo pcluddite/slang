@@ -4,6 +4,7 @@
 //
 // ======
 using System;
+using System.Diagnostics.Contracts;
 using System.Reflection;
 using Tbasic.Runtime;
 
@@ -49,6 +50,10 @@ namespace Tbasic.Types
         /// <param name="evaluate">whether or not its parameters should be evaluated</param>
         public CallData(TbasicFunction func, bool evaluate)
         {
+            if (func == null)
+                throw new ArgumentNullException(nameof(func));
+            Contract.EndContractBlock();
+
             Function = func;
             NativeDelegate = null;
             ArgumentCount = -1;
@@ -64,6 +69,10 @@ namespace Tbasic.Types
         /// <param name="evaluate">whether or not its parameters should be evaluated</param>
         public CallData(Delegate d, int args, bool evaluate)
         {
+            if (d == null)
+                throw new ArgumentNullException(nameof(d));
+            Contract.EndContractBlock();
+
             ArgumentCount = args;
             NativeDelegate = d;
             Returns = (d.Method.ReturnType != null);
@@ -74,6 +83,12 @@ namespace Tbasic.Types
 
         private object NativeFuncWrapper(TRuntime runtime, StackData stackdat)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            if (stackdat == null)
+                throw new ArgumentNullException(nameof(stackdat));
+            Contract.EndContractBlock();
+
             ParameterInfo[] expectedArgs = NativeDelegate.Method.GetParameters();
             if (expectedArgs.Length == ArgumentCount) {
                 stackdat.AssertCount(ArgumentCount + 1); // plus 1 for the name

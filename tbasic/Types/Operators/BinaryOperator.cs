@@ -4,6 +4,7 @@
 //
 // ======
 using System;
+using System.Diagnostics.Contracts;
 using Tbasic.Runtime;
 
 namespace Tbasic.Types
@@ -75,6 +76,12 @@ namespace Tbasic.Types
         /// <param name="operand">the operand that should be evaluated</param>
         public BinaryOperator(string strOp, int precedence, BinaryOpDelegate doOp, OperandPosition operand = OperandPosition.Both)
         {
+            if (strOp == null)
+                throw new ArgumentNullException(nameof(strOp));
+            if (doOp == null)
+                throw new ArgumentNullException(nameof(doOp));
+            Contract.EndContractBlock();
+
             OperatorString = strOp.ToUpper();
             Precedence = precedence;
             ExecuteOperator = doOp;

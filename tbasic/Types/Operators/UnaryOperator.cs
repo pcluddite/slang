@@ -4,6 +4,7 @@
 //
 // ======
 using System;
+using System.Diagnostics.Contracts;
 using Tbasic.Runtime;
 
 namespace Tbasic.Types
@@ -44,6 +45,12 @@ namespace Tbasic.Types
         /// <param name="evaluate">whether or not the operand should be evaluated</param>
         public UnaryOperator(string strOp, UnaryOpDelegate doOp, bool evaluate = true)
         {
+            if (strOp == null)
+                throw new ArgumentNullException(nameof(strOp));
+            if (doOp == null)
+                throw new ArgumentNullException(nameof(doOp));
+            Contract.EndContractBlock();
+
             OperatorString = strOp;
             ExecuteOperator = doOp;
             EvaluateOperand = evaluate;

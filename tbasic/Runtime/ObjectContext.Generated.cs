@@ -5,6 +5,7 @@
 // ======
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Tbasic.Errors;
 using Tbasic.Types;
 
@@ -21,6 +22,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void SetFunction(string name, CallData value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             ObjectContext c = FindFunctionContext(name);
             if (c != null) {
                 c._functions[name] = value;
@@ -35,6 +40,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddFunction(string name, CallData value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+			
 			try {
 				_functions.Add(name, value);
 			}
@@ -47,8 +56,13 @@ namespace Tbasic.Runtime
         /// Tries to get a Function from this context
         /// </summary>
         /// <returns>true if the Function was found, otherwise false.</returns>
+		[Pure]
         public bool TryGetFunction(string name, out CallData value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             if (_functions.TryGetValue(name, out value)) {
                 return true;
             }
@@ -66,8 +80,13 @@ namespace Tbasic.Runtime
         /// <param name="name">the Function as a string</param>
         /// <exception cref="ArgumentException">thrown if the Function is undefined</exception>
         /// <returns></returns>
+		[Pure]
         public CallData GetFunction(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             CallData value;
             if (_functions.TryGetValue(name, out value)) {
                 return value;
@@ -85,8 +104,13 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="name">the block name</param>
         /// <returns>the ObjectContext in which the block is declared</returns>
+		[Pure]
         public ObjectContext FindFunctionContext(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             if (_functions.ContainsKey(name)) {
                 return this;
             }
@@ -102,6 +126,7 @@ namespace Tbasic.Runtime
         /// Lists all the Functions currently defined in this context
         /// </summary>
         /// <returns></returns>
+		[Pure]
         public IEnumerable<KeyValuePair<string, CallData>> GetLocalFunctions()
         {
             return _functions;
@@ -111,6 +136,7 @@ namespace Tbasic.Runtime
         /// Lists all the Functions currently defined
         /// </summary>
         /// <returns></returns>
+		[Pure]
         public IEnumerable<KeyValuePair<string, CallData>> GetAllFunctions()
         {
             ObjectContext context = this;
@@ -128,6 +154,10 @@ namespace Tbasic.Runtime
         /// <returns>true if the remove was successful, false otherwise</returns>
         public bool RemoveFunction(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+			
             return _functions.Remove(name);
         }
 
@@ -138,6 +168,12 @@ namespace Tbasic.Runtime
 		/// <param name="alias">the alternative name for the Function</param>
 		public void AddFunctionAlias(string name, string alias)
 		{
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			if (alias == null)
+				throw new ArgumentNullException(nameof(alias));
+			Contract.EndContractBlock();
+
 			AddFunction(alias, GetFunction(name));
 		}
 
@@ -148,6 +184,12 @@ namespace Tbasic.Runtime
 		/// <param name="newname">the new name for the Function</param>
 		public void RenameFunction(string name, string newname)
 		{
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			if (newname == null)
+				throw new ArgumentNullException(newname);
+			Contract.EndContractBlock();
+
 			ObjectContext context = FindFunctionContext(name);
 			if (context == null)
 				throw ThrowHelper.UndefinedObject(name);
@@ -165,6 +207,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void SetCommand(string name, CallData value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             ObjectContext c = FindCommandContext(name);
             if (c != null) {
                 c._commands[name] = value;
@@ -179,6 +225,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddCommand(string name, CallData value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+			
 			try {
 				_commands.Add(name, value);
 			}
@@ -191,8 +241,13 @@ namespace Tbasic.Runtime
         /// Tries to get a Command from this context
         /// </summary>
         /// <returns>true if the Command was found, otherwise false.</returns>
+		[Pure]
         public bool TryGetCommand(string name, out CallData value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             if (_commands.TryGetValue(name, out value)) {
                 return true;
             }
@@ -210,8 +265,13 @@ namespace Tbasic.Runtime
         /// <param name="name">the Command as a string</param>
         /// <exception cref="ArgumentException">thrown if the Command is undefined</exception>
         /// <returns></returns>
+		[Pure]
         public CallData GetCommand(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             CallData value;
             if (_commands.TryGetValue(name, out value)) {
                 return value;
@@ -229,8 +289,13 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="name">the block name</param>
         /// <returns>the ObjectContext in which the block is declared</returns>
+		[Pure]
         public ObjectContext FindCommandContext(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             if (_commands.ContainsKey(name)) {
                 return this;
             }
@@ -246,6 +311,7 @@ namespace Tbasic.Runtime
         /// Lists all the Commands currently defined in this context
         /// </summary>
         /// <returns></returns>
+		[Pure]
         public IEnumerable<KeyValuePair<string, CallData>> GetLocalCommands()
         {
             return _commands;
@@ -255,6 +321,7 @@ namespace Tbasic.Runtime
         /// Lists all the Commands currently defined
         /// </summary>
         /// <returns></returns>
+		[Pure]
         public IEnumerable<KeyValuePair<string, CallData>> GetAllCommands()
         {
             ObjectContext context = this;
@@ -272,6 +339,10 @@ namespace Tbasic.Runtime
         /// <returns>true if the remove was successful, false otherwise</returns>
         public bool RemoveCommand(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+			
             return _commands.Remove(name);
         }
 
@@ -282,6 +353,12 @@ namespace Tbasic.Runtime
 		/// <param name="alias">the alternative name for the Command</param>
 		public void AddCommandAlias(string name, string alias)
 		{
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			if (alias == null)
+				throw new ArgumentNullException(nameof(alias));
+			Contract.EndContractBlock();
+
 			AddCommand(alias, GetCommand(name));
 		}
 
@@ -292,6 +369,12 @@ namespace Tbasic.Runtime
 		/// <param name="newname">the new name for the Command</param>
 		public void RenameCommand(string name, string newname)
 		{
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			if (newname == null)
+				throw new ArgumentNullException(newname);
+			Contract.EndContractBlock();
+
 			ObjectContext context = FindCommandContext(name);
 			if (context == null)
 				throw ThrowHelper.UndefinedObject(name);
@@ -309,6 +392,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void SetFunction(string name, TbasicFunction value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             ObjectContext c = FindFunctionContext(name);
             if (c != null) {
                 c._functions[name] = value;
@@ -323,6 +410,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddFunction(string name, TbasicFunction value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+			
 			try {
 				_functions.Add(name, value);
 			}
@@ -335,8 +426,13 @@ namespace Tbasic.Runtime
         /// Tries to get a Function from this context
         /// </summary>
         /// <returns>true if the Function was found, otherwise false.</returns>
+		[Pure]
         public bool TryGetFunction(string name, out TbasicFunction value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             CallData tmp;
             if (_functions.TryGetValue(name, out tmp)) {
                 value = (TbasicFunction)tmp;
@@ -361,6 +457,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void SetCommand(string name, TbasicFunction value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             ObjectContext c = FindCommandContext(name);
             if (c != null) {
                 c._commands[name] = value;
@@ -375,6 +475,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddCommand(string name, TbasicFunction value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+			
 			try {
 				_commands.Add(name, value);
 			}
@@ -387,8 +491,13 @@ namespace Tbasic.Runtime
         /// Tries to get a Command from this context
         /// </summary>
         /// <returns>true if the Command was found, otherwise false.</returns>
+		[Pure]
         public bool TryGetCommand(string name, out TbasicFunction value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             CallData tmp;
             if (_commands.TryGetValue(name, out tmp)) {
                 value = (TbasicFunction)tmp;
@@ -413,6 +522,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void SetBlock(string name, BlockCreator value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             ObjectContext c = FindBlockContext(name);
             if (c != null) {
                 c._blocks[name] = value;
@@ -427,6 +540,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddBlock(string name, BlockCreator value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+			
 			try {
 				_blocks.Add(name, value);
 			}
@@ -439,8 +556,13 @@ namespace Tbasic.Runtime
         /// Tries to get a Block from this context
         /// </summary>
         /// <returns>true if the Block was found, otherwise false.</returns>
+		[Pure]
         public bool TryGetBlock(string name, out BlockCreator value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             if (_blocks.TryGetValue(name, out value)) {
                 return true;
             }
@@ -458,8 +580,13 @@ namespace Tbasic.Runtime
         /// <param name="name">the Block as a string</param>
         /// <exception cref="ArgumentException">thrown if the Block is undefined</exception>
         /// <returns></returns>
+		[Pure]
         public BlockCreator GetBlock(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             BlockCreator value;
             if (_blocks.TryGetValue(name, out value)) {
                 return value;
@@ -477,8 +604,13 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="name">the block name</param>
         /// <returns>the ObjectContext in which the block is declared</returns>
+		[Pure]
         public ObjectContext FindBlockContext(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             if (_blocks.ContainsKey(name)) {
                 return this;
             }
@@ -494,6 +626,7 @@ namespace Tbasic.Runtime
         /// Lists all the Blocks currently defined in this context
         /// </summary>
         /// <returns></returns>
+		[Pure]
         public IEnumerable<KeyValuePair<string, BlockCreator>> GetLocalBlocks()
         {
             return _blocks;
@@ -503,6 +636,7 @@ namespace Tbasic.Runtime
         /// Lists all the Blocks currently defined
         /// </summary>
         /// <returns></returns>
+		[Pure]
         public IEnumerable<KeyValuePair<string, BlockCreator>> GetAllBlocks()
         {
             ObjectContext context = this;
@@ -520,6 +654,10 @@ namespace Tbasic.Runtime
         /// <returns>true if the remove was successful, false otherwise</returns>
         public bool RemoveBlock(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+			
             return _blocks.Remove(name);
         }
 
@@ -530,6 +668,12 @@ namespace Tbasic.Runtime
 		/// <param name="alias">the alternative name for the Block</param>
 		public void AddBlockAlias(string name, string alias)
 		{
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			if (alias == null)
+				throw new ArgumentNullException(nameof(alias));
+			Contract.EndContractBlock();
+
 			AddBlock(alias, GetBlock(name));
 		}
 
@@ -540,6 +684,12 @@ namespace Tbasic.Runtime
 		/// <param name="newname">the new name for the Block</param>
 		public void RenameBlock(string name, string newname)
 		{
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			if (newname == null)
+				throw new ArgumentNullException(newname);
+			Contract.EndContractBlock();
+
 			ObjectContext context = FindBlockContext(name);
 			if (context == null)
 				throw ThrowHelper.UndefinedObject(name);
@@ -557,6 +707,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void SetType(string name, TClass value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             ObjectContext c = FindTypeContext(name);
             if (c != null) {
                 c._prototypes[name] = value;
@@ -571,6 +725,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public void AddType(string name, TClass value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+			
 			try {
 				_prototypes.Add(name, value);
 			}
@@ -583,8 +741,13 @@ namespace Tbasic.Runtime
         /// Tries to get a Type from this context
         /// </summary>
         /// <returns>true if the Type was found, otherwise false.</returns>
+		[Pure]
         public bool TryGetType(string name, out TClass value)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             if (_prototypes.TryGetValue(name, out value)) {
                 return true;
             }
@@ -602,8 +765,13 @@ namespace Tbasic.Runtime
         /// <param name="name">the Type as a string</param>
         /// <exception cref="ArgumentException">thrown if the Type is undefined</exception>
         /// <returns></returns>
+		[Pure]
         public TClass GetType(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             TClass value;
             if (_prototypes.TryGetValue(name, out value)) {
                 return value;
@@ -621,8 +789,13 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="name">the block name</param>
         /// <returns>the ObjectContext in which the block is declared</returns>
+		[Pure]
         public ObjectContext FindTypeContext(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             if (_prototypes.ContainsKey(name)) {
                 return this;
             }
@@ -638,6 +811,7 @@ namespace Tbasic.Runtime
         /// Lists all the Types currently defined in this context
         /// </summary>
         /// <returns></returns>
+		[Pure]
         public IEnumerable<KeyValuePair<string, TClass>> GetLocalTypes()
         {
             return _prototypes;
@@ -647,6 +821,7 @@ namespace Tbasic.Runtime
         /// Lists all the Types currently defined
         /// </summary>
         /// <returns></returns>
+		[Pure]
         public IEnumerable<KeyValuePair<string, TClass>> GetAllTypes()
         {
             ObjectContext context = this;
@@ -664,6 +839,10 @@ namespace Tbasic.Runtime
         /// <returns>true if the remove was successful, false otherwise</returns>
         public bool RemoveType(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+			
             return _prototypes.Remove(name);
         }
 
@@ -674,6 +853,12 @@ namespace Tbasic.Runtime
 		/// <param name="alias">the alternative name for the Type</param>
 		public void AddTypeAlias(string name, string alias)
 		{
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			if (alias == null)
+				throw new ArgumentNullException(nameof(alias));
+			Contract.EndContractBlock();
+
 			AddType(alias, GetType(name));
 		}
 
@@ -684,6 +869,12 @@ namespace Tbasic.Runtime
 		/// <param name="newname">the new name for the Type</param>
 		public void RenameType(string name, string newname)
 		{
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			if (newname == null)
+				throw new ArgumentNullException(newname);
+			Contract.EndContractBlock();
+
 			ObjectContext context = FindTypeContext(name);
 			if (context == null)
 				throw ThrowHelper.UndefinedObject(name);
@@ -699,8 +890,13 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="name">the block name</param>
         /// <returns>the ObjectContext in which the block is declared</returns>
+		[Pure]
         public ObjectContext FindVariableContext(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             if (_variables.ContainsKey(name)) {
                 return this;
             }
@@ -716,8 +912,13 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="name">the block name</param>
         /// <returns>the ObjectContext in which the block is declared</returns>
+		[Pure]
         public ObjectContext FindConstantContext(string name)
         {
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+			Contract.EndContractBlock();
+
             if (_constants.ContainsKey(name)) {
                 return this;
             }

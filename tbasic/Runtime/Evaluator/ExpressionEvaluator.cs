@@ -5,6 +5,7 @@
 // ======
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text;
 using Tbasic.Errors;
@@ -25,12 +26,20 @@ namespace Tbasic.Runtime
         
         public ExpressionEvaluator(TRuntime runtime)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
             Runtime = runtime;
         }
         
-        public ExpressionEvaluator(IEnumerable<char> expression, TRuntime exec)
+        public ExpressionEvaluator(IEnumerable<char> expression, TRuntime runtime)
         {
-            Runtime = exec;
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+            Runtime = runtime;
             Expression = expression;
         }
 
@@ -40,6 +49,9 @@ namespace Tbasic.Runtime
         {
             get { return _expression; }
             set {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+                Contract.EndContractBlock();
                 _expression = value;
                 subexpressions = null;
             }
@@ -73,14 +85,18 @@ namespace Tbasic.Runtime
 
         public object Evaluate(IEnumerable<char> expr)
         {
+            if (expr == null)
+                throw new ArgumentNullException(nameof(expr));
+            Contract.EndContractBlock();
             Expression = expr;
             return Evaluate();
         }
 
         public object Evaluate()
         {
-            object[] results = EvaluateAll();
+            Contract.Ensures(Contract.Result<object>() != null);
 
+            object[] results = EvaluateAll();
             if (results.Length == 1) {
                 return results[0];
             }
@@ -91,6 +107,7 @@ namespace Tbasic.Runtime
 
         private object[] EvaluateAll()
         {
+            Contract.Ensures(Contract.Result<object>() != null);
             if (Expression == null || Expression.ToString() == string.Empty) {
                 return EmptyObjectArray;
             }
@@ -168,6 +185,8 @@ namespace Tbasic.Runtime
         
         private object EvaluateList(LinkedList<object> _tokens)
         {
+            Contract.Ensures(Contract.Result<object>() != null);
+
             LinkedList<object> list = new LinkedList<object>(_tokens);
 
             // evaluate unary operators
@@ -229,16 +248,26 @@ namespace Tbasic.Runtime
         /// Static version of the Expression Evaluator
         /// </summary>
         /// <param name="expressionString">expression to be evaluated</param>
-        /// <param name="exec">the current execution</param>
+        /// <param name="runtime">the current execution</param>
         /// <returns></returns>
-        public static object Evaluate(IEnumerable<char> expressionString, TRuntime exec)
+        public static object Evaluate(IEnumerable<char> expressionString, TRuntime runtime)
         {
-            ExpressionEvaluator expression = new ExpressionEvaluator(expressionString, exec);
+            if (expressionString == null)
+                throw new ArgumentNullException(nameof(expressionString));
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
+            ExpressionEvaluator expression = new ExpressionEvaluator(expressionString, runtime);
             return expression.Evaluate();
         }
 
         public static object PerformUnaryOp(TRuntime runtime, UnaryOperator op, object operand)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             if (op.EvaluateOperand) {
                 IExpressionEvaluator tempv = operand as IExpressionEvaluator;
                 if (tempv != null)
@@ -258,6 +287,10 @@ namespace Tbasic.Runtime
         /// </summary>
         public static object PerformBinaryOp(TRuntime runtime, BinaryOperator op, object left, object right)
         {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+            Contract.EndContractBlock();
+
             if (op.EvaulatedOperand.HasFlag(BinaryOperator.OperandPosition.Left)) {
                 IExpressionEvaluator tv = left as IExpressionEvaluator;
                 if (tv != null)
@@ -312,6 +345,7 @@ namespace Tbasic.Runtime
 
         public static string GetTypeName(object value)
         {
+            Contract.Requires(value != null);
             Type t = value.GetType();
             if (t.IsArray) {
                 return "array";
@@ -352,6 +386,7 @@ namespace Tbasic.Runtime
 
         private static string ToEscapedString(string str)
         {
+            Contract.Requires(str != null);
             StringBuilder sb = new StringBuilder();
             sb.Append('\"');
             for (int index = 0; index < str.Length; index++) {
@@ -422,6 +457,13 @@ namespace Tbasic.Runtime
         public override string ToString()
         {
             return Expression.ToString();
+        }
+
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(Expression != null);
+            Contract.Invariant(Runtime != null);
         }
     }
 }

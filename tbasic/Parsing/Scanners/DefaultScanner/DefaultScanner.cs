@@ -5,11 +5,10 @@
 // ======
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Text.RegularExpressions;
+using System.Diagnostics.Contracts;
+using Tbasic.Components;
 using Tbasic.Runtime;
 using Tbasic.Types;
-using Tbasic.Components;
 
 namespace Tbasic.Parsing
 {
@@ -84,6 +83,7 @@ namespace Tbasic.Parsing
         /// <param name="buffer"></param>
         public DefaultScanner(string buffer)
         {
+            Contract.Requires(buffer != null);
             InternalBuffer = buffer;
         }
 
@@ -97,6 +97,7 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Gets a character at a given position. If the position is out of bounds, -1 is returned
         /// </summary>
+        [Pure]
         public int CharAt(int pos)
         {
             if (pos < 0 || pos >= InternalBuffer.Length)
@@ -318,6 +319,7 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Checks if a character is an opening group character
         /// </summary>
+        [Pure]
         protected static bool IsGroupChar(int c)
         {
             return (c == '(' || c == '[');
@@ -326,6 +328,7 @@ namespace Tbasic.Parsing
         /// <summary>
         /// Checks if a character is a valid quote character
         /// </summary>
+        [Pure]
         protected static bool IsQuote(int c)
         {
             return (c == '\"' || c == '\'');

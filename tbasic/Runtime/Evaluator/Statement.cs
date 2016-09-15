@@ -6,9 +6,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
-using Tbasic.Components;
 
 namespace Tbasic.Parsing
 {
@@ -50,6 +50,9 @@ namespace Tbasic.Parsing
         /// </summary>
         public Statement(IScanner scanner)
         {
+            if (scanner == null)
+                throw new ArgumentNullException(nameof(scanner));
+            Contract.EndContractBlock();
             ParseArguments(scanner);
         }
         

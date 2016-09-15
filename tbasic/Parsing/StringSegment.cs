@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics.Contracts;
 
 namespace Tbasic.Parsing
 {
@@ -20,8 +21,13 @@ namespace Tbasic.Parsing
         /// </summary>
         public static readonly StringSegment Empty = new StringSegment(string.Empty);
 
+        [ContractPublicPropertyName(nameof(FullString))]
         private string full;
+
+        [ContractPublicPropertyName(nameof(Offset))]
         private int offset;
+
+        [ContractPublicPropertyName(nameof(Length))]
         private int len;
 
         /// <summary>
@@ -88,8 +94,13 @@ namespace Tbasic.Parsing
 
         public static StringSegment Create(string fullStr, int offset, int count)
         {
+            Contract.Requires(offset >= 0);
+
             if (count > fullStr.Length - offset)
                 throw new ArgumentOutOfRangeException(nameof(count));
+
+            Contract.EndContractBlock();
+
             if (offset == fullStr.Length - 1)
                 return Empty;
             return new StringSegment(fullStr, offset, count);
@@ -105,12 +116,14 @@ namespace Tbasic.Parsing
             get {
                 if (index >= len || index < 0)
                     throw new IndexOutOfRangeException();
+                Contract.EndContractBlock();
                 return GetCharAt(index);
             }
         }
 
         private char GetCharAt(int index)
         {
+            Contract.Requires(index >= 0 && index < len);
             return full[offset + index];
         }
 
@@ -129,13 +142,15 @@ namespace Tbasic.Parsing
         /// Create a substring within this segment
         /// </summary>
         /// <param name="startIndex"></param>
-        /// <param name="length"></param>
+        /// <param name="count"></param>
         /// <returns></returns>
-        public string Substring(int startIndex, int length)
+        public string Substring(int startIndex, int count)
         {
-            if (length > len - startIndex)
-                throw new ArgumentOutOfRangeException(nameof(length));
-            return full.Substring(startIndex + offset, length);
+            Contract.Requires(startIndex < len && startIndex >= 0);
+            if (count > len - startIndex)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            Contract.EndContractBlock();
+            return full.Substring(startIndex + offset, count);
         }
 
         /// <summary>
@@ -152,11 +167,11 @@ namespace Tbasic.Parsing
         /// Just like Substring(), only returns a StringSegment instead of a string
         /// </summary>
         /// <param name="startIndex"></param>
-        /// <param name="length"></param>
+        /// <param name="count"></param>
         /// <returns></returns>
-        public StringSegment Subsegment(int startIndex, int length)
+        public StringSegment Subsegment(int startIndex, int count)
         {
-            return new StringSegment(full, offset + startIndex, length);
+            return new StringSegment(full, offset + startIndex, count);
         }
 
         /// <summary>
@@ -166,6 +181,7 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public int IndexOf(char value)
         {
+            Contract.Requires(full != null);
             return full.IndexOf(value, offset, len) - offset;
         }
 
@@ -177,6 +193,7 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public int IndexOf(char value, int start)
         {
+            Contract.Requires(full != null);
             return full.IndexOf(value, offset + start, len) - offset;
         }
 
@@ -187,6 +204,7 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public int IndexOf(string value)
         {
+            Contract.Requires(full != null);
             return full.IndexOf(value, offset, len) - offset;
         }
 
@@ -198,6 +216,8 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public int IndexOf(string value, int start)
         {
+            Contract.Requires(full != null);
+            Contract.Requires(start < len && start >= 0);
             return full.IndexOf(value, offset + start, len - start) - offset;
         }
 
@@ -210,6 +230,8 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public int IndexOf(string value, int start, StringComparison comparisonType)
         {
+            Contract.Requires(full != null);
+            Contract.Requires(start < len && start >= 0);
             return full.IndexOf(value, offset + start, len - start, comparisonType) - offset;
         }
 
@@ -243,6 +265,8 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public unsafe bool StartsWith(string value, int startIndex, bool ignoreCase)
         {
+            Contract.Requires(value != null);
+            Contract.Requires(startIndex < Length && startIndex >= 0);
             int len = value.Length;
             fixed (char* aptr = full) fixed (char* bptr = value) {
                 char* a = aptr + offset + startIndex;
@@ -275,6 +299,7 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public StringSegment Trim()
         {
+            Contract.Requires(full != null);
             int new_start = SkipWhiteSpace();
             if (new_start == -1)
                 return Empty;
@@ -315,7 +340,7 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public override string ToString()
         {
-            return full.Substring(offset, len);
+            return full?.Substring(offset, len) ?? string.Empty;
         }
 
         /// <summary>

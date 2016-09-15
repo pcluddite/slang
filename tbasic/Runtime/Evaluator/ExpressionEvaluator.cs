@@ -94,8 +94,6 @@ namespace Tbasic.Runtime
 
         public object Evaluate()
         {
-            Contract.Ensures(Contract.Result<object>() != null);
-
             object[] results = EvaluateAll();
             if (results.Length == 1) {
                 return results[0];
@@ -185,8 +183,6 @@ namespace Tbasic.Runtime
         
         private object EvaluateList(LinkedList<object> _tokens)
         {
-            Contract.Ensures(Contract.Result<object>() != null);
-
             LinkedList<object> list = new LinkedList<object>(_tokens);
 
             // evaluate unary operators

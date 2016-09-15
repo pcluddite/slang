@@ -561,7 +561,7 @@ namespace Tbasic.Parsing
 
             // check null
             if (NextNull()) {
-                token = NullString;
+                token = null;
                 return TokenType.Null;
             }
 

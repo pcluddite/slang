@@ -111,6 +111,14 @@ namespace Tbasic.Types
         /// <returns></returns>
         public static Number? AsNumber(object o, ExecuterOption opts)
         {
+            if (o == null) {
+                if (opts.HasFlag(ExecuterOption.NullIsZero)) {
+                    return 0;
+                }
+                else {
+                    return null;
+                }
+            }
             double d;
             if (TypeConvert.TryConvert(o, out d, opts)) {
                 return d;
@@ -125,10 +133,10 @@ namespace Tbasic.Types
         /// </summary>
         public static Number Convert(object o, ExecuterOption opts)
         {
-            Number n;
-            if (!TypeConvert.TryConvert(o, out n, opts))
-                throw ThrowHelper.InvalidTypeInExpression(o?.ToString(), nameof(Number));
-            return n;
+            Number? n = AsNumber(o, opts);
+            if (n == null)
+                throw ThrowHelper.InvalidTypeInExpression(o?.GetType().Name ?? "null", nameof(Number));
+            return n.Value;
         }
 
         /// <summary>

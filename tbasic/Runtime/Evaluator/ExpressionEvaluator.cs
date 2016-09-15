@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text;
+using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Types;
@@ -215,18 +216,18 @@ namespace Tbasic.Runtime
                 x = x.Next.Next; // skip the operand
             }
 
-            BinOpNodePair nodePair;
+            var nodePair = default(ValueTuple<BinaryOperator, LinkedListNode<object>>);
             while (opqueue.Dequeue(out nodePair)) {
-                nodePair.Node.Value = PerformBinaryOp(
+                nodePair.Item2.Value = PerformBinaryOp(
                     Runtime,
-                    nodePair.Operator,
-                    nodePair.Node.Previous?.Value,
-                    nodePair.Node.Next?.Value
+                    nodePair.Item1,
+                    nodePair.Item2.Previous?.Value,
+                    nodePair.Item2.Next?.Value
                     );
-                if (nodePair.Node.Next != null)
-                    list.Remove(nodePair.Node.Next);
-                if (nodePair.Node.Previous != null)
-                    list.Remove(nodePair.Node.Previous);
+                if (nodePair.Item2.Next != null)
+                    list.Remove(nodePair.Item2.Next);
+                if (nodePair.Item2.Previous != null)
+                    list.Remove(nodePair.Item2.Previous);
             }
 
             IExpressionEvaluator expr = list.First?.Value as IExpressionEvaluator;

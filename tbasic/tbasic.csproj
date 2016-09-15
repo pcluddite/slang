@@ -129,7 +129,6 @@
     <Compile Include="Parsing\StringSegment.cs" />
     <Compile Include="Types\Operators\BinaryOperator.cs" />
     <Compile Include="Types\Operators\BinOpDicationary.cs" />
-    <Compile Include="Types\Operators\BinOpNodePair.cs" />
     <Compile Include="Types\Operators\IOperator.cs" />
     <Compile Include="Types\Operators\OperatorDictionary.cs" />
     <Compile Include="Types\Operators\UnaryOpDictionary.cs" />

@@ -5,29 +5,33 @@
 // ======
 using System.Collections.Generic;
 using Tbasic.Types;
+using Tbasic.Components;
 
 namespace Tbasic.Runtime
 {
     internal class BinaryOpQueue
     {
-        private LinkedList<BinOpNodePair> _oplist = new LinkedList<BinOpNodePair>();
+        private LinkedList<ValueTuple<BinaryOperator, LinkedListNode<object>>> _oplist = new LinkedList<ValueTuple<BinaryOperator, LinkedListNode<object>>>();
 
         public BinaryOpQueue(LinkedList<object> expressionlist)
         {
-            LinkedListNode<object> i = expressionlist.First;
-            while (i != null) {
-                Enqueue(new BinOpNodePair(i));
-                i = i.Next;
+            LinkedListNode<object> obj = expressionlist.First;
+            while (obj != null) {
+                Enqueue(obj);
+                obj = obj.Next;
             }
         }
 
-        public bool Enqueue(BinOpNodePair nodePair)
+        public bool Enqueue(LinkedListNode<object> node)
         {
-            if (!nodePair.IsValid())
+            BinaryOperator? op = node.Value as BinaryOperator?;
+            if (op == null)
                 return false;
 
+            var nodePair = new ValueTuple<BinaryOperator, LinkedListNode<object>>(op.Value, node);
+
             for (var currentNode = _oplist.First; currentNode != null; currentNode = currentNode.Next) {
-                if (currentNode.Value.Operator.Precedence > nodePair.Operator.Precedence) {
+                if (currentNode.Value.Item1.Precedence > nodePair.Item1.Precedence) {
                     _oplist.AddBefore(currentNode, nodePair);
                     return true;
                 }
@@ -36,10 +40,10 @@ namespace Tbasic.Runtime
             return true;
         }
 
-        public bool Dequeue(out BinOpNodePair nodePair)
+        public bool Dequeue(out ValueTuple<BinaryOperator, LinkedListNode<object>> nodePair)
         {
             if (_oplist.Count == 0) {
-                nodePair = default(BinOpNodePair);
+                nodePair = default(ValueTuple<BinaryOperator, LinkedListNode<object>>);
                 return false;
             }
             nodePair = _oplist.First.Value;

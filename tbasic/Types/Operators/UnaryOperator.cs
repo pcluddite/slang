@@ -20,7 +20,7 @@ namespace Tbasic.Types
         /// <param name="runtime">the current runtime</param>
         /// <param name="value">the operand</param>
         /// <returns>the result of the operator</returns>
-        public delegate object UnaryOpDelegate(TRuntime runtime, object value);
+        public delegate object UnaryOpDelegate(TRuntime runtime, IRuntimeObject value);
 
         /// <summary>
         /// Gets the string representation of the operator

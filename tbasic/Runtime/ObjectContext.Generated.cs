@@ -198,7 +198,6 @@ namespace Tbasic.Runtime
         }
 
         #endregion
-
         #region Generated Command.CallData methods 
 
         /// <summary>
@@ -383,7 +382,6 @@ namespace Tbasic.Runtime
         }
 
         #endregion
-
         #region Generated Function.TbasicFunction methods 
 
         /// <summary>
@@ -448,7 +446,6 @@ namespace Tbasic.Runtime
         }
 
         #endregion
-
         #region Generated Command.TbasicFunction methods 
 
         /// <summary>
@@ -513,7 +510,6 @@ namespace Tbasic.Runtime
         }
 
         #endregion
-
         #region Generated Block.BlockCreator methods 
 
         /// <summary>
@@ -698,32 +694,31 @@ namespace Tbasic.Runtime
         }
 
         #endregion
-
-        #region Generated Type.TClass methods 
+        #region Generated Class.TClass methods 
 
         /// <summary>
-        /// Sets a Type in this context. If the Type exists, it is set in
+        /// Sets a Class in this context. If the Class exists, it is set in
         /// the context in which it was declared. Otherwise, it is declared in this context.
         /// </summary>
-        public void SetType(string name, TClass value)
+        public void SetClass(string name, TClass value)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
             Contract.EndContractBlock();
 
-            ObjectContext c = FindTypeContext(name);
+            ObjectContext c = FindClassContext(name);
             if (c != null) {
                 c._prototypes[name] = value;
             }
             else {
-                AddType(name, value);
+                AddClass(name, value);
             }
         }
 
         /// <summary>
-        /// Adds a Type to this context. If the Type exists, an exception is thrown
+        /// Adds a Class to this context. If the Class exists, an exception is thrown
         /// </summary>
-        public void AddType(string name, TClass value)
+        public void AddClass(string name, TClass value)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
@@ -738,11 +733,11 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
-        /// Tries to get a Type from this context
+        /// Tries to get a Class from this context
         /// </summary>
-        /// <returns>true if the Type was found, otherwise false.</returns>
+        /// <returns>true if the Class was found, otherwise false.</returns>
         [Pure]
-        public bool TryGetType(string name, out TClass value)
+        public bool TryGetClass(string name, out TClass value)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
@@ -755,18 +750,18 @@ namespace Tbasic.Runtime
                 return false;
             }
             else {
-                return _super.TryGetType(name, out value);
+                return _super.TryGetClass(name, out value);
             }
         }
 
         /// <summary>
-        /// Gets a Type if it exists, throws an ArgumentException otherwise
+        /// Gets a Class if it exists, throws an ArgumentException otherwise
         /// </summary>
-        /// <param name="name">the Type as a string</param>
-        /// <exception cref="ArgumentException">thrown if the Type is undefined</exception>
+        /// <param name="name">the Class as a string</param>
+        /// <exception cref="ArgumentException">thrown if the Class is undefined</exception>
         /// <returns></returns>
         [Pure]
-        public TClass GetType(string name)
+        public TClass GetClass(string name)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
@@ -780,17 +775,17 @@ namespace Tbasic.Runtime
                 throw ThrowHelper.UndefinedObject(name);
             }
             else {
-                return _super.GetType(name);
+                return _super.GetClass(name);
             }
         }
 
         /// <summary>
-        /// Searches for the context in which a Type is declared. If the Type cannot be found, null is returned.
+        /// Searches for the context in which a Class is declared. If the Class cannot be found, null is returned.
         /// </summary>
         /// <param name="name">the block name</param>
         /// <returns>the ObjectContext in which the block is declared</returns>
         [Pure]
-        public ObjectContext FindTypeContext(string name)
+        public ObjectContext FindClassContext(string name)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
@@ -803,30 +798,30 @@ namespace Tbasic.Runtime
                 return null;
             }
             else {
-                return _super.FindTypeContext(name);
+                return _super.FindClassContext(name);
             }
         }
 
         /// <summary>
-        /// Lists all the Types currently defined in this context
+        /// Lists all the Classs currently defined in this context
         /// </summary>
         /// <returns></returns>
         [Pure]
-        public IEnumerable<KeyValuePair<string, TClass>> GetLocalTypes()
+        public IEnumerable<KeyValuePair<string, TClass>> GetLocalClasss()
         {
             return _prototypes;
         }
 
         /// <summary>
-        /// Lists all the Types currently defined
+        /// Lists all the Classs currently defined
         /// </summary>
         /// <returns></returns>
         [Pure]
-        public IEnumerable<KeyValuePair<string, TClass>> GetAllTypes()
+        public IEnumerable<KeyValuePair<string, TClass>> GetAllClasss()
         {
             ObjectContext context = this;
             while (context != null) {
-                foreach (var value in context.GetLocalTypes()) {
+                foreach (var value in context.GetLocalClasss()) {
                     yield return value;
                 }
                 context = context._super;
@@ -834,10 +829,10 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
-        /// Removes a Type from this context
+        /// Removes a Class from this context
         /// </summary>
         /// <returns>true if the remove was successful, false otherwise</returns>
-        public bool RemoveType(string name)
+        public bool RemoveClass(string name)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
@@ -847,11 +842,11 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
-        /// Adds an alias for a Type in this context
+        /// Adds an alias for a Class in this context
         /// </summary>
-        /// <param name="name">the name of the Type</param>
-        /// <param name="alias">the alternative name for the Type</param>
-        public void AddTypeAlias(string name, string alias)
+        /// <param name="name">the name of the Class</param>
+        /// <param name="alias">the alternative name for the Class</param>
+        public void AddClassAlias(string name, string alias)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
@@ -859,15 +854,15 @@ namespace Tbasic.Runtime
                 throw new ArgumentNullException(nameof(alias));
             Contract.EndContractBlock();
 
-            AddType(alias, GetType(name));
+            AddClass(alias, GetClass(name));
         }
 
         /// <summary>
-        /// Assigns a new name for a Type
+        /// Assigns a new name for a Class
         /// </summary>
-        /// <param name="name">the current name of the Type</param>
-        /// <param name="newname">the new name for the Type</param>
-        public void RenameType(string name, string newname)
+        /// <param name="name">the current name of the Class</param>
+        /// <param name="newname">the new name for the Class</param>
+        public void RenameClass(string name, string newname)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
@@ -875,7 +870,7 @@ namespace Tbasic.Runtime
                 throw new ArgumentNullException(newname);
             Contract.EndContractBlock();
 
-            ObjectContext context = FindTypeContext(name);
+            ObjectContext context = FindClassContext(name);
             if (context == null)
                 throw ThrowHelper.UndefinedObject(name);
             context._prototypes.Add(newname,  context._prototypes[name]);
@@ -883,8 +878,217 @@ namespace Tbasic.Runtime
         }
 
         #endregion
+        #region Generated methods for Variables
+        /// <summary>
+        /// Adds a variable to this context. If the Function exists, an exception is thrown
+        /// </summary>
+        public void AddVariable(string name, IRuntimeObject value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
 
-        #region Misc Generated
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            try {
+                c._variables.Add(name, value);
+            }
+            catch(ArgumentException) {
+                throw new DuplicateDefinitionException(name);
+            }
+        }
+
+        /// <summary>
+        /// Adds a variable to this context. If the Function exists, an exception is thrown
+        /// </summary>
+        public void AddVariable(string name, string value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            try {
+                c._variables.Add(name, (TbasicString)value);
+            }
+            catch(ArgumentException) {
+                throw new DuplicateDefinitionException(name);
+            }
+        }
+
+        /// <summary>
+        /// Adds a variable to this context. If the Function exists, an exception is thrown
+        /// </summary>
+        public void AddVariable(string name, Number value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            try {
+                c._variables.Add(name, (Number)value);
+            }
+            catch(ArgumentException) {
+                throw new DuplicateDefinitionException(name);
+            }
+        }
+
+        /// <summary>
+        /// Adds a variable to this context. If the Function exists, an exception is thrown
+        /// </summary>
+        public void AddVariable(string name, bool value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            try {
+                c._variables.Add(name, (TbasicBoolean)value);
+            }
+            catch(ArgumentException) {
+                throw new DuplicateDefinitionException(name);
+            }
+        }
+
+        /// <summary>
+        /// Adds a variable to this context. If the Function exists, an exception is thrown
+        /// </summary>
+        public void AddVariable(string name, Enum value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            try {
+                c._variables.Add(name, (TbasicEnumValue)value);
+            }
+            catch(ArgumentException) {
+                throw new DuplicateDefinitionException(name);
+            }
+        }
+
+        /// <summary>
+        /// Sets a variable in this context. If the variable exists, it is set in
+        /// the context in which it was declared. Otherwise, it is declared in this context.
+        /// </summary>
+        /// <param name="name">the variable name</param>
+        /// <param name="value">the variable value</param>
+        public void SetVariable(string name, IRuntimeObject value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            if (c == null) {
+                _variables.Add(name, value);
+            }
+            else {
+                c._variables[name] = value;
+            }
+        }
+
+        /// <summary>
+        /// Sets a variable in this context. If the variable exists, it is set in
+        /// the context in which it was declared. Otherwise, it is declared in this context.
+        /// </summary>
+        /// <param name="name">the variable name</param>
+        /// <param name="value">the variable value</param>
+        public void SetVariable(string name, string value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            if (c == null) {
+                _variables.Add(name, (TbasicString)value);
+            }
+            else {
+                c._variables[name] = (TbasicString)value;
+            }
+        }
+
+        /// <summary>
+        /// Sets a variable in this context. If the variable exists, it is set in
+        /// the context in which it was declared. Otherwise, it is declared in this context.
+        /// </summary>
+        /// <param name="name">the variable name</param>
+        /// <param name="value">the variable value</param>
+        public void SetVariable(string name, Number value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            if (c == null) {
+                _variables.Add(name, (Number)value);
+            }
+            else {
+                c._variables[name] = (Number)value;
+            }
+        }
+
+        /// <summary>
+        /// Sets a variable in this context. If the variable exists, it is set in
+        /// the context in which it was declared. Otherwise, it is declared in this context.
+        /// </summary>
+        /// <param name="name">the variable name</param>
+        /// <param name="value">the variable value</param>
+        public void SetVariable(string name, bool value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            if (c == null) {
+                _variables.Add(name, (TbasicBoolean)value);
+            }
+            else {
+                c._variables[name] = (TbasicBoolean)value;
+            }
+        }
+
         /// <summary>
         /// Searches for the context in which a Variable is declared. If the Variable cannot be found, null is returned.
         /// </summary>
@@ -907,6 +1111,119 @@ namespace Tbasic.Runtime
                 return _super.FindVariableContext(name);
             }
         }
+
+        #endregion
+        #region Generated methods for Constants
+        /// <summary>
+        /// Adds a constant to this context. If the Function exists, an exception is thrown
+        /// </summary>
+        public void AddConstant(string name, IRuntimeObject value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            try {
+                c._variables.Add(name, value);
+            }
+            catch(ArgumentException) {
+                throw new DuplicateDefinitionException(name);
+            }
+        }
+
+        /// <summary>
+        /// Adds a constant to this context. If the Function exists, an exception is thrown
+        /// </summary>
+        public void AddConstant(string name, string value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            try {
+                c._variables.Add(name, (TbasicString)value);
+            }
+            catch(ArgumentException) {
+                throw new DuplicateDefinitionException(name);
+            }
+        }
+
+        /// <summary>
+        /// Adds a constant to this context. If the Function exists, an exception is thrown
+        /// </summary>
+        public void AddConstant(string name, Number value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            try {
+                c._variables.Add(name, (Number)value);
+            }
+            catch(ArgumentException) {
+                throw new DuplicateDefinitionException(name);
+            }
+        }
+
+        /// <summary>
+        /// Adds a constant to this context. If the Function exists, an exception is thrown
+        /// </summary>
+        public void AddConstant(string name, bool value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            try {
+                c._variables.Add(name, (TbasicBoolean)value);
+            }
+            catch(ArgumentException) {
+                throw new DuplicateDefinitionException(name);
+            }
+        }
+
+        /// <summary>
+        /// Adds a constant to this context. If the Function exists, an exception is thrown
+        /// </summary>
+        public void AddConstant(string name, Enum value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            try {
+                c._variables.Add(name, (TbasicEnumValue)value);
+            }
+            catch(ArgumentException) {
+                throw new DuplicateDefinitionException(name);
+            }
+        }
+
         /// <summary>
         /// Searches for the context in which a Constant is declared. If the Constant cannot be found, null is returned.
         /// </summary>

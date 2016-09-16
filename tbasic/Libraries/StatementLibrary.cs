@@ -4,8 +4,10 @@
 //
 // ======
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Tbasic.Errors;
 using Tbasic.Parsing;
 using Tbasic.Runtime;
@@ -50,7 +52,7 @@ namespace Tbasic.Libraries
                 }
                 if (p.Classes.Count > 0) {
                     foreach (TClass t in p.Classes) {
-                        runtime.Context.AddType(t.Name, t);
+                        runtime.Context.AddClass(t.Name, t);
                     }
                 }
             }
@@ -122,7 +124,7 @@ namespace Tbasic.Libraries
             scanner.Position += stackdat.Name.Length;
             scanner.SkipWhiteSpace();
 
-            Variable v;
+            VariableEvaluator v;
             if (!DefaultScanner.NextVariable(scanner, runtime, out v))
                 throw ThrowHelper.InvalidVariableName();
 
@@ -138,45 +140,45 @@ namespace Tbasic.Libraries
                         SetVariable(runtime, stackdat, false);
                     }
                     else {
-                        runtime.Context.SetVariable(name, null); // just declare it.
+                        runtime.Context.SetVariable(name, (IRuntimeObject)null); // just declare it.
                     }
                 }
             }
             else {
-                object obj = context.GetVariable(name);
+                IRuntimeObject obj = context.GetVariable(name).Value;
                 array_realloc(ref obj, v.EvaluateIndices(), 0);
                 context.SetVariable(name, obj);
             }
             return NULL(runtime, stackdat);
         }
 
-        private object array_alloc(int[] sizes, int index)
+        private IRuntimeObject array_alloc(int[] sizes, int index)
         {
             if (index < sizes.Length) {
-                object[] o = new object[sizes[index]];
+                IRuntimeObject[] o = new IRuntimeObject[sizes[index]];
                 index++;
                 for (int i = 0; i < o.Length; i++) {
                     o[i] = array_alloc(sizes, index);
                 }
-                return o;
+                return new TbasicArray(o);
             }
             else {
                 return null;
             }
         }
 
-        private void array_realloc(ref object o, int[] sizes, int index)
+        private void array_realloc(ref IRuntimeObject o, int[] sizes, int index)
         {
             if (o != null) {
-                if (o.GetType().IsArray) {
-                    object[] _aObj = (object[])o;
+                if (o.TypeCode == TbasicType.Array) {
+                    IRuntimeObject[] _aObj = (IRuntimeObject[])o.Value;
                     if (index < sizes.Length) {
-                        Array.Resize<object>(ref _aObj, sizes[index]);
+                        Array.Resize<IRuntimeObject>(ref _aObj, sizes[index]);
                         index++;
                         for (int i = 0; i < _aObj.Length; i++) {
                             array_realloc(ref _aObj[i], sizes, index);
                         }
-                        o = _aObj;
+                        o = new TbasicArray(_aObj);
                     }
                 }
                 else {
@@ -202,22 +204,22 @@ namespace Tbasic.Libraries
             IScanner scanner = runtime.Scanner.Scan(stackdat.Text);
             scanner.Position += stackdat.Name.Length;
 
-            Variable v;
+            VariableEvaluator v;
             if (!DefaultScanner.NextVariable(scanner, runtime, out v))
                 throw ThrowHelper.InvalidVariableName();
-            
+
             if (!scanner.Next("="))
                 throw ThrowHelper.InvalidDefinitionOperator();
 
             ExpressionEvaluator e = new ExpressionEvaluator(stackdat.Text.Substring(scanner.Position + 1), runtime);
-            object data = e.Evaluate();
+            IRuntimeObject result = e.Evaluate();
 
             if (v.Indices == null) {
                 if (!constant) {
-                    runtime.Context.SetVariable(v.Name.ToString(), data);
+                    //runtime.Context.SetVariable(v.Name.ToString(), data);
                 }
                 else {
-                    runtime.Context.SetConstant(v.Name.ToString(), data);
+                    //runtime.Context.SetConstant(v.Name.ToString(), data);
                 }
             }
             else {
@@ -227,10 +229,10 @@ namespace Tbasic.Libraries
                 ObjectContext context = runtime.Context.FindVariableContext(v.Name.ToString());
                 if (context == null)
                     throw new ArgumentException("Array has not been defined and cannot be indexed");
-                context.SetArrayAt(v.Name.ToString(), data, v.EvaluateIndices());
+                context.SetArrayAt(v.Name.ToString(), result, v.EvaluateIndices());
             }
 
-            return data;
+            return result;
         }
     }
 }

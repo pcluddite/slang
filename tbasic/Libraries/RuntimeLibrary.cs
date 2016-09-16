@@ -25,8 +25,8 @@ namespace Tbasic.Libraries
             Add("CBool", CBool);
             AddLibrary(new StringLibrary());
             AddLibrary(new ArrayLibrary());
-            context.SetConstant("@version", TRuntime.VERSION);
-            context.SetConstant("@osversion", Environment.OSVersion.VersionString);
+            context.AddConstant("@version", TRuntime.VERSION);
+            context.AddConstant("@osversion", Environment.OSVersion.VersionString);
         }
         
         private object CStr(TRuntime runtime, StackData stackdat)
@@ -115,13 +115,13 @@ namespace Tbasic.Libraries
         private object IsString(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return stackdat.Get(1) is string;
+            return stackdat.Get(1).TypeCode == TbasicType.String;
         }
 
         private object IsBool(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return stackdat.Get(1) is bool;
+            return stackdat.Get(1).TypeCode == TbasicType.String;
         }
         
         private object IsDefined(TRuntime runtime, StackData stackdat)

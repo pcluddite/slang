@@ -40,7 +40,7 @@ namespace Tbasic.Libraries
             stackdat.AssertCount(atLeast: 3, atMost: 4);
 
             if (stackdat.ParameterCount == 3)
-                stackdat.Add(null);
+                stackdat.Add((object)null);
             
             return WinRegistry.Read(stackdat.Get<string>(1), stackdat.Get<string>(2), stackdat.Get<string>(3));
         }

@@ -4,13 +4,18 @@
 //
 // ======
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Contracts;
 
 namespace Tbasic.Parsing
 {
     /// <summary>
     /// Defines a set of methods and properties for a line of Tbasic code
     /// </summary>
-    public struct Line : IComparable<Line>, IEquatable<Line>
+    [DebuggerDisplay("[{LineNumber}, {Text}]")]
+    public struct Line : IComparable<Line>, IEquatable<Line>, IEnumerable<char>
     {
         private string visibleName;
         private string text;
@@ -34,6 +39,10 @@ namespace Tbasic.Parsing
                 return text;
             }
             set {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+                Contract.EndContractBlock();
+
                 text = value;
                 FindAndSetName();
             }
@@ -64,6 +73,10 @@ namespace Tbasic.Parsing
         /// <param name="line">The text of the line</param>
         public Line(int id, string line)
         {
+            if (line == null)
+                throw new ArgumentNullException(nameof(line));
+            Contract.EndContractBlock();
+
             LineNumber = id;
             visibleName = null;
             text = line.Trim(); // Ignore leading and trailing whitespace.
@@ -127,10 +140,10 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public override bool Equals(object other)
         {
-            if (other is Line) {
-                return this.Equals((Line)other);
-            }
-            return base.Equals(other);
+            Line? l = other as Line?;
+            if (l != null)
+                return Equals(l);
+            return false;
         }
 
         /// <summary>
@@ -139,7 +152,7 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return LineNumber.GetHashCode();
+            return LineNumber.GetHashCode() ^ Text.GetHashCode() ^ VisibleName.GetHashCode();
         }
 
         /// <summary>
@@ -149,7 +162,27 @@ namespace Tbasic.Parsing
         /// <returns></returns>
         public bool Equals(Line other)
         {
-            return other.LineNumber == LineNumber;
+            return LineNumber == other.LineNumber && Text == other.Text && VisibleName == other.VisibleName;
+        }
+
+        /// <summary>
+        /// Gets the enumerator for this type
+        /// </summary>
+        public IEnumerator<char> GetEnumerator()
+        {
+            return Text.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Text.GetEnumerator();
+        }
+
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(text != null);
+            Contract.Invariant(Name != null);
         }
     }
 }

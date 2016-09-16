@@ -13,7 +13,7 @@ namespace Tbasic.Types
     /// <summary>
     /// Represents a generic number (this is a double at its core)
     /// </summary>
-    public struct Number : IConvertible, IComparable, IComparable<Number>, IComparable<double>, IEquatable<Number>, IEquatable<double>
+    public struct Number : IConvertible, IComparable, IComparable<Number>, IComparable<double>, IEquatable<Number>, IEquatable<double>, IRuntimeObject
     {
         /// <summary>
         /// Gets or sets the value this Number represetns
@@ -23,7 +23,21 @@ namespace Tbasic.Types
         /// Gets the size of the type that represents this number
         /// </summary>
         public const int SIZE = sizeof(double);
-        
+
+        TbasicType IRuntimeObject.TypeCode
+        {
+            get {
+                return TbasicType.Number;
+            }
+        }
+
+        object IRuntimeObject.Value
+        {
+            get {
+                return Value;
+            }
+        }
+
         /// <summary>
         /// Constructs a new number
         /// </summary>
@@ -97,7 +111,7 @@ namespace Tbasic.Types
         /// <param name="o"></param>
         /// <param name="opts"></param>
         /// <returns></returns>
-        public static bool IsNumber(object o, ExecuterOption opts)
+        public static bool IsNumber(IRuntimeObject o, ExecuterOption opts)
         {
             double d;
             return TypeConvert.TryConvert(o, out d, opts);
@@ -109,7 +123,7 @@ namespace Tbasic.Types
         /// <param name="o"></param>
         /// <param name="opts"></param>
         /// <returns></returns>
-        public static Number? AsNumber(object o, ExecuterOption opts)
+        public static Number? AsNumber(IRuntimeObject o, ExecuterOption opts)
         {
             if (o == null) {
                 if (opts.HasFlag(ExecuterOption.NullIsZero)) {
@@ -131,7 +145,7 @@ namespace Tbasic.Types
         /// <summary>
         /// Converts an object to a Number
         /// </summary>
-        public static Number Convert(object o, ExecuterOption opts)
+        public static Number Convert(IRuntimeObject o, ExecuterOption opts)
         {
             Number? n = AsNumber(o, opts);
             if (n == null)

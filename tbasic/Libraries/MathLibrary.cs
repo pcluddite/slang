@@ -40,8 +40,8 @@ namespace Tbasic.Libraries
             Add<double, double, double>("POW", Math.Pow);
             Add<double, double, double>("ROOT", Root);
             Add("RANDOM", Random);
-            context.SetConstant("@PI", Math.PI); // pi
-            context.SetConstant("@E", Math.E); // euler's number
+            context.AddConstant("@pi", Math.PI); // pi
+            context.AddConstant("@e", Math.E); // euler's number
         }
 
         private void Add(string key, Func<double, double> func)

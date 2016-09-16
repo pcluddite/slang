@@ -113,7 +113,7 @@ namespace Tbasic.Runtime
             }
             if (p.Classes.Count > 0) {
                 foreach(TClass t in p.Classes) {
-                    Global.AddType(t.Name, t);
+                    Global.AddClass(t.Name, t);
                 }
             }
             Execute(p.Lines);
@@ -220,7 +220,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Executes a function or command with the given arguments
         /// </summary>
-        public object ExecuteFunction(string name, params object[] args)
+        public object ExecuteFunction(string name, params IRuntimeObject[] args)
         {
             CallData calldat;
             StackData stackdat = new StackData(Options, args);

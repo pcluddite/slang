@@ -36,18 +36,18 @@ namespace Tbasic.Libraries
             Add("WinPicture", WinPicture);
             Add("WinExists", WinExists);
             // window constants for WinSetState()
-            context.SetConstant("@SW_HIDE", WindowState.SW_HIDE);
-            context.SetConstant("@SW_MAXIMIZE", WindowState.SW_MAXIMIZE);
-            context.SetConstant("@SW_MINIMIZE", WindowState.SW_MINIMIZE);
-            context.SetConstant("@SW_NORMAL", WindowState.SW_NORMAL);
-            context.SetConstant("@SW_RESTORE", WindowState.SW_RESTORE);
-            context.SetConstant("@SW_SHOW", WindowState.SW_SHOW);
-            context.SetConstant("@SW_SHOWMAXIMIZED", WindowState.SW_SHOWMAXIMIZED);
-            context.SetConstant("@SW_SHOWMINIMIZED", WindowState.SW_SHOWMINIMIZED);
-            context.SetConstant("@SW_SHOWMINNOACTIVE", WindowState.SW_SHOWMINNOACTIVE);
-            context.SetConstant("@SW_SHOWNA", WindowState.SW_SHOWNA);
-            context.SetConstant("@SW_SHOWNOACTIVATE", WindowState.SW_SHOWNOACTIVATE);
-            context.SetConstant("@SW_SHOWNORMAL", WindowState.SW_SHOWNORMAL);
+            context.AddConstant("@SW_HIDE", WindowState.SW_HIDE);
+            context.AddConstant("@SW_MAXIMIZE", WindowState.SW_MAXIMIZE);
+            context.AddConstant("@SW_MINIMIZE", WindowState.SW_MINIMIZE);
+            context.AddConstant("@SW_NORMAL", WindowState.SW_NORMAL);
+            context.AddConstant("@SW_RESTORE", WindowState.SW_RESTORE);
+            context.AddConstant("@SW_SHOW", WindowState.SW_SHOW);
+            context.AddConstant("@SW_SHOWMAXIMIZED", WindowState.SW_SHOWMAXIMIZED);
+            context.AddConstant("@SW_SHOWMINIMIZED", WindowState.SW_SHOWMINIMIZED);
+            context.AddConstant("@SW_SHOWMINNOACTIVE", WindowState.SW_SHOWMINNOACTIVE);
+            context.AddConstant("@SW_SHOWNA", WindowState.SW_SHOWNA);
+            context.AddConstant("@SW_SHOWNOACTIVATE", WindowState.SW_SHOWNOACTIVATE);
+            context.AddConstant("@SW_SHOWNORMAL", WindowState.SW_SHOWNORMAL);
         }
 
         public static int WinRemoveClose(IntPtr hwnd)

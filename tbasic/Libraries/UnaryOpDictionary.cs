@@ -31,18 +31,18 @@ namespace Tbasic.Types
             operators.Add(new UnaryOperator("~", BitNot));
         }
 
-        private static object New(TRuntime runtime, object value)
+        private static object New(TRuntime runtime, IRuntimeObject value)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
             Contract.EndContractBlock();
 
-            Function eval = value as Function;
+            FunctionEvaluator eval = value.Value as FunctionEvaluator;
             if (eval == null)
                 throw ThrowHelper.InvalidTypeInExpression(value?.GetType().Name, "function");
             
             TClass prototype;
-            if (!runtime.Context.TryGetType(eval.Expression.ToString(), out prototype))
+            if (!runtime.Context.TryGetClass(eval.Expression.ToString(), out prototype))
                 throw new UndefinedObjectException($"The class {eval.Expression} is undefined");
 
             StackData stackdat = new StackData(runtime.Options, eval.Parameters.TB_ToStrings());
@@ -51,7 +51,7 @@ namespace Tbasic.Types
             return prototype.GetInstance(runtime, stackdat);
         }
 
-        private static object Plus(TRuntime runtime, object value)
+        private static object Plus(TRuntime runtime, IRuntimeObject value)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -60,7 +60,7 @@ namespace Tbasic.Types
             return +Number.Convert(value, runtime.Options);
         }
 
-        private static object Minus(TRuntime runtime, object value)
+        private static object Minus(TRuntime runtime, IRuntimeObject value)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -69,12 +69,12 @@ namespace Tbasic.Types
             return -Number.Convert(value, runtime.Options);
         }
 
-        private static object Not(TRuntime runtime, object value)
+        private static object Not(TRuntime runtime, IRuntimeObject value)
         {
             return !Convert.ToBoolean(value, CultureInfo.InvariantCulture);
         }
 
-        private static object BitNot(TRuntime runtime, object value)
+        private static object BitNot(TRuntime runtime, IRuntimeObject value)
         {
             return ~Convert.ToUInt64(value, CultureInfo.InvariantCulture);
         }

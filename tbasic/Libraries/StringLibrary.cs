@@ -91,13 +91,7 @@ namespace Tbasic.Libraries
                 stackdat.Add(stackdat.Get<string>(1).Length);
             }
             stackdat.AssertCount(5);
-            char? cObj = stackdat.Get(2) as char?;
-            if (cObj == null) {
-                return stackdat.Get<string>(1).IndexOf(stackdat.Get<string>(2), stackdat.Get<int>(3), stackdat.Get<int>(4));
-            }
-            else {
-                return stackdat.Get<string>(1).IndexOf(cObj.Value, stackdat.Get<int>(3), stackdat.Get<int>(4));
-            }
+            return stackdat.Get<string>(1).IndexOf(stackdat.Get<string>(2), stackdat.Get<int>(3), stackdat.Get<int>(4));
         }
 
         private object StringLastIndexOf(TRuntime runtime, StackData stackdat)
@@ -109,13 +103,7 @@ namespace Tbasic.Libraries
                 stackdat.Add(stackdat.Get<string>(1).Length);
             }
             stackdat.AssertCount(5);
-            char? cObj = stackdat.Get(2) as char?;
-            if (cObj == null) {
-                return stackdat.Get<string>(1).LastIndexOf(stackdat.Get<string>(2), stackdat.Get<int>(3), stackdat.Get<int>(4));
-            }
-            else {
-                return stackdat.Get<string>(1).LastIndexOf(cObj.Value, stackdat.Get<int>(3), stackdat.Get<int>(4));
-            }
+            return stackdat.Get<string>(1).LastIndexOf(stackdat.Get<string>(2), stackdat.Get<int>(3), stackdat.Get<int>(4));
         }
 
         private object StringUpper(TRuntime runtime, StackData stackdat)

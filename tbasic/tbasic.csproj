@@ -128,34 +128,47 @@
     <Compile Include="Parsing\Scanners\Scanners.cs" />
     <Compile Include="Parsing\Scanners\TerminalScanner\TerminalScanner.cs" />
     <Compile Include="Parsing\StringSegment.cs" />
-    <Compile Include="Types\Operators\BinaryOperator.cs" />
-    <Compile Include="Types\Operators\BinOpDicationary.cs" />
-    <Compile Include="Types\Operators\IOperator.cs" />
-    <Compile Include="Types\Operators\OperatorDictionary.cs" />
-    <Compile Include="Types\Operators\UnaryOpDictionary.cs" />
-    <Compile Include="Types\Operators\UnaryOperator.cs" />
-    <Compile Include="Runtime\ExecuterOption.cs" />
     <Compile Include="Runtime\ObjectContext.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ObjectContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Runtime\StackData.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StackData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Types\RuntimeObjects.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RuntimeObjects.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Types\TbasicArray.cs" />
+    <Compile Include="Types\TbasicString.cs" />
+    <Compile Include="Types\TbasicType.cs" />
+    <Compile Include="Types\Operators\BinaryOperator.cs" />
+    <Compile Include="Libraries\BinOpDicationary.cs" />
+    <Compile Include="Types\Operators\IOperator.cs" />
+    <Compile Include="Libraries\OperatorDictionary.cs" />
+    <Compile Include="Libraries\UnaryOpDictionary.cs" />
+    <Compile Include="Types\Operators\UnaryOperator.cs" />
+    <Compile Include="Runtime\ExecuterOption.cs" />
     <Compile Include="Types\TypeConvert.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TypeConvert.tt</DependentUpon>
     </Compile>
-    <Compile Include="Runtime\Evaluator\Statement.cs" />
+    <Compile Include="Parsing\Statement.cs" />
     <Compile Include="Parsing\Scanners\DefaultScanner\DefaultScanner.GroupParser.cs" />
     <Compile Include="Runtime\Evaluator\ExpressionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\BinaryOpQueue.cs" />
-    <Compile Include="Runtime\Evaluator\Function.cs" />
+    <Compile Include="Runtime\Evaluator\FunctionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\IExpressionEvaluator.cs" />
     <Compile Include="Parsing\LineCollection.cs" />
     <Compile Include="Parsing\Scanners\DefaultScanner\DefaultScanner.cs" />
     <Compile Include="Parsing\Preprocessors\DefaultPreprocessor.cs" />
     <Compile Include="Runtime\ObjectContext.cs" />
-    <Compile Include="Runtime\Evaluator\Variable.cs" />
+    <Compile Include="Runtime\Evaluator\VariableEvaluator.cs" />
     <Compile Include="Runtime\TRuntime.cs" />
     <Compile Include="Libraries\AutoLibrary.cs" />
     <Compile Include="Libraries\FileIOLibrary.cs" />
@@ -191,6 +204,7 @@
     <Compile Include="Types\CallData.cs" />
     <Compile Include="Types\Number.cs" />
     <Compile Include="Types\TClass.cs" />
+    <Compile Include="Types\Variable.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -220,6 +234,14 @@
     <Content Include="Runtime\ObjectContext.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ObjectContext.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Runtime\StackData.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StackData.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Types\RuntimeObjects.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RuntimeObjects.cs</LastGenOutput>
     </Content>
     <Content Include="Types\TypeConvert.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

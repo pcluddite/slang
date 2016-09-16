@@ -16,11 +16,11 @@ namespace Tbasic.Runtime
     /// </summary>
     public partial class ObjectContext
     {
-        #region Private Fields
+        #region Fields/Properties
 
         private ObjectContext _super;
-        private Dictionary<string, object> _variables;
-        private Dictionary<string, object> _constants;
+        private Dictionary<string, IRuntimeObject> _variables;
+        private Dictionary<string, IRuntimeObject> _constants;
         private Dictionary<string, BlockCreator> _blocks;
         private Dictionary<string, TClass> _prototypes;
         private BinOpDictionary _binaryOps;
@@ -29,10 +29,6 @@ namespace Tbasic.Runtime
         private Library _commands;
 
         private bool _bCollected = false;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         /// Gets the parent context. If this is the global context, returns null.
@@ -57,8 +53,8 @@ namespace Tbasic.Runtime
             _super = superContext;
             _functions = new Library();
             _commands = new Library();
-            _variables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            _constants = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            _variables = new Dictionary<string, IRuntimeObject>(StringComparer.OrdinalIgnoreCase);
+            _constants = new Dictionary<string, IRuntimeObject>(StringComparer.OrdinalIgnoreCase);
             _blocks = new Dictionary<string, BlockCreator>(StringComparer.OrdinalIgnoreCase);
             _prototypes = new Dictionary<string, TClass>(StringComparer.OrdinalIgnoreCase);
             if (superContext == null) {
@@ -290,16 +286,19 @@ namespace Tbasic.Runtime
         /// Tries to get a variable or constant from this context
         /// </summary>
         /// <returns>true if the variable was found, otherwise false.</returns>
-        public bool TryGetVariable(string name, out object value)
+        public bool TryGetVariable(string name, out Variable var)
         {
+            IRuntimeObject value;
             if (_variables.TryGetValue(name, out value) || _constants.TryGetValue(name, out value)) {
+                var = new Variable(this, name, value);
                 return true;
             }
             else if (_super == null) {
+                var = default(Variable);
                 return false;
             }
             else {
-                return _super.TryGetVariable(name, out value);
+                return _super.TryGetVariable(name, out var);
             }
         }
         
@@ -308,14 +307,14 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="name">variable name</param>
         /// <returns>the variable data</returns>
-        public object GetVariable(string name)
+        public Variable GetVariable(string name)
         {
-            object value;
+            IRuntimeObject value;
             if (_constants.TryGetValue(name, out value)) {
-                return value;
+                return new Variable(this, name, value);
             }
             else if (_variables.TryGetValue(name, out value)) {
-                return value;
+                return new Variable(this, name, value);
             }
             else if (_super == null) {
                 throw ThrowHelper.UndefinedObject(name);
@@ -331,31 +330,31 @@ namespace Tbasic.Runtime
         /// <param name="name">the variable name</param>
         /// <param name="indices">the index (or indices of a multidimensional array)</param>
         /// <returns>the value of the variable</returns>
-        public object GetArrayAt(string name, params int[] indices)
+        public Variable GetArrayAt(string name, params int[] indices)
         {
-            object obj = GetVariable(name);
+            IRuntimeObject obj = GetVariable(name);
             if (indices != null && indices.Length > 0) {
                 for (int n = 0; n < indices.Length; n++) {
-                    object[] _aObj = obj as object[];
+                    IRuntimeObject[] _aObj = obj.Value as IRuntimeObject[];
                     if (_aObj != null) {
                         if (indices[n] < _aObj.Length) {
                             obj = _aObj[indices[n]];
                         }
                         else {
-                            throw ThrowHelper.IndexOutOfRange(Variable.GetFullName(name, indices), indices[n]);
+                            throw ThrowHelper.IndexOutOfRange(VariableEvaluator.GetFullName(name, indices), indices[n]);
                         }
                     }
                     else {
-                        throw ThrowHelper.IndexUnavailable(Variable.GetFullName(name, indices));
+                        throw ThrowHelper.IndexUnavailable(VariableEvaluator.GetFullName(name, indices));
                     }
                 }
             }
-            return obj;
+            return new Variable(this, name, obj);
         }
 
         internal void SetReturns(StackData _sframe)
         {
-            GetGlobal()._constants["@error"] = _sframe.Status;
+            GetGlobal()._constants["@error"] = new Number(_sframe.Status);
         }
 
         internal ObjectContext GetGlobal()
@@ -369,58 +368,9 @@ namespace Tbasic.Runtime
 
         internal void PersistReturns(StackData _sframe)
         {
-            object status;
-            if (TryGetVariable("@error", out status)) {
-                _sframe.Status = (int)status;
-            }
-        }
-
-        /// <summary>
-        /// Sets a constant that will be declared in this context. Once a constant is set, it cannot be changed.
-        /// </summary>
-        /// <param name="name">the constant name</param>
-        /// <param name="obj">the object data</param>
-        public void SetConstant(string name, object obj)
-        {
-            ObjectContext context = FindVariableContext(name);
-            if (context == null) {
-                context = FindConstantContext(name);
-                if (context == null) {
-                    _constants.Add(name, obj); // since you can set constants only once, we don't need to use the context in which a constant was set
-                }
-                else {
-                    throw ThrowHelper.ConstantChange();
-                }
-            }
-            else {
-                throw ThrowHelper.AlreadyDefinedAsType(name, "variable", "constant");
-            }
-        }
-
-        /// <summary>
-        /// Sets a variable in this context. If the variable exists, it is set in
-        /// the context in which it was declared. Otherwise, it is declared in this context.
-        /// </summary>
-        /// <param name="name">the variable name</param>
-        /// <param name="obj">the object data</param>
-        public void SetVariable(string name, object obj)
-        {
-            ObjectContext c = FindConstantContext(name);
-            if (c != null) {
-                throw ThrowHelper.ConstantChange();
-            }
-            c = FindVariableContext(name);
-            if (c == null) {
-                _variables.Add(name, obj);
-#if SHOW_OBJECTS
-                Console.WriteLine("{1} = {2} declared in {0}", GetHashCode(), name, obj);
-#endif
-            }
-            else {
-                c._variables[name] = obj;
-#if SHOW_OBJECTS
-                Console.WriteLine("{1} = {2} set in {0}", c.GetHashCode(), name, obj);
-#endif
+            Variable statusvar;
+            if (TryGetVariable("@error", out statusvar)) {
+                _sframe.Status = (int)statusvar.Value.Value;
             }
         }
         
@@ -431,25 +381,27 @@ namespace Tbasic.Runtime
         /// <param name="value">the new value of the array at that index</param>
         /// <param name="indices">the index (or indices of a multidimensional array)</param>
         /// <returns>the value of the variable</returns>
-        public void SetArrayAt(string name, object value, params int[] indices)
+        public void SetArrayAt(string name, IRuntimeObject value, params int[] indices)
         {
-            object[] array = GetVariable(name) as object[];
+            IRuntimeObject obj = GetVariable(name).Value;
+            TbasicArray array = default(TbasicArray);
             if (indices != null && indices.Length > 0) {
                 for (int n = 0; n < indices.Length - 1; ++n) {
-                    if (array != null) {
-                        if (indices[n] < array.Length) {
-                            array = array[indices[n]] as object[];
+                    if (obj.TypeCode == TbasicType.Array) {
+                        array = (TbasicArray)obj;
+                        if (indices[n] < array.Value.Length) {
+                            obj = array.Value[indices[n]];
                         }
                         else {
-                            throw ThrowHelper.IndexOutOfRange(Variable.GetFullName(name, indices), indices[n]);
+                            throw ThrowHelper.IndexOutOfRange(VariableEvaluator.GetFullName(name, indices), indices[n]);
                         }
                     }
                     else {
-                        throw ThrowHelper.IndexUnavailable(Variable.GetFullName(name, indices));
+                        throw ThrowHelper.IndexUnavailable(VariableEvaluator.GetFullName(name, indices));
                     }
                 }
             }
-            array[indices[indices.Length - 1]] = value;
+            ((TbasicArray)obj).Value[indices[indices.Length - 1]] = value;
         }
         
         #endregion
@@ -465,10 +417,10 @@ namespace Tbasic.Runtime
                 dest._unaryOps = source._super._unaryOps;
                 dest._binaryOps = source._super._binaryOps;
             }
-            dest._variables = new Dictionary<string, object>(source._variables);
+            dest._variables = new Dictionary<string, IRuntimeObject>(source._variables);
             dest._prototypes = new Dictionary<string, TClass>(source._prototypes);
             dest._functions = new Library(source._functions);
-            dest._constants = new Dictionary<string, object>(source._constants);
+            dest._constants = new Dictionary<string, IRuntimeObject>(source._constants);
             dest._commands = new Library(source._commands);
             dest._blocks = new Dictionary<string, BlockCreator>(source._blocks);
             return dest;

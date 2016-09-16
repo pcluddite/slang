@@ -71,7 +71,7 @@ namespace Tbasic.Parsing
             var ops = context.GetAllBinaryOperators();
             for(int i = 0; i < ops.Count; ++i) {
                 string opStr = ops[i].OperatorString;
-                if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.Ordinal)) {
+                if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.OrdinalIgnoreCase)) {
                     foundOp = ops[i];
                     foundStr = opStr;
                 }
@@ -93,7 +93,7 @@ namespace Tbasic.Parsing
             var ops = context.GetAllUnaryOperators();
             for(int i = 0; i < ops.Count; ++i) {
                 string opStr = ops[i].OperatorString;
-                if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.Ordinal)) {
+                if (foundStr.Length < opStr.Length && token.StartsWith(opStr, StringComparison.OrdinalIgnoreCase)) {
                     foundOp = ops[i];
                     foundStr = opStr;
                 }

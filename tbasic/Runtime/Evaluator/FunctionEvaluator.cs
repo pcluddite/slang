@@ -14,7 +14,7 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Class for evaluating a function
     /// </summary>
-    internal class Function : IExpressionEvaluator
+    internal class FunctionEvaluator : IExpressionEvaluator
     {
         #region Properties
 
@@ -53,10 +53,24 @@ namespace Tbasic.Runtime
                 return _params;
             }
         }
+        
+        TbasicType IRuntimeObject.TypeCode
+        {
+            get {
+                return TbasicType.Function;
+            }
+        }
+
+        object IRuntimeObject.Value
+        {
+            get {
+                return this;
+            }
+        }
 
         #endregion
 
-        public Function(TRuntime runtime, string name, IList<IEnumerable<char>> parameters)
+        public FunctionEvaluator(TRuntime runtime, string name, IList<IEnumerable<char>> parameters)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -72,7 +86,7 @@ namespace Tbasic.Runtime
             _params = parameters;
         }
         
-        public object Evaluate()
+        public IRuntimeObject Evaluate()
         {
             return ExecuteFunction(_name, _params);
         }
@@ -82,7 +96,7 @@ namespace Tbasic.Runtime
             return Expression.ToString();
         }
         
-        private object ExecuteFunction(string name, IList<IEnumerable<char>> l_params)
+        private IRuntimeObject ExecuteFunction(string name, IList<IEnumerable<char>> l_params)
         {
             CallData func;
             if (CurrentContext.TryGetFunction(name, out func)) {

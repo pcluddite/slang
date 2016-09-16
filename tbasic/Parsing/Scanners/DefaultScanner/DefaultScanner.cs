@@ -447,12 +447,12 @@ namespace Tbasic.Parsing
             }
         }
 
-        internal static bool NextFunctionInternal(IScanner scanner, TRuntime exec, out Function func)
+        internal static bool NextFunctionInternal(IScanner scanner, TRuntime exec, out FunctionEvaluator func)
         {
             IEnumerable<char> name;
             IList<IEnumerable<char>> args;
             if (scanner.NextFunction(out name, out args)) {
-                func = new Function(exec, name.ToString(), args);
+                func = new FunctionEvaluator(exec, name.ToString(), args);
             }
             else {
                 func = null;
@@ -460,12 +460,12 @@ namespace Tbasic.Parsing
             return (func != null);
         }
 
-        internal static bool NextVariable(IScanner scanner, TRuntime exec, out Variable variable)
+        internal static bool NextVariable(IScanner scanner, TRuntime exec, out VariableEvaluator variable)
         {
             IEnumerable<char> name;
             IList<IEnumerable<char>> indices;
             if (scanner.NextVariable(out name, out indices)) {
-                variable = new Variable(name.ToString(), indices, exec);
+                variable = new VariableEvaluator(name.ToString(), indices, exec);
             }
             else {
                 variable = null;
@@ -566,7 +566,7 @@ namespace Tbasic.Parsing
             }
 
             // check variable
-            Variable variable;
+            VariableEvaluator variable;
             if (NextVariable(this, runtime, out variable)) {
                 token = variable;
                 return TokenType.Variable;
@@ -594,7 +594,7 @@ namespace Tbasic.Parsing
             }
 
             // check function
-            Function func;
+            FunctionEvaluator func;
             if (NextFunctionInternal(this, runtime, out func)) {
                 token = func;
                 return TokenType.Function;

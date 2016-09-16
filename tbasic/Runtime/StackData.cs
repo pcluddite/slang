@@ -15,15 +15,15 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Manages parameters and other data passed to a function or subroutine
     /// </summary>
-    public class StackData : ICloneable
+    public partial class StackData : ICloneable
     {
         [ContractPublicPropertyName(nameof(Parameters))]
-        private List<object> _params = new List<object>();
+        private List<IRuntimeObject> _params = new List<IRuntimeObject>();
 
         /// <summary>
         /// Gets a list of the parameters passed to the function
         /// </summary>
-        public IList<object> Parameters
+        public IList<IRuntimeObject> Parameters
         {
             get {
                 return _params;
@@ -47,7 +47,7 @@ namespace Tbasic.Runtime
         {
             get {
                 if (_params.Count > 0) {
-                    return (_params[0] ?? string.Empty).ToString();
+                    return (_params[0].Value ?? string.Empty).ToString();
                 }
                 else {
                     return string.Empty;
@@ -55,10 +55,10 @@ namespace Tbasic.Runtime
             }
             set {
                 if (_params.Count == 0) {
-                    _params.Add(value);
+                    _params.Add(new TbasicString(value));
                 }
                 else {
-                    _params.Insert(0, value);
+                    _params.Insert(0, new TbasicString(value));
                 }
             }
         }
@@ -97,10 +97,16 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="parameters">the parameters of the function</param>
         /// <param name="options">the execution that called the function</param>
-        public StackData(ExecuterOption options, IEnumerable<object> parameters)
+        public StackData(ExecuterOption options, IEnumerable<IRuntimeObject> parameters)
             : this(options)
         {
             _params.AddRange(parameters);
+        }
+
+        internal StackData(ExecuterOption options, IEnumerable<string> parameters)
+            : this(options)
+        {
+            AddRange(parameters);
         }
 
         /// <summary>
@@ -116,22 +122,9 @@ namespace Tbasic.Runtime
             Contract.EndContractBlock();
             Statement line = new Statement(runtime.Scanner.Scan(text));
             Text = text;
-            _params.AddRange(line);
+            AddRange(line);
         }
-
-        /// <summary>
-        /// Assigns new data to a parameter
-        /// </summary>
-        /// <param name="index">The index of the argument</param>
-        /// <param name="data">The new string data to assign</param>
-        public void Set(int index, object data)
-        {
-            if ((uint)index >= (uint)_params.Count)
-                throw new ArgumentOutOfRangeException();
-            Contract.EndContractBlock();
-            _params[index] = data;
-        }
-
+        
         /// <summary>
         /// Throws an ArgumentException if the number of parameters does not match a specified count
         /// </summary>
@@ -182,7 +175,7 @@ namespace Tbasic.Runtime
         /// <param name="index">The index of the argument</param>
         /// <exception cref="ArgumentOutOfRangeException">thrown if the argument is out of range</exception>
         /// <returns></returns>
-        public object Get(int index)
+        public IRuntimeObject Get(int index)
         {
             if ((uint)index >= (uint)_params.Count)
                 throw new ArgumentOutOfRangeException();
@@ -250,34 +243,7 @@ namespace Tbasic.Runtime
             }
             throw ThrowHelper.InvalidParamType(index, typeName);
         }
-
-        /// <summary>
-        /// Adds a parameter to the end of this collection
-        /// </summary>
-        /// <param name="param"></param>
-        public void Add(object param)
-        {
-            _params.Add(param);
-        }
-
-        /// <summary>
-        /// Adds a number of parameters to this collection
-        /// </summary>
-        /// <param name="param"></param>
-        public void AddRange(params object[] param)
-        {
-            _params.AddRange(param);
-        }
-
-        /// <summary>
-        /// Adds a number of parameters to this collection
-        /// </summary>
-        /// <param name="param"></param>
-        public void AddRange(IEnumerable<object> param)
-        {
-            _params.AddRange(param);
-        }
-
+                
         /// <summary>
         /// Forces the (re-)evaluation of a string parameter. This is useful for statements, whose parameters don't get evaluated automatically.
         /// </summary>
@@ -287,7 +253,7 @@ namespace Tbasic.Runtime
                 throw new ArgumentNullException(nameof(runtime));
             Contract.EndContractBlock();
 
-            string param = Get(index) as string;
+            TbasicString param = Get(index) as TbasicString;
             if (param != null)
                 _params[index] = ExpressionEvaluator.Evaluate(param, runtime);
             return _params[index];
@@ -302,7 +268,7 @@ namespace Tbasic.Runtime
                 throw new ArgumentNullException(nameof(runtime));
             Contract.EndContractBlock();
 
-            string param = Get(index) as string;
+            TbasicString param = Get(index) as TbasicString;
             if (param != null)
                 _params[index] = ExpressionEvaluator.Evaluate(param, runtime);
             return Get<T>(index);
@@ -319,9 +285,10 @@ namespace Tbasic.Runtime
 
             ExpressionEvaluator eval = new ExpressionEvaluator(runtime);
             for (int index = 1; index < _params.Count; ++index) {
-                string arg = _params[index] as string;
-                if (arg != null)
-                    _params[index] = eval.Evaluate(arg);
+                TbasicString param = _params[index] as TbasicString;
+                if (param != null) {
+                    _params[index] = ExpressionEvaluator.Evaluate(param, runtime);
+                }
             }
         }
 
@@ -334,7 +301,7 @@ namespace Tbasic.Runtime
             StackData clone = new StackData(Options);
             clone.Text = Text;
             if (_params == null) {
-                clone._params = new List<object>();
+                clone._params = new List<IRuntimeObject>();
             }
             else {
                 clone._params.AddRange(_params);

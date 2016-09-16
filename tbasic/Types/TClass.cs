@@ -13,7 +13,7 @@ namespace Tbasic.Types
     /// <summary>
     /// Represents a Tbasic class
     /// </summary>
-    public class TClass : ObjectContext, ICloneable
+    public class TClass : ObjectContext, ICloneable, IRuntimeObject
     {
         /// <summary>
         /// The name of this class
@@ -27,6 +27,20 @@ namespace Tbasic.Types
         /// The lines in the constructor. This includes any field initializations.
         /// </summary>
         public LineCollection Constructor { get; private set; }
+
+        TbasicType IRuntimeObject.TypeCode
+        {
+            get {
+                return TbasicType.Object;
+            }
+        }
+
+        object IRuntimeObject.Value
+        {
+            get {
+                return this;
+            }
+        }
 
         private TClass()
         {

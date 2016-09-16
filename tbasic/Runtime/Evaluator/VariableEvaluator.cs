@@ -12,7 +12,7 @@ using System.Diagnostics.Contracts;
 
 namespace Tbasic.Runtime
 {
-    internal class Variable : IExpressionEvaluator
+    internal class VariableEvaluator : IExpressionEvaluator
     {
         #region Properties
 
@@ -52,10 +52,24 @@ namespace Tbasic.Runtime
                 _name = value;
             }
         }
+        
+        TbasicType IRuntimeObject.TypeCode
+        {
+            get {
+                return TbasicType.Evaluator;
+            }
+        }
+
+        object IRuntimeObject.Value
+        {
+            get {
+                return this;
+            }
+        }
 
         #endregion
 
-        public Variable(string name, IList<IEnumerable<char>> indices, TRuntime runtime)
+        internal VariableEvaluator(string name, IList<IEnumerable<char>> indices, TRuntime runtime)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -73,13 +87,19 @@ namespace Tbasic.Runtime
             return _name.ToString();
         }
 
-        public object Evaluate()
+        public Variable Evaluate()
         {
-            object obj = CurrentContext.GetVariable(_name);
-            if (Indices != null) {
-                obj = CurrentContext.GetArrayAt(_name, EvaluateIndices());
+            if (Indices == null) {
+                return CurrentContext.GetVariable(_name);
             }
-            return obj;
+            else { 
+                return CurrentContext.GetArrayAt(_name, EvaluateIndices());
+            }
+        }
+
+        IRuntimeObject IExpressionEvaluator.Evaluate()
+        {
+            return Evaluate();
         }
 
         public int[] EvaluateIndices()
@@ -89,7 +109,7 @@ namespace Tbasic.Runtime
             ExpressionEvaluator eval = new ExpressionEvaluator(Runtime);
             int[] indices = new int[Indices.Count];
             for (int index = 0; index < indices.Length; ++index) {
-                object o = eval.Evaluate(Indices[index]);
+                IRuntimeObject o = eval.Evaluate(Indices[index]);
                 Number? num = Number.AsNumber(o, Runtime.Options);
                 if (num == null) {
                     throw ThrowHelper.InvalidTypeInExpression(o.GetType().Name, typeof(Number).Name);

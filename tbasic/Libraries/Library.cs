@@ -6,6 +6,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Tbasic.Types;
 
 namespace Tbasic.Libraries
@@ -29,6 +30,10 @@ namespace Tbasic.Libraries
         /// </summary>
         public Library(Library other)
         {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+            Contract.EndContractBlock();
+
             lib = new Dictionary<string, CallData>(other.lib);
         }
 
@@ -36,8 +41,12 @@ namespace Tbasic.Libraries
         /// Initializes a new Tbasic Library object
         /// </summary>
         /// <param name="libs">a collection of Library objects that should be incorporated into this one</param>
-        public Library(ICollection<Library> libs)
+        public Library(IEnumerable<Library> libs)
         {
+            if (libs == null)
+                throw new ArgumentNullException(nameof(libs));
+            Contract.EndContractBlock();
+
             foreach (Library lib in libs) 
                 AddLibrary(lib);
         }
@@ -48,6 +57,10 @@ namespace Tbasic.Libraries
         /// <param name="other">the Tbasic Library</param>
         public void AddLibrary(Library other)
         {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+            Contract.EndContractBlock();
+
             foreach (var kv_entry in other.lib)
                 lib.Add(kv_entry.Key, kv_entry.Value);
         }
@@ -59,17 +72,13 @@ namespace Tbasic.Libraries
         /// <param name="value"></param>
         public void Add(string key, TbasicFunction value)
         {
-            lib.Add(key, new CallData(value, evaluate: true));
-        }
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+            Contract.EndContractBlock();
 
-        /// <summary>
-        /// Adds a function to this dictionary
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        public void Add(string key, CallData value)
-        {
-            lib.Add(key, value);
+            lib.Add(key, new CallData(value, evaluate: true));
         }
 
         /// <summary>
@@ -80,7 +89,27 @@ namespace Tbasic.Libraries
         /// <param name="evaluate">whether or not this function should have its parameters evaluated</param>
         public void Add(string key, TbasicFunction value, bool evaluate)
         {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+            Contract.EndContractBlock();
+
             lib.Add(key, new CallData(value, evaluate));
+        }
+
+        /// <summary>
+        /// Adds a function to this dictionary
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void Add(string key, CallData value)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            Contract.EndContractBlock();
+
+            lib.Add(key, value);
         }
 
         /// <summary>
@@ -92,6 +121,12 @@ namespace Tbasic.Libraries
         /// <param name="requiredArgs">the required number of arguments</param>
         public void AddDelegate(string key, Delegate value, bool evaluate = true, int requiredArgs = -1)
         {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+            Contract.EndContractBlock();
+
             TbasicFunction func = value as TbasicFunction;
             if (func != null)
                 Add(key, func);
@@ -102,6 +137,7 @@ namespace Tbasic.Libraries
 
         private static int CountParameters(Delegate d)
         {
+            Contract.Ensures(Contract.Result<int>() >= 0);
             return d.Method.GetParameters().Length;
         }
 

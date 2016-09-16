@@ -45,7 +45,7 @@ namespace Tbasic.Types
         /// <param name="left">the left operand</param>
         /// <param name="right">the right operand</param>
         /// <returns>the result of the operator</returns>
-        public delegate object BinaryOpDelegate(TRuntime runtime, object left, object right);
+        public delegate object BinaryOpDelegate(TRuntime runtime, IRuntimeObject left, IRuntimeObject right);
 
         /// <summary>
         /// Gets which operand should be evaluated

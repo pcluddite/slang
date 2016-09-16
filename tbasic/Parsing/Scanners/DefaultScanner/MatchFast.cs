@@ -22,18 +22,19 @@ namespace Tbasic.Parsing
                 return -1;
             }
         }
-
-
+        
         public static int MatchVariable(string buff)
         {
-            int end = MatchIdentifier(buff);
-            if (end > -1 && buff.CharAt(end++) == '$') {
-                return end;
+            int pos = MatchIdentifier(buff);
+            if (pos > -1 && buff.CharAt(pos++) == '$') {
+                return pos;
             }
-            else if (buff.CharAt(end++) == '@') { // it's a macro
-                int newend = FindAcceptableFuncChars(buff, end);
-                if (newend != end) {
-                    return newend;
+            else if (buff.CharAt(0) == '@') { // it's a macro
+                if (buff.CharAt(1) == -1)
+                    return -1;
+                int end = FindAcceptableFuncChars(buff, 1);
+                if (end != pos) {
+                    return end;
                 }
             }
             return -1;

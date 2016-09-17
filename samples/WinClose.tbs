@@ -25,7 +25,7 @@ If hwnd$ = 0 Then
 	MsgBox(16, "The Calculator is not open!", "Error!")
 Else
 	ret$ = MsgBox(36, "Would you like to close the calculator?", "Question")
-	If ret$ = "Yes" Then
+	If ret$ == "Yes" Then
 		WinClose(hwnd$)
 	End If
 End If

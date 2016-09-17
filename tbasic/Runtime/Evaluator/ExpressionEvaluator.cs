@@ -20,9 +20,9 @@ namespace Tbasic.Runtime
     /// </summary>
     internal partial class ExpressionEvaluator : IExpressionEvaluator
     {
-        private static readonly IRuntimeObject[] EmptyObjectArray = new IRuntimeObject[0];
+        private static readonly object[] EmptyObjectArray = new object[0];
 
-        private LinkedList<LinkedList<IRuntimeObject>> subexpressions = null;
+        private LinkedList<LinkedList<object>> subexpressions = null;
         private IEnumerable<char> _expression = string.Empty;
         
         public ExpressionEvaluator(TRuntime runtime)
@@ -81,24 +81,10 @@ namespace Tbasic.Runtime
                 }
             }
         }
-        
-        TbasicType IRuntimeObject.TypeCode
-        {
-            get {
-                return TbasicType.Evaluator;
-            }
-        }
-
-        object IRuntimeObject.Value
-        {
-            get {
-                return this;
-            }
-        }
 
         #endregion
 
-        public IRuntimeObject Evaluate(IEnumerable<char> expr)
+        public object Evaluate(IEnumerable<char> expr)
         {
             if (expr == null)
                 throw new ArgumentNullException(nameof(expr));
@@ -107,43 +93,43 @@ namespace Tbasic.Runtime
             return Evaluate();
         }
 
-        public IRuntimeObject Evaluate()
+        public object Evaluate()
         {
-            IRuntimeObject[] results = EvaluateAll();
+            object[] results = EvaluateAll();
             if (results.Length == 1) {
                 return results[0];
             }
             else {
-                return (TbasicArray)results;
+                return results;
             }
         }
 
-        private IRuntimeObject[] EvaluateAll()
+        private object[] EvaluateAll()
         {
             Contract.Ensures(Contract.Result<object>() != null);
             if (Expression == null || Expression.ToString() == string.Empty) {
                 return EmptyObjectArray;
             }
             else {
-                List<IRuntimeObject> lResults = new List<IRuntimeObject>();
+                List<object> lResults = new List<object>();
 
                 if (!Parsed) {
-                    subexpressions = new LinkedList<LinkedList<IRuntimeObject>>();
+                    subexpressions = new LinkedList<LinkedList<object>>();
 
                     IScanner scanner = Runtime.Scanner.Scan(_expression);
-                    LinkedList<IRuntimeObject> tokens = new LinkedList<IRuntimeObject>();
+                    LinkedList<object> objects = new LinkedList<object>();
 
                     while (!scanner.EndOfStream) {
-                        if (!NextToken(tokens, scanner)) { // expression break time
-                            subexpressions.AddLast(tokens);
-                            tokens = new LinkedList<IRuntimeObject>();
+                        if (!NextToken(objects, scanner)) { // expression break time
+                            subexpressions.AddLast(objects);
+                            objects = new LinkedList<object>();
                         }
                     }
-                    subexpressions.AddLast(tokens);
+                    subexpressions.AddLast(objects);
                 }
 
-                foreach(LinkedList<IRuntimeObject> tokens in subexpressions) {
-                    lResults.Add(ConvertToSimpleType(EvaluateList(tokens), Runtime.Options));
+                foreach(LinkedList<object> objects in subexpressions) {
+                    lResults.Add(ConvertToSimpleType(EvaluateList(objects), Runtime.Options));
                 }
 
                 return lResults.ToArray();
@@ -155,11 +141,11 @@ namespace Tbasic.Runtime
             return Convert.ToBoolean(Evaluate());
         }
         
-        private bool NextToken(LinkedList<IRuntimeObject> tokens, IScanner scanner)
+        private bool NextToken(LinkedList<object> objects, IScanner scanner)
         {
             int startIndex = scanner.Position;
-            object token;
-            TokenType type = scanner.NextToken(Runtime, out token, tokens.Last?.Value);
+            object value;
+            TokenType type = scanner.NextToken(Runtime, out value, objects.Last?.Value);
             switch(type) {
                 case TokenType.Comment:
                     return false;
@@ -173,11 +159,11 @@ namespace Tbasic.Runtime
                         throw new FormatException("Poorly formed function call");
                     }
             }
-            AddObjectToExprList(token, startIndex, scanner, tokens);
+            AddObjectToExprList(value, startIndex, scanner, objects);
             return true;
         }
 
-        private void AddObjectToExprList(IRuntimeObject val, int startIndex, IScanner scanner, LinkedList<IRuntimeObject> tokens)
+        private void AddObjectToExprList(object val, int startIndex, IScanner scanner, LinkedList<object> objects)
         {
             if (val?.ToString() == "(") {
                 scanner.Position = startIndex;
@@ -188,26 +174,26 @@ namespace Tbasic.Runtime
                     scanner.Read(startIndex + 1, scanner.Position - startIndex - 2),
                     Runtime // share the wealth
                 );
-                tokens.AddLast(eval);
+                objects.AddLast(eval);
             }
             else {
-                tokens.AddLast(val);
+                objects.AddLast(val);
             }
             scanner.SkipWhiteSpace();
         }
         
-        private IRuntimeObject EvaluateList(LinkedList<IRuntimeObject> _tokens)
+        private object EvaluateList(LinkedList<object> _objects)
         {
-            LinkedList<IRuntimeObject> list = new LinkedList<IRuntimeObject>(_tokens);
+            LinkedList<object> list = new LinkedList<object>(_objects);
 
             // evaluate unary operators
 
-            LinkedListNode<IRuntimeObject> x = list.First;
+            LinkedListNode<object> x = list.First;
             while (x != null) {
-                UnaryOperator? op = x.Value.Value as UnaryOperator?;
+                UnaryOperator? op = x.Value as UnaryOperator?;
                 if (op != null) {
                     var node = x.Next;
-                    x.Value = PerformUnaryOp(Runtime, op.Value, node?.Value);
+                    x.Value = PerformUnaryOp(Runtime, op.Value, node.Value);
                     if (node != null)
                         list.Remove(node);
                 }
@@ -219,7 +205,7 @@ namespace Tbasic.Runtime
             
             x = list.First?.Next; // skip the first operand
             while (x != null) {
-                BinaryOperator? op = x.Value.Value as BinaryOperator?;
+                BinaryOperator? op = x.Value as BinaryOperator?;
                 if (op == null) {
                     throw ThrowHelper.MissingBinaryOp(x.Previous.Value, x.Value);
                 }
@@ -227,10 +213,10 @@ namespace Tbasic.Runtime
                     if (x.Next == null)
                         throw new ArgumentException("Expression cannot end in a binary operation [" + x.Value + "]");
                 }
-                x = x.Next.Next; // skip the operand
+                x = x.Next?.Next; // skip the operand
             }
 
-            var nodePair = default(ValueTuple<BinaryOperator, LinkedListNode<IRuntimeObject>>);
+            var nodePair = default(ValueTuple<BinaryOperator, LinkedListNode<object>>);
             while (opqueue.Dequeue(out nodePair)) {
                 nodePair.Item2.Value = PerformBinaryOp(
                     Runtime,
@@ -244,7 +230,7 @@ namespace Tbasic.Runtime
                     list.Remove(nodePair.Item2.Previous);
             }
 
-            IExpressionEvaluator expr = list.First?.Value as IExpressionEvaluator;
+            IExpressionEvaluator expr = list.First.Value as IExpressionEvaluator;
             if (expr == null) {
                 return list.First?.Value;
             }
@@ -261,7 +247,7 @@ namespace Tbasic.Runtime
         /// <param name="expressionString">expression to be evaluated</param>
         /// <param name="runtime">the current execution</param>
         /// <returns></returns>
-        public static IRuntimeObject Evaluate(IEnumerable<char> expressionString, TRuntime runtime)
+        public static object Evaluate(IEnumerable<char> expressionString, TRuntime runtime)
         {
             if (expressionString == null)
                 throw new ArgumentNullException(nameof(expressionString));
@@ -273,7 +259,7 @@ namespace Tbasic.Runtime
             return expression.Evaluate();
         }
 
-        public static IRuntimeObject PerformUnaryOp(TRuntime runtime, UnaryOperator op, IRuntimeObject operand)
+        public static object PerformUnaryOp(TRuntime runtime, UnaryOperator op, object operand)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -296,7 +282,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Performs a binary operation
         /// </summary>
-        public static object PerformBinaryOp(TRuntime runtime, BinaryOperator op, IRuntimeObject left, IRuntimeObject right)
+        public static object PerformBinaryOp(TRuntime runtime, BinaryOperator op, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -362,7 +348,7 @@ namespace Tbasic.Runtime
                 return "array";
             }
             else {
-                return t.Name.ToLower();
+                return t.Name;
             }
         }
 
@@ -426,7 +412,7 @@ namespace Tbasic.Runtime
             return sb.ToString();
         }
 
-        public static IRuntimeObject ConvertToSimpleType(IRuntimeObject obj, ExecuterOption opts)
+        public static object ConvertToSimpleType(object obj, ExecuterOption opts)
         {
             if (obj == null) {
                 if (opts.HasFlag(ExecuterOption.NullIsZero)) {
@@ -437,7 +423,7 @@ namespace Tbasic.Runtime
                 }
             }
 
-            if (obj.TypeCode == TbasicType.Boolean)
+            if (obj is bool)
                 return obj;
 
             Number? _nObj = Number.AsNumber(obj, opts);
@@ -472,7 +458,7 @@ namespace Tbasic.Runtime
             Contract.Invariant(Runtime != null);
         }
 
-        IRuntimeObject IExpressionEvaluator.Evaluate()
+        object IExpressionEvaluator.Evaluate()
         {
             throw new NotImplementedException();
         }

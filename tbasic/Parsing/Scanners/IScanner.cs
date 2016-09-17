@@ -28,6 +28,8 @@ namespace Tbasic.Parsing
         ExpressionBreak,
         Null,
         Undefined,
+        Evaluator,
+        Array,
         None
 #pragma warning restore CS1591
     }

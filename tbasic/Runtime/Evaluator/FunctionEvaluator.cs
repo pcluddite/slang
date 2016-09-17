@@ -53,20 +53,6 @@ namespace Tbasic.Runtime
                 return _params;
             }
         }
-        
-        TbasicType IRuntimeObject.TypeCode
-        {
-            get {
-                return TbasicType.Function;
-            }
-        }
-
-        object IRuntimeObject.Value
-        {
-            get {
-                return this;
-            }
-        }
 
         #endregion
 
@@ -86,7 +72,7 @@ namespace Tbasic.Runtime
             _params = parameters;
         }
         
-        public IRuntimeObject Evaluate()
+        public object Evaluate()
         {
             return ExecuteFunction(_name, _params);
         }
@@ -96,7 +82,7 @@ namespace Tbasic.Runtime
             return Expression.ToString();
         }
         
-        private IRuntimeObject ExecuteFunction(string name, IList<IEnumerable<char>> l_params)
+        private object ExecuteFunction(string name, IList<IEnumerable<char>> l_params)
         {
             CallData func;
             if (CurrentContext.TryGetFunction(name, out func)) {

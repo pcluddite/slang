@@ -18,10 +18,5 @@ namespace Tbasic.Parsing
 
         protected override Predicate<Line> FuncBegin { get; } = (o => o.Text.EqualsIgnoreCase("func"));
         protected override Predicate<Line> FuncEnd { get; } = (o => o.Text.Equals("}"));
-
-        protected override void AddImplicitLet(ref Line line)
-        {
-            // don't do anything. we don't want an implicit let
-        }
     }
 }

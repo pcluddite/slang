@@ -882,7 +882,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Adds a variable to this context. If the Function exists, an exception is thrown
         /// </summary>
-        public void AddVariable(string name, IRuntimeObject value)
+        public void AddVariable(string name, object value)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
@@ -892,31 +892,8 @@ namespace Tbasic.Runtime
             if (c != null) {
                 throw ThrowHelper.ConstantChange();
             }
-            c = FindVariableContext(name);
             try {
-                c._variables.Add(name, value);
-            }
-            catch(ArgumentException) {
-                throw new DuplicateDefinitionException(name);
-            }
-        }
-
-        /// <summary>
-        /// Adds a variable to this context. If the Function exists, an exception is thrown
-        /// </summary>
-        public void AddVariable(string name, string value)
-        {
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-            Contract.EndContractBlock();
-
-            ObjectContext c = FindConstantContext(name);
-            if (c != null) {
-                throw ThrowHelper.ConstantChange();
-            }
-            c = FindVariableContext(name);
-            try {
-                c._variables.Add(name, (TbasicString)value);
+                _variables.Add(name, value);
             }
             catch(ArgumentException) {
                 throw new DuplicateDefinitionException(name);
@@ -936,9 +913,8 @@ namespace Tbasic.Runtime
             if (c != null) {
                 throw ThrowHelper.ConstantChange();
             }
-            c = FindVariableContext(name);
             try {
-                c._variables.Add(name, (Number)value);
+                _variables.Add(name, value);
             }
             catch(ArgumentException) {
                 throw new DuplicateDefinitionException(name);
@@ -958,9 +934,8 @@ namespace Tbasic.Runtime
             if (c != null) {
                 throw ThrowHelper.ConstantChange();
             }
-            c = FindVariableContext(name);
             try {
-                c._variables.Add(name, (TbasicBoolean)value);
+                _variables.Add(name, value);
             }
             catch(ArgumentException) {
                 throw new DuplicateDefinitionException(name);
@@ -980,9 +955,8 @@ namespace Tbasic.Runtime
             if (c != null) {
                 throw ThrowHelper.ConstantChange();
             }
-            c = FindVariableContext(name);
             try {
-                c._variables.Add(name, (TbasicEnumValue)value);
+                _variables.Add(name, value);
             }
             catch(ArgumentException) {
                 throw new DuplicateDefinitionException(name);
@@ -995,7 +969,7 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="name">the variable name</param>
         /// <param name="value">the variable value</param>
-        public void SetVariable(string name, IRuntimeObject value)
+        public void SetVariable(string name, object value)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
@@ -1020,31 +994,6 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="name">the variable name</param>
         /// <param name="value">the variable value</param>
-        public void SetVariable(string name, string value)
-        {
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-            Contract.EndContractBlock();
-
-            ObjectContext c = FindConstantContext(name);
-            if (c != null) {
-                throw ThrowHelper.ConstantChange();
-            }
-            c = FindVariableContext(name);
-            if (c == null) {
-                _variables.Add(name, (TbasicString)value);
-            }
-            else {
-                c._variables[name] = (TbasicString)value;
-            }
-        }
-
-        /// <summary>
-        /// Sets a variable in this context. If the variable exists, it is set in
-        /// the context in which it was declared. Otherwise, it is declared in this context.
-        /// </summary>
-        /// <param name="name">the variable name</param>
-        /// <param name="value">the variable value</param>
         public void SetVariable(string name, Number value)
         {
             if (name == null)
@@ -1057,10 +1006,10 @@ namespace Tbasic.Runtime
             }
             c = FindVariableContext(name);
             if (c == null) {
-                _variables.Add(name, (Number)value);
+                _variables.Add(name, value);
             }
             else {
-                c._variables[name] = (Number)value;
+                c._variables[name] = value;
             }
         }
 
@@ -1082,10 +1031,35 @@ namespace Tbasic.Runtime
             }
             c = FindVariableContext(name);
             if (c == null) {
-                _variables.Add(name, (TbasicBoolean)value);
+                _variables.Add(name, value);
             }
             else {
-                c._variables[name] = (TbasicBoolean)value;
+                c._variables[name] = value;
+            }
+        }
+
+        /// <summary>
+        /// Sets a variable in this context. If the variable exists, it is set in
+        /// the context in which it was declared. Otherwise, it is declared in this context.
+        /// </summary>
+        /// <param name="name">the variable name</param>
+        /// <param name="value">the variable value</param>
+        public void SetVariable(string name, Enum value)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            Contract.EndContractBlock();
+
+            ObjectContext c = FindConstantContext(name);
+            if (c != null) {
+                throw ThrowHelper.ConstantChange();
+            }
+            c = FindVariableContext(name);
+            if (c == null) {
+                _variables.Add(name, value);
+            }
+            else {
+                c._variables[name] = value;
             }
         }
 
@@ -1111,13 +1085,12 @@ namespace Tbasic.Runtime
                 return _super.FindVariableContext(name);
             }
         }
-
         #endregion
         #region Generated methods for Constants
         /// <summary>
         /// Adds a constant to this context. If the Function exists, an exception is thrown
         /// </summary>
-        public void AddConstant(string name, IRuntimeObject value)
+        public void AddConstant(string name, object value)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
@@ -1127,31 +1100,8 @@ namespace Tbasic.Runtime
             if (c != null) {
                 throw ThrowHelper.ConstantChange();
             }
-            c = FindVariableContext(name);
             try {
-                c._variables.Add(name, value);
-            }
-            catch(ArgumentException) {
-                throw new DuplicateDefinitionException(name);
-            }
-        }
-
-        /// <summary>
-        /// Adds a constant to this context. If the Function exists, an exception is thrown
-        /// </summary>
-        public void AddConstant(string name, string value)
-        {
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-            Contract.EndContractBlock();
-
-            ObjectContext c = FindConstantContext(name);
-            if (c != null) {
-                throw ThrowHelper.ConstantChange();
-            }
-            c = FindVariableContext(name);
-            try {
-                c._variables.Add(name, (TbasicString)value);
+                _constants.Add(name, value);
             }
             catch(ArgumentException) {
                 throw new DuplicateDefinitionException(name);
@@ -1171,9 +1121,8 @@ namespace Tbasic.Runtime
             if (c != null) {
                 throw ThrowHelper.ConstantChange();
             }
-            c = FindVariableContext(name);
             try {
-                c._variables.Add(name, (Number)value);
+                _constants.Add(name, value);
             }
             catch(ArgumentException) {
                 throw new DuplicateDefinitionException(name);
@@ -1193,9 +1142,8 @@ namespace Tbasic.Runtime
             if (c != null) {
                 throw ThrowHelper.ConstantChange();
             }
-            c = FindVariableContext(name);
             try {
-                c._variables.Add(name, (TbasicBoolean)value);
+                _constants.Add(name, value);
             }
             catch(ArgumentException) {
                 throw new DuplicateDefinitionException(name);
@@ -1215,9 +1163,8 @@ namespace Tbasic.Runtime
             if (c != null) {
                 throw ThrowHelper.ConstantChange();
             }
-            c = FindVariableContext(name);
             try {
-                c._variables.Add(name, (TbasicEnumValue)value);
+                _constants.Add(name, value);
             }
             catch(ArgumentException) {
                 throw new DuplicateDefinitionException(name);
@@ -1246,7 +1193,6 @@ namespace Tbasic.Runtime
                 return _super.FindConstantContext(name);
             }
         }
-
         #endregion
     }
 }

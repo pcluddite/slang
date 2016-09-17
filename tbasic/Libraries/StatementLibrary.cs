@@ -124,15 +124,15 @@ namespace Tbasic.Libraries
             scanner.Position += stackdat.Name.Length;
             scanner.SkipWhiteSpace();
 
-            VariableEvaluator v;
-            if (!DefaultScanner.NextVariable(scanner, runtime, out v))
+            VariableEvaluator var_eval;
+            if (!DefaultScanner.NextVariable(scanner, runtime, out var_eval))
                 throw ThrowHelper.InvalidVariableName();
 
-            string name = v.Name.ToString();
+            string name = var_eval.Name.ToString();
             ObjectContext context = runtime.Context.FindVariableContext(name);
             if (context == null) {
-                if (v.Indices != null) {
-                    runtime.Context.SetVariable(name, array_alloc(v.EvaluateIndices(), 0));
+                if (var_eval.Indices != null) {
+                    runtime.Context.SetVariable(name, array_alloc(var_eval.EvaluateIndices(), 0));
                 }
                 else {
                     scanner.SkipWhiteSpace();
@@ -140,50 +140,58 @@ namespace Tbasic.Libraries
                         SetVariable(runtime, stackdat, false);
                     }
                     else {
-                        runtime.Context.SetVariable(name, (IRuntimeObject)null); // just declare it.
+                        runtime.Context.SetVariable(name, null); // just declare it.
                     }
                 }
             }
             else {
-                IRuntimeObject obj = context.GetVariable(name).Value;
-                array_realloc(ref obj, v.EvaluateIndices(), 0);
-                context.SetVariable(name, obj);
+                Variable v = context.GetVariable(name);
+                object[] array = v.Value as object[];
+                if (array != null) {
+                    array = array_realloc(array, var_eval.EvaluateIndices(), 0);
+                }
+                context.SetVariable(name, array);
             }
             return NULL(runtime, stackdat);
         }
 
-        private IRuntimeObject array_alloc(int[] sizes, int index)
+        private static object[] array_alloc(int[] sizes, int index)
         {
             if (index < sizes.Length) {
-                IRuntimeObject[] o = new IRuntimeObject[sizes[index]];
-                index++;
-                for (int i = 0; i < o.Length; i++) {
-                    o[i] = array_alloc(sizes, index);
+                object[] array = new object[sizes[index++]];
+                for (int i = 0; i < array.Length; ++i) {
+                    array[i] = array_alloc(sizes, index);
                 }
-                return new TbasicArray(o);
+                return array;
             }
             else {
                 return null;
             }
         }
 
-        private void array_realloc(ref IRuntimeObject o, int[] sizes, int index)
+        private static object[] array_realloc(object[] o, int[] sizes, int index)
         {
+            if (o == null)
+                return null;
+            
+            object[] array = o as object[];
             if (o != null) {
-                if (o.TypeCode == TbasicType.Array) {
-                    IRuntimeObject[] _aObj = (IRuntimeObject[])o.Value;
-                    if (index < sizes.Length) {
-                        Array.Resize<IRuntimeObject>(ref _aObj, sizes[index]);
-                        index++;
-                        for (int i = 0; i < _aObj.Length; i++) {
-                            array_realloc(ref _aObj[i], sizes, index);
+                if (index < sizes.Length) {
+                    Array.Resize(ref array, sizes[index++]);
+                    for (int i = 0; i < array.Length; ++i) {
+                        object[] elem = array as object[];
+                        if (elem != null) {
+                            array[i] = array_realloc(elem, sizes, index);
                         }
-                        o = new TbasicArray(_aObj);
                     }
+                    return array;
                 }
                 else {
-                    o = array_alloc(sizes, index);
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 }
+            }
+            else {
+                return array_alloc(sizes, index);
             }
         }
 
@@ -201,6 +209,9 @@ namespace Tbasic.Libraries
         {
             stackdat.AssertAtLeast(2);
 
+            ExpressionEvaluator eval = new ExpressionEvaluator(runtime);
+            return eval.Evaluate(stackdat.Text.Substring(stackdat.Name.Length));
+
             IScanner scanner = runtime.Scanner.Scan(stackdat.Text);
             scanner.Position += stackdat.Name.Length;
 
@@ -212,7 +223,7 @@ namespace Tbasic.Libraries
                 throw ThrowHelper.InvalidDefinitionOperator();
 
             ExpressionEvaluator e = new ExpressionEvaluator(stackdat.Text.Substring(scanner.Position + 1), runtime);
-            IRuntimeObject result = e.Evaluate();
+            object result = e.Evaluate();
 
             if (v.Indices == null) {
                 if (!constant) {

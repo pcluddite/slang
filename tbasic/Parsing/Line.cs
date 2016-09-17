@@ -81,7 +81,7 @@ namespace Tbasic.Parsing
             visibleName = null;
             text = line.Trim(); // Ignore leading and trailing whitespace.
             IsFunction = false;
-            Name = null;
+            Name = string.Empty;
             FindAndSetName();
         }
 

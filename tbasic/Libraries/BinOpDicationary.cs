@@ -48,10 +48,10 @@ namespace Tbasic.Types
             operators.Add(new BinaryOperator("|", 12, BitOr));
             operators.Add(new BinaryOperator("&&", 13, NotImplemented)); // These are special cases that are evaluated with short circuit evalutaion 6/20/16
             operators.Add(new BinaryOperator("||", 14, NotImplemented));
-            operators.Add(new BinaryOperator("=", 16, Set));
+            operators.Add(new BinaryOperator("=", 16, Set, BinaryOperator.OperandPosition.Right));
         }
 
-        private static object Dot(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object Dot(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -72,18 +72,19 @@ namespace Tbasic.Types
             return e.Evaluate();
         }
 
-        private static object Set(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object Set(TRuntime runtime, object left, object right)
         {
             VariableEvaluator v = left as VariableEvaluator;
             if (v == null)
                 throw new ArgumentException($"Cannot set the value of {left}");
 
-            //v.Evaluate()
+            ObjectContext context = runtime.Context;
+            context.SetVariable(v.Name, right);
 
-            throw new NotImplementedException();
+            return right;
         }
 
-        private static object Multiply(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object Multiply(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -93,7 +94,7 @@ namespace Tbasic.Types
                    Number.Convert(right, runtime.Options);
         }
 
-        private static object Divide(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object Divide(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -103,7 +104,7 @@ namespace Tbasic.Types
                    Number.Convert(right, runtime.Options);
         }
 
-        private static object Modulo(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object Modulo(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -113,14 +114,14 @@ namespace Tbasic.Types
                    Convert.ToInt64(right, CultureInfo.InvariantCulture);
         }
 
-        private static object Add(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object Add(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
             Contract.EndContractBlock();
 
-            string str1 = left?.Value as string,
-                   str2 = right?.Value as string;
+            string str1 = left as string,
+                   str2 = right as string;
             if (str1 != null || str2 != null)
                 return StringAdd(left, right, str1, str2);
             return Number.Convert(left, runtime.Options) +
@@ -133,7 +134,7 @@ namespace Tbasic.Types
             return str1 + str2;
         }
 
-        private static object Subtract(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object Subtract(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -143,7 +144,7 @@ namespace Tbasic.Types
                    Number.Convert(right, runtime.Options);
         }
 
-        private static object LessThan(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object LessThan(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -153,7 +154,7 @@ namespace Tbasic.Types
                    Number.Convert(right, runtime.Options);
         }
 
-        private static object LessThanOrEqual(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object LessThanOrEqual(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -163,7 +164,7 @@ namespace Tbasic.Types
                    Number.Convert(right, runtime.Options);
         }
 
-        private static object GreaterThan(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object GreaterThan(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -173,7 +174,7 @@ namespace Tbasic.Types
                    Number.Convert(right, runtime.Options);
         }
 
-        private static object GreaterThanOrEqual(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object GreaterThanOrEqual(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -183,7 +184,7 @@ namespace Tbasic.Types
                    Number.Convert(right, runtime.Options);
         }
 
-        private static object EqualTo(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object EqualTo(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -192,7 +193,7 @@ namespace Tbasic.Types
             return EqualToAsBool(runtime, left, right);
         }
 
-        private static bool EqualToAsBool(TRuntime runtime, IRuntimeObject left, IRuntimeObject right) // separate method so that it won't be boxed and unboxed unnecessarily 8/8/16
+        private static bool EqualToAsBool(TRuntime runtime, object left, object right) // separate method so that it won't be boxed and unboxed unnecessarily 8/8/16
         {
             if (left == right)
                 return true;
@@ -211,7 +212,7 @@ namespace Tbasic.Types
                 str2 = ExpressionEvaluator.GetStringRepresentation(right);
         }
 
-        private static object SortaEquals(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object SortaEquals(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -222,17 +223,20 @@ namespace Tbasic.Types
             if (left.GetType() == right.GetType())
                 return EqualTo(runtime, left, right);
 
-            if (left.TypeCode == TbasicType.String)
-                return StrSortaEqualsObj((string)left.Value, right);
-            if (right.TypeCode == TbasicType.String)
-                return StrSortaEqualsObj((string)right.Value, left);
+            string str_left = left as string;
+            if (str_left != null)
+                return StrSortaEqualsObj(str_left, right);
+
+            string str_right = right as string;
+            if (str_right != null)
+                return StrSortaEqualsObj(str_right, left);
 
             return false;
         }
 
         private const ExecuterOption SortaEqualsOptions = ExecuterOption.None;
 
-        private static bool StrSortaEqualsObj(string str_left, IRuntimeObject right)
+        private static bool StrSortaEqualsObj(string str_left, object right)
         {
             Number? n_right = Number.AsNumber(right, SortaEqualsOptions);
             if (n_right != null) {
@@ -246,11 +250,12 @@ namespace Tbasic.Types
                 }
             }
 
-            if (right.TypeCode != TbasicType.String)
+            string str_right = right as string;
+            if (str_right != null)
                 return false;
             
             bool b_right;
-            if (bool.TryParse((string)right.Value, out b_right)) {
+            if (bool.TryParse(str_right, out b_right)) {
                 bool b_left;
                 if (bool.TryParse(str_left, out b_left)) {
                     return b_left == b_right;
@@ -263,7 +268,7 @@ namespace Tbasic.Types
             return false;
         }
 
-        private static object NotEqualTo(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object NotEqualTo(TRuntime runtime, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -278,37 +283,37 @@ namespace Tbasic.Types
             return str1 != str2;
         }
 
-        private static object ShiftLeft(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object ShiftLeft(TRuntime runtime, object left, object right)
         {
             return Convert.ToInt64(left, CultureInfo.InvariantCulture) <<
                    Convert.ToInt32(right, CultureInfo.InvariantCulture);
         }
 
-        private static object ShiftRight(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object ShiftRight(TRuntime runtime, object left, object right)
         {
             return Convert.ToInt64(left, CultureInfo.InvariantCulture) >>
                    Convert.ToInt32(right, CultureInfo.InvariantCulture);
         }
 
-        private static object BitAnd(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object BitAnd(TRuntime runtime, object left, object right)
         {
             return Convert.ToUInt64(left, CultureInfo.InvariantCulture) &
                    Convert.ToUInt64(right, CultureInfo.InvariantCulture);
         }
 
-        private static object BitXor(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object BitXor(TRuntime runtime, object left, object right)
         {
             return Convert.ToUInt64(left, CultureInfo.InvariantCulture) ^
                    Convert.ToUInt64(right, CultureInfo.InvariantCulture);
         }
 
-        private static object BitOr(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object BitOr(TRuntime runtime, object left, object right)
         {
             return Convert.ToUInt64(left, CultureInfo.InvariantCulture) |
                    Convert.ToUInt64(right, CultureInfo.InvariantCulture);
         }
 
-        private static object NotImplemented(TRuntime runtime, IRuntimeObject left, IRuntimeObject right)
+        private static object NotImplemented(TRuntime runtime, object left, object right)
         {
             throw new NotImplementedException();
         }

@@ -11,10 +11,10 @@ namespace Tbasic.Runtime
     /// <summary>
     /// An expression evaluator
     /// </summary>
-    internal interface IExpressionEvaluator : IRuntimeObject
+    internal interface IExpressionEvaluator
     {
         IEnumerable<char> Expression { get; set; }
-        IRuntimeObject Evaluate();
+        object Evaluate();
         TRuntime Runtime { get; set; }
         ObjectContext CurrentContext { get; set; }
     }

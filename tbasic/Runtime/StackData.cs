@@ -18,12 +18,12 @@ namespace Tbasic.Runtime
     public partial class StackData : ICloneable
     {
         [ContractPublicPropertyName(nameof(Parameters))]
-        private List<IRuntimeObject> _params = new List<IRuntimeObject>();
+        private List<object> _params = new List<object>();
 
         /// <summary>
         /// Gets a list of the parameters passed to the function
         /// </summary>
-        public IList<IRuntimeObject> Parameters
+        public IList<object> Parameters
         {
             get {
                 return _params;
@@ -47,7 +47,7 @@ namespace Tbasic.Runtime
         {
             get {
                 if (_params.Count > 0) {
-                    return (_params[0].Value ?? string.Empty).ToString();
+                    return (_params[0] ?? string.Empty).ToString();
                 }
                 else {
                     return string.Empty;
@@ -55,10 +55,10 @@ namespace Tbasic.Runtime
             }
             set {
                 if (_params.Count == 0) {
-                    _params.Add(new TbasicString(value));
+                    _params.Add(value);
                 }
                 else {
-                    _params.Insert(0, new TbasicString(value));
+                    _params.Insert(0, value);
                 }
             }
         }
@@ -97,16 +97,10 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="parameters">the parameters of the function</param>
         /// <param name="options">the execution that called the function</param>
-        public StackData(ExecuterOption options, IEnumerable<IRuntimeObject> parameters)
+        public StackData(ExecuterOption options, IEnumerable<object> parameters)
             : this(options)
         {
             _params.AddRange(parameters);
-        }
-
-        internal StackData(ExecuterOption options, IEnumerable<string> parameters)
-            : this(options)
-        {
-            AddRange(parameters);
         }
 
         /// <summary>
@@ -175,7 +169,7 @@ namespace Tbasic.Runtime
         /// <param name="index">The index of the argument</param>
         /// <exception cref="ArgumentOutOfRangeException">thrown if the argument is out of range</exception>
         /// <returns></returns>
-        public IRuntimeObject Get(int index)
+        public object Get(int index)
         {
             if ((uint)index >= (uint)_params.Count)
                 throw new ArgumentOutOfRangeException();
@@ -253,7 +247,7 @@ namespace Tbasic.Runtime
                 throw new ArgumentNullException(nameof(runtime));
             Contract.EndContractBlock();
 
-            TbasicString param = Get(index) as TbasicString;
+            string param = Get(index) as string;
             if (param != null)
                 _params[index] = ExpressionEvaluator.Evaluate(param, runtime);
             return _params[index];
@@ -268,7 +262,7 @@ namespace Tbasic.Runtime
                 throw new ArgumentNullException(nameof(runtime));
             Contract.EndContractBlock();
 
-            TbasicString param = Get(index) as TbasicString;
+            string param = Get(index) as string;
             if (param != null)
                 _params[index] = ExpressionEvaluator.Evaluate(param, runtime);
             return Get<T>(index);
@@ -285,7 +279,7 @@ namespace Tbasic.Runtime
 
             ExpressionEvaluator eval = new ExpressionEvaluator(runtime);
             for (int index = 1; index < _params.Count; ++index) {
-                TbasicString param = _params[index] as TbasicString;
+                string param = _params[index] as string;
                 if (param != null) {
                     _params[index] = ExpressionEvaluator.Evaluate(param, runtime);
                 }
@@ -301,7 +295,7 @@ namespace Tbasic.Runtime
             StackData clone = new StackData(Options);
             clone.Text = Text;
             if (_params == null) {
-                clone._params = new List<IRuntimeObject>();
+                clone._params = new List<object>();
             }
             else {
                 clone._params.AddRange(_params);

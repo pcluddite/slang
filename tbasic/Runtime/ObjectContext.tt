@@ -62,20 +62,19 @@ private void BuildVariable(string name, string dict, bool sets)
 #>
         #region Generated methods for <#= name #>s
 <#+
-    BuildAddVariable(name, "IRuntimeObject", "",  "_variables"); WriteLine("");
-    BuildAddVariable(name, "string", "(TbasicString)",  "_variables"); WriteLine("");
-    BuildAddVariable(name, "Number", "(Number)",  "_variables"); WriteLine("");
-    BuildAddVariable(name, "bool", "(TbasicBoolean)",  "_variables"); WriteLine("");
-	BuildAddVariable(name, "Enum", "(TbasicEnumValue)",  "_variables"); WriteLine("");
+    BuildAddVariable(name, "object", "", dict); WriteLine("");
+    BuildAddVariable(name, "Number", "", dict); WriteLine("");
+    BuildAddVariable(name, "bool", "", dict); WriteLine("");
+    BuildAddVariable(name, "Enum", "", dict); WriteLine("");
 
     if (sets) {
-        BuildSetVariable("IRuntimeObject", ""); WriteLine("");
-        BuildSetVariable("string", "(TbasicString)"); WriteLine("");
-        BuildSetVariable("Number", "(Number)"); WriteLine("");
-        BuildSetVariable("bool", "(TbasicBoolean)"); WriteLine("");
+        BuildSetVariable("object", ""); WriteLine("");
+        BuildSetVariable("Number", ""); WriteLine("");
+        BuildSetVariable("bool", ""); WriteLine("");
+        BuildSetVariable("Enum", ""); WriteLine("");
     }
 
-    BuildFindContext(name, "Variable", dict); WriteLine("");
+    BuildFindContext(name, "Variable", dict);
 #>
         #endregion
 <#+
@@ -127,9 +126,8 @@ private void BuildAddVariable(string name, string type, string cast, string dict
             if (c != null) {
                 throw ThrowHelper.ConstantChange();
             }
-            c = FindVariableContext(name);
             try {
-                c.<#= dict #>.Add(name, <#= cast #>value);
+                <#= dict #>.Add(name, <#= cast #>value);
             }
             catch(ArgumentException) {
                 throw new DuplicateDefinitionException(name);

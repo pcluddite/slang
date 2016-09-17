@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using Tbasic.Types;
 using Tbasic.Components;
+using Tbasic.Parsing;
 
 namespace Tbasic.Runtime
 {

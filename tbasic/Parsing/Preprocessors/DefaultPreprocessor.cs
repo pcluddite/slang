@@ -89,16 +89,7 @@ namespace Tbasic.Parsing
                 linestr = new string(chars.Reverse().ToArray());
             }
             line = Line.CreateLineNoTrim(lineNumber, linestr);
-            AddImplicitLet(ref line);
             return true;
-        }
-
-        protected virtual void AddImplicitLet(ref Line line)
-        {
-            if (line.Text.Length > 0 && line.Name[line.Name.Length - 1] == VarSigil) {
-                line.VisibleName = line.Name;
-                line.Text = "LET " + line.Text; // add the word LET if it's an equality, but use the original name as visible name
-            }
         }
 
         protected virtual int ProcessFuncBlock(TextReader reader, Line current, out FunctionBlock block)

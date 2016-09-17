@@ -13,7 +13,7 @@ namespace Tbasic.Types
     /// <summary>
     /// Reperesents a variable
     /// </summary>
-    public struct Variable : IRuntimeObject
+    public struct Variable
     {
         /// <summary>
         /// The context where this variable is located
@@ -26,16 +26,16 @@ namespace Tbasic.Types
         /// <summary>
         /// The value of this variable
         /// </summary>
-        public IRuntimeObject Value { get; }
+        public object Value { get; }
         /// <summary>
         /// Gets the name of this variable
         /// </summary>
         public string Name { get; }
-
+        
         /// <summary>
         /// Initializes a new variable
         /// </summary>
-        public Variable(ObjectContext context, string name, IRuntimeObject value)
+        public Variable(ObjectContext context, string name, object value)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
@@ -52,7 +52,7 @@ namespace Tbasic.Types
         /// <summary>
         /// Initializes a new variable
         /// </summary>
-        public Variable(ObjectContext context, string name, IRuntimeObject value, int index)
+        public Variable(ObjectContext context, string name, object value, int index)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
@@ -64,20 +64,6 @@ namespace Tbasic.Types
             Name = name;
             Value = value;
             Index = index;
-        }
-
-        TbasicType IRuntimeObject.TypeCode
-        {
-            get {
-                return TbasicType.Variable;
-            }
-        }
-
-        object IRuntimeObject.Value
-        {
-            get {
-                return Value;
-            }
         }
     }
 }

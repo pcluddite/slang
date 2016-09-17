@@ -19,8 +19,8 @@ namespace Tbasic.Runtime
         #region Fields/Properties
 
         private ObjectContext _super;
-        private Dictionary<string, IRuntimeObject> _variables;
-        private Dictionary<string, IRuntimeObject> _constants;
+        private Dictionary<string, object> _variables;
+        private Dictionary<string, object> _constants;
         private Dictionary<string, BlockCreator> _blocks;
         private Dictionary<string, TClass> _prototypes;
         private BinOpDictionary _binaryOps;
@@ -53,8 +53,8 @@ namespace Tbasic.Runtime
             _super = superContext;
             _functions = new Library();
             _commands = new Library();
-            _variables = new Dictionary<string, IRuntimeObject>(StringComparer.OrdinalIgnoreCase);
-            _constants = new Dictionary<string, IRuntimeObject>(StringComparer.OrdinalIgnoreCase);
+            _variables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            _constants = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             _blocks = new Dictionary<string, BlockCreator>(StringComparer.OrdinalIgnoreCase);
             _prototypes = new Dictionary<string, TClass>(StringComparer.OrdinalIgnoreCase);
             if (superContext == null) {
@@ -288,7 +288,7 @@ namespace Tbasic.Runtime
         /// <returns>true if the variable was found, otherwise false.</returns>
         public bool TryGetVariable(string name, out Variable var)
         {
-            IRuntimeObject value;
+            object value;
             if (_variables.TryGetValue(name, out value) || _constants.TryGetValue(name, out value)) {
                 var = new Variable(this, name, value);
                 return true;
@@ -309,7 +309,7 @@ namespace Tbasic.Runtime
         /// <returns>the variable data</returns>
         public Variable GetVariable(string name)
         {
-            IRuntimeObject value;
+            object value;
             if (_constants.TryGetValue(name, out value)) {
                 return new Variable(this, name, value);
             }
@@ -332,10 +332,11 @@ namespace Tbasic.Runtime
         /// <returns>the value of the variable</returns>
         public Variable GetArrayAt(string name, params int[] indices)
         {
-            IRuntimeObject obj = GetVariable(name);
+            Variable v = GetVariable(name);
+            object obj = v.Value;
             if (indices != null && indices.Length > 0) {
                 for (int n = 0; n < indices.Length; n++) {
-                    IRuntimeObject[] _aObj = obj.Value as IRuntimeObject[];
+                    object[] _aObj = obj as object[];
                     if (_aObj != null) {
                         if (indices[n] < _aObj.Length) {
                             obj = _aObj[indices[n]];
@@ -370,7 +371,7 @@ namespace Tbasic.Runtime
         {
             Variable statusvar;
             if (TryGetVariable("@error", out statusvar)) {
-                _sframe.Status = (int)statusvar.Value.Value;
+                _sframe.Status = ((Number)statusvar.Value).ToInt();
             }
         }
         
@@ -381,16 +382,16 @@ namespace Tbasic.Runtime
         /// <param name="value">the new value of the array at that index</param>
         /// <param name="indices">the index (or indices of a multidimensional array)</param>
         /// <returns>the value of the variable</returns>
-        public void SetArrayAt(string name, IRuntimeObject value, params int[] indices)
+        public void SetArrayAt(string name, object value, params int[] indices)
         {
-            IRuntimeObject obj = GetVariable(name).Value;
-            TbasicArray array = default(TbasicArray);
+            object obj = GetVariable(name).Value;
+            object[] array = null;
             if (indices != null && indices.Length > 0) {
                 for (int n = 0; n < indices.Length - 1; ++n) {
-                    if (obj.TypeCode == TbasicType.Array) {
-                        array = (TbasicArray)obj;
-                        if (indices[n] < array.Value.Length) {
-                            obj = array.Value[indices[n]];
+                    array = obj as object[];
+                    if (array != null) {
+                        if (indices[n] < array.Length) {
+                            obj = array[indices[n]];
                         }
                         else {
                             throw ThrowHelper.IndexOutOfRange(VariableEvaluator.GetFullName(name, indices), indices[n]);
@@ -401,7 +402,7 @@ namespace Tbasic.Runtime
                     }
                 }
             }
-            ((TbasicArray)obj).Value[indices[indices.Length - 1]] = value;
+            array[indices[indices.Length - 1]] = value;
         }
         
         #endregion
@@ -417,10 +418,10 @@ namespace Tbasic.Runtime
                 dest._unaryOps = source._super._unaryOps;
                 dest._binaryOps = source._super._binaryOps;
             }
-            dest._variables = new Dictionary<string, IRuntimeObject>(source._variables);
+            dest._variables = new Dictionary<string, object>(source._variables);
             dest._prototypes = new Dictionary<string, TClass>(source._prototypes);
             dest._functions = new Library(source._functions);
-            dest._constants = new Dictionary<string, IRuntimeObject>(source._constants);
+            dest._constants = new Dictionary<string, object>(source._constants);
             dest._commands = new Library(source._commands);
             dest._blocks = new Dictionary<string, BlockCreator>(source._blocks);
             return dest;

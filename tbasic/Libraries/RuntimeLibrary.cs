@@ -115,13 +115,13 @@ namespace Tbasic.Libraries
         private object IsString(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return stackdat.Get(1).TypeCode == TbasicType.String;
+            return stackdat.Get(1) is string;
         }
 
         private object IsBool(TRuntime runtime, StackData stackdat)
         {
             stackdat.AssertCount(2);
-            return stackdat.Get(1).TypeCode == TbasicType.String;
+            return stackdat.Get(1) is bool;
         }
         
         private object IsDefined(TRuntime runtime, StackData stackdat)

@@ -130,12 +130,12 @@ namespace Tbasic.Runtime
         /// <returns></returns>
         public StackData Execute(Line codeLine)
         {
-#if !NO_EXCEPT
+#if !NO_CATCH
             TbasicRuntimeException runEx;
             try {
 #endif
                 return Execute(this, codeLine);
-#if !NO_EXCEPT
+#if !NO_CATCH
             }
             catch(Exception ex) when ((runEx = TbasicRuntimeException.WrapException(ex)) != null) {
                 throw runEx;
@@ -152,7 +152,7 @@ namespace Tbasic.Runtime
                 }
                 Line current = lines[index];
                 CurrentLine = current.LineNumber;
-#if !NO_EXCEPT
+#if !NO_CATCH
                 TbasicRuntimeException runEx;
                 try {
 #endif
@@ -167,7 +167,7 @@ namespace Tbasic.Runtime
                     else {
                         runtime = Execute(this, current);
                     }
-#if !NO_EXCEPT
+#if !NO_CATCH
                 }
                 catch (Exception ex) when ((runEx = TbasicRuntimeException.WrapException(ex)) != null) { // only catch errors that we understand 8/16/16
                     HandleError(current, runtime ?? new StackData(Options), runEx);
@@ -220,7 +220,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Executes a function or command with the given arguments
         /// </summary>
-        public object ExecuteFunction(string name, params IRuntimeObject[] args)
+        public object ExecuteFunction(string name, params object[] args)
         {
             CallData calldat;
             StackData stackdat = new StackData(Options, args);

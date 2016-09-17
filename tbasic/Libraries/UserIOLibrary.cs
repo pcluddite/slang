@@ -91,7 +91,7 @@ namespace Tbasic.Libraries
         private object Input(TRuntime runtime, StackData stackdat)
         {
             if (stackdat.ParameterCount == 2) {
-                stackdat.AddRange(new TbasicString("Tbasic"), new Number(-1), new Number(-1));
+                stackdat.AddRange("Tbasic", -1, -1);
             }
             if (stackdat.ParameterCount == 3) {
                 stackdat.AddRange(-1, -1);

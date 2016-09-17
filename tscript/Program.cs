@@ -37,12 +37,15 @@ namespace Tbasic.ScriptHost
 
         public static void RunScript(string filename)
         {
+#if !NO_CATCH
             try {
+#endif
                 TRuntime runtime = new TRuntime();
                 runtime.Global.LoadStandardLibrary();
                 using (StreamReader fstream = new StreamReader(File.OpenRead(filename))) {
                     runtime.Execute(fstream);
                 }
+#if !NO_CATCH
             }
             catch (TbasicRuntimeException ex) {
                 ShowError(ex.Message);
@@ -50,6 +53,7 @@ namespace Tbasic.ScriptHost
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException) {
                 ShowError(ex.Message, "Unable to Open Script");
             }
+#endif
         }
 
         private static void ShowError(string msg, string title = "TBASIC Runtime Error")

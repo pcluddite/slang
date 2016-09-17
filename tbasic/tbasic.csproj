@@ -138,14 +138,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StackData.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\RuntimeObjects.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RuntimeObjects.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Types\TbasicArray.cs" />
-    <Compile Include="Types\TbasicString.cs" />
-    <Compile Include="Types\TbasicType.cs" />
     <Compile Include="Types\Operators\BinaryOperator.cs" />
     <Compile Include="Libraries\BinOpDicationary.cs" />
     <Compile Include="Types\Operators\IOperator.cs" />
@@ -238,10 +230,6 @@
     <Content Include="Runtime\StackData.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>StackData.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Types\RuntimeObjects.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RuntimeObjects.cs</LastGenOutput>
     </Content>
     <Content Include="Types\TypeConvert.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

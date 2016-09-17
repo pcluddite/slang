@@ -22,22 +22,21 @@ namespace Tbasic.Runtime
     /// Manages parameters and other data passed to a function or subroutine
     /// </summary>
     public partial class StackData : ICloneable
-	{
+    {
 <#
-BuildAll("IRuntimeObject", ""); WriteLine("");
-BuildAll("string", "(TbasicString)"); WriteLine("");
 BuildAll("Number", " "); WriteLine("");
-BuildAll("bool", "(TbasicBoolean)"); WriteLine("");
-BuildAll("object", "(TbasicNative)"); WriteLine("");
+BuildAll("bool", " "); WriteLine("");
+BuildAll("object", ""); WriteLine("");
+BuildAll("Enum", "");
 #>
-	}
+    }
 }
 <#+
 private void BuildAll(string typename, string cast = "")
 {
-	BuildAdd(typename, cast); WriteLine("");
-	BuildAddRange(typename, cast); WriteLine("");
-	BuildSet(typename, cast);
+    BuildAdd(typename, cast); WriteLine("");
+    BuildAddRange(typename, cast); WriteLine("");
+    BuildSet(typename, cast);
 }
 
 private void BuildAdd(string typename, string cast = "")
@@ -64,17 +63,17 @@ private void BuildAddRange(string typename, string cast = "")
         public void AddRange(IEnumerable<<#= typename #>> collection)
         {
 <#+
-	if (cast == string.Empty) {
+    if (cast == string.Empty) {
 #>
             _params.AddRange(collection);
 <#+
-	} else {
+    } else {
 #>
-			foreach(<#= typename #> value in collection) {
-				_params.Add(<#= cast.Trim() #>value);
-			}
+            foreach(<#= typename #> value in collection) {
+                _params.Add(<#= cast.Trim() #>value);
+            }
 <#+
-	}
+    }
 #>
         }
 
@@ -85,17 +84,17 @@ private void BuildAddRange(string typename, string cast = "")
         public void AddRange(params <#= typename #>[] collection)
         {
 <#+
-	if (cast == string.Empty) {
+    if (cast == string.Empty) {
 #>
             _params.AddRange(collection);
 <#+
-	} else {
+    } else {
 #>
-			foreach(<#= typename #> value in collection) {
-				_params.Add(<#= cast.Trim() #>value);
-			}
+            foreach(<#= typename #> value in collection) {
+                _params.Add(<#= cast.Trim() #>value);
+            }
 <#+
-	}
+    }
 #>
         }
 <#+

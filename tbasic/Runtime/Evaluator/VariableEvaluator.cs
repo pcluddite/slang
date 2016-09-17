@@ -52,20 +52,6 @@ namespace Tbasic.Runtime
                 _name = value;
             }
         }
-        
-        TbasicType IRuntimeObject.TypeCode
-        {
-            get {
-                return TbasicType.Evaluator;
-            }
-        }
-
-        object IRuntimeObject.Value
-        {
-            get {
-                return this;
-            }
-        }
 
         #endregion
 
@@ -97,9 +83,9 @@ namespace Tbasic.Runtime
             }
         }
 
-        IRuntimeObject IExpressionEvaluator.Evaluate()
+        object IExpressionEvaluator.Evaluate()
         {
-            return Evaluate();
+            return Evaluate().Value;
         }
 
         public int[] EvaluateIndices()
@@ -109,7 +95,7 @@ namespace Tbasic.Runtime
             ExpressionEvaluator eval = new ExpressionEvaluator(Runtime);
             int[] indices = new int[Indices.Count];
             for (int index = 0; index < indices.Length; ++index) {
-                IRuntimeObject o = eval.Evaluate(Indices[index]);
+                object o = eval.Evaluate(Indices[index]);
                 Number? num = Number.AsNumber(o, Runtime.Options);
                 if (num == null) {
                     throw ThrowHelper.InvalidTypeInExpression(o.GetType().Name, typeof(Number).Name);

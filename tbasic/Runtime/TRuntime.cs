@@ -28,7 +28,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// A string containing information on this version of Tbasic
         /// </summary>
-        public const string VERSION = "Tbasic 3.0.2016 Beta";
+        public const string VERSION = "TBASIC BETA 0.3.0.2016";
 
         #region Properties
         /// <summary>

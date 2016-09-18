@@ -119,6 +119,9 @@ namespace Tbasic.Types
                     return null;
                 }
             }
+            Number? n = o as Number?;
+            if (n != null)
+                return n;
             double d;
             if (TypeConvert.TryConvert(o, out d, opts)) {
                 return d;

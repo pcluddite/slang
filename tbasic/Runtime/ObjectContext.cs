@@ -286,19 +286,16 @@ namespace Tbasic.Runtime
         /// Tries to get a variable or constant from this context
         /// </summary>
         /// <returns>true if the variable was found, otherwise false.</returns>
-        public bool TryGetVariable(string name, out Variable var)
+        public bool TryGetVariable(string name, out object value)
         {
-            object value;
             if (_variables.TryGetValue(name, out value) || _constants.TryGetValue(name, out value)) {
-                var = new Variable(this, name, value);
                 return true;
             }
             else if (_super == null) {
-                var = default(Variable);
                 return false;
             }
             else {
-                return _super.TryGetVariable(name, out var);
+                return _super.TryGetVariable(name, out value);
             }
         }
         
@@ -307,14 +304,14 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="name">variable name</param>
         /// <returns>the variable data</returns>
-        public Variable GetVariable(string name)
+        public object GetVariable(string name)
         {
             object value;
             if (_constants.TryGetValue(name, out value)) {
-                return new Variable(this, name, value);
+                return value;
             }
             else if (_variables.TryGetValue(name, out value)) {
-                return new Variable(this, name, value);
+                return value;
             }
             else if (_super == null) {
                 throw ThrowHelper.UndefinedObject(name);
@@ -330,10 +327,9 @@ namespace Tbasic.Runtime
         /// <param name="name">the variable name</param>
         /// <param name="indices">the index (or indices of a multidimensional array)</param>
         /// <returns>the value of the variable</returns>
-        public Variable GetArrayAt(string name, params int[] indices)
+        public object GetArrayAt(string name, params int[] indices)
         {
-            Variable v = GetVariable(name);
-            object obj = v.Value;
+            object obj = GetVariable(name);
             if (indices != null && indices.Length > 0) {
                 for (int n = 0; n < indices.Length; n++) {
                     object[] _aObj = obj as object[];
@@ -350,7 +346,7 @@ namespace Tbasic.Runtime
                     }
                 }
             }
-            return new Variable(this, name, obj);
+            return obj;
         }
 
         internal void SetReturns(StackData _sframe)
@@ -369,9 +365,9 @@ namespace Tbasic.Runtime
 
         internal void PersistReturns(StackData _sframe)
         {
-            Variable statusvar;
+            object statusvar;
             if (TryGetVariable("@error", out statusvar)) {
-                _sframe.Status = ((Number)statusvar.Value).ToInt();
+                _sframe.Status = ((Number)statusvar).ToInt();
             }
         }
         
@@ -384,7 +380,7 @@ namespace Tbasic.Runtime
         /// <returns>the value of the variable</returns>
         public void SetArrayAt(string name, object value, params int[] indices)
         {
-            object obj = GetVariable(name).Value;
+            object obj = GetVariable(name);
             object[] array = null;
             if (indices != null && indices.Length > 0) {
                 for (int n = 0; n < indices.Length - 1; ++n) {

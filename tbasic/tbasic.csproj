@@ -196,7 +196,6 @@
     <Compile Include="Types\CallData.cs" />
     <Compile Include="Types\Number.cs" />
     <Compile Include="Types\TClass.cs" />
-    <Compile Include="Types\Variable.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

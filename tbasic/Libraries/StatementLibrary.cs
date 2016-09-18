@@ -145,12 +145,12 @@ namespace Tbasic.Libraries
                 }
             }
             else {
-                Variable v = context.GetVariable(name);
-                object[] array = v.Value as object[];
+                object value = context.GetVariable(name);
+                object[] array = value as object[];
                 if (array != null) {
-                    array = array_realloc(array, var_eval.EvaluateIndices(), 0);
+                    value = array_realloc(array, var_eval.EvaluateIndices(), 0);
                 }
-                context.SetVariable(name, array);
+                context.SetVariable(name, value);
             }
             return NULL(runtime, stackdat);
         }
@@ -208,42 +208,8 @@ namespace Tbasic.Libraries
         private object SetVariable(TRuntime runtime, StackData stackdat, bool constant)
         {
             stackdat.AssertAtLeast(2);
-
             ExpressionEvaluator eval = new ExpressionEvaluator(runtime);
             return eval.Evaluate(stackdat.Text.Substring(stackdat.Name.Length));
-
-            IScanner scanner = runtime.Scanner.Scan(stackdat.Text);
-            scanner.Position += stackdat.Name.Length;
-
-            VariableEvaluator v;
-            if (!DefaultScanner.NextVariable(scanner, runtime, out v))
-                throw ThrowHelper.InvalidVariableName();
-
-            if (!scanner.Next("="))
-                throw ThrowHelper.InvalidDefinitionOperator();
-
-            ExpressionEvaluator e = new ExpressionEvaluator(stackdat.Text.Substring(scanner.Position + 1), runtime);
-            object result = e.Evaluate();
-
-            if (v.Indices == null) {
-                if (!constant) {
-                    //runtime.Context.SetVariable(v.Name.ToString(), data);
-                }
-                else {
-                    //runtime.Context.SetConstant(v.Name.ToString(), data);
-                }
-            }
-            else {
-                if (constant)
-                    throw ThrowHelper.ArraysCannotBeConstant();
-                
-                ObjectContext context = runtime.Context.FindVariableContext(v.Name.ToString());
-                if (context == null)
-                    throw new ArgumentException("Array has not been defined and cannot be indexed");
-                context.SetArrayAt(v.Name.ToString(), result, v.EvaluateIndices());
-            }
-
-            return result;
         }
     }
 }

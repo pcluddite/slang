@@ -66,7 +66,7 @@ namespace Tbasic.Runtime
             return _name.ToString();
         }
 
-        public Variable Evaluate()
+        public object Evaluate()
         {
             if (Indices == null) {
                 return CurrentContext.GetVariable(_name);
@@ -75,12 +75,7 @@ namespace Tbasic.Runtime
                 return CurrentContext.GetArrayAt(_name, EvaluateIndices());
             }
         }
-
-        object IExpressionEvaluator.Evaluate()
-        {
-            return Evaluate().Value;
-        }
-
+        
         public int[] EvaluateIndices()
         {
             Contract.Ensures(Contract.Result<int[]>() != null);

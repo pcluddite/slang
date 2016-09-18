@@ -208,6 +208,15 @@ namespace Tbasic.Runtime
             return stackdat.ReturnValue;
         }
 
+        internal StackData ExecuteInContext(ObjectContext context, IList<Line> lines)
+        {
+            ObjectContext old = Context;
+            Context = context;
+            StackData dat = Execute(lines);
+            Context = old;
+            return dat;
+        }
+
         internal StackData ExecuteInSubContext(IList<Line> lines)
         {
             StackData ret;

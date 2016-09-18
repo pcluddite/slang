@@ -457,10 +457,5 @@ namespace Tbasic.Runtime
             Contract.Invariant(Expression != null);
             Contract.Invariant(Runtime != null);
         }
-
-        object IExpressionEvaluator.Evaluate()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

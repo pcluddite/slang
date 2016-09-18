@@ -20,16 +20,8 @@ namespace Tbasic.Runtime
         private string _name = null;
 
         public IList<IEnumerable<char>> Indices { get; private set; }
-        
-        public ObjectContext CurrentContext
-        {
-            get {
-                return Runtime.Context;
-            }
-            set {
-                throw new NotImplementedException();
-            }
-        }
+
+        public ObjectContext CurrentContext { get; set; }
 
         public TRuntime Runtime { get; set; }
 
@@ -64,6 +56,7 @@ namespace Tbasic.Runtime
             Contract.EndContractBlock();
 
             Runtime = runtime;
+            CurrentContext = runtime.Context;
             _name = name;
             Indices = indices;
         }

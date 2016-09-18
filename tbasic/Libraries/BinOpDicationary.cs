@@ -63,13 +63,19 @@ namespace Tbasic.Types
             if (n == null)
                 throw new TbasicRuntimeException("The dot operator cannot be used on primitive types");
             
-            IExpressionEvaluator e = right as IExpressionEvaluator;
-            if (e == null) {
+            FunctionEvaluator fEval = right as FunctionEvaluator;
+            if (fEval != null) {
+                fEval.CurrentContext = n;
+                return fEval.Evaluate();
+            }
+            VariableEvaluator vEval = right as VariableEvaluator;
+            if (vEval == null) {
                 throw ThrowHelper.InvalidExpression($"{n.Name}.{right}");
             }
-
-            e.CurrentContext = n; // set the context to the scope of the class
-            return e.Evaluate();
+            else {
+                vEval.CurrentContext = n;
+                return vEval;
+            }
         }
 
         private static object Set(TRuntime runtime, object left, object right)
@@ -78,7 +84,7 @@ namespace Tbasic.Types
             if (v == null)
                 throw new ArgumentException($"Cannot set the value of {left}");
 
-            ObjectContext context = runtime.Context;
+            ObjectContext context = v.CurrentContext;
             context.SetVariable(v.Name, right);
 
             return right;

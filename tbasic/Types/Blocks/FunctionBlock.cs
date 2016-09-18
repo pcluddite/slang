@@ -50,17 +50,17 @@ namespace Tbasic.Types
         {
             stackdat.AssertCount(Prototype.Count);
 
-            ObjectContext context = runtime.Context;
+            ObjectContext context = runtime.Context.CreateSubContext();
 
             int index = 0;
             foreach(string param in Prototype.Skip(1)) { // skip the first item in the collection, which is assumed to be the name
-                context.SetVariable(param, stackdat.Get(++index));
+                context.AddVariable(param, stackdat.Get(++index));
             }
             
             context.AddCommand("return", new CallData(Return, evaluate: false));
             context.AddCommand("raise", SetStatus);
 
-            StackData ret = runtime.Execute(Body);
+            StackData ret = runtime.ExecuteInContext(context, Body);
             stackdat.CopyFrom(ret);
             runtime.HonorBreak();
             return stackdat.ReturnValue;

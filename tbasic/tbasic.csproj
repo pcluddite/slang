@@ -103,7 +103,7 @@
     <Compile Include="Errors\InvalidDefinitionException.cs" />
     <Compile Include="Errors\ScriptParsingException.cs" />
     <Compile Include="Errors\FunctionException.cs" />
-    <Compile Include="Errors\TintRuntimeException.cs" />
+    <Compile Include="Errors\TbasicRuntimeException.cs" />
     <Compile Include="Errors\ThrowHelper.cs" />
     <Compile Include="Errors\UndefinedObjectException.cs" />
     <Compile Include="Libraries\ArrayLibrary.cs" />
@@ -140,6 +140,7 @@
     </Compile>
     <Compile Include="Types\Operators\BinaryOperator.cs" />
     <Compile Include="Libraries\BinOpDicationary.cs" />
+    <Compile Include="Types\Operators\GroupOperator.cs" />
     <Compile Include="Types\Operators\IOperator.cs" />
     <Compile Include="Libraries\OperatorDictionary.cs" />
     <Compile Include="Libraries\UnaryOpDictionary.cs" />

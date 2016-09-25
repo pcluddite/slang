@@ -12,8 +12,32 @@ namespace Tbasic.Types
     /// <summary>
     /// Represents an operator that takes two operands
     /// </summary>
-    public struct BinaryOperator : IOperator, IComparable<BinaryOperator>, IEquatable<BinaryOperator>
+    public struct GroupOperator : IOperator, IComparable<GroupOperator>, IEquatable<GroupOperator>
     {
+        /// <summary>
+        /// Operand positions
+        /// </summary>
+        [Flags]
+        public enum OperandPosition
+        {
+            /// <summary>
+            /// Neither operand
+            /// </summary>
+            Neither = 0x00,
+            /// <summary>
+            /// The left operand
+            /// </summary>
+            Left = 0x01,
+            /// <summary>
+            /// The right operand
+            /// </summary>
+            Right = 0x02,
+            /// <summary>
+            /// Both operands
+            /// </summary>
+            Both = Left | Right,
+        }
+
         /// <summary>
         /// A delegate that represents the method which processes the operands
         /// </summary>
@@ -21,7 +45,7 @@ namespace Tbasic.Types
         /// <param name="left">the left operand</param>
         /// <param name="right">the right operand</param>
         /// <returns>the result of the operator</returns>
-        public delegate object BinaryOpDelegate(TRuntime runtime, object left, object right);
+        public delegate object GroupOpDelegate(TRuntime runtime, object left, object right);
 
         /// <summary>
         /// Gets which operand should be evaluated
@@ -41,16 +65,16 @@ namespace Tbasic.Types
         /// <summary>
         /// Gets the method that processes the operands
         /// </summary>
-        public BinaryOpDelegate ExecuteOperator { get; private set; }
+        public GroupOpDelegate ExecuteOperator { get; private set; }
 
         /// <summary>
-        /// Creates a new BinaryOperator
+        /// Creates a new GroupOperator
         /// </summary>
         /// <param name="strOp">the string representation of the operator</param>
         /// <param name="precedence">the operator precedence. Lower precedence are processed first</param>
         /// <param name="doOp">the method that processes the operands</param>
         /// <param name="operand">the operand that should be evaluated</param>
-        public BinaryOperator(string strOp, int precedence, BinaryOpDelegate doOp, OperandPosition operand = OperandPosition.Both)
+        public GroupOperator(string strOp, int precedence, GroupOpDelegate doOp, OperandPosition operand = OperandPosition.Both)
         {
             if (strOp == null)
                 throw new ArgumentNullException(nameof(strOp));
@@ -63,13 +87,13 @@ namespace Tbasic.Types
             ExecuteOperator = doOp;
             EvaulatedOperand = operand;
         }
-        
+
         /// <summary>
         /// Compares this operator to another
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public int CompareTo(BinaryOperator other)
+        public int CompareTo(GroupOperator other)
         {
             return Precedence.CompareTo(other.Precedence);
         }
@@ -79,7 +103,7 @@ namespace Tbasic.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(BinaryOperator other)
+        public bool Equals(GroupOperator other)
         {
             return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
         }
@@ -90,7 +114,7 @@ namespace Tbasic.Types
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static bool operator ==(BinaryOperator first, BinaryOperator second)
+        public static bool operator ==(GroupOperator first, GroupOperator second)
         {
             return first.Equals(second);
         }
@@ -101,7 +125,7 @@ namespace Tbasic.Types
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static bool operator !=(BinaryOperator first, BinaryOperator second)
+        public static bool operator !=(GroupOperator first, GroupOperator second)
         {
             return !first.Equals(second);
         }
@@ -113,7 +137,7 @@ namespace Tbasic.Types
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            BinaryOperator? op = obj as BinaryOperator?;
+            GroupOperator? op = obj as GroupOperator?;
             if (op != null)
                 return Equals(op.Value);
             return false;

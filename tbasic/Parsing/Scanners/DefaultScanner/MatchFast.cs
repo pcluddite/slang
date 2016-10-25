@@ -119,5 +119,30 @@ namespace Tbasic.Parsing
                 return index;
             }
         }
+
+        internal static unsafe bool StartsWithFast(string s, string pattern, bool ignoreCase)
+        {
+            if (s == null || pattern == null)
+                return false;
+            if (pattern.Length > s.Length)
+                return false;
+            
+            fixed(char* lpstr = s) fixed(char* lppat = pattern) {
+                for (int i = 0, len = pattern.Length; i < len; ++i) {
+                    char a, b;
+                    if (ignoreCase) {
+                        a = char.ToLower(lpstr[i]);
+                        b = char.ToLower(lppat[i]);
+                    }
+                    else {
+                        a = lpstr[i];
+                        b = lppat[i];
+                    }
+                    if (a != b)
+                        return false;
+                }
+            }
+            return true;
+        }
     }
 }

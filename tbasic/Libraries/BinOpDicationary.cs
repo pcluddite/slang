@@ -25,7 +25,7 @@ namespace Tbasic.Types
 
         public override void LoadStandardOperators()
         {
-            operators.Add(new BinaryOperator(".", 2, Dot, BinaryOperator.OperandPosition.Left)); // only evaluate the left operand
+            operators.Add(new BinaryOperator(".", 2, Dot, OperandPosition.Left)); // only evaluate the left operand
             operators.Add(new BinaryOperator("*", 5, Multiply));
             operators.Add(new BinaryOperator("/", 5, Divide));
             operators.Add(new BinaryOperator("%", 5, Modulo));
@@ -48,7 +48,7 @@ namespace Tbasic.Types
             operators.Add(new BinaryOperator("|", 12, BitOr));
             operators.Add(new BinaryOperator("&&", 13, NotImplemented)); // These are special cases that are evaluated with short circuit evalutaion 6/20/16
             operators.Add(new BinaryOperator("||", 14, NotImplemented));
-            operators.Add(new BinaryOperator("=", 16, Set, BinaryOperator.OperandPosition.Right));
+            operators.Add(new BinaryOperator("=", 16, Set, OperandPosition.Right));
         }
 
         private static object Dot(TRuntime runtime, object left, object right)

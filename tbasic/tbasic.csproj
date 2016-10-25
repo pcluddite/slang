@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NO_CATCH</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\tbasic.xml</DocumentationFile>
@@ -138,6 +138,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StackData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Types\Number.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Number.tt</DependentUpon>
+    </Compile>
     <Compile Include="Types\Operators\BinaryOperator.cs" />
     <Compile Include="Libraries\BinOpDicationary.cs" />
     <Compile Include="Types\Operators\GroupOperator.cs" />
@@ -230,6 +235,10 @@
     <Content Include="Runtime\StackData.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>StackData.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Types\Number.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Number.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="Types\TypeConvert.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

@@ -288,14 +288,14 @@ namespace Tbasic.Runtime
                 throw new ArgumentNullException(nameof(runtime));
             Contract.EndContractBlock();
 
-            if (op.EvaulatedOperand.HasFlag(BinaryOperator.OperandPosition.Left)) {
+            if (op.EvaulatedOperand.HasFlag(OperandPosition.Left)) {
                 IExpressionEvaluator tv = left as IExpressionEvaluator;
                 if (tv != null)
                     left = tv.Evaluate();
             }
 
             try {
-                if (op.EvaulatedOperand.HasFlag(BinaryOperator.OperandPosition.Right)) {
+                if (op.EvaulatedOperand.HasFlag(OperandPosition.Right)) {
                     IExpressionEvaluator tv;
                     switch (op.OperatorString) { // short circuit evaluation 1/6/16
                         case "AND":

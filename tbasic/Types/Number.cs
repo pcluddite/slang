@@ -13,7 +13,7 @@ namespace Tbasic.Types
     /// <summary>
     /// Represents a generic number (this is a double at its core)
     /// </summary>
-    public struct Number : IConvertible, IComparable, IComparable<Number>, IComparable<double>, IEquatable<Number>, IEquatable<double>
+    public partial struct Number : IConvertible, IComparable, IComparable<Number>, IComparable<double>, IEquatable<Number>, IEquatable<double>
     {
         /// <summary>
         /// Gets or sets the value this Number represetns
@@ -204,11 +204,11 @@ namespace Tbasic.Types
             if (n != null)
                 return CompareTo(n.Value);
 
-            decimal? d = obj as decimal?;
+            double? d = obj as double?;
             if (n != null)
-                return CompareTo(n.Value);
+                return CompareTo(d.Value);
 
-            throw new ArgumentException(string.Format("can only compare types {0} or {1}", typeof(Number).Name, typeof(double).Name));
+            throw new ArgumentException($"Cannot compare types {nameof(Number)} and \"{obj?.GetType().Name}\"");
         }
 
         /// <summary>
@@ -280,224 +280,6 @@ namespace Tbasic.Types
         public override int GetHashCode()
         {
             return Value.GetHashCode();
-        }
-
-        #endregion
-
-        #region boolean ops
-
-        /// <summary>
-        /// Determines if two numbers are equal
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static bool operator ==(Number left, Number right)
-        {
-            return left.Value == right.Value;
-        }
-
-        /// <summary>
-        /// Determines if two numbers are not equal
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static bool operator !=(Number left, Number right)
-        {
-            return left.Value != right.Value;
-        }
-
-        /// <summary>
-        /// Determines if one number is less than another
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static bool operator <(Number left, Number right)
-        {
-            return left.Value < right.Value;
-        }
-
-        /// <summary>
-        /// Determines if one number is less than or equal to another
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static bool operator <=(Number left, Number right)
-        {
-            return left.Value <= right.Value;
-        }
-
-        /// <summary>
-        /// Determines if one number is greater than another
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static bool operator >(Number left, Number right)
-        {
-            return left.Value > right.Value;
-        }
-
-        /// <summary>
-        /// Determines if one number is greater than or equal to another
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static bool operator >=(Number left, Number right)
-        {
-            return left.Value >= right.Value;
-        }
-
-        #endregion
-
-        #region arithmetic ops
-
-        /// <summary>
-        /// addition
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static Number operator +(Number left, Number right)
-        {
-            return new Number(left.Value + right.Value);
-        }
-
-        /// <summary>
-        /// subtraction
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static Number operator -(Number left, Number right)
-        {
-            return new Number(left.Value - right.Value);
-        }
-
-        /// <summary>
-        /// multiplication
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static Number operator *(Number left, Number right)
-        {
-            return new Number(left.Value * right.Value);
-        }
-
-        /// <summary>
-        /// division
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static Number operator /(Number left, Number right)
-        {
-            return new Number(left.Value / right.Value);
-        }
-
-        /// <summary>
-        /// modulus
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static Number operator %(Number left, Number right)
-        {
-            return new Number(left.Value % right.Value);
-        }
-
-        #endregion
-
-        #region IConvertable
-        
-        TypeCode IConvertible.GetTypeCode()
-        {
-            return Value.GetTypeCode();
-        }
-
-        bool IConvertible.ToBoolean(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToBoolean(provider);
-        }
-
-        char IConvertible.ToChar(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToChar(provider);
-        }
-
-        sbyte IConvertible.ToSByte(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToSByte(provider);
-        }
-
-        byte IConvertible.ToByte(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToByte(provider);
-        }
-
-        short IConvertible.ToInt16(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToInt16(provider);
-        }
-
-        ushort IConvertible.ToUInt16(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToUInt16(provider);
-        }
-
-        int IConvertible.ToInt32(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToInt32(provider);
-        }
-
-        uint IConvertible.ToUInt32(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToUInt32(provider);
-        }
-
-        long IConvertible.ToInt64(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToInt64(provider);
-        }
-
-        ulong IConvertible.ToUInt64(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToUInt64(provider);
-        }
-
-        float IConvertible.ToSingle(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToSingle(provider);
-        }
-
-        double IConvertible.ToDouble(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToDouble(provider);
-        }
-
-        decimal IConvertible.ToDecimal(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToDecimal(provider);
-        }
-
-        DateTime IConvertible.ToDateTime(IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToDateTime(provider);
-        }
-
-        string IConvertible.ToString(IFormatProvider provider)
-        {
-            return Value.ToString(provider);
-        }
-
-        object IConvertible.ToType(Type conversionType, IFormatProvider provider)
-        {
-            return ((IConvertible)Value).ToType(conversionType, provider);
         }
 
         #endregion

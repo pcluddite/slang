@@ -579,18 +579,18 @@ namespace Tbasic.Parsing
                 return TokenType.Hexadecimal;
             }
 
-            // check binary operator
-            BinaryOperator binOp;
-            if (NextBinaryOp(runtime.Context, out binOp)) {
-                token = binOp;
-                return TokenType.BinaryOperator;
-            }
-
             // check unary op
             UnaryOperator unaryOp;
             if (NextUnaryOp(runtime.Context, lastToken, out unaryOp)) {
                 token = unaryOp;
                 return TokenType.UnaryOperator;
+            }
+
+            // check binary operator
+            BinaryOperator binOp;
+            if (NextBinaryOp(runtime.Context, out binOp)) {
+                token = binOp;
+                return TokenType.BinaryOperator;
             }
 
             // check function

@@ -87,7 +87,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Extensions.cs" />
-    <Compile Include="Components\Trie.cs" />
     <Compile Include="Components\ValueTuple.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

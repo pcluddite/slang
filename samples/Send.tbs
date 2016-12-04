@@ -31,5 +31,8 @@ Do
 	hwnd$ = WinGetHandle("Untitled - Notepad")
 Loop Until hwnd$ <> 0
 
-WinActivate(hwnd$)
+Do
+	WinActivate(hwnd$)
+loop until (WinGetState(hwnd$) & 8) != 8
+
 Send("Hello{!} I am a notepad application{!}")

@@ -137,6 +137,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StackData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Types\ITbasicObject.cs" />
     <Compile Include="Types\Number.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -150,6 +151,7 @@
     <Compile Include="Libraries\UnaryOpDictionary.cs" />
     <Compile Include="Types\Operators\UnaryOperator.cs" />
     <Compile Include="Runtime\ExecuterOption.cs" />
+    <Compile Include="Types\Time.cs" />
     <Compile Include="Types\TypeConvert.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

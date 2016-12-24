@@ -1,84 +1,65 @@
-# The MIT License (MIT)
-#
-# Copyright (c) 2013-2016 Tim Baxendale
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-amnt$ = GetNumChars()
-middleman$ = new Middler(GetString(amnt$), amnt$)
-middleman$.showmsg()
+# gets a substring in a given string
+
+$amnt = GetNumChars()
+$middleman = new Middler(GetString($amnt), $amnt)
+$middleman.showmsg()
 
 Function GetNumChars()
-    amnt$ = 0
+    $amnt = 0
     While 1
-        amnt$ = Input("How many characters do you want to take?", "Substring Test")
+        $amnt = Input("How many characters do you want to take?", "Substring Test")
         If @error == 204 Then
             Exit
         End If
-        amnt$ = CNum(amnt$)
+        $amnt = CNum($amnt)
         If @error == 400 Then
             MsgBox(16, "What you entered is not a valid integer!", "Substring Test")
         Else
             Break
         End If
     WEnd
-    Return amnt$
+    Return $amnt
 End Function
 
-Function GetString(amnt$)
-    str$ = ""
+Function GetString($amnt)
+    $str = ""
     While 1
-        str$ = Input("Enter some text that is at least " + amnt$ + " character(s) long:", "Substring Test")
+        $str = Input("Enter some text that is at least " + $amnt + " character(s) long:", "Substring Test")
 
         If @error == 204 Then
             Exit
         End If
 
-        If sizeof(str$) < amnt$ Then
-            MsgBox(16, "You need to enter a string that is at least " + amnt$ + " character(s) long!", "Substring Test")
+        If sizeof($str) < $amnt Then
+            MsgBox(16, "You need to enter a string that is at least " + $amnt + " character(s) long!", "Substring Test")
         Else
             Break
         End If
     WEnd
-    Return str$
+    Return $str
 End Function
 
 class Middler
-	dim str$
-	dim nCount$
-	dim nMiddle$
+	dim $str
+	dim $nCount
+	dim $nMiddle
 	
-	Middler(str$, count$)
-		@this.str$ = str$
-		nCount$ = count$
-		nMiddle$ = iPart((length() - count$) / 2)
+	Middler($str, $count)
+		@this.$str = $str
+		$nCount = $count
+		$nMiddle = iPart((length() - $count) / 2)
 	end function
 	
 	function length()
-		return sizeof(str$)
+		return sizeof($str)
 	end function
 	
 	function substring()
-		return StrInStr(str$, nMiddle$, nCount$)
+		return StrInStr($str, $nMiddle, $nCount)
 	end function
 	
 	function showmsg()
-		MsgBox(64, "The middle character was determined to be at position " + (nMiddle$ + 1) + ".\n" + _
+		MsgBox(64, "The middle character was determined to be at position " + ($nMiddle + 1) + ".\n" + _
 				   "The resulting string is \"" + substring() + "\".", _
 				   "Substring")
 	end function

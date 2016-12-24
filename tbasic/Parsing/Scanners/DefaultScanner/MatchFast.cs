@@ -25,15 +25,11 @@ namespace Tbasic.Parsing
         
         public static int MatchVariable(string buff)
         {
-            int pos = MatchIdentifier(buff);
-            if (pos > -1 && buff.CharAt(pos++) == '$') {
-                return pos;
-            }
-            else if (buff.CharAt(0) == '@') { // it's a macro
+            if (buff.CharAt(0) == '$' || buff.CharAt(0) == '@') { // it's a macro
                 if (buff.CharAt(1) == -1)
                     return -1;
                 int end = FindAcceptableFuncChars(buff, 1);
-                if (end != pos) {
+                if (end != 0) {
                     return end;
                 }
             }

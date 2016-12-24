@@ -99,7 +99,7 @@ namespace Tbasic.Types
             object[] args = new object[expectedArgs.Length];
 
             int index = 0;
-            for (; index < stackdat.ParameterCount - 1; ++index) // make sure the types are correct for each parameter
+            for (; index < args.Length - 1; ++index) // make sure the types are correct for each parameter
                 args[index] = stackdat.Convert(index + 1, expectedArgs[index].ParameterType);
 
             for (; index < expectedArgs.Length; ++index) { // default initialize any remaining values

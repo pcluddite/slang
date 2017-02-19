@@ -35,7 +35,7 @@ namespace Tbasic.Components
             return new StructReference<T>(value);
         }
 
-        public static implicit operator T(StructReference<T> reference)
+        public static explicit operator T(StructReference<T> reference)
         {
             return reference.innerStruct;
         }

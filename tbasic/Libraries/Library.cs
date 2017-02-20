@@ -131,7 +131,6 @@ namespace Tbasic.Libraries
             if (func != null)
                 Add(key, func);
             if (value.Method.ReturnType == typeof(void))
-
                 lib.Add(key, new CallData(value, requiredArgs < 0 ? CountParameters(value) : requiredArgs, evaluate));
         }
 

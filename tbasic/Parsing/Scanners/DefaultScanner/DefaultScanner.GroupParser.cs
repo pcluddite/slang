@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Text;
 using Tbasic.Errors;
 using System.Diagnostics.Contracts;
+using Tbasic.Components;
 
 namespace Tbasic.Parsing
 {

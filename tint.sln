@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tbasic", "tbasic\tbasic.csproj", "{86EC7054-1D77-4DEE-854F-AD7377FC27AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T Interpreter Shell", "tish\T Interpreter Shell.csproj", "{BAA9C2B6-B371-4B01-8C24-C9D4786866B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tish", "tish\tish.csproj", "{BAA9C2B6-B371-4B01-8C24-C9D4786866B7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tbasic Script Host", "tscript\Tbasic Script Host.csproj", "{DB156F57-2EBE-4900-A135-4D5C27944351}"
 EndProject
@@ -36,5 +36,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {70DA2846-94BC-43F0-AE57-CDD61443D2AB}
 	EndGlobalSection
 EndGlobal

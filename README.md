@@ -12,5 +12,3 @@ This project is composed of several parts:
 3. `tish.exe` - T Interpreter Shell, runs commands in an interactive shell.
 
 A syntax file for the default T dialect TBASIC is available for Notepad++ located in tint/samples
-
-The project is licensed under a modified BSD License for **NON-COMMERCIAL USE ONLY** unless a specific source file is labled otherwise. See LICENSE for details.

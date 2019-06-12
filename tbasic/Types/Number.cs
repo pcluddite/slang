@@ -14,7 +14,8 @@ namespace Tbasic.Types
     /// <summary>
     /// Represents a generic number (this is a double at its core)
     /// </summary>
-    public partial struct Number : IConvertible, IComparable, IComparable<Number>, IComparable<double>, IEquatable<Number>, IEquatable<double>
+    public partial struct Number
+        : IConvertible, IComparable, IComparable<Number>, IComparable<double>, IEquatable<Number>, IEquatable<double>
     {
         /// <summary>
         /// Gets or sets the value this Number represetns
@@ -71,13 +72,12 @@ namespace Tbasic.Types
         /// <returns></returns>
         public static bool TryParse(string s, out Number result)
         {
-            double d;
-            if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out d)) {
-                result = new Number(d);
+            if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out double d)) {
+                result = d;
                 return true;
             }
             else {
-                result = default(Number);
+                result = default;
                 return false;
             }
         }
@@ -100,8 +100,7 @@ namespace Tbasic.Types
         /// <returns></returns>
         public static bool IsNumber(object o, ExecuterOption opts)
         {
-            double d;
-            return TypeConvert.TryConvert(o, out d, opts);
+            return TypeConvert.TryConvert<double>(o, out _, opts);
         }
 
         /// <summary>
@@ -123,8 +122,7 @@ namespace Tbasic.Types
             Number? n = o as Number?;
             if (n != null)
                 return n;
-            double d;
-            if (TypeConvert.TryConvert(o, out d, opts)) {
+            if (TypeConvert.TryConvert(o, out double d, opts)) {
                 return d;
             }
             else {
@@ -180,7 +178,18 @@ namespace Tbasic.Types
                 throw new InvalidCastException("Number contains a fractional part");
             return (int)n.Value;
         }
-        
+
+        /// <summary>
+        /// Converts this number to a long
+        /// </summary>
+        /// <param name="n"></param>
+        public static explicit operator long(Number n)
+        {
+            if (n.HasFraction())
+                throw new InvalidCastException("Number contains a fractional part");
+            return (long)n.Value;
+        }
+
         /// <summary>
         /// Converts this number to a string representation
         /// </summary>

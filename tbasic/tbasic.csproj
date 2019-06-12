@@ -139,7 +139,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StackData.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\ITbasicObject.cs" />
+    <Compile Include="Types\ITObject.cs" />
     <Compile Include="Types\Number.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -154,11 +154,6 @@
     <Compile Include="Types\Operators\UnaryOperator.cs" />
     <Compile Include="Runtime\ExecuterOption.cs" />
     <Compile Include="Types\Time.cs" />
-    <Compile Include="Types\TypeConvert.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TypeConvert.tt</DependentUpon>
-    </Compile>
     <Compile Include="Parsing\Statement.cs" />
     <Compile Include="Parsing\Scanners\DefaultScanner\DefaultScanner.GroupParser.cs" />
     <Compile Include="Runtime\Evaluator\ExpressionEvaluator.cs" />
@@ -205,6 +200,12 @@
     <Compile Include="Types\Function\CallData.cs" />
     <Compile Include="Types\Number.cs" />
     <Compile Include="Types\TClass.cs" />
+    <Compile Include="Types\TypeUtil.cs" />
+    <Compile Include="Types\TypeUtil.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TypeUtil.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -243,9 +244,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Number.Generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Types\TypeConvert.tt">
+    <Content Include="Types\TypeUtil.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>TypeConvert.cs</LastGenOutput>
+      <LastGenOutput>TypeUtil.Generated.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup />

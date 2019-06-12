@@ -15,8 +15,13 @@ namespace Tbasic.Types
     /// Represents a generic number (this is a double at its core)
     /// </summary>
     public partial struct Number
-        : IConvertible, IComparable, IComparable<Number>, IComparable<double>, IEquatable<Number>, IEquatable<double>
+        : ITObject, IConvertible, IComparable, IComparable<Number>, IComparable<double>, IEquatable<Number>, IEquatable<double>
     {
+        /// <summary>
+        /// Returns a double
+        /// </summary>
+        public Type Native => typeof(double);
+
         /// <summary>
         /// Gets or sets the value this Number represetns
         /// </summary>
@@ -100,7 +105,7 @@ namespace Tbasic.Types
         /// <returns></returns>
         public static bool IsNumber(object o, ExecuterOption opts)
         {
-            return TypeUtil1.TryConvert<double>(o, out _, opts);
+            return TypeUtil.TryConvert<double>(o, out _, opts);
         }
 
         /// <summary>
@@ -122,7 +127,7 @@ namespace Tbasic.Types
             Number? n = o as Number?;
             if (n != null)
                 return n;
-            if (TypeUtil1.TryConvert(o, out double d, opts)) {
+            if (TypeUtil.TryConvert(o, out double d, opts)) {
                 return d;
             }
             else {

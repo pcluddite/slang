@@ -1,8 +1,9 @@
-﻿// ======
-//
-// Copyright (c) Timothy Baxendale. All Rights Reserved.
-//
-// ======
+﻿/** +++====+++
+ *  
+ *  Copyright (c) Timothy Baxendale
+ *
+ *  +++====+++
+**/
 using System;
 using System.IO;
 using System.Windows.Forms;

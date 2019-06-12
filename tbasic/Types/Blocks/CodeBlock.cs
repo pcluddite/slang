@@ -1,8 +1,9 @@
-﻿// ======
-//
-// Copyright (c) Timothy Baxendale. All Rights Reserved.
-//
-// ======
+﻿/** +++====+++
+ *  
+ *  Copyright (c) Timothy Baxendale
+ *
+ *  +++====+++
+**/
 using Tbasic.Parsing;
 using Tbasic.Runtime;
 using System.Collections.Generic;

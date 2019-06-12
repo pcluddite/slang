@@ -1,8 +1,9 @@
-﻿// ======
-//
-// Copyright (c) Timothy Baxendale. All Rights Reserved.
-//
-// ======
+﻿/** +++====+++
+ *  
+ *  Copyright (c) Timothy Baxendale
+ *
+ *  +++====+++
+**/
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;

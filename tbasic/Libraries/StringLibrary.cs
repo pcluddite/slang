@@ -1,8 +1,9 @@
-﻿// ======
-//
-// Copyright (c) Timothy Baxendale. All Rights Reserved.
-//
-// ======
+﻿/** +++====+++
+ *  
+ *  Copyright (c) Timothy Baxendale
+ *
+ *  +++====+++
+**/
 using System.Text;
 using System.Text.RegularExpressions;
 using Tbasic.Runtime;

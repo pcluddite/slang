@@ -1,8 +1,9 @@
-﻿// ======
-//
-// Copyright (c) Timothy Baxendale. All Rights Reserved.
-//
-// ======
+﻿/** +++====+++
+ *  
+ *  Copyright (c) Timothy Baxendale
+ *
+ *  +++====+++
+**/
 using Microsoft.Win32;
 using System.Collections.Generic;
 

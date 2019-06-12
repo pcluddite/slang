@@ -1,4 +1,10 @@
-﻿using System;
+﻿/** +++====+++
+ *  
+ *  Copyright (c) Timothy Baxendale
+ *
+ *  +++====+++
+**/
+using System;
 using System.IO;
 using Tbasic.Runtime;
 

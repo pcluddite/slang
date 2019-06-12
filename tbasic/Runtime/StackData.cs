@@ -207,7 +207,7 @@ namespace Tbasic.Runtime
         public T Get<T>(int index)
         {
             T ret;
-            if (TypeConvert.TryConvert(Get(index), out ret, Options))
+            if (TypeUtil1.TryConvert(Get(index), out ret, Options))
                 return ret;
             throw ThrowHelper.InvalidParamType(index, typeof(T).Name);
         }
@@ -215,7 +215,7 @@ namespace Tbasic.Runtime
         internal object Convert(int index, Type type)
         {
             object ret;
-            if (TypeConvert.TryConvert(Get(index), type, out ret, Options))
+            if (TypeUtil1.TryConvert(Get(index), type, out ret, Options))
                 return ret;
             throw ThrowHelper.InvalidParamType(index, type.Name);
         }

@@ -100,7 +100,7 @@ namespace Tbasic.Types
         /// <returns></returns>
         public static bool IsNumber(object o, ExecuterOption opts)
         {
-            return TypeConvert.TryConvert<double>(o, out _, opts);
+            return TypeUtil1.TryConvert<double>(o, out _, opts);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Tbasic.Types
             Number? n = o as Number?;
             if (n != null)
                 return n;
-            if (TypeConvert.TryConvert(o, out double d, opts)) {
+            if (TypeUtil1.TryConvert(o, out double d, opts)) {
                 return d;
             }
             else {

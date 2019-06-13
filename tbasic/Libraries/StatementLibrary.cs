@@ -10,7 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Tbasic.Errors;
-using Tbasic.Parsing;
+using Tbasic.Lexer;
 using Tbasic.Runtime;
 using Tbasic.Types;
 

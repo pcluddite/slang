@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.Contracts;
 
-namespace Tbasic.Parsing
+namespace Tbasic.Lexer
 {
     /// <summary>
     /// This class is used to avoid string copying. It keeps a reference to the original string and accesses only a segment of it. This class is immutable.

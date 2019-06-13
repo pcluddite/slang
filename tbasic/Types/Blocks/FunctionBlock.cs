@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tbasic.Parsing;
+using Tbasic.Lexer;
 using Tbasic.Runtime;
 
 namespace Tbasic.Types

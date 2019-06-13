@@ -6,7 +6,7 @@
 **/
 using System.Collections.Generic;
 
-namespace Tbasic.Parsing
+namespace Tbasic.Lexer
 {
     /// <summary>
     /// A delegate for creating scanner objects

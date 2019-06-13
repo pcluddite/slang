@@ -11,7 +11,7 @@ using System.Globalization;
 using System.Text;
 using Tbasic.Components;
 using Tbasic.Errors;
-using Tbasic.Parsing;
+using Tbasic.Lexer;
 using Tbasic.Types;
 
 namespace Tbasic.Runtime

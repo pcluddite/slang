@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using Tbasic.Errors;
-using Tbasic.Parsing;
+using Tbasic.Lexer;
 using Tbasic.Types;
 
 namespace Tbasic.Runtime

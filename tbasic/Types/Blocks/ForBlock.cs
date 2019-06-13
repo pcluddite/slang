@@ -5,7 +5,7 @@
  *  +++====+++
 **/
 using System;
-using Tbasic.Parsing;
+using Tbasic.Lexer;
 using Tbasic.Runtime;
 
 namespace Tbasic.Types

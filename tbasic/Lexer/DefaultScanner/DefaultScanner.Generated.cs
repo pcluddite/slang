@@ -8,7 +8,7 @@ using System;
 using Tbasic.Runtime;
 using Tbasic.Types;
 
-namespace Tbasic.Parsing
+namespace Tbasic.Lexer
 {
     public partial class DefaultScanner
     {

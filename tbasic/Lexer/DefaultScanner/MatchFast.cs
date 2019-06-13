@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tbasic.Parsing
+namespace Tbasic.Lexer
 {
     internal static unsafe class MatchFast
     {

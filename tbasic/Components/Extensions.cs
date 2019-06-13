@@ -6,7 +6,7 @@
 **/
 using System;
 using System.Collections.Generic;
-using Tbasic.Parsing;
+using Tbasic.Lexer;
 
 namespace Tbasic
 {

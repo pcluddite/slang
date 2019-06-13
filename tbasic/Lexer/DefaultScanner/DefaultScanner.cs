@@ -11,7 +11,7 @@ using Tbasic.Components;
 using Tbasic.Runtime;
 using Tbasic.Types;
 
-namespace Tbasic.Parsing
+namespace Tbasic.Lexer
 {
     /// <summary>
     /// The default implementation of Scanner. This can be extended and modified for custom implementations.

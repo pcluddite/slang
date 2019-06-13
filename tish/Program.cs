@@ -6,7 +6,7 @@
 **/
 using Newtonsoft.Json;
 using System;
-using Tbasic.Parsing;
+using Tbasic.Lexer;
 using Tbasic.Runtime;
 using Tbasic.Errors;
 using Tbasic.Types;

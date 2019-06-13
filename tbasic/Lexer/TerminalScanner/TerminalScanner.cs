@@ -6,7 +6,7 @@
 **/
 using System.Collections.Generic;
 
-namespace Tbasic.Parsing
+namespace Tbasic.Lexer
 {
     internal class TerminalScanner : DefaultScanner
     {

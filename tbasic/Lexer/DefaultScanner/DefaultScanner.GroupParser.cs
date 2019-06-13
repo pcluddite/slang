@@ -11,7 +11,7 @@ using Tbasic.Errors;
 using System.Diagnostics.Contracts;
 using Tbasic.Components;
 
-namespace Tbasic.Parsing
+namespace Tbasic.Lexer
 {
     public partial class DefaultScanner
     {

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using Tbasic.Runtime;
 using Tbasic.Types;
 
-namespace Tbasic.Parsing
+namespace Tbasic.Lexer
 {
     /// <summary>
     /// Values indicating the current status of the scanner

@@ -29,7 +29,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// A string containing information on this version of Tbasic
         /// </summary>
-        public const string VERSION = "TBASIC BETA 0.4.0.2016";
+        public const string VERSION = "TINT ALPHA 0.4.0.2019";
 
         #region Properties
         /// <summary>

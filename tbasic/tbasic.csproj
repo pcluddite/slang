@@ -113,20 +113,16 @@
     </Compile>
     <Compile Include="Libraries\StringLibrary.cs" />
     <Compile Include="Libraries\SystemLibrary.cs" />
-    <Compile Include="Parsing\GroupParser.cs" />
-    <Compile Include="Parsing\Preprocessors\TerminalPreprocessor.cs" />
-    <Compile Include="Parsing\Scanners\CScanner\CScanner.cs" />
-    <Compile Include="Parsing\Scanners\DefaultScanner\DefaultScanner.Generated.cs">
+    <Compile Include="Parsing\CScanner\CScanner.cs" />
+    <Compile Include="Parsing\DefaultScanner\DefaultScanner.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DefaultScanner.tt</DependentUpon>
     </Compile>
-    <Compile Include="Parsing\Preprocessors\IPreprocessor.cs" />
-    <Compile Include="Parsing\Scanners\DefaultScanner\MatchFast.cs" />
-    <Compile Include="Parsing\Scanners\IScanner.cs" />
-    <Compile Include="Parsing\Preprocessors\Preprocessors.cs" />
-    <Compile Include="Parsing\Scanners\Scanners.cs" />
-    <Compile Include="Parsing\Scanners\TerminalScanner\TerminalScanner.cs" />
+    <Compile Include="Parsing\DefaultScanner\MatchFast.cs" />
+    <Compile Include="Parsing\IScanner.cs" />
+    <Compile Include="Parsing\Scanners.cs" />
+    <Compile Include="Parsing\TerminalScanner\TerminalScanner.cs" />
     <Compile Include="Parsing\StringSegment.cs" />
     <Compile Include="Types\Function\FuncCache.cs" />
     <Compile Include="Runtime\ObjectContext.Generated.cs">
@@ -158,15 +154,12 @@
     <Compile Include="Libraries\UnaryOpDictionary.cs" />
     <Compile Include="Types\Operators\UnaryOperator.cs" />
     <Compile Include="Runtime\ExecuterOption.cs" />
-    <Compile Include="Parsing\Statement.cs" />
-    <Compile Include="Parsing\Scanners\DefaultScanner\DefaultScanner.GroupParser.cs" />
+    <Compile Include="Parsing\DefaultScanner\DefaultScanner.GroupParser.cs" />
     <Compile Include="Runtime\Evaluator\ExpressionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\BinaryOpQueue.cs" />
     <Compile Include="Runtime\Evaluator\FunctionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\IExpressionEvaluator.cs" />
-    <Compile Include="Parsing\LineCollection.cs" />
-    <Compile Include="Parsing\Scanners\DefaultScanner\DefaultScanner.cs" />
-    <Compile Include="Parsing\Preprocessors\DefaultPreprocessor.cs" />
+    <Compile Include="Parsing\DefaultScanner\DefaultScanner.cs" />
     <Compile Include="Runtime\ObjectContext.cs" />
     <Compile Include="Runtime\Evaluator\VariableEvaluator.cs" />
     <Compile Include="Runtime\TRuntime.cs" />
@@ -186,7 +179,6 @@
     <Compile Include="Types\Blocks\WhileBlock.cs" />
     <Compile Include="Types\Blocks\IfBlock.cs" />
     <Compile Include="Types\Blocks\CodeBlock.cs" />
-    <Compile Include="Parsing\Line.cs" />
     <Compile Include="Components\ImageCompression.cs" />
     <Compile Include="Components\Win32\UnmanagedTypes.cs" />
     <Compile Include="Components\Win32\User32.cs" />
@@ -232,7 +224,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Library.Generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Parsing\Scanners\DefaultScanner\DefaultScanner.tt">
+    <Content Include="Parsing\DefaultScanner\DefaultScanner.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DefaultScanner.Generated.cs</LastGenOutput>
     </Content>

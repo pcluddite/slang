@@ -85,7 +85,7 @@ namespace Tbasic.Libraries
                 return obj.ToString().Length;
             }
             else if (obj is Number) {
-                return Number.SIZE;
+                return sizeof(double);
             }
             else if (obj is bool) {
                 return sizeof(bool);

@@ -145,6 +145,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Number.tt</DependentUpon>
     </Compile>
+    <Compile Include="Types\Objects.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Objects.tt</DependentUpon>
+    </Compile>
     <Compile Include="Types\Operators\BinaryOperator.cs" />
     <Compile Include="Libraries\BinOpDicationary.cs" />
     <Compile Include="Types\Operators\GroupOperator.cs" />
@@ -153,7 +158,6 @@
     <Compile Include="Libraries\UnaryOpDictionary.cs" />
     <Compile Include="Types\Operators\UnaryOperator.cs" />
     <Compile Include="Runtime\ExecuterOption.cs" />
-    <Compile Include="Types\Time.cs" />
     <Compile Include="Parsing\Statement.cs" />
     <Compile Include="Parsing\Scanners\DefaultScanner\DefaultScanner.GroupParser.cs" />
     <Compile Include="Runtime\Evaluator\ExpressionEvaluator.cs" />
@@ -243,6 +247,10 @@
     <Content Include="Types\Number.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Number.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Types\Objects.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Objects.cs</LastGenOutput>
     </Content>
     <Content Include="Types\TypeUtil.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

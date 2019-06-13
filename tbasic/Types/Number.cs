@@ -11,35 +11,8 @@ using System.Globalization;
 
 namespace Tbasic.Types
 {
-    /// <summary>
-    /// Represents a generic number (this is a double at its core)
-    /// </summary>
     public partial struct Number
-        : ITObject, IConvertible, IComparable, IComparable<Number>, IComparable<double>, IEquatable<Number>, IEquatable<double>
     {
-        /// <summary>
-        /// Returns a double
-        /// </summary>
-        public Type Native => typeof(double);
-
-        /// <summary>
-        /// Gets or sets the value this Number represetns
-        /// </summary>
-        public double Value;
-        /// <summary>
-        /// Gets the size of the type that represents this number
-        /// </summary>
-        public const int SIZE = sizeof(double);
-
-        /// <summary>
-        /// Constructs a new number
-        /// </summary>
-        /// <param name="value"></param>
-        public Number(double value)
-        {
-            Value = value;
-        }
-
         /// <summary>
         /// Determines if this number has a fractional part
         /// </summary>
@@ -67,34 +40,6 @@ namespace Tbasic.Types
             if (HasFraction())
                 return Value;
             return ToInt();
-        }
-
-        /// <summary>
-        /// Tries to parse a string as a number
-        /// </summary>
-        /// <param name="s"></param>
-        /// <param name="result"></param>
-        /// <returns></returns>
-        public static bool TryParse(string s, out Number result)
-        {
-            if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out double d)) {
-                result = d;
-                return true;
-            }
-            else {
-                result = default;
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Parses a string as a number
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static Number Parse(string s)
-        {
-            return double.Parse(s);
         }
 
         /// <summary>
@@ -147,25 +92,7 @@ namespace Tbasic.Types
         }
 
         /// <summary>
-        /// Implicitly converts a double to a Number
-        /// </summary>
-        /// <param name="d"></param>
-        public static implicit operator Number(double d)
-        {
-            return new Number(d);
-        }
-
-        /// <summary>
-        /// Implicitly converts a Number to a double
-        /// </summary>
-        /// <param name="num"></param>
-        public static implicit operator double(Number num)
-        {
-            return num.Value;
-        }
-
-        /// <summary>
-        /// Implicitly converts a double to an Integer
+        /// Implicitly converts a Number to an Integer
         /// </summary>
         /// <param name="n"></param>
         public static implicit operator Number(int n)
@@ -174,7 +101,7 @@ namespace Tbasic.Types
         }
 
         /// <summary>
-        /// Converts this number to an integer
+        /// Converts this Number to an Integer
         /// </summary>
         /// <param name="n"></param>
         public static explicit operator int(Number n)
@@ -185,7 +112,7 @@ namespace Tbasic.Types
         }
 
         /// <summary>
-        /// Converts this number to a long
+        /// Converts this Number to a long
         /// </summary>
         /// <param name="n"></param>
         public static explicit operator long(Number n)
@@ -205,98 +132,5 @@ namespace Tbasic.Types
                 return Value.ToString();
             return ((long)Value).ToString();
         }
-
-        #region IComparable
-
-        /// <summary>
-        /// Compares this Number with another object
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public int CompareTo(object obj)
-        {
-            Number? n = obj as Number?;
-            if (n != null)
-                return CompareTo(n.Value);
-
-            double? d = obj as double?;
-            if (n != null)
-                return CompareTo(d.Value);
-
-            throw new ArgumentException($"Cannot compare types {nameof(Number)} and \"{obj?.GetType().Name}\"");
-        }
-
-        /// <summary>
-        /// Compares this Number to another Number
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(Number other)
-        {
-            return Value.CompareTo(other.Value);
-        }
-
-        /// <summary>
-        /// Compares this Number to a double
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(double other)
-        {
-            return Value.CompareTo(other);
-        }
-
-        #endregion
-
-        #region IEquatable
-
-        /// <summary>
-        /// Determines if this number is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(Number other)
-        {
-            return Value == other.Value;
-        }
-
-        /// <summary>
-        /// Determines if this number is equal to a double
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(double other)
-        {
-            return Value == other;
-        }
-        
-        /// <summary>
-        /// Determines if these two objects are equal
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            Number? n = obj as Number?;
-            if (n != null)
-                return Equals(n.Value);
-
-            double? d = obj as double?;
-            if (d != null)
-                return Equals(d.Value);
-
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this number
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
-
-        #endregion
     }
 }

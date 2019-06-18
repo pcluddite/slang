@@ -1,11 +1,18 @@
-﻿using System;
+﻿/** +++====+++
+*  
+*  Copyright (c) Timothy Baxendale
+*
+*  +++====+++
+**/
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 
 namespace Tbasic.Lexer
 {
-    interface IToken
+    public interface IToken
     {
+        IEnumerable<char> Text { get; }
+        int Match(StreamReader reader);
+        bool Pack();
     }
 }

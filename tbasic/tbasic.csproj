@@ -105,6 +105,8 @@
     <Compile Include="Errors\TbasicRuntimeException.cs" />
     <Compile Include="Errors\ThrowHelper.cs" />
     <Compile Include="Errors\UndefinedObjectException.cs" />
+    <Compile Include="Lexer\Tokens\IToken.cs" />
+    <Compile Include="Lexer\Tokens\StringLiteral.cs" />
     <Compile Include="Libraries\ArrayLibrary.cs" />
     <Compile Include="Libraries\Library.Generated.cs">
       <AutoGen>True</AutoGen>
@@ -113,17 +115,17 @@
     </Compile>
     <Compile Include="Libraries\StringLibrary.cs" />
     <Compile Include="Libraries\SystemLibrary.cs" />
-    <Compile Include="Parsing\CScanner\CScanner.cs" />
-    <Compile Include="Parsing\DefaultScanner\DefaultScanner.Generated.cs">
+    <Compile Include="Lexer\CScanner\CScanner.cs" />
+    <Compile Include="Lexer\DefaultScanner\DefaultScanner.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DefaultScanner.tt</DependentUpon>
     </Compile>
-    <Compile Include="Parsing\DefaultScanner\MatchFast.cs" />
-    <Compile Include="Parsing\IScanner.cs" />
-    <Compile Include="Parsing\Scanners.cs" />
-    <Compile Include="Parsing\TerminalScanner\TerminalScanner.cs" />
-    <Compile Include="Parsing\StringSegment.cs" />
+    <Compile Include="Lexer\DefaultScanner\MatchFast.cs" />
+    <Compile Include="Lexer\IScanner.cs" />
+    <Compile Include="Lexer\Scanners.cs" />
+    <Compile Include="Lexer\TerminalScanner\TerminalScanner.cs" />
+    <Compile Include="Lexer\StringSegment.cs" />
     <Compile Include="Types\Function\FuncCache.cs" />
     <Compile Include="Runtime\ObjectContext.Generated.cs">
       <AutoGen>True</AutoGen>
@@ -154,12 +156,12 @@
     <Compile Include="Libraries\UnaryOpDictionary.cs" />
     <Compile Include="Types\Operators\UnaryOperator.cs" />
     <Compile Include="Runtime\ExecuterOption.cs" />
-    <Compile Include="Parsing\DefaultScanner\DefaultScanner.GroupParser.cs" />
+    <Compile Include="Lexer\DefaultScanner\DefaultScanner.GroupParser.cs" />
     <Compile Include="Runtime\Evaluator\ExpressionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\BinaryOpQueue.cs" />
     <Compile Include="Runtime\Evaluator\FunctionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\IExpressionEvaluator.cs" />
-    <Compile Include="Parsing\DefaultScanner\DefaultScanner.cs" />
+    <Compile Include="Lexer\DefaultScanner\DefaultScanner.cs" />
     <Compile Include="Runtime\ObjectContext.cs" />
     <Compile Include="Runtime\Evaluator\VariableEvaluator.cs" />
     <Compile Include="Runtime\TRuntime.cs" />
@@ -224,7 +226,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Library.Generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Parsing\DefaultScanner\DefaultScanner.tt">
+    <Content Include="Lexer\DefaultScanner\DefaultScanner.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DefaultScanner.Generated.cs</LastGenOutput>
     </Content>

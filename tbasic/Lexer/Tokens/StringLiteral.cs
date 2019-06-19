@@ -10,29 +10,21 @@ using System.Globalization;
 using System.IO;
 using Tbasic.Errors;
 
-namespace Tbasic.Lexer.Tokens
+namespace Tbasic.Lexer
 {
-    public class StringLiteral : IToken
+    public class StringLiteralFactory : ITokenFactory
     {
-        private List<char> value;
-        public IEnumerable<char> Text
-        {
-            get {
-                if (value == null)
-                    throw new NullReferenceException();
-                return value;
-            }
-        }
-
-        public int Match(StreamReader reader)
+        public int MatchToken(StreamReader reader, out IToken token)
         {
             int open = reader.Peek();
             if (open != '\'' && open != '\"')
                 return 0;
-            int c;
-            value = new List<char>();
-            for(int read = 0; (c = reader.Read()) != -1; ++read) {
-                if (open == '"' && read == '\\') { 
+			reader.Read();
+
+            int c, read = 0;
+            List<char> value = new List<char>();
+            for(; (c = reader.Read()) != -1 && c != open; ++read) {
+                if (open == '"' && read == '\\') {
                     switch(c = reader.Read()) {
                         case -1:
                             throw ThrowHelper.UnterminatedEscapeSequence();
@@ -56,11 +48,33 @@ namespace Tbasic.Lexer.Tokens
                     }
                 }
                 value.Add((char)c);
-                if (c == open)
-                    return read;
             }
-            throw ThrowHelper.UnterminatedString();
+
+			if (c != open)
+	            throw ThrowHelper.UnterminatedString();
+			
+			token = new StringLiteral(value);
+			
+			return read;
+        } 
+    }
+
+    public struct StringLiteral : IToken
+    {
+		private IList<char> value;
+
+		public IEnumerable<char> Text
+            get {
+				if (value == null)
+					throw new NullReferenceException();
+                return value;
+            }
         }
+
+		public StringLiteral(IList<char> value)
+		{
+			this.value = value;
+		}
 
         public bool Pack()
         {

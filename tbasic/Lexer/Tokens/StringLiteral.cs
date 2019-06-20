@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using Tbasic.Components;
 using Tbasic.Errors;
 
 namespace Tbasic.Lexer
@@ -17,6 +19,8 @@ namespace Tbasic.Lexer
         public int MatchToken(StreamReader reader, out IToken token)
         {
             int open = reader.Peek();
+            token = default;
+
             if (open != '\'' && open != '\"')
                 return 0;
 			reader.Read();
@@ -49,21 +53,19 @@ namespace Tbasic.Lexer
                 }
                 value.Add((char)c);
             }
-
 			if (c != open)
 	            throw ThrowHelper.UnterminatedString();
-			
 			token = new StringLiteral(value);
-			
 			return read;
-        } 
+        }
     }
 
     public struct StringLiteral : IToken
     {
-		private IList<char> value;
+		private readonly char[] value;
+        private readonly int length;
 
-		public IEnumerable<char> Text
+		public IEnumerable<char> Text {
             get {
 				if (value == null)
 					throw new NullReferenceException();
@@ -71,15 +73,18 @@ namespace Tbasic.Lexer
             }
         }
 
-		public StringLiteral(IList<char> value)
-		{
-			this.value = value;
-		}
+        public object Native => new string(value, 0, length);
 
-        public bool Pack()
+        public StringLiteral(IEnumerable<char> value)
         {
-            value?.TrimExcess();
-            return true;
+            this.value = value.ToArray();
+            length = this.value.Length;
         }
+
+        internal StringLiteral(ArrayList<char> value)
+		{
+			this.value = value.InnerArray;
+            length = value.Count;
+		}
     }
 }

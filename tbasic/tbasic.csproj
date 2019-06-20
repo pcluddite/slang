@@ -67,6 +67,7 @@
     <CodeContractsRuntimeCheckingLevel>Pre and Post</CodeContractsRuntimeCheckingLevel>
     <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeAnalysisRuleSet>tbasic.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -76,6 +77,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>tbasic.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
@@ -86,6 +88,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\ArrayList.cs" />
     <Compile Include="Components\Extensions.cs" />
     <Compile Include="Components\ValueTuple.Generated.cs">
       <AutoGen>True</AutoGen>
@@ -106,6 +109,7 @@
     <Compile Include="Errors\ThrowHelper.cs" />
     <Compile Include="Errors\UndefinedObjectException.cs" />
     <Compile Include="Lexer\Tokens\IToken.cs" />
+    <Compile Include="Lexer\Tokens\ITokenFactory.cs" />
     <Compile Include="Lexer\Tokens\StringLiteral.cs" />
     <Compile Include="Libraries\ArrayLibrary.cs" />
     <Compile Include="Libraries\Library.Generated.cs">
@@ -213,6 +217,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\blank.ico" />
+    <None Include="tbasic.ruleset" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

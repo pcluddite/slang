@@ -16,30 +16,28 @@ namespace Tbasic.Lexer.Tokens
         public int MatchToken(StringStream stream, out IToken token)
         {
             StringSegment value = stream.Value;
-            int startIdx = value.Offset;
+            int offset = value.Offset, count;
             int nLen = value.Length;
-            int count;
 
             token = default;
+
+            if (!(stream.Peek() == '$' || stream.Peek() == '@'))
+                return 0;
+
+            stream.Read();
+
+            if (stream.Peek() == -1)
+                return 0;
+
             unsafe {
                 fixed(char* lpBuff = value.FullString) {
-                    count = MatchVariable(&lpBuff[startIdx], nLen);
+                    count = MatchFast.FindAcceptableFuncChars(&lpBuff[offset + 1], nLen);
                 }
             }
+
             token = new Variable(value.Subsegment(0, count));
             stream.Seek(count, SeekOrigin.Current);
             return count;
-        }
-
-        private static unsafe int MatchVariable(char* lpBuff, int nLen)
-        {
-            int index = 0;
-            if (lpBuff[index] == '$' || lpBuff[index] == '@') { // it's a macro
-                if (++index >= nLen)
-                    return 0;
-                index = MatchFast.FindAcceptableFuncChars(lpBuff, index, nLen);
-            }
-            return index;
         }
     }
 

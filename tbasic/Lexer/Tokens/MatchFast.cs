@@ -54,8 +54,9 @@ namespace Tbasic.Lexer.Tokens
         }
 
 
-        public static unsafe int FindAcceptableFuncChars(char* lpBuff, int index, int nLen)
+        public static unsafe int FindAcceptableFuncChars(char* lpBuff, int nLen)
         {
+            int index  = 0;
             for (; index < nLen; ++index) {
                 if (!char.IsLetterOrDigit(lpBuff[index]) && lpBuff[index] != '_') {
                     return index;

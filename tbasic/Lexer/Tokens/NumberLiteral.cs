@@ -16,15 +16,14 @@ namespace Tbasic.Lexer.Tokens
         public int MatchToken(StringStream stream, out IToken token)
         {
             StringSegment value = stream.Value;
-            int startIdx = value.Offset;
+            int offset = value.Offset, count;
             int nLen = value.Length;
-            int count;
 
             token = default;
 
             unsafe {
                 fixed (char* lpBuff = value.FullString) {
-                    count = MatchNumber(&lpBuff[startIdx], nLen);
+                    count = MatchNumber(&lpBuff[offset], nLen);
                 }
             }
 
@@ -36,7 +35,7 @@ namespace Tbasic.Lexer.Tokens
             return count;
         }
 
-        public unsafe static int MatchNumber(char* buff, int nLen)
+        private unsafe static int MatchNumber(char* buff, int nLen)
         {
             int index = FindConsecutiveDigits(buff, 0, nLen);
             if (index == 0)

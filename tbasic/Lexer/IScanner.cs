@@ -29,13 +29,18 @@ namespace Tbasic.Lexer
         /// </summary>
         bool EndOfStream { get; }
         /// <summary>
+        /// Converts the current stream into tokens
+        /// </summary>
+        /// <returns></returns>
+        public IToken[] Tokenize();
+        /// <summary>
         /// Gets the next token in the buffer
         /// </summary>
         IToken Next();
         /// <summary>
         /// Returns a new scanner scanning a different buffer
         /// </summary>
-        IScanner Scan(StringStream buffer);
+        IScanner Scan(StringStream stream);
         /// <summary>
         /// Advances the scanner a given number of characters
         /// </summary>

@@ -38,13 +38,24 @@ namespace Tbasic.Lexer
 
         public bool EndOfStream => stream.Peek() == -1;
 
+        public IToken[] Tokenize()
+        {
+            if (EndOfStream)
+                throw new EndOfStreamException();
+            List<IToken> tokens = new List<IToken>();
+            IToken next;
+            while ((next = Next()) != null)
+                tokens.Add(next);
+            return tokens.ToArray();
+        }
+
         public IToken Next()
         {
             int c;
             while ((c = stream.Read()) != -1 && c != '\n' && char.IsWhiteSpace((char)c)) ;
 
             if (EndOfStream)
-                throw new EndOfStreamException();
+                return null;
 
             int maxRead = 0;
             IToken found = null;

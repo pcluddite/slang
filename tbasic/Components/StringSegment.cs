@@ -89,6 +89,8 @@ namespace Tbasic.Components
         public StringSegment(string fullStr, int offset, int count)
         {
             Contract.Requires(offset >= 0);
+            if (fullStr == null)
+                throw new ArgumentNullException(nameof(fullStr));
             if (count > fullStr.Length - offset)
                 throw new ArgumentOutOfRangeException(nameof(count));
             Contract.EndContractBlock();

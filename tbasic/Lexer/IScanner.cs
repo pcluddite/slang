@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using Tbasic.Components;
 using Tbasic.Lexer.Tokens;
+using Tbasic.Runtime;
 
 namespace Tbasic.Lexer
 {
@@ -16,6 +17,10 @@ namespace Tbasic.Lexer
     /// </summary>
     public interface IScanner
     {
+        /// <summary>
+        /// Gets the current scope
+        /// </summary>
+        ObjectContext Scope { get; }
         /// <summary>
         /// Gets or sets the current position of the scanner
         /// </summary>
@@ -32,7 +37,7 @@ namespace Tbasic.Lexer
         /// Converts the current stream into tokens
         /// </summary>
         /// <returns></returns>
-        public IToken[] Tokenize();
+        IToken[] Tokenize();
         /// <summary>
         /// Gets the next token in the buffer
         /// </summary>

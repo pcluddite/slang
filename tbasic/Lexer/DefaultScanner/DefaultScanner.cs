@@ -6,11 +6,13 @@
 **/
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Reflection;
 using Tbasic.Components;
 using Tbasic.Errors;
 using Tbasic.Lexer.Tokens;
+using Tbasic.Runtime;
 
 namespace Tbasic.Lexer
 {
@@ -21,14 +23,21 @@ namespace Tbasic.Lexer
     {
         private readonly StringStream stream;
         private readonly List<ITokenFactory> tokens = new List<ITokenFactory>();
+        public ObjectContext Scope { get; private set; }
 
-        public DefaultScanner(StringStream stream)
+        public DefaultScanner(StringStream stream, ObjectContext scope)
         {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (scope == null)
+                throw new ArgumentNullException(nameof(scope));
+            Contract.EndContractBlock();
             this.stream = stream;
+            Scope = scope;
         }
 
-        public DefaultScanner(string str)
-            : this(new StringStream(str))
+        public DefaultScanner(string str, ObjectContext scope)
+            : this(new StringStream(str), scope)
         {
         }
 

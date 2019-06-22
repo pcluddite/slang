@@ -5,10 +5,12 @@
  *  +++====+++
 **/
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Tbasic.Errors;
 using Tbasic.Libraries;
 using Tbasic.Types;
+using System.Collections.ObjectModel;
 
 namespace Tbasic.Runtime
 {
@@ -219,27 +221,27 @@ namespace Tbasic.Runtime
         /// List all unary operators defined
         /// </summary>
         /// <returns></returns>
-        public IList<UnaryOperator> GetAllUnaryOperators()
+        public IEnumerable<UnaryOperator> GetAllUnaryOperators()
         {
-            return _unaryOps;
+            return new ReadOnlyCollection<UnaryOperator>(_unaryOps);
         }
         
         /// <summary>
         /// Lists all binary operators defined
         /// </summary>
         /// <returns></returns>
-        public IList<BinaryOperator> GetAllBinaryOperators()
+        public IEnumerable<BinaryOperator> GetAllBinaryOperators()
         {
-            return _binaryOps;
+            return new ReadOnlyCollection<BinaryOperator>(_binaryOps);
         }
 
         /// <summary>
         /// List the unary operators defined in this context
         /// </summary>
         /// <returns></returns>
-        public IList<UnaryOperator> GetLocalUnaryOperators()
+        public IEnumerable<UnaryOperator> GetLocalUnaryOperators()
         {
-            return _unaryOps;
+            return new ReadOnlyCollection<UnaryOperator>(_unaryOps);
         }
 
 
@@ -247,9 +249,9 @@ namespace Tbasic.Runtime
         /// Lists the binary operators defined in this context
         /// </summary>
         /// <returns></returns>
-        public IList<BinaryOperator> GetLocalBinaryOperators()
+        public IEnumerable<BinaryOperator> GetLocalBinaryOperators()
         {
-            return _binaryOps;
+            return new ReadOnlyCollection<BinaryOperator>(_binaryOps);
         }
 
         /// <summary>

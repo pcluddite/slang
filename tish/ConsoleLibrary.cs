@@ -7,11 +7,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Tbasic.Libraries;
-using Tbasic.Runtime;
-using Tbasic.Tbasic;
+using Slang.Libraries;
+using Slang.Runtime;
+using Slang.Tbasic;
 
-namespace Tbasic.Shell
+namespace Slang.Shell
 {
     public class ConsoleLibrary : Library
     {

@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Tbasic.Win32 {
+namespace Slang.Win32 {
     internal enum WindowState : int {
         SW_HIDE = 0,
         SW_SHOWNORMAL = 1,

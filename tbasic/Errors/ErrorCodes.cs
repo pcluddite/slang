@@ -4,7 +4,7 @@
  *
  *  +++====+++
 **/
-namespace Tbasic.Errors
+namespace Slang.Errors
 {
     /// <summary>
     /// These codes indicate the at least partial success of a function

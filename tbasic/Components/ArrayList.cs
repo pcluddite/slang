@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-namespace Tbasic.Components
+namespace Slang.Components
 {
     internal class ArrayList<T> : IList<T>, ICollection<T>, IEnumerable<T>
     {

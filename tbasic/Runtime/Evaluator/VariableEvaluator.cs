@@ -7,11 +7,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Tbasic.Errors;
-using Tbasic.Types;
+using Slang.Errors;
+using Slang.Types;
 using System.Diagnostics.Contracts;
 
-namespace Tbasic.Runtime
+namespace Slang.Runtime
 {
     internal class VariableEvaluator : IExpressionEvaluator
     {

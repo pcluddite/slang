@@ -7,7 +7,7 @@
     <ProjectGuid>{86EC7054-1D77-4DEE-854F-AD7377FC27AA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tbasic</RootNamespace>
+    <RootNamespace>Slang</RootNamespace>
     <AssemblyName>tbasic</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

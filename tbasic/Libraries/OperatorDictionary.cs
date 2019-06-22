@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.Contracts;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     internal abstract class OperatorDictionary<T> : IList<T>
         where T : IOperator

@@ -6,9 +6,9 @@
 **/
 using System;
 using System.Collections.Generic;
-using Tbasic.Components;
+using Slang.Components;
 
-namespace Tbasic
+namespace Slang
 {
     internal static class Extensions
     {

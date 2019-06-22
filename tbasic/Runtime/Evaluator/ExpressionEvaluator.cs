@@ -9,12 +9,12 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text;
-using Tbasic.Components;
-using Tbasic.Errors;
-using Tbasic.Lexer;
-using Tbasic.Types;
+using Slang.Components;
+using Slang.Errors;
+using Slang.Lexer;
+using Slang.Types;
 
-namespace Tbasic.Runtime
+namespace Slang.Runtime
 {
     /// <summary>
     /// General purpose evaluator for functions, variables, math, booleans, etc.

@@ -8,7 +8,7 @@ using System;
 using System.IO;
 using System.Security;
 
-namespace Tbasic.Errors
+namespace Slang.Errors
 {
     /// <summary>
     /// An exception that occours within a Tbasic function or subroutine and has an associated a status code

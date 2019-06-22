@@ -10,7 +10,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".Generated.cs" #>
-namespace Tbasic.Components
+namespace Slang.Components
 {
 <#
 for(int i = 1; i <= 7; ++i) {

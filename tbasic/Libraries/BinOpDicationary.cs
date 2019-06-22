@@ -6,12 +6,12 @@
 **/
 using System;
 using System.Globalization;
-using Tbasic.Runtime;
-using Tbasic.Errors;
+using Slang.Runtime;
+using Slang.Errors;
 using System.Linq;
 using System.Diagnostics.Contracts;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     internal class BinOpDictionary : OperatorDictionary<BinaryOperator>
     {

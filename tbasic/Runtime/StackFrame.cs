@@ -7,10 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using Tbasic.Errors;
-using Tbasic.Types;
+using Slang.Errors;
+using Slang.Types;
 
-namespace Tbasic.Runtime
+namespace Slang.Runtime
 {
     /// <summary>
     /// Manages parameters and other data passed to a function or subroutine

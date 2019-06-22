@@ -8,10 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Tbasic.Components;
-using Tbasic.Errors;
+using Slang.Components;
+using Slang.Errors;
 
-namespace Tbasic.Lexer.Tokens
+namespace Slang.Lexer.Tokens
 {
     public class StringLiteralFactory : ITokenFactory
     {

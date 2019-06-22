@@ -4,7 +4,7 @@
  *
  *  +++====+++
 **/
-namespace Tbasic.Types
+namespace Slang.Types
 {
     internal static partial class TypeUtil
     {

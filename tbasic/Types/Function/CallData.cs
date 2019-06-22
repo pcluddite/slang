@@ -7,9 +7,9 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Reflection;
-using Tbasic.Runtime;
+using Slang.Runtime;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     /// <summary>
     /// Delegate for processing a Tbasic function

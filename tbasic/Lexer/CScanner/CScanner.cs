@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tbasic.Components;
+using Slang.Components;
 
-namespace Tbasic.Lexer
+namespace Slang.Lexer
 {
     internal class CScanner : DefaultScanner
     {

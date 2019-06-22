@@ -8,9 +8,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using Tbasic.Types;
+using Slang.Types;
 
-namespace Tbasic.Libraries
+namespace Slang.Libraries
 {
     /// <summary>
     /// A library for storing and processing Tbasic functions

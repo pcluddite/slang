@@ -5,13 +5,13 @@
  *  +++====+++
 **/
 using System;
-using Tbasic.Components;
-using Tbasic.Errors;
-using Tbasic.Lexer;
-using Tbasic.Runtime;
+using Slang.Components;
+using Slang.Errors;
+using Slang.Lexer;
+using Slang.Runtime;
 using System.Collections.Generic;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     internal class IfBlock : CodeBlock
     {

@@ -7,9 +7,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Tbasic.Components;
+using Slang.Components;
 
-namespace Tbasic.Lexer.Tokens
+namespace Slang.Lexer.Tokens
 {
     public class NumberLiteralFactory : ITokenFactory
     {

@@ -5,11 +5,11 @@
  *  +++====+++
 **/
 using System.Collections.Generic;
-using Tbasic.Types;
-using Tbasic.Components;
-using Tbasic.Lexer;
+using Slang.Types;
+using Slang.Components;
+using Slang.Lexer;
 
-namespace Tbasic.Runtime
+namespace Slang.Runtime
 {
     internal class BinaryOpQueue
     {

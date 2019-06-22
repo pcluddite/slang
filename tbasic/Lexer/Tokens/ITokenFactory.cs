@@ -4,9 +4,9 @@
 *
 *  +++====+++
 **/
-using Tbasic.Components;
+using Slang.Components;
 
-namespace Tbasic.Lexer.Tokens
+namespace Slang.Lexer.Tokens
 {
     public interface ITokenFactory
     {

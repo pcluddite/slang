@@ -6,7 +6,7 @@
 **/
 using System.Collections.Generic;
 
-namespace Tbasic.Lexer.Tokens
+namespace Slang.Lexer.Tokens
 {
     public interface IToken
     {

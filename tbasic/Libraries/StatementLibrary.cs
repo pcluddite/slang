@@ -9,12 +9,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Tbasic.Errors;
-using Tbasic.Lexer;
-using Tbasic.Runtime;
-using Tbasic.Types;
+using Slang.Errors;
+using Slang.Lexer;
+using Slang.Runtime;
+using Slang.Types;
 
-namespace Tbasic.Libraries
+namespace Slang.Libraries
 {
     internal class StatementLibrary : Library
     {

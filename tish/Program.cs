@@ -6,16 +6,16 @@
 **/
 using Newtonsoft.Json;
 using System;
-using Tbasic.Lexer;
-using Tbasic.Runtime;
-using Tbasic.Errors;
-using Tbasic.Types;
+using Slang.Lexer;
+using Slang.Runtime;
+using Slang.Errors;
+using Slang.Types;
 
 #if DEBUG
 using System.Diagnostics;
 #endif
 
-namespace Tbasic.Shell
+namespace Slang.Shell
 {
     internal class Program
     {

@@ -9,7 +9,7 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text;
 
-namespace Tbasic.Components
+namespace Slang.Components
 {
     public class StringStream : Stream
     {

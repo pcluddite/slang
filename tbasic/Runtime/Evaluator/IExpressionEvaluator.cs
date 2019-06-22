@@ -5,9 +5,9 @@
  *  +++====+++
 **/
 using System.Collections.Generic;
-using Tbasic.Types;
+using Slang.Types;
 
-namespace Tbasic.Runtime
+namespace Slang.Runtime
 {
     /// <summary>
     /// An expression evaluator

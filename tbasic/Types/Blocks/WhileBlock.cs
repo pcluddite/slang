@@ -5,11 +5,11 @@
  *  +++====+++
 **/
 using System.Collections.Generic;
-using Tbasic.Errors;
-using Tbasic.Lexer;
-using Tbasic.Runtime;
+using Slang.Errors;
+using Slang.Lexer;
+using Slang.Runtime;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     internal class WhileBlock : CodeBlock
     {

@@ -5,9 +5,9 @@
  *  +++====+++
 **/
 using System;
-using Tbasic.Runtime;
+using Slang.Runtime;
 
-namespace Tbasic.Libraries
+namespace Slang.Libraries
 {
     /// <summary>
     /// A library containing several mathmatical functions

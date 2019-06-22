@@ -7,12 +7,12 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Tbasic.Errors;
-using Tbasic.Runtime;
-using Tbasic.Win32;
+using Slang.Errors;
+using Slang.Runtime;
+using Slang.Win32;
 using Forms = System.Windows.Forms;
 
-namespace Tbasic.Libraries
+namespace Slang.Libraries
 {
     /// <summary>
     /// A library used to automate and manipulate key strokes, mouse clicks and other input

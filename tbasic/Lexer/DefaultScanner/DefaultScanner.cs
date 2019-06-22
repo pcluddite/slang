@@ -9,12 +9,12 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Reflection;
-using Tbasic.Components;
-using Tbasic.Errors;
-using Tbasic.Lexer.Tokens;
-using Tbasic.Runtime;
+using Slang.Components;
+using Slang.Errors;
+using Slang.Lexer.Tokens;
+using Slang.Runtime;
 
-namespace Tbasic.Lexer
+namespace Slang.Lexer
 {
     /// <summary>
     /// The default implementation of Scanner. This can be extended and modified for custom implementations.

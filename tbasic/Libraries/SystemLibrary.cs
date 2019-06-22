@@ -5,9 +5,9 @@
  *  +++====+++
 **/
 using System;
-using Tbasic.Runtime;
+using Slang.Runtime;
 
-namespace Tbasic.Libraries
+namespace Slang.Libraries
 {
     internal class SystemLibrary : Library
     {

@@ -6,7 +6,7 @@
 **/
 using System;
 
-namespace Tbasic.Errors
+namespace Slang.Errors
 {
     internal class ThrowHelper
     {

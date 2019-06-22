@@ -4,11 +4,11 @@
  *
  *  +++====+++
 **/
-using Tbasic.Lexer;
-using Tbasic.Runtime;
+using Slang.Lexer;
+using Slang.Runtime;
 using System.Collections.Generic;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     /// <summary>
     /// Delegate for initializing a CodeBlock

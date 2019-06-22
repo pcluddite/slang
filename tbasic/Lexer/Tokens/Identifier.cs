@@ -9,9 +9,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Tbasic.Components;
+using Slang.Components;
 
-namespace Tbasic.Lexer.Tokens
+namespace Slang.Lexer.Tokens
 {
     public class IdentifierFactory : ITokenFactory
     {

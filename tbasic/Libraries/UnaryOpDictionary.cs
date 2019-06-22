@@ -7,10 +7,10 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
-using Tbasic.Errors;
-using Tbasic.Runtime;
+using Slang.Errors;
+using Slang.Runtime;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     internal class UnaryOpDictionary : OperatorDictionary<UnaryOperator>
     {

@@ -7,12 +7,12 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Tbasic.Errors;
-using Tbasic.Libraries;
-using Tbasic.Types;
+using Slang.Errors;
+using Slang.Libraries;
+using Slang.Types;
 using System.Collections.ObjectModel;
 
-namespace Tbasic.Runtime
+namespace Slang.Runtime
 {
     /// <summary>
     /// Manages the variables, functions, and commands declared in a given context

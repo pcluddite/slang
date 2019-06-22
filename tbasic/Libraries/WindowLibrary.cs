@@ -10,12 +10,12 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Tbasic.Components;
-using Tbasic.Errors;
-using Tbasic.Runtime;
-using Tbasic.Win32;
+using Slang.Components;
+using Slang.Errors;
+using Slang.Runtime;
+using Slang.Win32;
 
-namespace Tbasic.Libraries
+namespace Slang.Libraries
 {
     internal class WindowLibrary : Library
     {

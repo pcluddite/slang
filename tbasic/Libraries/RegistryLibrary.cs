@@ -6,11 +6,11 @@
 **/
 using Microsoft.Win32;
 using System;
-using Tbasic.Components;
-using Tbasic.Errors;
-using Tbasic.Runtime;
+using Slang.Components;
+using Slang.Errors;
+using Slang.Runtime;
 
-namespace Tbasic.Libraries
+namespace Slang.Libraries
 {
     /// <summary>
     /// Library for interacting with Windows registry.

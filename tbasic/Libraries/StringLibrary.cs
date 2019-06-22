@@ -6,9 +6,9 @@
 **/
 using System.Text;
 using System.Text.RegularExpressions;
-using Tbasic.Runtime;
+using Slang.Runtime;
 
-namespace Tbasic.Libraries
+namespace Slang.Libraries
 {
     internal class StringLibrary : Library
     {

@@ -7,10 +7,10 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using Tbasic.Errors;
-using Tbasic.Runtime;
+using Slang.Errors;
+using Slang.Runtime;
 
-namespace Tbasic.ScriptHost
+namespace Slang.ScriptHost
 {
     public class Program
     {

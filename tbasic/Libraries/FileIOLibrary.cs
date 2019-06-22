@@ -8,10 +8,10 @@ using Microsoft.VisualBasic.FileIO;
 using System;
 using System.IO;
 using System.Text;
-using Tbasic.Errors;
-using Tbasic.Runtime;
+using Slang.Errors;
+using Slang.Runtime;
 
-namespace Tbasic.Libraries
+namespace Slang.Libraries
 {
     /// <summary>
     /// A library used to write and read to files or the file system

@@ -6,9 +6,9 @@
 **/
 using System;
 using System.Diagnostics.Contracts;
-using Tbasic.Runtime;
+using Slang.Runtime;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     /// <summary>
     /// Represents an operator that takes one operand

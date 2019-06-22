@@ -9,11 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using Tbasic.Runtime;
+using Slang.Runtime;
 using System.Windows.Forms;
-using Tbasic.Errors;
+using Slang.Errors;
 
-namespace Tbasic.Tbasic
+namespace Slang.Tbasic
 {
     internal static class ScriptHost
     {

@@ -7,7 +7,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Tbasic.Win32
+namespace Slang.Win32
 {
     internal static class GDI32
     {

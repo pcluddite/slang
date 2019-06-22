@@ -5,9 +5,9 @@
  *  +++====+++
 **/
 using System.Collections.Generic;
-using Tbasic.Runtime;
+using Slang.Runtime;
 
-namespace Tbasic.Lexer
+namespace Slang.Lexer
 {
     /// <summary>
     /// A delegate for creating scanner objects

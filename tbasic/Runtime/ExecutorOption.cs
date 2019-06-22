@@ -6,7 +6,7 @@
 **/
 using System;
 
-namespace Tbasic.Runtime
+namespace Slang.Runtime
 {
     /// <summary>
     /// A list of flags to define the runtime environment

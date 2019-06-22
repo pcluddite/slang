@@ -6,7 +6,7 @@
 **/
 using System;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     /// <summary>
     /// Interface for objects

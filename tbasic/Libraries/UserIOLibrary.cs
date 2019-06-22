@@ -9,11 +9,11 @@ using System;
 using System.Speech.Synthesis;
 using System.Threading;
 using System.Windows.Forms;
-using Tbasic.Errors;
-using Tbasic.Runtime;
-using Tbasic.Types;
+using Slang.Errors;
+using Slang.Runtime;
+using Slang.Types;
 
-namespace Tbasic.Libraries
+namespace Slang.Libraries
 {
     /// <summary>
     /// A library for basic user input and output operations

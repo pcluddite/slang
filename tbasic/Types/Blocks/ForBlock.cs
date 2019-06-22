@@ -5,10 +5,10 @@
  *  +++====+++
 **/
 using System;
-using Tbasic.Lexer;
-using Tbasic.Runtime;
+using Slang.Lexer;
+using Slang.Runtime;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     internal class ForBlock : CodeBlock
     {

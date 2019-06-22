@@ -6,11 +6,11 @@
 **/
 using System;
 using System.Collections.Generic;
-using Tbasic.Components;
-using Tbasic.Lexer.Tokens;
-using Tbasic.Runtime;
+using Slang.Components;
+using Slang.Lexer.Tokens;
+using Slang.Runtime;
 
-namespace Tbasic.Lexer
+namespace Slang.Lexer
 {
     /// <summary>
     /// An inteface for a Tbasic scanner

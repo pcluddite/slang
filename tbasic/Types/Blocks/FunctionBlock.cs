@@ -7,10 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tbasic.Lexer;
-using Tbasic.Runtime;
+using Slang.Lexer;
+using Slang.Runtime;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     /// <summary>
     /// A code block that sores information on a function

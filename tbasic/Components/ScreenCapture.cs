@@ -6,9 +6,9 @@
 **/
 using System;
 using System.Drawing;
-using Tbasic.Win32;
+using Slang.Win32;
 
-namespace Tbasic.Components
+namespace Slang.Components
 {
     /// <summary>
     /// Class for getting a screen shot of the whole screen or a specific window

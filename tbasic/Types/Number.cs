@@ -5,11 +5,11 @@
  *  +++====+++
 **/
 using System;
-using Tbasic.Errors;
-using Tbasic.Runtime;
+using Slang.Errors;
+using Slang.Runtime;
 using System.Globalization;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     public partial struct Number
     {

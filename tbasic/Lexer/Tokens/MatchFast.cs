@@ -7,7 +7,7 @@ using System;
 *
 *  +++====+++
 **/
-namespace Tbasic.Lexer.Tokens
+namespace Slang.Lexer.Tokens
 {
     internal static unsafe class MatchFast
     {

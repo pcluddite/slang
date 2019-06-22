@@ -6,7 +6,7 @@
 **/
 using System;
 using System.IO;
-using Tbasic.Runtime;
+using Slang.Runtime;
 
 namespace PerformanceTest
 {

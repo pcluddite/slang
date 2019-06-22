@@ -6,10 +6,10 @@
 **/
 using System;
 using System.Collections.Generic;
-using Tbasic.Lexer;
-using Tbasic.Runtime;
+using Slang.Lexer;
+using Slang.Runtime;
 
-namespace Tbasic.Types
+namespace Slang.Types
 {
     /// <summary>
     /// Represents a Tbasic class

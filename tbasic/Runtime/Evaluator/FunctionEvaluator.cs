@@ -7,10 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using Tbasic.Errors;
-using Tbasic.Types;
+using Slang.Errors;
+using Slang.Types;
 
-namespace Tbasic.Runtime
+namespace Slang.Runtime
 {
     /// <summary>
     /// Class for evaluating a function

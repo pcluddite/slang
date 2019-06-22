@@ -8,11 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
-using Tbasic.Errors;
-using Tbasic.Lexer;
-using Tbasic.Types;
+using Slang.Errors;
+using Slang.Lexer;
+using Slang.Types;
 
-namespace Tbasic.Runtime
+namespace Slang.Runtime
 {
     /// <summary>
     /// An event handler for a user exit
@@ -29,7 +29,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// A string containing information on this version of Tbasic
         /// </summary>
-        public const string VERSION = "TINT ALPHA 0.4.0.2019";
+        public const string VERSION = "SLANG ALPHA 0.4.0.2019";
 
         #region Properties
         /// <summary>

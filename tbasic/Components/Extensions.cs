@@ -6,7 +6,7 @@
 **/
 using System;
 using System.Collections.Generic;
-using Tbasic.Lexer;
+using Tbasic.Components;
 
 namespace Tbasic
 {
@@ -70,9 +70,9 @@ namespace Tbasic
                 yield return item.ToString();
         }
         
-        internal static IEnumerable<char> TB_Segment(this string source, int start, int count)
+        internal static IEnumerable<char> StringSegment(this string source, int start, int count)
         {
-            return StringSegment.Create(source, start, count);
+            return new StringSegment(source, start, count);
         }
 
         /// <summary>
@@ -92,10 +92,10 @@ namespace Tbasic
         {
             if (test.Length > source.Length)
                 return false; // we don't have enough material
-
+            int nLen = test.Length;
             fixed (char* lpsrc = source) fixed (char* lptest = test) {
-                for (int i = 0; i < test.Length; ++i) {
-                    if (lpsrc[i] != test[i]) {
+                for (int i = 0; i < nLen; ++i) {
+                    if (lpsrc[i] != lptest[i]) {
                         return false;
                     }
                 }
@@ -107,10 +107,11 @@ namespace Tbasic
         {
             if (test.Length > source.Length)
                 return false; // we don't have enough material
+            int nLen = test.Length;
 
             fixed (char* lpsrc = source) fixed (char* lptest = test) {
-                for (int i = 0; i < test.Length; ++i) {
-                    if (char.ToUpper(lpsrc[i]) != char.ToUpper(test[i])) {
+                for (int i = 0; i < nLen; ++i) {
+                    if (char.ToUpper(lpsrc[i]) != char.ToUpper(lptest[i])) {
                         return false;
                     }
                 }

@@ -109,6 +109,7 @@
     <Compile Include="Errors\ThrowHelper.cs" />
     <Compile Include="Errors\UndefinedObjectException.cs" />
     <Compile Include="Components\StringStream.cs" />
+    <Compile Include="Lexer\Tokens\Identifier.cs" />
     <Compile Include="Lexer\Tokens\IToken.cs" />
     <Compile Include="Lexer\Tokens\ITokenFactory.cs" />
     <Compile Include="Lexer\Tokens\NumberLiteral.cs" />

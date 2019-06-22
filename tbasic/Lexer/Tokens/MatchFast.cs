@@ -4,10 +4,6 @@
  *
  *  +++====+++
 **/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Tbasic.Lexer
 {
@@ -35,39 +31,6 @@ namespace Tbasic.Lexer
                 }
             }
             return -1;
-        }
-
-        public static int MatchNumber(string buff)
-        {
-            int end = FindConsecutiveDigits(buff, 0);
-            if (end == 0)
-                return -1; // nothing was found
-
-            if (buff.CharAt(end) == '.')
-                end = FindConsecutiveDigits(buff, ++end);
-            
-            if (buff.CharAt(end) == 'e' || buff.CharAt(end) == 'E') {
-                if (buff.CharAt(++end) == '-' || buff.CharAt(end) == '+')
-                    ++end;
-
-                end = FindConsecutiveDigits(buff, end);
-            }
-
-            return end;
-        }
-
-        private static unsafe int FindConsecutiveDigits(string buff, int start)
-        {
-            fixed (char* lpseg = buff) {
-                int len = buff.Length;
-                int index = start;
-                for (; index < len; ++index) {
-                    if (!char.IsDigit(lpseg[index])) {
-                        return index;
-                    }
-                }
-                return index;
-            }
         }
 
         public static int MatchHex(string buff)

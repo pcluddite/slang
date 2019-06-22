@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.Contracts;
 
-namespace Tbasic.Lexer
+namespace Tbasic.Components
 {
     /// <summary>
     /// This class is used to avoid string copying. It keeps a reference to the original string and accesses only a segment of it. This class is immutable.
@@ -65,7 +65,7 @@ namespace Tbasic.Lexer
         /// Constructs a new string segment with a given string
         /// </summary>
         /// <param name="fullStr">the string for this segment</param>
-        private StringSegment(string fullStr)
+        public StringSegment(string fullStr)
             : this(fullStr, 0)
         {
         }
@@ -75,7 +75,7 @@ namespace Tbasic.Lexer
         /// </summary>
         /// <param name="fullStr">the entire string</param>
         /// <param name="offset">the index at which to start the segment</param>
-        private StringSegment(string fullStr, int offset)
+        public StringSegment(string fullStr, int offset)
             : this(fullStr, offset, fullStr.Length - offset)
         {
         }
@@ -86,25 +86,16 @@ namespace Tbasic.Lexer
         /// <param name="fullStr">the entire string</param>
         /// <param name="offset">the index at which to start the segment</param>
         /// <param name="count">the number of characters to include in this segment</param>
-        private StringSegment(string fullStr, int offset, int count)
+        public StringSegment(string fullStr, int offset, int count)
         {
+            Contract.Requires(offset >= 0);
+            if (count > fullStr.Length - offset)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            Contract.EndContractBlock();
+
             full = fullStr;
             this.offset = offset;
             len = count;
-        }
-
-        public static StringSegment Create(string fullStr, int offset, int count)
-        {
-            Contract.Requires(offset >= 0);
-
-            if (count > fullStr.Length - offset)
-                throw new ArgumentOutOfRangeException(nameof(count));
-
-            Contract.EndContractBlock();
-
-            if (offset == fullStr.Length - 1)
-                return Empty;
-            return new StringSegment(fullStr, offset, count);
         }
 
         /// <summary>

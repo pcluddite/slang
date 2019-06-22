@@ -4,12 +4,12 @@
 *
 *  +++====+++
 **/
-using System.IO;
+using Tbasic.Components;
 
 namespace Tbasic.Lexer
 {
     public interface ITokenFactory
     {
-        int MatchToken(StreamReader reader, out IToken token);
+        int MatchToken(StringStream reader, out IToken token);
     }
 }

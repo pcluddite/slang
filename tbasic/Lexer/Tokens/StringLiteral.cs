@@ -16,20 +16,20 @@ namespace Tbasic.Lexer
 {
     public class StringLiteralFactory : ITokenFactory
     {
-        public int MatchToken(StreamReader reader, out IToken token)
+        public int MatchToken(StringStream stream, out IToken token)
         {
-            int open = reader.Peek();
+            int open = stream.Peek();
             token = default;
 
             if (open != '\'' && open != '\"')
                 return 0;
-			reader.Read();
+			stream.Read();
 
             int c, read = 0;
             List<char> value = new List<char>();
-            for(; (c = reader.Read()) != -1 && c != open; ++read) {
+            for(; (c = stream.Read()) != -1 && c != open; ++read) {
                 if (open == '"' && read == '\\') {
-                    switch(c = reader.Read()) {
+                    switch(c = stream.Read()) {
                         case -1:
                             throw ThrowHelper.UnterminatedEscapeSequence();
                         case 'a': c = '\a'; break;
@@ -45,7 +45,7 @@ namespace Tbasic.Lexer
                         case '\0': c = '\0'; break;
                         case 'u':
                             char[] buff = new char[4];
-                            if (reader.Read(buff, 0, buff.Length) != buff.Length)
+                            if (stream.Read(buff, 0, buff.Length) != buff.Length)
                                 throw ThrowHelper.UnterminatedUnicodeEscape();
                             c = (char)ushort.Parse(new string(buff), NumberStyles.HexNumber);
                             break;

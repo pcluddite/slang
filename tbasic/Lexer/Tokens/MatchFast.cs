@@ -11,17 +11,6 @@ namespace Tbasic.Lexer.Tokens
 {
     internal static unsafe class MatchFast
     {
-        public static int MatchIdentifier(string buff)
-        {
-            int end = 0;
-            if (char.IsLetter(buff[end]) || buff[end] == '_') {
-                return FindAcceptableFuncChars(buff, ++end);
-            }
-            else {
-                return -1;
-            }
-        }
-
         public static int MatchHex(string buff)
         {
             int end = 0;

@@ -16,7 +16,7 @@ namespace Tbasic.Lexer.Tokens
         public int MatchToken(StringStream stream, out IToken token)
         {
             StringSegment value = stream.Value;
-            int offset = value.Offset, count;
+            int offset = value.Offset + (int)stream.Position, count;
             int nLen = value.Length;
 
             token = default;

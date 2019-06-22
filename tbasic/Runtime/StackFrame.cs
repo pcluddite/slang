@@ -15,7 +15,7 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Manages parameters and other data passed to a function or subroutine
     /// </summary>
-    public partial class StackData : ICloneable
+    public partial class StackFrame : ICloneable
     {
         [ContractPublicPropertyName(nameof(Parameters))]
         private List<object> _params = new List<object>();
@@ -31,7 +31,7 @@ namespace Tbasic.Runtime
         }
 
         /// <summary>
-        /// Gets or sets the options for this StackData
+        /// Gets or sets the options for this StackFrame
         /// </summary>
         public ExecuterOption Options { get; set; }
         
@@ -87,7 +87,7 @@ namespace Tbasic.Runtime
         /// Constructs this object
         /// </summary>
         /// <param name="options">the runtime options that are currently enforced</param>
-        public StackData(ExecuterOption options)
+        public StackFrame(ExecuterOption options)
         {
             Options = options;
         }
@@ -97,7 +97,7 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="parameters">the parameters of the function</param>
         /// <param name="options">the execution that called the function</param>
-        public StackData(ExecuterOption options, IEnumerable<object> parameters)
+        public StackFrame(ExecuterOption options, IEnumerable<object> parameters)
             : this(options)
         {
             _params.AddRange(parameters);
@@ -108,13 +108,12 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="text">the line that executed this function, this will be parsed like the Windows Command Prompt</param>
         /// <param name="runtime">the execution that called the function</param>
-        public StackData(TRuntime runtime, string text)
+        public StackFrame(TRuntime runtime, string text)
             : this(runtime.Options)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
             Contract.EndContractBlock();
-            Statement line = new Statement(runtime.Scanner.Scan(text));
             Text = text;
             AddRange(line);
         }
@@ -290,9 +289,9 @@ namespace Tbasic.Runtime
         /// Clones this
         /// </summary>
         /// <returns>A new object with the same data</returns>
-        public StackData Clone()
+        public StackFrame Clone()
         {
-            StackData clone = new StackData(Options);
+            StackFrame clone = new StackFrame(Options);
             clone.Text = Text;
             if (_params == null) {
                 clone._params = new List<object>();
@@ -309,9 +308,9 @@ namespace Tbasic.Runtime
         /// Copies all properties of another into this one
         /// </summary>
         /// <param name="other"></param>
-        public void CopyFrom(StackData other)
+        public void CopyFrom(StackFrame other)
         {
-            StackData clone = other.Clone();
+            StackFrame clone = other.Clone();
             Options = clone.Options;
             Text = clone.Text;
             _params = clone._params;

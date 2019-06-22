@@ -59,7 +59,7 @@ namespace Tbasic.Runtime
             }
         }
 
-        public ObjectContext CurrentContext
+        public Scope CurrentContext
         {
             get {
                 return Runtime.Context;

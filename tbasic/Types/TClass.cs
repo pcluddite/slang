@@ -14,7 +14,7 @@ namespace Tbasic.Types
     /// <summary>
     /// Represents a Tbasic class
     /// </summary>
-    public class TClass : ObjectContext, ICloneable
+    public class TClass : Scope, ICloneable
     {
         /// <summary>
         /// The name of this class
@@ -36,7 +36,7 @@ namespace Tbasic.Types
         /// <summary>
         /// Generate a base class
         /// </summary>
-        public TClass(string name, ObjectContext global) : base(global)
+        public TClass(string name, Scope global) : base(global)
         {
             Name = name;
             Constructor = new LineCollection();
@@ -83,7 +83,7 @@ namespace Tbasic.Types
         /// <summary>
         /// Creates an instance of this class for use in Tbasic code
         /// </summary>
-        public TClass GetInstance(TRuntime runtime, StackData stackdat)
+        public TClass GetInstance(TRuntime runtime, StackFrame stackdat)
         {
             TClass instance = Clone();
             instance.SetVariable("@this", instance);
@@ -97,9 +97,9 @@ namespace Tbasic.Types
             return instance;
         }
 
-        private void Ctor(TClass instance, TRuntime runtime, StackData stackdat)
+        private void Ctor(TClass instance, TRuntime runtime, StackFrame stackdat)
         {
-            ObjectContext old = runtime.Context;
+            Scope old = runtime.Context;
             runtime.Context = instance;
             runtime.Execute(Constructor); // this is to initialize all the variables
 

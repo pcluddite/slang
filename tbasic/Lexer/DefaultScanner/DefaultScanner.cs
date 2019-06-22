@@ -23,9 +23,9 @@ namespace Tbasic.Lexer
     {
         private readonly StringStream stream;
         private readonly List<ITokenFactory> tokens = new List<ITokenFactory>();
-        public ObjectContext Scope { get; private set; }
+        public Scope Scope { get; private set; }
 
-        public DefaultScanner(StringStream stream, ObjectContext scope)
+        public DefaultScanner(StringStream stream, Scope scope)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -36,7 +36,7 @@ namespace Tbasic.Lexer
             Scope = scope;
         }
 
-        public DefaultScanner(string str, ObjectContext scope)
+        public DefaultScanner(string str, Scope scope)
             : this(new StringStream(str), scope)
         {
         }
@@ -86,9 +86,9 @@ namespace Tbasic.Lexer
             tokens.Add((ITokenFactory)ctor.Invoke(new object[0]));
         }
 
-        public IScanner Scan(StringStream stream)
+        public IScanner Scan(StringStream stream, Scope scope)
         {
-            return new DefaultScanner(stream);
+            return new DefaultScanner(stream, scope);
         }
 
         public void Skip(int count)

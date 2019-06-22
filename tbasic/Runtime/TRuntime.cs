@@ -44,7 +44,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// The global context for this object
         /// </summary>
-        public ObjectContext Global { get; private set; }
+        public Scope Global { get; private set; }
 
         /// <summary>
         /// Gets or sets the rules that the runtime should adhere to
@@ -62,9 +62,9 @@ namespace Tbasic.Runtime
         public int CurrentLine { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the ObjectContext in which the code is executed
+        /// Gets or sets the Scope in which the code is executed
         /// </summary>
-        public ObjectContext Context { get; set; }
+        public Scope Context { get; set; }
 
         /// <summary>
         /// Gets if a request to exit has been petitioned. This should apply to the scope of the whole application.
@@ -83,7 +83,7 @@ namespace Tbasic.Runtime
         /// </summary>
         public TRuntime()
         {
-            Global = new ObjectContext(null);
+            Global = new Scope(null);
             Context = Global;
             CurrentLine = 0;
             BreakRequest = false;
@@ -129,7 +129,7 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="codeLine"></param>
         /// <returns></returns>
-        public StackData Execute(Line codeLine)
+        public StackFrame Execute(Line codeLine)
         {
 #if !NO_CATCH
             TbasicRuntimeException runEx;
@@ -144,9 +144,9 @@ namespace Tbasic.Runtime
 #endif
         }
 
-        internal StackData Execute(IList<Line> lines)
+        internal StackFrame Execute(IList<Line> lines)
         {
-            StackData runtime = null;
+            StackFrame runtime = null;
             for (int index = 0; index < lines.Count; index++) {
                 if (BreakRequest) {
                     break;
@@ -171,26 +171,26 @@ namespace Tbasic.Runtime
 #if !NO_CATCH
                 }
                 catch (Exception ex) when ((runEx = TbasicRuntimeException.WrapException(ex)) != null) { // only catch errors that we understand 8/16/16
-                    HandleError(current, runtime ?? new StackData(Options), runEx);
+                    HandleError(current, runtime ?? new StackFrame(Options), runEx);
                 }
 #endif
             }
-            return runtime ?? new StackData(Options);
+            return runtime ?? new StackFrame(Options);
         }
 
-        internal static StackData Execute(TRuntime runtime, Line codeLine)
+        internal static StackFrame Execute(TRuntime runtime, Line codeLine)
         {
-            StackData stackdat;
+            StackFrame stackdat;
             CallData calldat;
             if (!codeLine.IsFunction && runtime.Context.TryGetCommand(codeLine.Name, out calldat)) {
-                stackdat = new StackData(runtime, codeLine.Text);
+                stackdat = new StackFrame(runtime, codeLine.Text);
                 if (calldat.ShouldEvaluate) {
                     stackdat.EvaluateAll(runtime);
                 }
                 stackdat.ReturnValue = calldat.Function(runtime, stackdat);
             }
             else {
-                stackdat = new StackData(runtime.Options);
+                stackdat = new StackFrame(runtime.Options);
                 ExpressionEvaluator eval = new ExpressionEvaluator(codeLine.Text, runtime);
                 runtime.Context.PersistReturns(stackdat);
                 stackdat.ReturnValue = eval.Evaluate();
@@ -199,9 +199,9 @@ namespace Tbasic.Runtime
             return stackdat;
         }
 
-        internal object ExecuteInContext(ObjectContext newcontext, TbasicFunction func, StackData stackdat)
+        internal object ExecuteInContext(Scope newcontext, TbasicFunction func, StackFrame stackdat)
         {
-            ObjectContext old = Context;
+            Scope old = Context;
             Context = newcontext.CreateSubContext();
             stackdat.ReturnValue = func(this, stackdat);
             Context.SetReturns(stackdat);
@@ -209,18 +209,18 @@ namespace Tbasic.Runtime
             return stackdat.ReturnValue;
         }
 
-        internal StackData ExecuteInContext(ObjectContext context, IList<Line> lines)
+        internal StackFrame ExecuteInContext(Scope context, IList<Line> lines)
         {
-            ObjectContext old = Context;
+            Scope old = Context;
             Context = context;
-            StackData dat = Execute(lines);
+            StackFrame dat = Execute(lines);
             Context = old;
             return dat;
         }
 
-        internal StackData ExecuteInSubContext(IList<Line> lines)
+        internal StackFrame ExecuteInSubContext(IList<Line> lines)
         {
-            StackData ret;
+            StackFrame ret;
             Context = Context.CreateSubContext();
             ret = Execute(lines);
             Context = Context.Collect();
@@ -233,7 +233,7 @@ namespace Tbasic.Runtime
         public object ExecuteFunction(string name, params object[] args)
         {
             CallData calldat;
-            StackData stackdat = new StackData(Options, args);
+            StackFrame stackdat = new StackFrame(Options, args);
             stackdat.Name = name;
 
             if (Context.TryGetFunction(name, out calldat) || Context.TryGetCommand(name, out calldat)) {
@@ -247,7 +247,7 @@ namespace Tbasic.Runtime
             }
         }
 
-        private void HandleError(Line current, StackData stackdat, TbasicRuntimeException ex)
+        private void HandleError(Line current, StackFrame stackdat, TbasicRuntimeException ex)
         {
             FunctionException cEx = ex as FunctionException;
             if (cEx != null) {

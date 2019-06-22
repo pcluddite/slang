@@ -17,11 +17,11 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Manages the variables, functions, and commands declared in a given context
     /// </summary>
-    public partial class ObjectContext
+    public partial class Scope
     {
         #region Fields/Properties
 
-        private ObjectContext _super;
+        private Scope _super;
         private Dictionary<string, object> _variables;
         private Dictionary<string, object> _constants;
         private Dictionary<string, BlockCreator> _blocks;
@@ -36,7 +36,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Gets the parent context. If this is the global context, returns null.
         /// </summary>
-        public ObjectContext ParentContext
+        public Scope ParentContext
         {
             get {
                 return _super;
@@ -47,11 +47,11 @@ namespace Tbasic.Runtime
 
         #region Constructors
 
-        internal ObjectContext()
+        internal Scope()
         {
         }
 
-        internal ObjectContext(ObjectContext superContext)
+        internal Scope(Scope superContext)
         {
             _super = superContext;
             _functions = new Library();
@@ -139,12 +139,12 @@ namespace Tbasic.Runtime
         /// Creates a sub-context nested in this one. The sub-context inherits all variables, functions, and commands of declared in this one.
         /// </summary>
         /// <returns>the new sub-context</returns>
-        public ObjectContext CreateSubContext()
+        public Scope CreateSubContext()
         {
             if (_bCollected) {
                 throw ThrowHelper.ContextCleared();
             }
-            return new ObjectContext(this); // They're not allowed to do this themselves so it won't be null
+            return new Scope(this); // They're not allowed to do this themselves so it won't be null
         }
 
         #endregion
@@ -156,7 +156,7 @@ namespace Tbasic.Runtime
         /// no super-context exists, the object will not be collected, and the same object is returned.
         /// </summary>
         /// <returns>the super context of this context</returns>
-        public ObjectContext Collect()
+        public Scope Collect()
         {
             if (_bCollected) {
                 throw ThrowHelper.ContextCleared();
@@ -191,10 +191,10 @@ namespace Tbasic.Runtime
         /// Searches for the context in which any name is declared (variable, constant, function, command or block). If no definition cannot be found, null is returned.
         /// </summary>
         /// <param name="name">the variable name</param>
-        /// <returns>the ObjectContext in which the name is defined</returns>
-        public ObjectContext FindContext(string name)
+        /// <returns>the Scope in which the name is defined</returns>
+        public Scope FindContext(string name)
         {
-            ObjectContext context = FindVariableContext(name);
+            Scope context = FindVariableContext(name);
             if (context != null) {
                 return context;
             }
@@ -260,7 +260,7 @@ namespace Tbasic.Runtime
         /// <returns></returns>
         public IEnumerable<IOperator> GetAllOperators()
         {
-            ObjectContext context = this;
+            Scope context = this;
             while (context != null) {
                 foreach (var op in context.GetLocalOperators()) {
                     yield return op;
@@ -352,21 +352,21 @@ namespace Tbasic.Runtime
             return obj;
         }
 
-        internal void SetReturns(StackData _sframe)
+        internal void SetReturns(StackFrame _sframe)
         {
             GetGlobal()._constants["@error"] = new Number(_sframe.Status);
         }
 
-        internal ObjectContext GetGlobal()
+        internal Scope GetGlobal()
         {
-            ObjectContext curr = this;
+            Scope curr = this;
             while(curr._super != null) {
                 curr = curr._super;
             }
             return curr;
         }
 
-        internal void PersistReturns(StackData _sframe)
+        internal void PersistReturns(StackFrame _sframe)
         {
             object statusvar;
             if (TryGetVariable("@error", out statusvar)) {
@@ -406,7 +406,7 @@ namespace Tbasic.Runtime
         
         #endregion
 
-        internal static T CopyTo<T>(ObjectContext source, T dest) where T : ObjectContext
+        internal static T CopyTo<T>(Scope source, T dest) where T : Scope
         {
             if (source._super == null) {
                 dest._unaryOps = new UnaryOpDictionary(source._unaryOps);

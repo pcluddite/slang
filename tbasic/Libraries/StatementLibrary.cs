@@ -35,7 +35,7 @@ namespace Tbasic.Libraries
             Add("IMPORT", Include);
         }
 
-        private static object Include(TRuntime runtime, StackData stackdat)
+        private static object Include(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             string path = Path.GetFullPath(stackdat.Evaluate<string>(1, runtime));
@@ -64,7 +64,7 @@ namespace Tbasic.Libraries
             return NULL(runtime, stackdat);
         }
 
-        private static object Option(TRuntime runtime, StackData stackdat)
+        private static object Option(TRuntime runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 2)
                 stackdat.Add(true);
@@ -85,39 +85,39 @@ namespace Tbasic.Libraries
             return NULL(runtime, stackdat);
         }
 
-        private object Sleep(TRuntime runtime, StackData stackdat)
+        private object Sleep(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             System.Threading.Thread.Sleep(stackdat.Get<int>(1));
             return NULL(runtime, stackdat);
         }
 
-        private object Break(TRuntime runtime, StackData stackdat)
+        private object Break(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(1);
             runtime.RequestBreak();
             return NULL(runtime, stackdat);
         }
 
-        internal object Exit(TRuntime runtime, StackData stackdat)
+        internal object Exit(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(1);
             runtime.RequestExit();
             return NULL(runtime, stackdat);
         }
 
-        internal static object NULL(TRuntime runtime, StackData stackdat)
+        internal static object NULL(TRuntime runtime, StackFrame stackdat)
         {
             runtime.Context.PersistReturns(stackdat);
             return stackdat.ReturnValue;
         }
 
-        internal object UhOh(TRuntime runtime, StackData stackdat)
+        internal object UhOh(TRuntime runtime, StackFrame stackdat)
         {
             throw ThrowHelper.NoOpeningStatement(stackdat.Text);
         }
 
-        internal object DIM(TRuntime runtime, StackData stackdat)
+        internal object DIM(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertAtLeast(2);
             
@@ -130,7 +130,7 @@ namespace Tbasic.Libraries
                 throw ThrowHelper.InvalidVariableName();
 
             string name = var_eval.Name.ToString();
-            ObjectContext context = runtime.Context.FindVariableContext(name);
+            Scope context = runtime.Context.FindVariableContext(name);
             if (context == null) {
                 if (var_eval.Indices != null) {
                     runtime.Context.SetVariable(name, array_alloc(var_eval.EvaluateIndices(), 0));
@@ -196,17 +196,17 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object Let(TRuntime runtime, StackData stackdat)
+        private object Let(TRuntime runtime, StackFrame stackdat)
         {
             return SetVariable(runtime, stackdat, constant: false);
         }
 
-        internal object Const(TRuntime runtime, StackData stackdat)
+        internal object Const(TRuntime runtime, StackFrame stackdat)
         {
             return SetVariable(runtime, stackdat, constant: true);
         }
 
-        private object SetVariable(TRuntime runtime, StackData stackdat, bool constant)
+        private object SetVariable(TRuntime runtime, StackFrame stackdat, bool constant)
         {
             stackdat.AssertAtLeast(2);
             ExpressionEvaluator eval = new ExpressionEvaluator(runtime);

@@ -37,39 +37,39 @@ namespace Tbasic.Libraries
             Add("StdPause", ConsolePause);
         }
 
-        private object ConsoleWriteline(TRuntime runtime, StackData stackdat)
+        private object ConsoleWriteline(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             Console.WriteLine(stackdat.Get(1));
             return null;
         }
 
-        private object ConsoleWrite(TRuntime runtime, StackData stackdat)
+        private object ConsoleWrite(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             Console.Write(stackdat.Get(1));
             return null;
         }
 
-        private object ConsoleRead(TRuntime runtime, StackData stackdat)
+        private object ConsoleRead(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(1);
             return Console.Read();
         }
 
-        private object ConsoleReadLine(TRuntime runtime, StackData stackdat)
+        private object ConsoleReadLine(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(1);
             return Console.ReadLine();
         }
 
-        private object ConsoleReadKey(TRuntime runtime, StackData stackdat)
+        private object ConsoleReadKey(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(1);
             return Console.ReadKey().KeyChar;
         }
 
-        private object ConsolePause(TRuntime runtime, StackData stackdat)
+        private object ConsolePause(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(1);
             return Console.ReadKey(true).KeyChar;
@@ -89,7 +89,7 @@ namespace Tbasic.Libraries
             return Interaction.InputBox(prompt, title, defaultResponse, x, y);
         }
 
-        private object Input(TRuntime runtime, StackData stackdat)
+        private object Input(TRuntime runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 2) {
                 stackdat.AddRange("Tbasic", -1, -1);
@@ -129,7 +129,7 @@ namespace Tbasic.Libraries
             t.Start(new object[] { timeout, icon, text, title });
         }
 
-        private object TrayTip(TRuntime runtime, StackData stackdat)
+        private object TrayTip(TRuntime runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 2) {
                 stackdat.Add(""); // title
@@ -184,7 +184,7 @@ namespace Tbasic.Libraries
             return Interaction.MsgBox(prompt, (MsgBoxStyle)buttons, title).ToString();
         }
 
-        private object MsgBox(TRuntime runtime, StackData stackdat)
+        private object MsgBox(TRuntime runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 3) {
                 stackdat.Add("");
@@ -208,7 +208,7 @@ namespace Tbasic.Libraries
             t.Start(text);
         }
 
-        private object Say(TRuntime runtime, StackData stackdat)
+        private object Say(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             Say(stackdat.Get<string>(1));

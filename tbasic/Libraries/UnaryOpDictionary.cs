@@ -46,7 +46,7 @@ namespace Tbasic.Types
             if (!runtime.Context.TryGetClass(eval.Expression.ToString(), out prototype))
                 throw new UndefinedObjectException($"The class {eval.Expression} is undefined");
 
-            StackData stackdat = new StackData(runtime.Options, eval.Parameters.TB_ToStrings());
+            StackFrame stackdat = new StackFrame(runtime.Options, eval.Parameters.TB_ToStrings());
             stackdat.Name = eval.Expression.ToString();
             stackdat.EvaluateAll(runtime);
             return prototype.GetInstance(runtime, stackdat);

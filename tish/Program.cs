@@ -41,7 +41,7 @@ namespace Tbasic.Shell
             while(!TRuntime.ExitRequest) {
                 Console.Write(">");
                 line = Console.ReadLine();
-                StackData dat;
+                Runtime.StackFrame dat;
                 try {
 #if DEBUG
                     Stopwatch watch = new Stopwatch();

@@ -22,7 +22,7 @@ namespace Tbasic.Runtime
 
         public IList<IEnumerable<char>> Indices { get; private set; }
 
-        public ObjectContext CurrentContext { get; set; }
+        public Scope CurrentContext { get; set; }
 
         public TRuntime Runtime { get; set; }
 

@@ -20,7 +20,7 @@ namespace Tbasic.Lexer
         /// <summary>
         /// Gets the current scope
         /// </summary>
-        ObjectContext Scope { get; }
+        Scope Scope { get; }
         /// <summary>
         /// Gets or sets the current position of the scanner
         /// </summary>
@@ -45,7 +45,7 @@ namespace Tbasic.Lexer
         /// <summary>
         /// Returns a new scanner scanning a different buffer
         /// </summary>
-        IScanner Scan(StringStream stream);
+        IScanner Scan(StringStream stream, Scope scope);
         /// <summary>
         /// Advances the scanner a given number of characters
         /// </summary>

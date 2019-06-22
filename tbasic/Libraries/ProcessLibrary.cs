@@ -33,7 +33,7 @@ namespace Tbasic.Libraries
             Add("ProcList", ProcessList);
         }
 
-        private object ProcessExists(TRuntime runtime, StackData stackdat)
+        private object ProcessExists(TRuntime runtime, Runtime.StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             foreach (Process p in Process.GetProcesses()) {
@@ -44,7 +44,7 @@ namespace Tbasic.Libraries
             return false;
         }
 
-        private object ProcessList(TRuntime runtime, StackData stackdat)
+        private object ProcessList(TRuntime runtime, Runtime.StackFrame stackdat)
         {
             stackdat.AssertCount(1);
             Process[] procs = Process.GetProcesses();
@@ -61,7 +61,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object ProcessKill(TRuntime runtime, StackData stackdat)
+        private object ProcessKill(TRuntime runtime, Runtime.StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             foreach (Process p in Process.GetProcesses()) {
@@ -74,7 +74,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object ProcessClose(TRuntime runtime, StackData stackdat)
+        private object ProcessClose(TRuntime runtime, Runtime.StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             foreach (Process p in Process.GetProcesses()) {
@@ -87,7 +87,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object BlockedList(TRuntime runtime, StackData stackdat)
+        private object BlockedList(TRuntime runtime, Runtime.StackFrame stackdat)
         {
             stackdat.AssertCount(1);
             var list = BlockedList(); // dicts currently are not supported 2/24/15
@@ -122,7 +122,7 @@ namespace Tbasic.Libraries
 
         private const string REG_EXEC_PATH = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\";
 
-        private object ProcessBlock(TRuntime runtime, StackData stackdat)
+        private object ProcessBlock(TRuntime runtime, Runtime.StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 2) {
                 stackdat.Add(16);
@@ -141,7 +141,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object ProcessRedirect(TRuntime runtime, StackData stackdat)
+        private object ProcessRedirect(TRuntime runtime, Runtime.StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             string name = stackdat.Get<string>(1);
@@ -158,7 +158,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object ProcessSetDebugger(TRuntime runtime, StackData stackdat)
+        private object ProcessSetDebugger(TRuntime runtime, Runtime.StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             string name = stackdat.Get<string>(1);
@@ -175,7 +175,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object Unblock(TRuntime runtime, StackData stackdat)
+        private object Unblock(TRuntime runtime, Runtime.StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             string name = stackdat.Get<string>(1);
@@ -194,7 +194,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object Run(TRuntime runtime, StackData stackdat)
+        private object Run(TRuntime runtime, Runtime.StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 2) {
                 stackdat.Add("");

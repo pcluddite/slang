@@ -5,6 +5,7 @@
  *  +++====+++
 **/
 using System.Collections.Generic;
+using Tbasic.Runtime;
 
 namespace Tbasic.Lexer
 {

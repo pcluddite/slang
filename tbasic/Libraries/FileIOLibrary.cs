@@ -56,79 +56,79 @@ namespace Tbasic.Libraries
             Directory.SetCurrentDirectory(dir);
         }
 
-        private static object DirExists(TRuntime runtime, StackData stackdat)
+        private static object DirExists(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return Directory.Exists(stackdat.Get<string>(1));
         }
 
-        private static object FileExists(TRuntime runtime, StackData stackdat)
+        private static object FileExists(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return File.Exists(stackdat.Get<string>(1));
         }
 
-        private static object FileMove(TRuntime runtime, StackData stackdat)
+        private static object FileMove(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             File.Move(stackdat.Get<string>(1), stackdat.Get<string>(2));
             return null;
         }
 
-        private static object FileCopy(TRuntime runtime, StackData stackdat)
+        private static object FileCopy(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             File.Copy(stackdat.Get<string>(1), stackdat.Get<string>(2));
             return null;
         }
 
-        private static object FileDelete(TRuntime runtime, StackData stackdat)
+        private static object FileDelete(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             File.Delete(stackdat.Get<string>(1));
             return null;
         }
 
-        private static object DirDelete(TRuntime runtime, StackData stackdat)
+        private static object DirDelete(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             Directory.Delete(stackdat.Get<string>(1));
             return null;
         }
 
-        private static object DirMove(TRuntime runtime, StackData stackdat)
+        private static object DirMove(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             Directory.Move(stackdat.Get<string>(1), stackdat.Get<string>(2));
             return null;
         }
 
-        private static object DirCreate(TRuntime runtime, StackData stackdat)
+        private static object DirCreate(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             Directory.CreateDirectory(stackdat.Get<string>(1));
             return null;
         }
 
-        private static object DirGetFileList(TRuntime runtime, StackData stackdat)
+        private static object DirGetFileList(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return Directory.GetFiles(stackdat.Get<string>(1));
         }
 
-        private static object DirGetDirList(TRuntime runtime, StackData stackdat)
+        private static object DirGetDirList(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return Directory.GetDirectories(stackdat.Get<string>(1));
         }
 
-        private static object FileReadAll(TRuntime runtime, StackData stackdat)
+        private static object FileReadAll(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return File.ReadAllText(stackdat.Get<string>(1));
         }
 
-        private static object FileWriteAll(TRuntime runtime, StackData stackdat)
+        private static object FileWriteAll(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             string path = stackdat.Get<string>(1);
@@ -166,14 +166,14 @@ namespace Tbasic.Libraries
             FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
         }
 
-        private static object Recycle(TRuntime runtime, StackData stackdat)
+        private static object Recycle(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             Recycle(stackdat.Get<string>(1));
             return null;
         }
 
-        private static object FileGetAttributes(TRuntime runtime, StackData stackdat)
+        private static object FileGetAttributes(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             string path = stackdat.Get<string>(1);
@@ -181,7 +181,7 @@ namespace Tbasic.Libraries
             return GetStringFromAttributes(current);
         }
 
-        private static object FileSetAttributes(TRuntime runtime, StackData stackdat)
+        private static object FileSetAttributes(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             string path = stackdat.Get<string>(1);
@@ -224,7 +224,7 @@ namespace Tbasic.Libraries
             return result;
         }
 
-        private static object FileSetAccessDate(TRuntime runtime, StackData stackdat)
+        private static object FileSetAccessDate(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             string path = stackdat.Get<string>(1);
@@ -244,7 +244,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private static object FileSetModifiedDate(TRuntime runtime, StackData stackdat)
+        private static object FileSetModifiedDate(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             string path = stackdat.Get<string>(1);
@@ -264,7 +264,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private static object FileSetCreatedDate(TRuntime runtime, StackData stackdat)
+        private static object FileSetCreatedDate(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             string path = stackdat.Get<string>(1);
@@ -319,7 +319,7 @@ namespace Tbasic.Libraries
             return Shell(cmd, Directory.GetCurrentDirectory(), out output);
         }
 
-        private static object Shell(TRuntime runtime, StackData stackdat)
+        private static object Shell(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             string output;

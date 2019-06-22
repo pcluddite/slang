@@ -19,7 +19,7 @@ namespace Tbasic.Libraries
         /// <summary>
         /// Initializes a new instance of this class
         /// </summary>
-        public MathLibrary(ObjectContext context)
+        public MathLibrary(Scope context)
         {
             Add("ABS", Math.Abs);
             Add("SIN", Math.Sin);
@@ -91,7 +91,7 @@ namespace Tbasic.Libraries
             return Random(upperBound - lowerBound) + lowerBound;
         }
 
-        private object Random(TRuntime runtime, StackData stackdat)
+        private object Random(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(atLeast: 1, atMost: 3);
             if (stackdat.ParameterCount == 1) {

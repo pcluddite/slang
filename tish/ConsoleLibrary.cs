@@ -40,13 +40,13 @@ namespace Tbasic.Shell
             }
         }
 
-        public static object Exit(TRuntime runtime, StackData stackdat)
+        public static object Exit(TRuntime runtime, StackFrame stackdat)
         {
             runtime.RequestExit();
             return null;
         }
 
-        public static object Hello(TRuntime runtime, StackData stackdat)
+        public static object Hello(TRuntime runtime, StackFrame stackdat)
         {
             return "Hey";
         }

@@ -130,15 +130,15 @@
     <Compile Include="Lexer\TerminalScanner\TerminalScanner.cs" />
     <Compile Include="Components\StringSegment.cs" />
     <Compile Include="Types\Function\FuncCache.cs" />
-    <Compile Include="Runtime\ObjectContext.Generated.cs">
+    <Compile Include="Runtime\Scope.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ObjectContext.tt</DependentUpon>
+      <DependentUpon>Scope.tt</DependentUpon>
     </Compile>
-    <Compile Include="Runtime\StackData.Generated.cs">
+    <Compile Include="Runtime\StackFrame.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>StackData.tt</DependentUpon>
+      <DependentUpon>StackFrame.tt</DependentUpon>
     </Compile>
     <Compile Include="Types\ITObject.cs" />
     <Compile Include="Types\Number.Generated.cs">
@@ -164,7 +164,7 @@
     <Compile Include="Runtime\Evaluator\FunctionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\IExpressionEvaluator.cs" />
     <Compile Include="Lexer\DefaultScanner\DefaultScanner.cs" />
-    <Compile Include="Runtime\ObjectContext.cs" />
+    <Compile Include="Runtime\Scope.cs" />
     <Compile Include="Runtime\Evaluator\VariableEvaluator.cs" />
     <Compile Include="Runtime\TRuntime.cs" />
     <Compile Include="Libraries\AutoLibrary.cs" />
@@ -187,7 +187,7 @@
     <Compile Include="Components\Win32\UnmanagedTypes.cs" />
     <Compile Include="Components\Win32\User32.cs" />
     <Compile Include="Components\Win32\WindowEnums.cs" />
-    <Compile Include="Runtime\StackData.cs" />
+    <Compile Include="Runtime\StackFrame.cs" />
     <Compile Include="Components\Win32\Windows.cs" />
     <Compile Include="Libraries\WindowLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -229,13 +229,13 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Library.Generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Runtime\ObjectContext.tt">
+    <Content Include="Runtime\Scope.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ObjectContext.Generated.cs</LastGenOutput>
+      <LastGenOutput>Scope.Generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Runtime\StackData.tt">
+    <Content Include="Runtime\StackFrame.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>StackData.Generated.cs</LastGenOutput>
+      <LastGenOutput>StackFrame.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="Types\Number.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

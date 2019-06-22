@@ -47,11 +47,11 @@ namespace Tbasic.Types
         /// <summary>
         /// Executes the body of the function
         /// </summary>
-        public virtual object Execute(TRuntime runtime, StackData stackdat)
+        public virtual object Execute(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(Prototype.Count);
 
-            ObjectContext context = runtime.Context.CreateSubContext();
+            Scope context = runtime.Context.CreateSubContext();
 
             int index = 0;
             foreach(string param in Prototype.Skip(1)) { // skip the first item in the collection, which is assumed to be the name
@@ -61,13 +61,13 @@ namespace Tbasic.Types
             context.AddCommand("return", new CallData(Return, evaluate: false));
             context.AddCommand("raise", SetStatus);
 
-            StackData ret = runtime.ExecuteInContext(context, Body);
+            StackFrame ret = runtime.ExecuteInContext(context, Body);
             stackdat.CopyFrom(ret);
             runtime.HonorBreak();
             return stackdat.ReturnValue;
         }
 
-        private object Return(TRuntime runtime, StackData stackdat)
+        private object Return(TRuntime runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount < 2) {
                 stackdat.AssertCount(2);
@@ -79,7 +79,7 @@ namespace Tbasic.Types
             return stackdat.ReturnValue = e.Evaluate();
         }
 
-        private object SetStatus(TRuntime runtime, StackData stackdat)
+        private object SetStatus(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return stackdat.Status = stackdat.Get<int>(1);

@@ -30,13 +30,13 @@ namespace Tbasic.Libraries
             Add("RegWrite", RegWrite);
         }
         
-        private object RegValueKind(TRuntime runtime, StackData stackdat)
+        private object RegValueKind(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             return WinRegistry.GetValueKind(stackdat.Get<string>(1), stackdat.Get<string>(2)).ToString();
         }
 
-        private object RegRead(TRuntime runtime, StackData stackdat)
+        private object RegRead(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(atLeast: 3, atMost: 4);
 
@@ -46,35 +46,35 @@ namespace Tbasic.Libraries
             return WinRegistry.Read(stackdat.Get<string>(1), stackdat.Get<string>(2), stackdat.Get<string>(3));
         }
 
-        private object RegDelete(TRuntime runtime, StackData stackdat)
+        private object RegDelete(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             WinRegistry.Delete(stackdat.Get<string>(1), stackdat.Get<string>(2));
             return null;
         }
 
-        private object RegRename(TRuntime runtime, StackData stackdat)
+        private object RegRename(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(4);
             WinRegistry.Rename(stackdat.Get<string>(1), stackdat.Get<string>(2), stackdat.Get<string>(3));
             return null;
         }
 
-        private object RegDeleteKey(TRuntime runtime, StackData stackdat)
+        private object RegDeleteKey(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             WinRegistry.DeleteKey(stackdat.Get<string>(1));
             return null;
         }
 
-        private object RegRenameKey(TRuntime runtime, StackData stackdat)
+        private object RegRenameKey(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             WinRegistry.RenameKey(stackdat.Get<string>(1), stackdat.Get<string>(2));
             return null;
         }
 
-        private object RegCreateKey(TRuntime runtime, StackData stackdat)
+        private object RegCreateKey(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             WinRegistry.RenameKey(stackdat.Get<string>(1), stackdat.Get<string>(2));
@@ -82,7 +82,7 @@ namespace Tbasic.Libraries
             return null;
         }
         
-        private object RegEnumValues(TRuntime runtime, StackData stackdat)
+        private object RegEnumValues(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
 
@@ -96,13 +96,13 @@ namespace Tbasic.Libraries
             }
         }
 
-        private static object RegEnumKeys(TRuntime runtime, StackData stackdat)
+        private static object RegEnumKeys(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return WinRegistry.EnumeratKeys(stackdat.Get<string>(1));
         }
 
-        private object RegWrite(TRuntime runtime, StackData stackdat)
+        private object RegWrite(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(5);
 

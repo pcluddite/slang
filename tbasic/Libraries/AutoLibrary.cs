@@ -65,7 +65,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object MouseClick(TRuntime runtime, StackData stackdat)
+        private object MouseClick(TRuntime runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 4) {
                 stackdat.Add(1);
@@ -92,7 +92,7 @@ namespace Tbasic.Libraries
             return null;
         }
 
-        private object MouseMove(TRuntime runtime, StackData stackdat)
+        private object MouseMove(TRuntime runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 3) {
                 stackdat.Add(1);
@@ -156,7 +156,7 @@ namespace Tbasic.Libraries
             return User32.BlockInput(blocked);
         }
 
-        private object BlockInput(TRuntime runtime, StackData stackdat)
+        private object BlockInput(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             if (!BlockInput(stackdat.Get<bool>(1))) {
@@ -174,7 +174,7 @@ namespace Tbasic.Libraries
             SendKeys.SendWait(keys);
         }
 
-        private object Send(TRuntime runtime, StackData stackdat)
+        private object Send(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             Send(stackdat.Get<string>(1));
@@ -192,7 +192,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object VolumeUp(TRuntime runtime, StackData stackdat)
+        private object VolumeUp(TRuntime runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 1) {
                 stackdat.Add(1);
@@ -213,7 +213,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object VolumeDown(TRuntime runtime, StackData stackdat)
+        private object VolumeDown(TRuntime runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 1) {
                 stackdat.Add(1);
@@ -231,7 +231,7 @@ namespace Tbasic.Libraries
             User32.keybd_event((byte)Forms.Keys.VolumeMute, 0, 0, 0);
         }
 
-        private object VolumeMute(TRuntime runtime, StackData stackdat)
+        private object VolumeMute(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(1);
             VolumeMute();

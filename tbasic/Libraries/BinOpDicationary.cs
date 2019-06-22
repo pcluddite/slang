@@ -85,7 +85,7 @@ namespace Tbasic.Types
             if (v == null)
                 throw new ArgumentException($"Cannot set the value of {left}");
 
-            ObjectContext context = v.CurrentContext;
+            Scope context = v.CurrentContext;
             context.SetVariable(v.Name, right);
 
             return right;

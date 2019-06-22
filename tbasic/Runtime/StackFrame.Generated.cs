@@ -14,7 +14,7 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Manages parameters and other data passed to a function or subroutine
     /// </summary>
-    public partial class StackData : ICloneable
+    public partial class StackFrame : ICloneable
     {
         /// <summary>
         /// Adds a parameter to the end of the parameter list

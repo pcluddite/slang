@@ -44,7 +44,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Gets or sets the context in which this function should be run. This is the global context by default.
         /// </summary>
-        public ObjectContext CurrentContext { get; set; }
+        public Scope CurrentContext { get; set; }
 
         public TRuntime Runtime { get; set; }
 
@@ -87,7 +87,7 @@ namespace Tbasic.Runtime
         {
             CallData func;
             if (CurrentContext.TryGetFunction(name, out func)) {
-                StackData stackdat = new StackData(Runtime.Options, l_params.TB_ToStrings());
+                StackFrame stackdat = new StackFrame(Runtime.Options, l_params.TB_ToStrings());
                 stackdat.Name = name; // if this isn't before evaluation, EvaluateAll() won't eval properly 8/30/16
                 if (func.ShouldEvaluate) {
                     stackdat.EvaluateAll(Runtime);

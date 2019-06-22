@@ -31,7 +31,7 @@ namespace Tbasic.Libraries
             Add("StrInStr", Substring);
         }
 
-        private object CharsToString(TRuntime runtime, StackData stackdat)
+        private object CharsToString(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             StringBuilder hanz = new StringBuilder();
@@ -41,49 +41,49 @@ namespace Tbasic.Libraries
             return hanz.ToString();
         }
 
-        private object ToCharArray(TRuntime runtime, StackData stackdat)
+        private object ToCharArray(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return stackdat.Get<string>(1).ToCharArray();
         }
 
-        private object StringSplit(TRuntime runtime, StackData stackdat)
+        private object StringSplit(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             return Regex.Split(stackdat.Get(1).ToString(), stackdat.Get(2).ToString());
         }
 
-        private object Trim(TRuntime runtime, StackData stackdat)
+        private object Trim(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return stackdat.Get(1).ToString().Trim();
         }
 
-        private object TrimStart(TRuntime runtime, StackData stackdat)
+        private object TrimStart(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return stackdat.Get(1).ToString().TrimStart();
         }
 
-        private object TrimEnd(TRuntime runtime, StackData stackdat)
+        private object TrimEnd(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return stackdat.Get(1).ToString().TrimEnd();
         }
 
-        private object StringContains(TRuntime runtime, StackData stackdat)
+        private object StringContains(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             return stackdat.Get<string>(1).Contains(stackdat.Get<string>(2));
         }
 
-        private object StringCompare(TRuntime runtime, StackData stackdat)
+        private object StringCompare(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             return stackdat.Get<string>(1).CompareTo(stackdat.Get<string>(2));
         }
 
-        private object StringIndexOf(TRuntime runtime, StackData stackdat)
+        private object StringIndexOf(TRuntime runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 3) {
                 stackdat.Add(0);
@@ -95,7 +95,7 @@ namespace Tbasic.Libraries
             return stackdat.Get<string>(1).IndexOf(stackdat.Get<string>(2), stackdat.Get<int>(3), stackdat.Get<int>(4));
         }
 
-        private object StringLastIndexOf(TRuntime runtime, StackData stackdat)
+        private object StringLastIndexOf(TRuntime runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 3) {
                 stackdat.Add(0);
@@ -107,31 +107,31 @@ namespace Tbasic.Libraries
             return stackdat.Get<string>(1).LastIndexOf(stackdat.Get<string>(2), stackdat.Get<int>(3), stackdat.Get<int>(4));
         }
 
-        private object StringUpper(TRuntime runtime, StackData stackdat)
+        private object StringUpper(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return stackdat.Get<string>(1).ToUpper();
         }
 
-        private object StringLower(TRuntime runtime, StackData stackdat)
+        private object StringLower(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return stackdat.Get<string>(1).ToLower();
         }
 
-        private object StringLeft(TRuntime runtime, StackData stackdat)
+        private object StringLeft(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             return stackdat.Get<string>(1).Substring(stackdat.Get<int>(2));
         }
 
-        private object StringRight(TRuntime runtime, StackData stackdat)
+        private object StringRight(TRuntime runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             return stackdat.Get<string>(1).Remove(stackdat.Get<int>(2));
         }
 
-        private object Substring(TRuntime runtime, StackData stackdat)
+        private object Substring(TRuntime runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 3) {
                 return stackdat.Get<string>(1).Substring(

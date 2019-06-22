@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.IO;
+using System.Text;
 
 namespace Tbasic.Components
 {
@@ -14,6 +15,11 @@ namespace Tbasic.Components
     {
         internal StringSegment Value { get; private set; }
         private int pos = 0;
+
+        public StringStream(string str)
+        {
+            Value = new StringSegment(str);
+        }
 
         public override bool CanRead => true;
 
@@ -67,6 +73,21 @@ namespace Tbasic.Components
             }
 
             return size;
+        }
+
+        public string ReadWord()
+        {
+            int c;
+            while ((c = Read()) != -1 && char.IsWhiteSpace((char)c)) ;
+            if (c == -1)
+                return string.Empty;
+
+            StringBuilder sb = new StringBuilder();
+            do {
+                sb.Append((char)c);
+            }
+            while ((c = Read()) != -1 && !char.IsWhiteSpace((char)c));
+            return sb.ToString();
         }
 
         public unsafe int Read(char[] buffer, int offset, int count)

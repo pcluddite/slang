@@ -55,6 +55,11 @@ namespace Tbasic.Errors
             return new InvalidCastException($"An object '{name}' has been defined as a {type} and cannot be redefined as a {newType}");
         }
 
+        internal static Exception UnknownToken(string token)
+        {
+            return new InvalidTokenException(token);
+        }
+
         public static Exception AlreadyDefined(string name)
         {
             return new DuplicateDefinitionException(name);

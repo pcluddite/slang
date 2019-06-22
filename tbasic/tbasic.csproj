@@ -124,11 +124,6 @@
     <Compile Include="Libraries\StringLibrary.cs" />
     <Compile Include="Libraries\SystemLibrary.cs" />
     <Compile Include="Lexer\CScanner\CScanner.cs" />
-    <Compile Include="Lexer\DefaultScanner\DefaultScanner.Generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DefaultScanner.tt</DependentUpon>
-    </Compile>
     <Compile Include="Lexer\Tokens\MatchFast.cs" />
     <Compile Include="Lexer\IScanner.cs" />
     <Compile Include="Lexer\Scanners.cs" />
@@ -164,7 +159,6 @@
     <Compile Include="Libraries\UnaryOpDictionary.cs" />
     <Compile Include="Types\Operators\UnaryOperator.cs" />
     <Compile Include="Runtime\ExecuterOption.cs" />
-    <Compile Include="Lexer\DefaultScanner\DefaultScanner.GroupParser.cs" />
     <Compile Include="Runtime\Evaluator\ExpressionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\BinaryOpQueue.cs" />
     <Compile Include="Runtime\Evaluator\FunctionEvaluator.cs" />
@@ -234,10 +228,6 @@
     <Content Include="Libraries\Library.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Library.Generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Lexer\DefaultScanner\DefaultScanner.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DefaultScanner.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="Runtime\ObjectContext.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

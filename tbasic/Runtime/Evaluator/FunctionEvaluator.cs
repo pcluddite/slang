@@ -46,7 +46,7 @@ namespace Tbasic.Runtime
         /// </summary>
         public Scope CurrentContext { get; set; }
 
-        public TRuntime Runtime { get; set; }
+        public Executor Runtime { get; set; }
 
         public IList<IEnumerable<char>> Parameters
         {
@@ -57,7 +57,7 @@ namespace Tbasic.Runtime
 
         #endregion
 
-        public FunctionEvaluator(TRuntime runtime, string name, IList<IEnumerable<char>> parameters)
+        public FunctionEvaluator(Executor runtime, string name, IList<IEnumerable<char>> parameters)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));

@@ -27,18 +27,18 @@ namespace Tbasic.Shell
             ResetColor();
             Console.Clear();
             Console.Title = "T Interpreter Shell";
-            Console.WriteLine("T Interpreter Shell [{0}]", TRuntime.VERSION);
+            Console.WriteLine("T Interpreter Shell [{0}]", Executor.VERSION);
             Console.WriteLine("Copyright (c) Timothy Baxendale. All Rights Reserved.");
             Console.WriteLine();
 
             Console.Write("Initializing standard library...");
-            TRuntime runtime = InitRuntime();
+            Executor runtime = InitRuntime();
 
             Console.WriteLine("Done.\n");
 
             int curr = 0;
             string line;
-            while(!TRuntime.ExitRequest) {
+            while(!Executor.ExitRequest) {
                 Console.Write(">");
                 line = Console.ReadLine();
                 Runtime.StackFrame dat;
@@ -65,9 +65,9 @@ namespace Tbasic.Shell
             }
         }
 
-        internal static TRuntime InitRuntime()
+        internal static Executor InitRuntime()
         {
-            TRuntime runtime = new TRuntime();
+            Executor runtime = new Executor();
             runtime.Scanner = Scanners.Terminal;
             runtime.Preprocessor = Preprocessors.Terminal;
             runtime.Global.LoadStandardLibrary();

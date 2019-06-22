@@ -16,7 +16,7 @@ namespace Tbasic.Types
     /// </summary>
     /// <param name="runtime">the runtime that called this function</param>
     /// <param name="stackdat">The object containing parameter and execution information</param>
-    public delegate object TbasicFunction(TRuntime runtime, StackFrame stackdat);
+    public delegate object TbasicFunction(Executor runtime, StackFrame stackdat);
 
     /// <summary>
     /// Contains call information for each function or command
@@ -82,7 +82,7 @@ namespace Tbasic.Types
             Function = NativeFuncWrapper;
         }
 
-        private object NativeFuncWrapper(TRuntime runtime, StackFrame stackdat)
+        private object NativeFuncWrapper(Executor runtime, StackFrame stackdat)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));

@@ -26,17 +26,17 @@ namespace Tbasic.Libraries
             Add("CBool", CBool);
             AddLibrary(new StringLibrary());
             AddLibrary(new ArrayLibrary());
-            context.AddConstant("@version", TRuntime.VERSION);
+            context.AddConstant("@version", Executor.VERSION);
             context.AddConstant("@osversion", Environment.OSVersion.VersionString);
         }
         
-        private object CStr(TRuntime runtime, StackFrame stackdat)
+        private object CStr(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return stackdat.Get(1)?.ToString(); // return null if it is null
         }
 
-        private object CBool(TRuntime runtime, StackFrame stackdat)
+        private object CBool(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             try {
@@ -55,7 +55,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object CNum(TRuntime runtime, StackFrame stackdat)
+        private object CNum(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             try {
@@ -74,7 +74,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object SizeOf(TRuntime runtime, StackFrame stackdat)
+        private object SizeOf(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             object obj = stackdat.Get(1);
@@ -107,25 +107,25 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object IsNum(TRuntime runtime, StackFrame stackdat)
+        private object IsNum(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return Number.IsNumber(stackdat.Get(1), runtime.Options);
         }
 
-        private object IsString(TRuntime runtime, StackFrame stackdat)
+        private object IsString(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return stackdat.Get(1) is string;
         }
 
-        private object IsBool(TRuntime runtime, StackFrame stackdat)
+        private object IsBool(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return stackdat.Get(1) is bool;
         }
         
-        private object IsDefined(TRuntime runtime, StackFrame stackdat)
+        private object IsDefined(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             string name = stackdat.Get<string>(1);

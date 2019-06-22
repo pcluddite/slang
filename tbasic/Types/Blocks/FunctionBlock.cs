@@ -47,7 +47,7 @@ namespace Tbasic.Types
         /// <summary>
         /// Executes the body of the function
         /// </summary>
-        public virtual object Execute(TRuntime runtime, StackFrame stackdat)
+        public virtual object Execute(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(Prototype.Count);
 
@@ -67,7 +67,7 @@ namespace Tbasic.Types
             return stackdat.ReturnValue;
         }
 
-        private object Return(TRuntime runtime, StackFrame stackdat)
+        private object Return(Executor runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount < 2) {
                 stackdat.AssertCount(2);
@@ -79,7 +79,7 @@ namespace Tbasic.Types
             return stackdat.ReturnValue = e.Evaluate();
         }
 
-        private object SetStatus(TRuntime runtime, StackFrame stackdat)
+        private object SetStatus(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return stackdat.Status = stackdat.Get<int>(1);
@@ -88,7 +88,7 @@ namespace Tbasic.Types
         /// <summary>
         /// Do not call this method. This is not implemented by default.
         /// </summary>
-        public override void Execute(TRuntime runtime)
+        public override void Execute(Executor runtime)
         {
             throw new NotImplementedException();
         }

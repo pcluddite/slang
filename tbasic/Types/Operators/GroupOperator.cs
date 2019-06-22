@@ -46,7 +46,7 @@ namespace Tbasic.Types
         /// <param name="left">the left operand</param>
         /// <param name="right">the right operand</param>
         /// <returns>the result of the operator</returns>
-        public delegate object GroupOpDelegate(TRuntime runtime, object left, object right);
+        public delegate object GroupOpDelegate(Executor runtime, object left, object right);
 
         /// <summary>
         /// Gets which operand should be evaluated

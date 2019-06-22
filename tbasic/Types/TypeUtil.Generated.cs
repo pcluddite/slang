@@ -20,14 +20,14 @@ namespace Tbasic.Types
         /// <param name="result">the result of the conversion</param>
         /// <param name="opts">the options for converting</param>
         /// <returns></returns>
-        internal static bool TryConvert<T>(object obj,  out T result, ExecuterOption opts)
+        internal static bool TryConvert<T>(object obj,  out T result, ExecutorOption opts)
         {
             if (obj is T) {
                 result = (T)obj;
                 return true;
             }
             else {
-                if (!opts.HasFlag(ExecuterOption.Strict))
+                if (!opts.HasFlag(ExecutorOption.Strict))
                     return TryConvertNonStrict(obj, out result, opts);
                 result = default;
                 return false;
@@ -42,33 +42,33 @@ namespace Tbasic.Types
         /// <param name="result">the result of the conversion</param>
         /// <param name="opts">the options for converting</param>
         /// <returns></returns>
-        internal static bool TryConvert(object obj,  Type type, out object result, ExecuterOption opts)
+        internal static bool TryConvert(object obj,  Type type, out object result, ExecutorOption opts)
         {
             if (type.IsAssignableFrom(obj.GetType())) {
                 result = obj;
                 return true;
             }
             else {
-                if (!opts.HasFlag(ExecuterOption.Strict))
+                if (!opts.HasFlag(ExecutorOption.Strict))
                     return TryConvertNonStrict(obj, type, out result, opts);
                 result = default;
                 return false;
             }
         }
 
-        private static bool TryConvertNonStrict<T>(object obj, out T result, ExecuterOption opts)
+        private static bool TryConvertNonStrict<T>(object obj, out T result, ExecutorOption opts)
         {
             result = default;
             if (obj == null)
                 return false;
 
-            if (!opts.HasFlag(ExecuterOption.EnforceStrings)) {
+            if (!opts.HasFlag(ExecutorOption.EnforceStrings)) {
                 string str = obj as string; // maybe we can convert it from a string?
                 if (str != null) {
                     obj = ConvertFromString(str);
                     if (obj == null)
                         return false;
-                    return TryConvert(obj, out result, ExecuterOption.None); // it's a good old fashion type now. try again.
+                    return TryConvert(obj, out result, ExecutorOption.None); // it's a good old fashion type now. try again.
                 }
             }
 
@@ -84,7 +84,7 @@ namespace Tbasic.Types
                 if (typeof(T).IsEnum) {
                     Number? n = obj as Number?;
                     if (n != null) {
-                        return TryConvert((long)n, out result, ExecuterOption.Strict); // if we don't turn on strict, we'll have infinite recursion 8/22/16
+                        return TryConvert((long)n, out result, ExecutorOption.Strict); // if we don't turn on strict, we'll have infinite recursion 8/22/16
                     }
                 }
                 return false;
@@ -94,19 +94,19 @@ namespace Tbasic.Types
             }
         }
 
-        private static bool TryConvertNonStrict(object obj, Type type, out object result, ExecuterOption opts)
+        private static bool TryConvertNonStrict(object obj, Type type, out object result, ExecutorOption opts)
         {
             result = default;
             if (obj == null)
                 return false;
 
-            if (!opts.HasFlag(ExecuterOption.EnforceStrings)) {
+            if (!opts.HasFlag(ExecutorOption.EnforceStrings)) {
                 string str = obj as string; // maybe we can convert it from a string?
                 if (str != null) {
                     obj = ConvertFromString(str);
                     if (obj == null)
                         return false;
-                    return TryConvert(obj, out result, ExecuterOption.None); // it's a good old fashion type now. try again.
+                    return TryConvert(obj, out result, ExecutorOption.None); // it's a good old fashion type now. try again.
                 }
             }
 
@@ -122,7 +122,7 @@ namespace Tbasic.Types
                 if (type.IsEnum) {
                     Number? n = obj as Number?;
                     if (n != null) {
-                        return TryConvert((long)n, out result, ExecuterOption.Strict); // if we don't turn on strict, we'll have infinite recursion 8/22/16
+                        return TryConvert((long)n, out result, ExecutorOption.Strict); // if we don't turn on strict, we'll have infinite recursion 8/22/16
                     }
                 }
                 return false;

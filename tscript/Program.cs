@@ -41,7 +41,7 @@ namespace Tbasic.ScriptHost
 #if !NO_CATCH
             try {
 #endif
-                TRuntime runtime = new TRuntime();
+                Executor runtime = new Executor();
                 runtime.Global.LoadStandardLibrary();
                 using (StreamReader fstream = new StreamReader(File.OpenRead(filename))) {
                     runtime.Execute(fstream);

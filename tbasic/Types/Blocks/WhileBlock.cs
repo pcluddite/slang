@@ -22,7 +22,7 @@ namespace Tbasic.Types
                 ));
         }
 
-        public override void Execute(TRuntime runtime)
+        public override void Execute(Executor runtime)
         {
             Statement line = new Statement(runtime.Scanner.Scan(Header.Text));
 

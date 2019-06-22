@@ -18,7 +18,7 @@ namespace PerformanceTest
         [STAThread]
         static void Main()
         {
-            TRuntime runtime = new TRuntime();
+            Executor runtime = new Executor();
             runtime.Global.LoadStandardLibrary();
             using (StreamReader reader = new StreamReader(File.OpenRead("D:\\tbasic\\samples\\SpeedTest.tbs"))) {
                 runtime.Execute(reader);

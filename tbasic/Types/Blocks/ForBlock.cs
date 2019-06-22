@@ -22,7 +22,7 @@ namespace Tbasic.Types
                 ));
         }
 
-        public override void Execute(TRuntime exec)
+        public override void Execute(Executor exec)
         {
             throw new NotImplementedException();
         }

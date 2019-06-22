@@ -24,7 +24,7 @@ namespace Tbasic.Runtime
 
         public Scope CurrentContext { get; set; }
 
-        public TRuntime Runtime { get; set; }
+        public Executor Runtime { get; set; }
 
         public IEnumerable<char> Expression
         {
@@ -48,7 +48,7 @@ namespace Tbasic.Runtime
 
         #endregion
 
-        internal VariableEvaluator(string name, IList<IEnumerable<char>> indices, TRuntime runtime)
+        internal VariableEvaluator(string name, IList<IEnumerable<char>> indices, Executor runtime)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));

@@ -83,7 +83,7 @@ namespace Tbasic.Types
         /// <summary>
         /// Creates an instance of this class for use in Tbasic code
         /// </summary>
-        public TClass GetInstance(TRuntime runtime, StackFrame stackdat)
+        public TClass GetInstance(Executor runtime, StackFrame stackdat)
         {
             TClass instance = Clone();
             instance.SetVariable("@this", instance);
@@ -97,7 +97,7 @@ namespace Tbasic.Types
             return instance;
         }
 
-        private void Ctor(TClass instance, TRuntime runtime, StackFrame stackdat)
+        private void Ctor(TClass instance, Executor runtime, StackFrame stackdat)
         {
             Scope old = runtime.Context;
             runtime.Context = instance;

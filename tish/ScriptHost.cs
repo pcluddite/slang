@@ -34,7 +34,7 @@ namespace Tbasic.Tbasic
         public static void RunScript(string filename)
         {
             try {
-                TRuntime runtime = new TRuntime();
+                Executor runtime = new Executor();
                 runtime.Global.LoadStandardLibrary();
                 using (StreamReader fstream = new StreamReader(File.OpenRead(filename))) {
                     runtime.Execute(fstream);

@@ -33,7 +33,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Gets or sets the options for this StackFrame
         /// </summary>
-        public ExecuterOption Options { get; set; }
+        public ExecutorOption Options { get; set; }
         
         /// <summary>
         /// Gets the Tbasic function as text
@@ -87,7 +87,7 @@ namespace Tbasic.Runtime
         /// Constructs this object
         /// </summary>
         /// <param name="options">the runtime options that are currently enforced</param>
-        public StackFrame(ExecuterOption options)
+        public StackFrame(ExecutorOption options)
         {
             Options = options;
         }
@@ -97,7 +97,7 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="parameters">the parameters of the function</param>
         /// <param name="options">the execution that called the function</param>
-        public StackFrame(ExecuterOption options, IEnumerable<object> parameters)
+        public StackFrame(ExecutorOption options, IEnumerable<object> parameters)
             : this(options)
         {
             _params.AddRange(parameters);
@@ -108,7 +108,7 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="text">the line that executed this function, this will be parsed like the Windows Command Prompt</param>
         /// <param name="runtime">the execution that called the function</param>
-        public StackFrame(TRuntime runtime, string text)
+        public StackFrame(Executor runtime, string text)
             : this(runtime.Options)
         {
             if (runtime == null)
@@ -240,7 +240,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Forces the (re-)evaluation of a string parameter. This is useful for statements, whose parameters don't get evaluated automatically.
         /// </summary>
-        public object Evaluate(int index, TRuntime runtime)
+        public object Evaluate(int index, Executor runtime)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -255,7 +255,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Forces the (re-)evaluation of a string parameter. This is useful for statements, whose parameters don't get evaluated automatically. This will replace the old parameter value on success.
         /// </summary>
-        public T Evaluate<T>(int index, TRuntime runtime)
+        public T Evaluate<T>(int index, Executor runtime)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -270,7 +270,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Forces the (re-)evaluation of all prarameters excluding the name. If the parameter is not a string, it's value is kept. This is useful for statements, whose parameters don't get evaluated automatically.
         /// </summary>
-        public void EvaluateAll(TRuntime runtime)
+        public void EvaluateAll(Executor runtime)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));

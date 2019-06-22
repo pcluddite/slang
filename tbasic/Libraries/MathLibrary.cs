@@ -91,7 +91,7 @@ namespace Tbasic.Libraries
             return Random(upperBound - lowerBound) + lowerBound;
         }
 
-        private object Random(TRuntime runtime, StackFrame stackdat)
+        private object Random(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(atLeast: 1, atMost: 3);
             if (stackdat.ParameterCount == 1) {
@@ -132,7 +132,7 @@ namespace Tbasic.Libraries
         /// <returns>the evaluated expression</returns>
         public static object Eval(string expr)
         {
-            TRuntime e = new TRuntime(); // local execution
+            Executor e = new Executor(); // local execution
             e.Global.LoadStandardOperators();
             e.Global.AddLibrary(new MathLibrary(e.Global)); // only allow math libs
             e.Global.RemoveFunction("eval"); // that's a no-no

@@ -58,7 +58,7 @@ namespace Tbasic.Libraries
             return User32.RemoveMenu(hMenu, menuItemCount - 1, User32.MF_BYPOSITION);
         }
 
-        private object WinRemoveClose(TRuntime runtime, StackFrame stackdat)
+        private object WinRemoveClose(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return WinRemoveClose(new IntPtr(stackdat.Get<long>(1)));
@@ -69,13 +69,13 @@ namespace Tbasic.Libraries
             return User32.FindWindow(sz_class, title);
         }
 
-        private object WinGetHandle(TRuntime runtime, StackFrame stackdat)
+        private object WinGetHandle(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return WinGetHandle(stackdat.Get<string>(1)).ToInt64();
         }
 
-        private object WinGetTitle(TRuntime runtime, StackFrame stackdat)
+        private object WinGetTitle(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return WinGetTitle(new IntPtr(stackdat.Get<long>(1)));
@@ -89,7 +89,7 @@ namespace Tbasic.Libraries
             return sb.ToString();
         }
 
-        private object WinSetTitle(TRuntime runtime, StackFrame stackdat)
+        private object WinSetTitle(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             IntPtr hwnd = new IntPtr(stackdat.Get<long>(1));
@@ -104,7 +104,7 @@ namespace Tbasic.Libraries
             return User32.ShowWindow(hwnd, flag);
         }
 
-        private object WinGetState(TRuntime runtime, StackFrame stackdat)
+        private object WinGetState(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return WinGetState(stackdat.Get<long>(1));
@@ -120,7 +120,7 @@ namespace Tbasic.Libraries
             return Windows.GetState(hwnd);
         }
 
-        private object WinSetState(TRuntime runtime, StackFrame stackdat)
+        private object WinSetState(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             uint flag = stackdat.Get<uint>(2);
@@ -135,7 +135,7 @@ namespace Tbasic.Libraries
             return User32.SetForegroundWindow(hwnd);
         }
 
-        private object WinActivate(TRuntime runtime, StackFrame stackdat)
+        private object WinActivate(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             if (!WinActivate(new IntPtr(stackdat.Get<long>(1)))) {
@@ -155,7 +155,7 @@ namespace Tbasic.Libraries
                 (rect.Right - rect.Left), (rect.Bottom - rect.Top), SWP.NOACTIVATE);
         }
 
-        private object WinMove(TRuntime runtime, StackFrame stackdat)
+        private object WinMove(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(4);
             IntPtr hwnd = new IntPtr(stackdat.Get<long>(1));
@@ -175,7 +175,7 @@ namespace Tbasic.Libraries
                 place.rcNormalPosition.X, place.rcNormalPosition.Y, width, height, SWP.NOACTIVATE);
         }
 
-        private object WinSize(TRuntime runtime, StackFrame stackdat)
+        private object WinSize(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(4);
             IntPtr hwnd = new IntPtr(stackdat.Get<long>(1));
@@ -190,7 +190,7 @@ namespace Tbasic.Libraries
             return User32.DestroyWindow(hwnd);
         }
 
-        private object WinKill(TRuntime runtime, StackFrame stackdat)
+        private object WinKill(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             long hwnd = stackdat.Get<long>(1);
@@ -205,7 +205,7 @@ namespace Tbasic.Libraries
             return User32.SendMessage(hwnd, SendMessages.WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
         }
 
-        private object WinClose(TRuntime runtime, StackFrame stackdat)
+        private object WinClose(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return WinClose(new IntPtr(stackdat.Get<long>(1)));
@@ -217,7 +217,7 @@ namespace Tbasic.Libraries
             return User32.SetLayeredWindowAttributes(hwnd, 0, trans, User32.LWA_ALPHA);
         }
 
-        private object WinSetTrans(TRuntime runtime, StackFrame stackdat)
+        private object WinSetTrans(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             IntPtr hwnd = new IntPtr(stackdat.Get<long>(1));
@@ -237,7 +237,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object WinList(TRuntime runtime, StackFrame stackdat)
+        private object WinList(Executor runtime, StackFrame stackdat)
         {
             if (stackdat.ParameterCount == 1) {
                 stackdat.Add(WindowFlag.Existing);
@@ -263,7 +263,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object GetScreen(TRuntime runtime, StackFrame stackdat)
+        private object GetScreen(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             int compression = stackdat.GetFromRange(1, 0, 100);
@@ -286,7 +286,7 @@ namespace Tbasic.Libraries
             }
         }
 
-        private object WinPicture(TRuntime runtime, StackFrame stackdat)
+        private object WinPicture(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(3);
             int compression = stackdat.GetFromRange(2, 0, 100);
@@ -299,7 +299,7 @@ namespace Tbasic.Libraries
             return Windows.WinExists(hwnd);
         }
 
-        private object WinExists(TRuntime runtime, StackFrame stackdat)
+        private object WinExists(Executor runtime, StackFrame stackdat)
         {
             stackdat.AssertCount(2);
             return Windows.WinExists(new IntPtr(stackdat.Get<long>(1)));

@@ -66,6 +66,6 @@ namespace Tbasic.Types
         /// When overridden in a derived class, executes this block
         /// </summary>
         /// <param name="exec">the current execution</param>
-        public abstract void Execute(TRuntime exec);
+        public abstract void Execute(Executor exec);
     }
 }

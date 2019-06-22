@@ -12,7 +12,7 @@ namespace Tbasic.Runtime
     /// A list of flags to define the runtime environment
     /// </summary>
     [Flags]
-    public enum ExecuterOption : int
+    public enum ExecutorOption : int
     {
         /// <summary>
         /// No special options (default)

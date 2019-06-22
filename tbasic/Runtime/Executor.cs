@@ -24,7 +24,7 @@ namespace Tbasic.Runtime
     /// <summary>
     /// Executes a script and stores information on the current runtime
     /// </summary>
-    public class TRuntime
+    public class Executor
     {
         /// <summary>
         /// A string containing information on this version of Tbasic
@@ -49,7 +49,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Gets or sets the rules that the runtime should adhere to
         /// </summary>
-        public ExecuterOption Options { get; set; } = ExecuterOption.None;
+        public ExecutorOption Options { get; set; } = ExecutorOption.None;
 
         /// <summary>
         /// Gets if request to break has been petitioned
@@ -81,7 +81,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Initializes a new object to execute scripts or single lines of code
         /// </summary>
-        public TRuntime()
+        public Executor()
         {
             Global = new Scope(null);
             Context = Global;
@@ -178,7 +178,7 @@ namespace Tbasic.Runtime
             return runtime ?? new StackFrame(Options);
         }
 
-        internal static StackFrame Execute(TRuntime runtime, Line codeLine)
+        internal static StackFrame Execute(Executor runtime, Line codeLine)
         {
             StackFrame stackdat;
             CallData calldat;
@@ -259,7 +259,7 @@ namespace Tbasic.Runtime
                 stackdat.Status = status;
                 stackdat.ReturnValue = msg;
                 Context.SetReturns(stackdat);
-                if (Options.HasFlag(ExecuterOption.ThrowErrors)) { // throw errors if the user wants it
+                if (Options.HasFlag(ExecutorOption.ThrowErrors)) { // throw errors if the user wants it
                     throw new LineException(current.LineNumber, current.VisibleName, cEx);
                 }
             }
@@ -300,7 +300,7 @@ namespace Tbasic.Runtime
         /// Enables an executer option
         /// </summary>
         /// <param name="option"></param>
-        public void EnableOption(ExecuterOption option)
+        public void EnableOption(ExecutorOption option)
         {
             Options |= option;
         }
@@ -309,7 +309,7 @@ namespace Tbasic.Runtime
         /// Disables an executer option
         /// </summary>
         /// <param name="option"></param>
-        public void DisableOption(ExecuterOption option)
+        public void DisableOption(ExecutorOption option)
         {
             Options &= ~option;
         }
@@ -319,7 +319,7 @@ namespace Tbasic.Runtime
         /// </summary>
         /// <param name="option"></param>
         /// <returns></returns>
-        public bool IsEnforced(ExecuterOption option)
+        public bool IsEnforced(ExecutorOption option)
         {
             return Options.HasFlag(option);
         }

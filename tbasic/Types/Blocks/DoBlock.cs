@@ -23,7 +23,7 @@ namespace Tbasic.Types
                 ));
         }
 
-        public override void Execute(TRuntime runtime)
+        public override void Execute(Executor runtime)
         {
             IScanner scanner;
             bool doLoop;

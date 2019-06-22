@@ -26,7 +26,7 @@ namespace Tbasic.Runtime
         private LinkedList<LinkedList<object>> subexpressions = null;
         private IEnumerable<char> _expression = string.Empty;
         
-        public ExpressionEvaluator(TRuntime runtime)
+        public ExpressionEvaluator(Executor runtime)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -34,7 +34,7 @@ namespace Tbasic.Runtime
             Runtime = runtime;
         }
         
-        public ExpressionEvaluator(IEnumerable<char> expression, TRuntime runtime)
+        public ExpressionEvaluator(IEnumerable<char> expression, Executor runtime)
         {
             if (expression == null)
                 throw new ArgumentNullException(nameof(expression));
@@ -69,7 +69,7 @@ namespace Tbasic.Runtime
             }
         }
 
-        public TRuntime Runtime { get; set; }
+        public Executor Runtime { get; set; }
 
         public bool Parsed
         {
@@ -248,7 +248,7 @@ namespace Tbasic.Runtime
         /// <param name="expressionString">expression to be evaluated</param>
         /// <param name="runtime">the current execution</param>
         /// <returns></returns>
-        public static object Evaluate(IEnumerable<char> expressionString, TRuntime runtime)
+        public static object Evaluate(IEnumerable<char> expressionString, Executor runtime)
         {
             if (expressionString == null)
                 throw new ArgumentNullException(nameof(expressionString));
@@ -260,7 +260,7 @@ namespace Tbasic.Runtime
             return expression.Evaluate();
         }
 
-        public static object PerformUnaryOp(TRuntime runtime, UnaryOperator op, object operand)
+        public static object PerformUnaryOp(Executor runtime, UnaryOperator op, object operand)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -283,7 +283,7 @@ namespace Tbasic.Runtime
         /// <summary>
         /// Performs a binary operation
         /// </summary>
-        public static object PerformBinaryOp(TRuntime runtime, BinaryOperator op, object left, object right)
+        public static object PerformBinaryOp(Executor runtime, BinaryOperator op, object left, object right)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -413,10 +413,10 @@ namespace Tbasic.Runtime
             return sb.ToString();
         }
 
-        public static object ConvertToSimpleType(object obj, ExecuterOption opts)
+        public static object ConvertToSimpleType(object obj, ExecutorOption opts)
         {
             if (obj == null) {
-                if (opts.HasFlag(ExecuterOption.NullIsZero)) {
+                if (opts.HasFlag(ExecutorOption.NullIsZero)) {
                     return new Number(0);
                 }
                 else {

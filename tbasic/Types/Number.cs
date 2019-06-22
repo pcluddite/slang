@@ -48,7 +48,7 @@ namespace Tbasic.Types
         /// <param name="o"></param>
         /// <param name="opts"></param>
         /// <returns></returns>
-        public static bool IsNumber(object o, ExecuterOption opts)
+        public static bool IsNumber(object o, ExecutorOption opts)
         {
             return TypeUtil.TryConvert<double>(o, out _, opts);
         }
@@ -59,10 +59,10 @@ namespace Tbasic.Types
         /// <param name="o"></param>
         /// <param name="opts"></param>
         /// <returns></returns>
-        public static Number? AsNumber(object o, ExecuterOption opts)
+        public static Number? AsNumber(object o, ExecutorOption opts)
         {
             if (o == null) {
-                if (opts.HasFlag(ExecuterOption.NullIsZero)) {
+                if (opts.HasFlag(ExecutorOption.NullIsZero)) {
                     return 0;
                 }
                 else {
@@ -83,7 +83,7 @@ namespace Tbasic.Types
         /// <summary>
         /// Converts an object to a Number
         /// </summary>
-        public static Number Convert(object o, ExecuterOption opts)
+        public static Number Convert(object o, ExecutorOption opts)
         {
             Number? n = AsNumber(o, opts);
             if (n == null)

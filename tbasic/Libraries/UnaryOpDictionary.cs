@@ -32,7 +32,7 @@ namespace Tbasic.Types
             operators.Add(new UnaryOperator("~", BitNot));
         }
 
-        private static object New(TRuntime runtime, object value)
+        private static object New(Executor runtime, object value)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -52,7 +52,7 @@ namespace Tbasic.Types
             return prototype.GetInstance(runtime, stackdat);
         }
 
-        private static object Plus(TRuntime runtime, object value)
+        private static object Plus(Executor runtime, object value)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -61,7 +61,7 @@ namespace Tbasic.Types
             return +Number.Convert(value, runtime.Options);
         }
 
-        private static object Minus(TRuntime runtime, object value)
+        private static object Minus(Executor runtime, object value)
         {
             if (runtime == null)
                 throw new ArgumentNullException(nameof(runtime));
@@ -70,12 +70,12 @@ namespace Tbasic.Types
             return -Number.Convert(value, runtime.Options);
         }
 
-        private static object Not(TRuntime runtime, object value)
+        private static object Not(Executor runtime, object value)
         {
             return !Convert.ToBoolean(value, CultureInfo.InvariantCulture);
         }
 
-        private static object BitNot(TRuntime runtime, object value)
+        private static object BitNot(Executor runtime, object value)
         {
             return ~Convert.ToUInt64(value, CultureInfo.InvariantCulture);
         }

@@ -6,7 +6,7 @@
 **/
 using Tbasic.Components;
 
-namespace Tbasic.Lexer
+namespace Tbasic.Lexer.Tokens
 {
     public interface ITokenFactory
     {

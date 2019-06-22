@@ -4,14 +4,11 @@
  *
  *  +++====+++
 **/
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
 using Tbasic.Components;
 
-namespace Tbasic.Lexer
+namespace Tbasic.Lexer.Tokens
 {
     public class NumberLiteralFactory : ITokenFactory
     {

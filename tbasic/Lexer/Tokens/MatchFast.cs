@@ -1,11 +1,13 @@
-﻿/** +++====+++
- *  
- *  Copyright (c) Timothy Baxendale
- *
- *  +++====+++
-**/
+﻿
 
-namespace Tbasic.Lexer
+using System;
+/** +++====+++
+*  
+*  Copyright (c) Timothy Baxendale
+*
+*  +++====+++
+**/
+namespace Tbasic.Lexer.Tokens
 {
     internal static unsafe class MatchFast
     {
@@ -18,19 +20,6 @@ namespace Tbasic.Lexer
             else {
                 return -1;
             }
-        }
-        
-        public static int MatchVariable(string buff)
-        {
-            if (buff.CharAt(0) == '$' || buff.CharAt(0) == '@') { // it's a macro
-                if (buff.CharAt(1) == -1)
-                    return -1;
-                int end = FindAcceptableFuncChars(buff, 1);
-                if (end != 0) {
-                    return end;
-                }
-            }
-            return -1;
         }
 
         public static int MatchHex(string buff)
@@ -59,25 +48,20 @@ namespace Tbasic.Lexer
                 return index;
             }
         }
-
         private static bool IsHexDigit(char c)
         {
             return char.IsDigit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
         }
 
 
-        private static unsafe int FindAcceptableFuncChars(string buff, int start)
+        public static unsafe int FindAcceptableFuncChars(char* lpBuff, int index, int nLen)
         {
-            fixed (char* lpseg = buff) {
-                int len = buff.Length;
-                int index = start;
-                for (; index < len; ++index) {
-                    if (!char.IsLetterOrDigit(lpseg[index]) && lpseg[index] != '_') {
-                        return index;
-                    }
+            for (; index < nLen; ++index) {
+                if (!char.IsLetterOrDigit(lpBuff[index]) && lpBuff[index] != '_') {
+                    return index;
                 }
-                return index;
             }
+            return index;
         }
 
         internal static unsafe bool StartsWithFast(string s, string pattern, bool ignoreCase)

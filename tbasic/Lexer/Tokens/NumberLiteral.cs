@@ -5,6 +5,7 @@
  *  +++====+++
 **/
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Tbasic.Components;
 
@@ -15,22 +16,24 @@ namespace Tbasic.Lexer.Tokens
         public int MatchToken(StringStream stream, out IToken token)
         {
             StringSegment value = stream.Value;
-            int startIdx = value.Offset + (int)stream.Position;
+            int startIdx = value.Offset;
             int nLen = value.Length;
-            int lastIdx;
+            int count;
 
             token = default;
 
             unsafe {
                 fixed (char* lpBuff = value.FullString) {
-                    lastIdx = MatchNumber(&lpBuff[startIdx], nLen);
+                    count = MatchNumber(&lpBuff[startIdx], nLen);
                 }
             }
 
-            if (lastIdx == 0)
+            if (count == 0)
                 return 0;
 
-            return lastIdx;
+            token = new NumberLiteral(value.Subsegment(0, count));
+            stream.Seek(count, SeekOrigin.Current);
+            return count;
         }
 
         public unsafe static int MatchNumber(char* buff, int nLen)
@@ -79,10 +82,16 @@ namespace Tbasic.Lexer.Tokens
 
         public NumberLiteral(IEnumerable<char> text)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (char c in text)
-                sb.Append(c);
-            value = new StringSegment(sb.ToString(), 0);
+            string value = text as string;
+            if (text == null) {
+                StringBuilder sb = new StringBuilder();
+                foreach (char c in text)
+                    sb.Append(c);
+                this.value = new StringSegment(sb.ToString(), 0);
+            }
+            else {
+                this.value = new StringSegment(value);
+            }
         }
 
         internal NumberLiteral(StringSegment value)

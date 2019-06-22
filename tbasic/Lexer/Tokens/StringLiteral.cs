@@ -7,12 +7,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using Tbasic.Components;
 using Tbasic.Errors;
 
-namespace Tbasic.Lexer
+namespace Tbasic.Lexer.Tokens
 {
     public class StringLiteralFactory : ITokenFactory
     {

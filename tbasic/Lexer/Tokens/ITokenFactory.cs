@@ -10,6 +10,6 @@ namespace Tbasic.Lexer.Tokens
 {
     public interface ITokenFactory
     {
-        int MatchToken(StringStream reader, out IToken token);
+        int MatchToken(StringStream stream, out IToken token);
     }
 }

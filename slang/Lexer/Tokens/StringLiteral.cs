@@ -10,12 +10,13 @@ using System.Globalization;
 using System.Linq;
 using Slang.Components;
 using Slang.Errors;
+using Slang.Runtime;
 
 namespace Slang.Lexer.Tokens
 {
     public class StringLiteralFactory : ITokenFactory
     {
-        public int MatchToken(StringStream stream, out IToken token)
+        public int MatchToken(StringStream stream, Scope scope, out IToken token)
         {
             int open = stream.Peek();
             token = default;

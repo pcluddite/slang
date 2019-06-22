@@ -8,7 +8,7 @@ using System;
 using System.Diagnostics.Contracts;
 using Slang.Runtime;
 
-namespace Slang.Types
+namespace Slang.Lexer.Tokens
 {
     /// <summary>
     /// Represents an operator that takes one operand

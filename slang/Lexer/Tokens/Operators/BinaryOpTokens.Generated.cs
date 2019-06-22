@@ -1,0 +1,6 @@
+﻿/** +++====+++
+ *  
+ *  Copyright (c) Timothy Baxendale
+ *
+ *  +++====+++
+**/

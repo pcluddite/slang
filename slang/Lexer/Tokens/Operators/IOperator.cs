@@ -6,7 +6,7 @@
 **/
 using System;
 
-namespace Slang.Types
+namespace Slang.Lexer.Tokens
 {
     /// <summary>
     /// Represents an operator

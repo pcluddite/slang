@@ -8,37 +8,13 @@ using System;
 using System.Diagnostics.Contracts;
 using Slang.Runtime;
 
-namespace Slang.Types
+namespace Slang.Lexer.Tokens
 {
     /// <summary>
     /// Represents an operator that takes two operands
     /// </summary>
-    public struct GroupOperator : IOperator, IComparable<GroupOperator>, IEquatable<GroupOperator>
+    public struct BinaryOperator : IOperator, IComparable<BinaryOperator>, IEquatable<BinaryOperator>
     {
-        /// <summary>
-        /// Operand positions
-        /// </summary>
-        [Flags]
-        public enum OperandPosition
-        {
-            /// <summary>
-            /// Neither operand
-            /// </summary>
-            Neither = 0x00,
-            /// <summary>
-            /// The left operand
-            /// </summary>
-            Left = 0x01,
-            /// <summary>
-            /// The right operand
-            /// </summary>
-            Right = 0x02,
-            /// <summary>
-            /// Both operands
-            /// </summary>
-            Both = Left | Right,
-        }
-
         /// <summary>
         /// A delegate that represents the method which processes the operands
         /// </summary>
@@ -46,7 +22,7 @@ namespace Slang.Types
         /// <param name="left">the left operand</param>
         /// <param name="right">the right operand</param>
         /// <returns>the result of the operator</returns>
-        public delegate object GroupOpDelegate(Executor runtime, object left, object right);
+        public delegate object BinaryOpDelegate(Executor runtime, object left, object right);
 
         /// <summary>
         /// Gets which operand should be evaluated
@@ -66,16 +42,16 @@ namespace Slang.Types
         /// <summary>
         /// Gets the method that processes the operands
         /// </summary>
-        public GroupOpDelegate ExecuteOperator { get; private set; }
+        public BinaryOpDelegate ExecuteOperator { get; private set; }
 
         /// <summary>
-        /// Creates a new GroupOperator
+        /// Creates a new BinaryOperator
         /// </summary>
         /// <param name="strOp">the string representation of the operator</param>
         /// <param name="precedence">the operator precedence. Lower precedence are processed first</param>
         /// <param name="doOp">the method that processes the operands</param>
         /// <param name="operand">the operand that should be evaluated</param>
-        public GroupOperator(string strOp, int precedence, GroupOpDelegate doOp, OperandPosition operand = OperandPosition.Both)
+        public BinaryOperator(string strOp, int precedence, BinaryOpDelegate doOp, OperandPosition operand = OperandPosition.Both)
         {
             if (strOp == null)
                 throw new ArgumentNullException(nameof(strOp));
@@ -88,13 +64,13 @@ namespace Slang.Types
             ExecuteOperator = doOp;
             EvaulatedOperand = operand;
         }
-
+        
         /// <summary>
         /// Compares this operator to another
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public int CompareTo(GroupOperator other)
+        public int CompareTo(BinaryOperator other)
         {
             return Precedence.CompareTo(other.Precedence);
         }
@@ -104,7 +80,7 @@ namespace Slang.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(GroupOperator other)
+        public bool Equals(BinaryOperator other)
         {
             return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
         }
@@ -115,7 +91,7 @@ namespace Slang.Types
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static bool operator ==(GroupOperator first, GroupOperator second)
+        public static bool operator ==(BinaryOperator first, BinaryOperator second)
         {
             return first.Equals(second);
         }
@@ -126,7 +102,7 @@ namespace Slang.Types
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static bool operator !=(GroupOperator first, GroupOperator second)
+        public static bool operator !=(BinaryOperator first, BinaryOperator second)
         {
             return !first.Equals(second);
         }
@@ -138,7 +114,7 @@ namespace Slang.Types
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            GroupOperator? op = obj as GroupOperator?;
+            BinaryOperator? op = obj as BinaryOperator?;
             if (op != null)
                 return Equals(op.Value);
             return false;

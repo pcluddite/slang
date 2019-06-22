@@ -8,12 +8,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Slang.Components;
+using Slang.Runtime;
 
 namespace Slang.Lexer.Tokens
 {
     public class VariableFactory : ITokenFactory
     {
-        public int MatchToken(StringStream stream, out IToken token)
+        public int MatchToken(StringStream stream, Scope scope, out IToken token)
         {
             StringSegment value = stream.Value;
             int offset = value.Offset + (int)stream.Position, count;

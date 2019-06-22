@@ -1,12 +1,10 @@
-﻿
-
-using System;
-/** +++====+++
+﻿/** +++====+++
 *  
 *  Copyright (c) Timothy Baxendale
 *
 *  +++====+++
 **/
+
 namespace Slang.Lexer.Tokens
 {
     internal static unsafe class MatchFast

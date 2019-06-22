@@ -71,7 +71,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\tbasic\slang.csproj">
+    <ProjectReference Include="..\slang\slang.csproj">
       <Project>{86ec7054-1d77-4dee-854f-ad7377fc27aa}</Project>
       <Name>slang</Name>
     </ProjectReference>

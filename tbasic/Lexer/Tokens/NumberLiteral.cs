@@ -17,7 +17,7 @@ namespace Tbasic.Lexer.Tokens
         {
             StringSegment value = stream.Value;
             int offset = value.Offset + (int)stream.Position, count;
-            int nLen = value.Length;
+            int nLen = value.Length - (int)stream.Position;
 
             token = default;
 

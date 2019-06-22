@@ -7,6 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace Tbasic.Components
@@ -16,13 +17,15 @@ namespace Tbasic.Components
         public T this[int index]
         {
             get {
-                if (index < 0 || index >= Count)
+                if ((uint)index >= (uint)Count)
                     throw new IndexOutOfRangeException();
+                Contract.EndContractBlock();
                 return InnerArray[index];
             }
             set {
-                if (index < 0 || index >= Count)
+                if ((uint)index >= (uint)Count)
                     throw new IndexOutOfRangeException();
+                Contract.EndContractBlock();
                 InnerArray[index] = value;
             }
         }
@@ -35,13 +38,13 @@ namespace Tbasic.Components
 
         public void Add(T item)
         {
-            if (Capacity < ++Count) {
-                ExpandArray();
+            if (Capacity < Count + 1) {
+                EnsureCapacity();
             }
-            InnerArray[Count - 1] = item;
+            InnerArray[Count++] = item;
         }
 
-        private void ExpandArray()
+        private void EnsureCapacity()
         {
             T[] newArr = new T[InnerArray.Length * 2];
             InnerArray.CopyTo(newArr, 0);

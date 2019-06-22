@@ -5,6 +5,7 @@
 *  +++====+++
 **/
 using System;
+using System.Diagnostics.Contracts;
 using System.IO;
 
 namespace Tbasic.Components
@@ -48,6 +49,7 @@ namespace Tbasic.Components
                 throw new ArgumentNullException(nameof(buffer));
             if ((uint)offset >= (uint)buffer.Length)
                 throw new IndexOutOfRangeException();
+            Contract.EndContractBlock();
 
             int size = 0;
             if (pos >= Value.Length)
@@ -73,6 +75,7 @@ namespace Tbasic.Components
                 throw new ArgumentNullException(nameof(buffer));
             if ((uint)offset >= (uint)buffer.Length)
                 throw new IndexOutOfRangeException();
+            Contract.EndContractBlock();
 
             int nIdx = pos, nLen = Value.Length;
             string fullStr = Value.FullString;

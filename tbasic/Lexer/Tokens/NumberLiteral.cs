@@ -61,9 +61,8 @@ namespace Tbasic.Lexer.Tokens
 
         private static unsafe int FindConsecutiveDigits(char* buff, int start, int nLen)
         {
-            int len = nLen;
             int index = start;
-            for (; index < len; ++index) {
+            for (; index < nLen; ++index) {
                 if (!char.IsDigit(buff[index])) {
                     return index;
                 }

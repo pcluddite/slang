@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tbasic", "tbasic\tbasic.csproj", "{86EC7054-1D77-4DEE-854F-AD7377FC27AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "slang", "tbasic\slang.csproj", "{86EC7054-1D77-4DEE-854F-AD7377FC27AA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tish", "tish\tish.csproj", "{BAA9C2B6-B371-4B01-8C24-C9D4786866B7}"
 EndProject

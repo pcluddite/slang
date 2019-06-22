@@ -35,7 +35,7 @@ namespace Tbasic.Lexer.Tokens
                 }
             }
 
-            token = new Variable(value.Subsegment(0, count));
+            token = new Variable(value.Subsegment(offset, count));
             stream.Seek(count, SeekOrigin.Current);
             return count;
         }

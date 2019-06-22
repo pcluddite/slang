@@ -30,7 +30,7 @@ namespace Tbasic.Lexer.Tokens
             if (count == 0)
                 return 0;
 
-            token = new NumberLiteral(value.Subsegment(0, count));
+            token = new NumberLiteral(value.Subsegment(offset, count));
             stream.Seek(count, SeekOrigin.Current);
             return count;
         }

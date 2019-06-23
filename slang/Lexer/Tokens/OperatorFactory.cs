@@ -15,7 +15,7 @@ namespace Slang.Lexer.Tokens
 {
     public class OperatorFactory : ITokenFactory
     {
-        public int MatchToken(StringStream stream, Scope scope, out IToken token)
+        public int MatchToken(StringStream stream, out IToken token)
         {
         }
     }

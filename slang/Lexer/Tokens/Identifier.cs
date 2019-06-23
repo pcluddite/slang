@@ -14,7 +14,7 @@ namespace Slang.Lexer.Tokens
 {
     public class IdentifierFactory : ITokenFactory
     {
-        public int MatchToken(StringStream stream, Scope scope, out IToken token)
+        public int MatchToken(StringStream stream, out IToken token)
         {
             StringSegment value = stream.Value;
             int offset = value.Offset + (int)stream.Position, count;

@@ -14,6 +14,6 @@ namespace Slang.Lexer.Tokens
     /// </summary>
     public interface ITokenFactory
     {
-        int MatchToken(StringStream stream, Scope scope, out IToken token);
+        int MatchToken(StringStream stream, out IToken token);
     }
 }

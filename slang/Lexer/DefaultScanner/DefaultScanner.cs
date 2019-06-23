@@ -22,7 +22,7 @@ namespace Slang.Lexer
     internal partial class DefaultScanner : IScanner
     {
         private readonly StringStream stream;
-        private readonly List<ITokenFactory> tokens = new List<ITokenFactory>();
+        private readonly List<ITokenFactory> factories = new List<ITokenFactory>();
         public Scope Scope { get; private set; }
 
         public DefaultScanner(StringStream stream, Scope scope)
@@ -47,18 +47,18 @@ namespace Slang.Lexer
 
         public bool EndOfStream => stream.Peek() == -1;
 
-        public IToken[] Tokenize()
+        public IEnumerable<IToken>[] Tokenize()
         {
             if (EndOfStream)
                 throw new EndOfStreamException();
-            List<IToken> tokens = new List<IToken>();
-            IToken next;
+            List<IEnumerable<IToken>> tokens = new List<IEnumerable<IToken>>();
+            IEnumerable<IToken> next;
             while ((next = Next()) != null)
                 tokens.Add(next);
             return tokens.ToArray();
         }
 
-        public IToken Next()
+        public IEnumerable<IToken> Next()
         {
             int c;
             while ((c = stream.Read()) != -1 && c != '\n' && char.IsWhiteSpace((char)c)) ;
@@ -66,16 +66,21 @@ namespace Slang.Lexer
             if (EndOfStream)
                 return null;
 
-            int maxRead = 0;
-            IToken found = null;
+            int maxRead = -1;
+            List<IToken> found = new List<IToken>(1);
             int pos = (int)stream.Position;
-            for (int idx = 0; idx < tokens.Count; ++idx) { // maximal munch
-                int read = tokens[idx].MatchToken(stream, out IToken token);
-                if (read != 0)
-                    stream.Position = pos;
+            for (int idx = 0; idx < factories.Count; ++idx) { // maximal munch
+                int read = factories[idx].MatchToken(stream, out IToken token);
+                if (read == 0)
+                    continue;
+                stream.Position = pos;
                 if (read > maxRead) {
                     maxRead = read;
-                    found = token;
+                    found.Clear();
+                    found.Add(token);
+                }
+                else if (read == maxRead) {
+                    found.Add(token);
                 }
             }
             if (found == null)
@@ -86,7 +91,7 @@ namespace Slang.Lexer
         public void RegisterToken<T>() where T : ITokenFactory
         {
             ConstructorInfo ctor = typeof(T).TypeInitializer;
-            tokens.Add((ITokenFactory)ctor.Invoke(new object[0]));
+            factories.Add((ITokenFactory)ctor.Invoke(new object[0]));
         }
 
         public IScanner Scan(StringStream stream, Scope scope)

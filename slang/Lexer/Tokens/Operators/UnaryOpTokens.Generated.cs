@@ -17,7 +17,7 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public IEnumerable<char> Text => "NEW";
+        public IEnumerable<char> Text => OperatorString;
 
         /// <summary>
         /// Throws a NotImplementedException
@@ -81,7 +81,7 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public IEnumerable<char> Text => "+";
+        public IEnumerable<char> Text => OperatorString;
 
         /// <summary>
         /// Throws a NotImplementedException
@@ -145,7 +145,7 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public IEnumerable<char> Text => "+";
+        public IEnumerable<char> Text => OperatorString;
 
         /// <summary>
         /// Throws a NotImplementedException
@@ -209,7 +209,7 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public IEnumerable<char> Text => "NOT";
+        public IEnumerable<char> Text => OperatorString;
 
         /// <summary>
         /// Throws a NotImplementedException
@@ -273,7 +273,7 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public IEnumerable<char> Text => "~";
+        public IEnumerable<char> Text => OperatorString;
 
         /// <summary>
         /// Throws a NotImplementedException

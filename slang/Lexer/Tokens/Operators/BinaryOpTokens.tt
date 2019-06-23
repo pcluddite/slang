@@ -54,7 +54,7 @@ void BuildOperator(string name, string strOp, int precedence, string operand = "
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public IEnumerable<char> Text => "<#=strOp#>";
+        public IEnumerable<char> Text => OperatorString;
 
         /// <summary>
         /// Throws a NotImplementedException

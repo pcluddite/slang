@@ -11,7 +11,7 @@ namespace Slang.Lexer.Tokens
     /// <summary>
     /// Represents an operator
     /// </summary>
-    public interface IOperator
+    public interface IOperator : IToken
     {
         /// <summary>
         /// Represents this operator as a string

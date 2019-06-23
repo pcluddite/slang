@@ -113,6 +113,17 @@
     <Compile Include="Lexer\Tokens\IToken.cs" />
     <Compile Include="Lexer\Tokens\ITokenFactory.cs" />
     <Compile Include="Lexer\Tokens\NumberLiteral.cs" />
+    <Compile Include="Lexer\Tokens\OperatorFactory.cs" />
+    <Compile Include="Lexer\Tokens\Operators\BinaryOpTokens.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BinaryOpTokens.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Lexer\Tokens\Operators\UnaryOpTokens.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UnaryOpTokens.tt</DependentUpon>
+    </Compile>
     <Compile Include="Lexer\Tokens\StringLiteral.cs" />
     <Compile Include="Lexer\Tokens\Variable.cs" />
     <Compile Include="Libraries\ArrayLibrary.cs" />
@@ -151,13 +162,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Objects.tt</DependentUpon>
     </Compile>
-    <Compile Include="Types\Operators\BinaryOperator.cs" />
-    <Compile Include="Libraries\BinOpDicationary.cs" />
-    <Compile Include="Types\Operators\GroupOperator.cs" />
-    <Compile Include="Types\Operators\IOperator.cs" />
-    <Compile Include="Libraries\OperatorDictionary.cs" />
-    <Compile Include="Libraries\UnaryOpDictionary.cs" />
-    <Compile Include="Types\Operators\UnaryOperator.cs" />
+    <Compile Include="Lexer\Tokens\Operators\IBinaryOperator.cs" />
+    <Compile Include="Lexer\Tokens\Operators\IOperator.cs" />
+    <Compile Include="Lexer\Tokens\Operators\IUnaryOperator.cs" />
     <Compile Include="Runtime\ExecutorOption.cs" />
     <Compile Include="Runtime\Evaluator\ExpressionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\BinaryOpQueue.cs" />
@@ -224,6 +231,14 @@
     <Content Include="Components\ValueTuple.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ValueTuple.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Lexer\Tokens\Operators\BinaryOpTokens.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BinaryOpTokens.Generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Lexer\Tokens\Operators\UnaryOpTokens.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>UnaryOpTokens.Generated.cs</LastGenOutput>
     </Content>
     <Content Include="Libraries\Library.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

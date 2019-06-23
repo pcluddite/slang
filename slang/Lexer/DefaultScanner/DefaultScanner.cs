@@ -68,8 +68,11 @@ namespace Slang.Lexer
 
             int maxRead = 0;
             IToken found = null;
+            int pos = (int)stream.Position;
             for (int idx = 0; idx < tokens.Count; ++idx) { // maximal munch
-                int read = tokens[idx].MatchToken(stream, out IToken token);
+                int read = tokens[idx].MatchToken(stream, Scope, out IToken token);
+                if (read != 0)
+                    stream.Position = pos;
                 if (read > maxRead) {
                     maxRead = read;
                     found = token;

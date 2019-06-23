@@ -1,0 +1,94 @@
+﻿/** +++====+++
+ *  
+ *  Copyright (c) Timothy Baxendale
+ *
+ *  +++====+++
+**/
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".Generated.cs" #>
+using System;
+using System.Collections.Generic;
+
+namespace Slang.Lexer.Tokens
+{<#BuildOperator("New", "NEW", evaluate: false);#>
+<#BuildOperator("Positive", "+");#>
+<#BuildOperator("Negative", "+");#>
+<#BuildOperator("Not", "NOT");#>
+<#BuildOperator("BitNot", "~");#>
+}
+
+<#+
+void BuildOperator(string name, string strOp, bool evaluate = true)
+{
+#>
+
+    /// <summary>
+    /// Implementation of the <#=name#>Operator
+    /// </summary>
+    public partial struct <#=name#>Operator : IUnaryOperator
+    {
+        /// <summary>
+        /// Gets the string representation of the operator
+        /// </summary>
+        public IEnumerable<char> Text => "<#=strOp#>";
+
+        /// <summary>
+        /// Throws a NotImplementedException
+        /// </summary>
+        public object Native => throw new NotImplementedException();
+
+        /// <summary>
+        /// Gets the string representation of the operator
+        /// </summary>
+        public string OperatorString => "<#=strOp#>";
+
+        public bool EvaluateOperand => <#=evaluate.ToString().ToLower()#>;
+
+        /// <summary>
+        /// Determines if this operator is equal to another
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(IUnaryOperator other)
+        {
+            return OperatorString == other.OperatorString && EvaluateOperand == other.EvaluateOperand;
+        }
+
+        /// <summary>
+        /// Determines if this object is equal to another
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            <#=name#>Operator? op = obj as <#=name#>Operator?;
+            if (op != null)
+                return Equals(op.Value);
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the hash code for this object
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return OperatorString.GetHashCode() ^ EvaluateOperand.GetHashCode();
+        }
+
+        /// <summary>
+        /// Converts this operator to a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return OperatorString;
+        }
+    }
+<#+
+}
+#>

@@ -17,7 +17,6 @@ namespace Slang.Lexer.Tokens
     {
         public int MatchToken(StringStream stream, Scope scope, out IToken token)
         {
-            
         }
     }
 }

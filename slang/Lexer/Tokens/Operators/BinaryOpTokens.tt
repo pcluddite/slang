@@ -10,3 +10,123 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".Generated.cs" #>
+using System;
+using System.Collections.Generic;
+
+namespace Slang.Lexer.Tokens
+{<#BuildOperator("Dot", ".", 2, "Left");#>
+<#BuildOperator("Multiplication", "*", 5);#>
+<#BuildOperator("Division", "/", 5);#>
+<#BuildOperator("Modulo", "%", 5);#>
+<#BuildOperator("Add", "+", 6);#>
+<#BuildOperator("Subtract", "-", 6);#>
+<#BuildOperator("ShiftRight", ">>", 7);#>
+<#BuildOperator("ShiftLeft", "<<", 7);#>
+<#BuildOperator("GreaterThan", ">", 8);#>
+<#BuildOperator("LessThanOrEqual", "<=", 8);#>
+<#BuildOperator("LessThanOrEqual2", "=<", 8);#>
+<#BuildOperator("GreaterThanOrEqual", ">=", 8);#>
+<#BuildOperator("GreaterThanOrEqual2", "=<", 8);#>
+<#BuildOperator("Equality", "==", 9);#>
+<#BuildOperator("SortaEquals", "~=", 9);#>
+<#BuildOperator("Inequality", "!=", 9);#>
+<#BuildOperator("Inequality2", "<>", 9);#>
+<#BuildOperator("BitAnd", "&", 10);#>
+<#BuildOperator("BitXor", "^", 11);#>
+<#BuildOperator("BitOr", "|", 12);#>
+<#BuildOperator("And", "&&", 13);#>
+<#BuildOperator("And2", "AND", 13);#>
+<#BuildOperator("Or", "||", 14);#>
+<#BuildOperator("Or2", "OR", 14);#>
+<#BuildOperator("Set", "=", 16, "Right");#>
+}
+
+<#+
+void BuildOperator(string name, string strOp, int precedence, string operand = "Both")
+{
+#>
+
+    /// <summary>
+    /// Implementation of the <#=name#>Operator
+    /// </summary>
+    public partial struct <#=name#>Operator : IBinaryOperator
+    {
+        /// <summary>
+        /// Gets the string representation of the operator
+        /// </summary>
+        public IEnumerable<char> Text => "<#=strOp#>";
+
+        /// <summary>
+        /// Throws a NotImplementedException
+        /// </summary>
+        public object Native => throw new NotImplementedException();
+
+        /// <summary>
+        /// Gets the string representation of the operator
+        /// </summary>
+        public string OperatorString => "<#=strOp#>";
+
+        /// <summary>
+        /// Gets the operator precedence. Lower precedence operators are processed first
+        /// </summary>
+        public int Precedence => <#=precedence#>;
+
+        /// <summary>
+        /// Gets which operand should be evaluated
+        /// </summary>
+        public OperandPosition EvaulatedOperand => OperandPosition.<#=operand#>;
+
+        /// <summary>
+        /// Compares this operator to another
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(IBinaryOperator other)
+        {
+            return Precedence.CompareTo(other.Precedence);
+        }
+
+        /// <summary>
+        /// Determines if this operator is equal to another
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(IBinaryOperator other)
+        {
+            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
+        }
+
+        /// <summary>
+        /// Determines if this object is equal to another
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            <#=name#>Operator? op = obj as <#=name#>Operator?;
+            if (op != null)
+                return Equals(op.Value);
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the hash code for this object
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
+        }
+
+        /// <summary>
+        /// Converts this operator to a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return OperatorString;
+        }
+    }
+<#+
+}
+#>

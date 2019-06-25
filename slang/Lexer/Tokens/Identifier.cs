@@ -4,11 +4,11 @@
  *
  *  +++====+++
 **/
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Slang.Components;
-using Slang.Runtime;
 
 namespace Slang.Lexer.Tokens
 {

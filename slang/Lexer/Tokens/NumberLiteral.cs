@@ -4,6 +4,7 @@
  *
  *  +++====+++
 **/
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -77,7 +78,7 @@ namespace Slang.Lexer.Tokens
         private readonly StringSegment value;
        
         public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-        public HasSubtokens => false;
+        public bool HasSubtokens => false;
         public IEnumerable<char> Text => value;
 
         public NumberLiteral(IEnumerable<char> text)

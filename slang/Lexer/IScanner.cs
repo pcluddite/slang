@@ -37,11 +37,11 @@ namespace Slang.Lexer
         /// Converts the current stream into tokens
         /// </summary>
         /// <returns></returns>
-        IEnumerable<IToken>[] Tokenize();
+        IToken[] Tokenize();
         /// <summary>
         /// Gets the next token in the buffer
         /// </summary>
-        IEnumerable<IToken> Next();
+        IToken Next();
         /// <summary>
         /// Returns a new scanner scanning a different buffer
         /// </summary>

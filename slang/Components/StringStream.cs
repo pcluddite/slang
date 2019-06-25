@@ -66,9 +66,10 @@ namespace Slang.Components
                 offset += sizeof(char), ++size)
             {
                 char cur = (char)c;
-                unsafe {
-                    buffer[offset] = *(byte*)&cur;
-                    buffer[offset + 1] = *((byte*)&cur + 1);
+                for(int nByte = 0; nByte < sizeof(char); ++nByte) {
+                    unsafe {
+                        buffer[offset + nByte] = ((byte*)&cur)[nByte];
+                    }
                 }
             }
 

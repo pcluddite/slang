@@ -47,18 +47,18 @@ namespace Slang.Lexer
 
         public bool EndOfStream => stream.Peek() == -1;
 
-        public IEnumerable<IToken>[] Tokenize()
+        public IToken[] Tokenize()
         {
             if (EndOfStream)
                 throw new EndOfStreamException();
-            List<IEnumerable<IToken>> tokens = new List<IEnumerable<IToken>>();
+            List<IToken> tokens = new List<IToken>();
             IEnumerable<IToken> next;
             while ((next = Next()) != null)
                 tokens.Add(next);
             return tokens.ToArray();
         }
 
-        public IEnumerable<IToken> Next()
+        public IToken Next()
         {
             int c;
             while ((c = stream.Read()) != -1 && c != '\n' && char.IsWhiteSpace((char)c)) ;
@@ -83,9 +83,11 @@ namespace Slang.Lexer
                     found.Add(token);
                 }
             }
-            if (found == null)
+            if (found.Count == 0)
                 throw ThrowHelper.UnknownToken(stream.ReadWord());
-            return found;
+            if (found.Count == 1)
+                return found[0];
+            return new AmbiguousToken(found);
         }
 
         public void RegisterToken<T>() where T : ITokenFactory

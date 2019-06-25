@@ -46,8 +46,9 @@ namespace Slang.Lexer.Tokens
     {
         private readonly StringSegment value;
 
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+        public bool HasSubtokens => false;
         public IEnumerable<char> Text => value;
-        public object Native => value.ToString();
 
         public Variable(IEnumerable<char> text)
         {

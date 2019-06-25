@@ -75,9 +75,10 @@ namespace Slang.Lexer.Tokens
     public struct NumberLiteral : IToken
     {
         private readonly StringSegment value;
-
+       
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+        public HasSubtokens => false;
         public IEnumerable<char> Text => value;
-        public object Native => double.Parse(value.ToString());
 
         public NumberLiteral(IEnumerable<char> text)
         {

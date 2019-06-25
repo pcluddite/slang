@@ -10,7 +10,8 @@ namespace Slang.Lexer.Tokens
 {
     public interface IToken
     {
+        IEnumerable<IToken> Subtokens { get; }
+        bool HasSubtokens { get; }
         IEnumerable<char> Text { get; }
-        object Native { get; }
     }
 }

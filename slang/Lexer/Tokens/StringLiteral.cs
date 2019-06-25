@@ -65,6 +65,9 @@ namespace Slang.Lexer.Tokens
 		private readonly char[] value;
         private readonly int length;
 
+        private IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+        private bool HasSubtokens => false;
+
 		public IEnumerable<char> Text {
             get {
 				if (value == null)

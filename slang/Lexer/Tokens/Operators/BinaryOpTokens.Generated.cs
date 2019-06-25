@@ -1,4 +1,4 @@
-﻿/** +++====+++
+/** +++====+++
  *  
  *  Copyright (c) Timothy Baxendale
  *
@@ -22,7 +22,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -104,7 +109,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -186,7 +196,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -268,7 +283,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -350,7 +370,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -432,7 +457,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -514,7 +544,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -596,7 +631,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -678,7 +718,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -760,7 +805,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -842,7 +892,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -924,7 +979,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1006,7 +1066,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1088,7 +1153,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1170,7 +1240,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1252,7 +1327,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1334,7 +1414,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1416,7 +1501,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1498,7 +1588,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1580,7 +1675,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1662,7 +1762,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1744,7 +1849,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1826,7 +1936,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1908,7 +2023,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator
@@ -1990,7 +2110,12 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Throws a NotImplementedException
         /// </summary>
-        public object Native => throw new NotImplementedException();
+        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns false
+        /// </summary>
+        public bool HasSubtokens => false;
 
         /// <summary>
         /// Gets the string representation of the operator

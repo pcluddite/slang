@@ -16,7 +16,7 @@ namespace Slang.Lexer.Tokens
 {
     public class StringLiteralFactory : ITokenFactory
     {
-        public int MatchToken(StringStream stream, out IToken token)
+        public int MatchToken(StringStream stream, out Token token)
         {
             int open = stream.Peek();
             token = default;
@@ -55,27 +55,8 @@ namespace Slang.Lexer.Tokens
             }
 			if (c != open)
 	            throw ThrowHelper.UnterminatedString();
-			token = new StringLiteral(value.Substring(0, value.Count - 2);
+			token = new Token(value.Substring(0, value.Count - 2), TokenType.STRING);
 			return read;
-        }
-    }
-
-    public struct StringLiteral : IToken
-    {
-		private readonly string value;
-
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-        public bool HasSubtokens => false;
-		public IEnumerable<char> Text => value;
-
-        public StringLiteral(IEnumerable<char> value)
-        {
-            if (value == null)
-                throw new ArgumentNullException();
-            Contract.EndContractBlock();
-            this.value = value as string;
-            if (this.value == null)
-                this.value = new string(value.ToArray());
         }
     }
 }

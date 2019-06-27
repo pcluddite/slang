@@ -14,7 +14,7 @@ namespace Slang.Lexer.Tokens
 {
     public class IdentifierFactory : ITokenFactory
     {
-        public int MatchToken(StringStream stream, out IToken token)
+        public int MatchToken(StringStream stream, out Token token)
         {
             StringSegment value = stream.Value;
             int offset = value.Offset + (int)stream.Position, count;
@@ -33,37 +33,9 @@ namespace Slang.Lexer.Tokens
             if (count == 0)
                 return 0;
 
-            token = new Identifier(value.Subsegment(offset, count));
+            token = new Token(value.Subsegment(offset, count), TokenType.IDENTIFIER);
             stream.Seek(count, SeekOrigin.Current);
             return count;
-        }
-    }
-
-    public struct Identifier : IToken
-    {
-        private readonly StringSegment value;
-
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-        public bool HasSubtokens => false;
-        public IEnumerable<char> Text => value;
-
-        public Identifier(IEnumerable<char> text)
-        {
-            string value = text as string;
-            if (text == null) {
-                StringBuilder sb = new StringBuilder();
-                foreach (char c in text)
-                    sb.Append(c);
-                this.value = new StringSegment(sb.ToString(), 0);
-            }
-            else {
-                this.value = new StringSegment(value);
-            }
-        }
-
-        internal Identifier(StringSegment value)
-        {
-            this.value = value;
         }
     }
 }

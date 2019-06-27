@@ -47,25 +47,10 @@ void BuildOperator(string name, string strOp, int precedence, string operand = "
 #>
 
     /// <summary>
-    /// Implementation of the <#=name#>Operator
+    /// Implementation of the <#=name#>OperatorFactory
     /// </summary>
-    public partial struct <#=name#>Operator : IBinaryOperator
+    public partial class <#=name#>OperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -80,57 +65,6 @@ void BuildOperator(string name, string strOp, int precedence, string operand = "
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.<#=operand#>;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            <#=name#>Operator? op = obj as <#=name#>Operator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 <#+
 }

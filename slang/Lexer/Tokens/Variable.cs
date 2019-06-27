@@ -14,7 +14,7 @@ namespace Slang.Lexer.Tokens
 {
     public class VariableFactory : ITokenFactory
     {
-        public int MatchToken(StringStream stream, out IToken token)
+        public int MatchToken(StringStream stream, out Token token)
         {
             StringSegment value = stream.Value;
             int offset = value.Offset + (int)stream.Position, count;
@@ -36,37 +36,9 @@ namespace Slang.Lexer.Tokens
                 }
             }
 
-            token = new Variable(value.Subsegment(offset, count));
+            token = new Token(value.Subsegment(offset, count), TokenType.VARIABLE);
             stream.Seek(count, SeekOrigin.Current);
             return count;
-        }
-    }
-
-    public struct Variable : IToken
-    {
-        private readonly StringSegment value;
-
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-        public bool HasSubtokens => false;
-        public IEnumerable<char> Text => value;
-
-        public Variable(IEnumerable<char> text)
-        {
-            string value = text as string;
-            if (value == null) {
-                StringBuilder sb = new StringBuilder();
-                foreach (char c in text)
-                    sb.Append(c);
-                this.value = new StringSegment(sb.ToString(), 0);
-            }
-            else {
-                this.value = new StringSegment(value);
-            }
-        }
-
-        internal Variable(StringSegment value)
-        {
-            this.value = value;
         }
     }
 }

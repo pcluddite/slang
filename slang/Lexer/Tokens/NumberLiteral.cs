@@ -15,7 +15,7 @@ namespace Slang.Lexer.Tokens
 {
     public class NumberLiteralFactory : ITokenFactory
     {
-        public int MatchToken(StringStream stream, out IToken token)
+        public int MatchToken(StringStream stream, out Token token)
         {
             StringSegment value = stream.Value;
             int offset = value.Offset + (int)stream.Position, count;
@@ -32,7 +32,7 @@ namespace Slang.Lexer.Tokens
             if (count == 0)
                 return 0;
 
-            token = new NumberLiteral(value.Subsegment(offset, count));
+            token = new NumberLiteral(value.Subsegment(offset, count), TokenType.NUMBER);
             stream.Seek(count, SeekOrigin.Current);
             return count;
         }

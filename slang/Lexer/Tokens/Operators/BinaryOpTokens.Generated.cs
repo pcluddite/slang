@@ -10,25 +10,10 @@ using System.Collections.Generic;
 namespace Slang.Lexer.Tokens
 {
     /// <summary>
-    /// Implementation of the DotOperator
+    /// Implementation of the DotOperatorFactory
     /// </summary>
-    public partial struct DotOperator : IBinaryOperator
+    public partial class DotOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -43,79 +28,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Left;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            DotOperator? op = obj as DotOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the MultiplicationOperator
+    /// Implementation of the MultiplicationOperatorFactory
     /// </summary>
-    public partial struct MultiplicationOperator : IBinaryOperator
+    public partial class MultiplicationOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -130,79 +49,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            MultiplicationOperator? op = obj as MultiplicationOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the DivisionOperator
+    /// Implementation of the DivisionOperatorFactory
     /// </summary>
-    public partial struct DivisionOperator : IBinaryOperator
+    public partial class DivisionOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -217,79 +70,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            DivisionOperator? op = obj as DivisionOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the ModuloOperator
+    /// Implementation of the ModuloOperatorFactory
     /// </summary>
-    public partial struct ModuloOperator : IBinaryOperator
+    public partial class ModuloOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -304,79 +91,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            ModuloOperator? op = obj as ModuloOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the AddOperator
+    /// Implementation of the AddOperatorFactory
     /// </summary>
-    public partial struct AddOperator : IBinaryOperator
+    public partial class AddOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -391,79 +112,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            AddOperator? op = obj as AddOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the SubtractOperator
+    /// Implementation of the SubtractOperatorFactory
     /// </summary>
-    public partial struct SubtractOperator : IBinaryOperator
+    public partial class SubtractOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -478,79 +133,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            SubtractOperator? op = obj as SubtractOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the ShiftRightOperator
+    /// Implementation of the ShiftRightOperatorFactory
     /// </summary>
-    public partial struct ShiftRightOperator : IBinaryOperator
+    public partial class ShiftRightOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -565,79 +154,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            ShiftRightOperator? op = obj as ShiftRightOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the ShiftLeftOperator
+    /// Implementation of the ShiftLeftOperatorFactory
     /// </summary>
-    public partial struct ShiftLeftOperator : IBinaryOperator
+    public partial class ShiftLeftOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -652,79 +175,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            ShiftLeftOperator? op = obj as ShiftLeftOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the GreaterThanOperator
+    /// Implementation of the GreaterThanOperatorFactory
     /// </summary>
-    public partial struct GreaterThanOperator : IBinaryOperator
+    public partial class GreaterThanOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -739,79 +196,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            GreaterThanOperator? op = obj as GreaterThanOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the LessThanOrEqualOperator
+    /// Implementation of the LessThanOrEqualOperatorFactory
     /// </summary>
-    public partial struct LessThanOrEqualOperator : IBinaryOperator
+    public partial class LessThanOrEqualOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -826,79 +217,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            LessThanOrEqualOperator? op = obj as LessThanOrEqualOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the LessThanOrEqual2Operator
+    /// Implementation of the LessThanOrEqual2OperatorFactory
     /// </summary>
-    public partial struct LessThanOrEqual2Operator : IBinaryOperator
+    public partial class LessThanOrEqual2OperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -913,79 +238,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            LessThanOrEqual2Operator? op = obj as LessThanOrEqual2Operator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the GreaterThanOrEqualOperator
+    /// Implementation of the GreaterThanOrEqualOperatorFactory
     /// </summary>
-    public partial struct GreaterThanOrEqualOperator : IBinaryOperator
+    public partial class GreaterThanOrEqualOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -1000,79 +259,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            GreaterThanOrEqualOperator? op = obj as GreaterThanOrEqualOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the GreaterThanOrEqual2Operator
+    /// Implementation of the GreaterThanOrEqual2OperatorFactory
     /// </summary>
-    public partial struct GreaterThanOrEqual2Operator : IBinaryOperator
+    public partial class GreaterThanOrEqual2OperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -1087,79 +280,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            GreaterThanOrEqual2Operator? op = obj as GreaterThanOrEqual2Operator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the EqualityOperator
+    /// Implementation of the EqualityOperatorFactory
     /// </summary>
-    public partial struct EqualityOperator : IBinaryOperator
+    public partial class EqualityOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -1174,79 +301,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            EqualityOperator? op = obj as EqualityOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the SortaEqualsOperator
+    /// Implementation of the SortaEqualsOperatorFactory
     /// </summary>
-    public partial struct SortaEqualsOperator : IBinaryOperator
+    public partial class SortaEqualsOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -1261,79 +322,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            SortaEqualsOperator? op = obj as SortaEqualsOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the InequalityOperator
+    /// Implementation of the InequalityOperatorFactory
     /// </summary>
-    public partial struct InequalityOperator : IBinaryOperator
+    public partial class InequalityOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -1348,79 +343,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            InequalityOperator? op = obj as InequalityOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the Inequality2Operator
+    /// Implementation of the Inequality2OperatorFactory
     /// </summary>
-    public partial struct Inequality2Operator : IBinaryOperator
+    public partial class Inequality2OperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -1435,79 +364,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            Inequality2Operator? op = obj as Inequality2Operator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the BitAndOperator
+    /// Implementation of the BitAndOperatorFactory
     /// </summary>
-    public partial struct BitAndOperator : IBinaryOperator
+    public partial class BitAndOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -1522,79 +385,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            BitAndOperator? op = obj as BitAndOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the BitXorOperator
+    /// Implementation of the BitXorOperatorFactory
     /// </summary>
-    public partial struct BitXorOperator : IBinaryOperator
+    public partial class BitXorOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -1609,79 +406,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            BitXorOperator? op = obj as BitXorOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the BitOrOperator
+    /// Implementation of the BitOrOperatorFactory
     /// </summary>
-    public partial struct BitOrOperator : IBinaryOperator
+    public partial class BitOrOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -1696,79 +427,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            BitOrOperator? op = obj as BitOrOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the AndOperator
+    /// Implementation of the AndOperatorFactory
     /// </summary>
-    public partial struct AndOperator : IBinaryOperator
+    public partial class AndOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -1783,79 +448,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            AndOperator? op = obj as AndOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the And2Operator
+    /// Implementation of the And2OperatorFactory
     /// </summary>
-    public partial struct And2Operator : IBinaryOperator
+    public partial class And2OperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -1870,79 +469,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            And2Operator? op = obj as And2Operator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the OrOperator
+    /// Implementation of the OrOperatorFactory
     /// </summary>
-    public partial struct OrOperator : IBinaryOperator
+    public partial class OrOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -1957,79 +490,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            OrOperator? op = obj as OrOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the Or2Operator
+    /// Implementation of the Or2OperatorFactory
     /// </summary>
-    public partial struct Or2Operator : IBinaryOperator
+    public partial class Or2OperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -2044,79 +511,13 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Both;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            Or2Operator? op = obj as Or2Operator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 
     /// <summary>
-    /// Implementation of the SetOperator
+    /// Implementation of the SetOperatorFactory
     /// </summary>
-    public partial struct SetOperator : IBinaryOperator
+    public partial class SetOperatorFactory : BinaryOperatorFactory
     {
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public IEnumerable<char> Text => OperatorString;
-
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <summary>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
@@ -2131,57 +532,6 @@ namespace Slang.Lexer.Tokens
         /// Gets which operand should be evaluated
         /// </summary>
         public OperandPosition EvaulatedOperand => OperandPosition.Right;
-
-        /// <summary>
-        /// Compares this operator to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(IBinaryOperator other)
-        {
-            return Precedence.CompareTo(other.Precedence);
-        }
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IBinaryOperator other)
-        {
-            return OperatorString == other.OperatorString && Precedence == other.Precedence && EvaulatedOperand == other.EvaulatedOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            SetOperator? op = obj as SetOperator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ Precedence ^ EvaulatedOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
     }
 }
 

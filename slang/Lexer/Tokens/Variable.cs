@@ -53,7 +53,7 @@ namespace Slang.Lexer.Tokens
         public Variable(IEnumerable<char> text)
         {
             string value = text as string;
-            if (text == null) {
+            if (value == null) {
                 StringBuilder sb = new StringBuilder();
                 foreach (char c in text)
                     sb.Append(c);

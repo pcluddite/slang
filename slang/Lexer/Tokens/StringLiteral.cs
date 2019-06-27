@@ -26,7 +26,7 @@ namespace Slang.Lexer.Tokens
 			stream.Read();
 
             int c, read = 0;
-            List<char> value = new List<char>();
+            StringBuilder sb = new StringBuilder();
             for(; (c = stream.Read()) != -1 && c != open; ++read) {
                 if (open == '"' && read == '\\') {
                     switch(c = stream.Read()) {
@@ -55,39 +55,27 @@ namespace Slang.Lexer.Tokens
             }
 			if (c != open)
 	            throw ThrowHelper.UnterminatedString();
-			token = new StringLiteral(value);
+			token = new StringLiteral(value.Substring(0, value.Count - 2);
 			return read;
         }
     }
 
     public struct StringLiteral : IToken
     {
-		private readonly char[] value;
-        private readonly int length;
+		private readonly string value;
 
         public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
         public bool HasSubtokens => false;
-
-		public IEnumerable<char> Text {
-            get {
-				if (value == null)
-					throw new NullReferenceException();
-                return value;
-            }
-        }
-
-        public object Native => new string(value, 0, length);
+		public IEnumerable<char> Text => value;
 
         public StringLiteral(IEnumerable<char> value)
         {
-            this.value = value.ToArray();
-            length = this.value.Length;
+            if (value == null)
+                throw new ArgumentNullException();
+            Contract.EndContractBlock();
+            this.value = value as string;
+            if (this.value == null)
+                this.value = new string(value.ToArray());
         }
-
-        internal StringLiteral(ArrayList<char> value)
-		{
-			this.value = value.InnerArray;
-            length = value.Count;
-		}
     }
 }

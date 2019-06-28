@@ -15,29 +15,32 @@ namespace Slang.Lexer.Tokens
     /// Arbitrary tokens can be created but note that all token IDs greater than 4026531840 (0xF0000000)
     /// are expected to be reserved
     /// </summary>
-    public static class TokenType
+    [Flags]
+    public enum TokenType : uint
     {
-        public const uint NONE             = 0x00000000;
-        public const uint NUMBER           = 0xF0000001;
-        public const uint STRING           = 0xF0000002;
-        public const uint IDENTIFIER       = 0xF0000004;
-        public const uint KEYWORD          = 0xF0000008;
-        public const uint VARIABLE         = 0xF0000010;
-        public const uint OPERATOR         = 0xF0000020;
-        public const uint BINARY_OPERATOR  = 0xF0000060; // OPERATOR | 0xF0000040
-        public const uint UNARY_OPERATOR   = 0xF00000A0; // OPERATOR | 0xF0000080
-        public const uint TERNARY_OPERATOR = 0xF0000120; // OPERATOR | 0xF0000100
-        public const uint CHARACTER        = 0xF0000200;
-        public const uint INT8             = 0xF0000401;
-        public const uint INT16            = 0xF0000801;
-        public const uint INT32            = 0xF0001001;
-        public const uint INT64            = 0xF0002001;
-        public const uint UNSIGNED_NUMBER  = 0xF0004001;
-        public const uint UINT8            = 0xF0004401; // INT8 | UNSIGNED_NUMBER
-        public const uint UINT16           = 0xF0004801; // INT16 | UNSIGNED_NUMBER
-        public const uint UINT32           = 0xF0005001; // INT32 | UNSIGNED_NUMBER
-        public const uint UINT64           = 0xF0006001; // INT64 | UNSIGNED_NUMBER
-        public const uint DATE             = 0xF0008001;
+        None            = 0x00000000,
+        Character       = 0x00000001,
+        Date            = 0x00000002,
+        Identifier      = 0x00000004,
+        Keyword         = 0x00000008,
+        Number          = 0x00000010,
+        Operator        = 0x00000020,
+        String          = 0x00000040,
+        UnsignedNumber  = 0x00000080 | Number,
+
+        Int8            = 0x00000100 | Number,
+        Int16           = 0x00000200 | Number,
+        Int32           = 0x00000400 | Number,
+        Int64           = 0x00000800 | Number,
+
+        BinaryOperator  = 0x00001000 | Operator,
+        UnaryOperator   = 0x00002000 | Operator,
+        TernaryOperator = 0x00004000 | Operator,
+
+        UInt8           = Int8 | UnsignedNumber,
+        UInt16          = Int16 | UnsignedNumber,
+        UInt32          = Int32 | UnsignedNumber,
+        UInt64          = Int64 | UnsignedNumber
     }
 
     public struct Token : IEquatable<Token>
@@ -56,86 +59,87 @@ namespace Slang.Lexer.Tokens
 
         public bool HasSubtokens => tokens != null;
         public IEnumerable<char> Text => text;
-        public bool Ambiguous { get; private set; }
-        public uint Type { get; private set; }
+        public TokenType Type { get; private set; }
         public ITokenFactory Factory { get; private set; }
 
+        public bool Ambiguous => !Enum.IsDefined(typeof(TokenType), Type);
+
         public Token(string str)
-            : this(str, TokenType.NONE)
+            : this(str, TokenType.None)
         {
         }
 
-        public Token(string str, uint type)
+        public Token(string str, TokenType type)
             : this(str, type, null)
         {
         }
 
         public Token(string str, Token[] subtokens)
-            : this(str, TokenType.NONE, subtokens)
+            : this(str, TokenType.None, subtokens)
         {
         }
 
-        public Token(string str, uint type, Token[] subtokens)
+        public Token(string str, TokenType type, Token[] subtokens)
             : this(null, str, type, subtokens)
         {
         }
 
         public Token(ITokenFactory factory, string str)
-            : this(factory, str, TokenType.NONE)
+            : this(factory, str, TokenType.None)
         {
         }
 
-        public Token(ITokenFactory factory, string str, uint type)
+        public Token(ITokenFactory factory, string str, TokenType type)
             : this(factory, str, type, null)
         {
         }
 
-        public Token(ItokenFactory factory, string str, Token[] subtokens)
-            : this(factory, str, TokenType.NONE, subtokens)
+        public Token(ITokenFactory factory, string str, Token[] subtokens)
+            : this(factory, str, TokenType.None, subtokens)
         {
         }
 
-        public Token(ITokenFactory factory, string str, uint type, Token[] subtokens)
+        public Token(ITokenFactory factory, string str, TokenType type, Token[] subtokens)
             : this(factory, new StringSegment(str), type, subtokens)
         {
         }
 
         internal Token(StringSegment str)
-            : this(str, TokenType.NONE)
+            : this(str, TokenType.None)
         {
         }
 
-        internal Token(StringSegment str, uint type)
+        internal Token(StringSegment str, TokenType type)
             : this(str, type, null)
         {
         }
 
         internal Token(StringSegment str, Token[] subtokens)
-            : this(str, TokenType.NONE, subtokens)
+            : this(str, TokenType.None, subtokens)
         {
         }
 
-        internal Token(StringSegment str, uint type, Token[] subtokens)
+        internal Token(StringSegment str, TokenType type, Token[] subtokens)
             : this(null, str, type, subtokens)
         {
         }
 
         internal Token(ITokenFactory factory, StringSegment str)
-            : this(factory, str, TokenType.NONE)
+            : this(factory, str, TokenType.None)
         {
         }
 
-        internal Token(ITokenFactory factory, StringSegment str, uint type)
+        internal Token(ITokenFactory factory, StringSegment str, TokenType type)
             : this(factory, str, type, null)
         {
         }
 
         internal Token(ITokenFactory factory, StringSegment str, Token[] subtokens)
-            : this(factory, str, TokenType.NONE, subtokens)
+            : this(factory, str, TokenType.None, subtokens)
         {
         }
 
-        internal Token(ITokenFactory factory StringSegment str, uint type, Token[] subtokens)
+        internal Token(ITokenFactory factory, StringSegment str, TokenType type, Token[] subtokens)
         {
             Factory = factory;
             text = str;

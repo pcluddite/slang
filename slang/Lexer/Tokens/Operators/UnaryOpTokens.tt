@@ -29,70 +29,14 @@ void BuildOperator(string name, string strOp, bool evaluate = true)
     /// <summary>
     /// Implementation of the <#=name#>Operator
     /// </summary>
-    public partial struct <#=name#>Operator : IUnaryOperator
+    public partial class <#=name#>Operator : UnaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public IEnumerable<char> Text => OperatorString;
+        public override string OperatorString => "<#=strOp#>";
 
-        /// <summary>
-        /// Throws a NotImplementedException
-        /// </summary>
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-
-        /// <sumarry>
-        /// Returns false
-        /// </summary>
-        public bool HasSubtokens => false;
-
-        /// <summary>
-        /// Gets the string representation of the operator
-        /// </summary>
-        public string OperatorString => "<#=strOp#>";
-
-        public bool EvaluateOperand => <#=evaluate.ToString().ToLower()#>;
-
-        /// <summary>
-        /// Determines if this operator is equal to another
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IUnaryOperator other)
-        {
-            return OperatorString == other.OperatorString && EvaluateOperand == other.EvaluateOperand;
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            <#=name#>Operator? op = obj as <#=name#>Operator?;
-            if (op != null)
-                return Equals(op.Value);
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the hash code for this object
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return OperatorString.GetHashCode() ^ EvaluateOperand.GetHashCode();
-        }
-
-        /// <summary>
-        /// Converts this operator to a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return OperatorString;
-        }
+        public override bool EvaluateOperand => <#=evaluate.ToString().ToLower()#>;
     }
 <#+
 }

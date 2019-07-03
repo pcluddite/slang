@@ -110,6 +110,9 @@
     <Compile Include="Errors\UndefinedObjectException.cs" />
     <Compile Include="Components\StringStream.cs" />
     <Compile Include="Lexer\Tokens\Identifier.cs" />
+    <Compile Include="Lexer\Tokens\Operators\BinaryOperatorFactory.cs" />
+    <Compile Include="Lexer\Tokens\Operators\IOperatorFactory.cs" />
+    <Compile Include="Lexer\Tokens\Operators\UnaryOperatorFactory.cs" />
     <Compile Include="Lexer\Tokens\Token.cs" />
     <Compile Include="Lexer\Tokens\ITokenFactory.cs" />
     <Compile Include="Lexer\Tokens\NumberLiteral.cs" />
@@ -124,7 +127,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UnaryOpTokens.tt</DependentUpon>
     </Compile>
-    <Compile Include="Lexer\Tokens\StringLiteral.cs" />
+    <Compile Include="Lexer\Tokens\StringLiteralFactory.cs" />
     <Compile Include="Lexer\Tokens\Variable.cs" />
     <Compile Include="Libraries\ArrayLibrary.cs" />
     <Compile Include="Libraries\Library.Generated.cs">
@@ -162,9 +165,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Objects.tt</DependentUpon>
     </Compile>
-    <Compile Include="Lexer\Tokens\Operators\IBinaryOperator.cs" />
-    <Compile Include="Lexer\Tokens\Operators\IOperator.cs" />
-    <Compile Include="Lexer\Tokens\Operators\IUnaryOperator.cs" />
     <Compile Include="Runtime\ExecutorOption.cs" />
     <Compile Include="Runtime\Evaluator\ExpressionEvaluator.cs" />
     <Compile Include="Runtime\Evaluator\BinaryOpQueue.cs" />

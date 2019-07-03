@@ -4,13 +4,10 @@
 *
 *  +++====+++
 **/
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
+using System.Text;
 using Slang.Components;
 using Slang.Errors;
-using Slang.Runtime;
 
 namespace Slang.Lexer.Tokens
 {
@@ -51,11 +48,11 @@ namespace Slang.Lexer.Tokens
                             break;
                     }
                 }
-                value.Add((char)c);
+                sb.Append((char)c);
             }
 			if (c != open)
 	            throw ThrowHelper.UnterminatedString();
-			token = new Token(value.Substring(0, value.Count - 2), TokenType.STRING);
+			token = new Token(sb.ToString(0, sb.Length - 2), TokenType.String);
 			return read;
         }
     }

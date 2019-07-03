@@ -5,7 +5,6 @@
 *  +++====+++
 **/
 using Slang.Components;
-using Slang.Runtime;
 
 namespace Slang.Lexer.Tokens
 {
@@ -14,6 +13,6 @@ namespace Slang.Lexer.Tokens
     /// </summary>
     public interface ITokenFactory
     {
-        int MatchToken(StringStream stream, out IToken token);
+        int MatchToken(StringStream stream, out Token token);
     }
 }

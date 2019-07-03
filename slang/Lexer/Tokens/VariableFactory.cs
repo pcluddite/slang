@@ -4,10 +4,7 @@
  *
  *  +++====+++
 **/
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Slang.Components;
 
 namespace Slang.Lexer.Tokens
@@ -36,7 +33,7 @@ namespace Slang.Lexer.Tokens
                 }
             }
 
-            token = new Token(value.Subsegment(offset, count), TokenType.VARIABLE);
+            token = new Token(this, value.Subsegment(offset, count), TokenType.Variable);
             stream.Seek(count, SeekOrigin.Current);
             return count;
         }

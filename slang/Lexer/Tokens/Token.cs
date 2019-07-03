@@ -27,15 +27,16 @@ namespace Slang.Lexer.Tokens
         Operator        = 0x00000020,
         String          = 0x00000040,
         UnsignedNumber  = 0x00000080 | Number,
+        Variable        = 0x00000100,
 
-        Int8            = 0x00000100 | Number,
-        Int16           = 0x00000200 | Number,
-        Int32           = 0x00000400 | Number,
-        Int64           = 0x00000800 | Number,
+        Int8            = 0x00000200 | Number,
+        Int16           = 0x00000400 | Number,
+        Int32           = 0x00000800 | Number,
+        Int64           = 0x00001000 | Number,
 
-        BinaryOperator  = 0x00001000 | Operator,
-        UnaryOperator   = 0x00002000 | Operator,
-        TernaryOperator = 0x00004000 | Operator,
+        BinaryOperator  = 0x00002000 | Operator,
+        UnaryOperator   = 0x00004000 | Operator,
+        TernaryOperator = 0x00008000 | Operator,
 
         UInt8           = Int8 | UnsignedNumber,
         UInt16          = Int16 | UnsignedNumber,

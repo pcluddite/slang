@@ -47,7 +47,7 @@ namespace Slang.Lexer.Tokens
     public struct Token : IEquatable<Token>
     {
         private readonly Token[] tokens;
-        private readonly StringSegment text;
+        internal readonly StringSegment value;
 
         public Token[] Subtokens
         {
@@ -59,7 +59,7 @@ namespace Slang.Lexer.Tokens
         }
 
         public bool HasSubtokens => tokens != null;
-        public IEnumerable<char> Text => text;
+        public IEnumerable<char> Text => value;
         public TokenType Type { get; private set; }
         public ITokenFactory Factory { get; private set; }
 
@@ -143,7 +143,7 @@ namespace Slang.Lexer.Tokens
         internal Token(ITokenFactory factory, StringSegment str, TokenType type, Token[] subtokens)
         {
             Factory = factory;
-            text = str;
+            value = str;
             Type = type;
             tokens = subtokens;
         }
@@ -152,7 +152,7 @@ namespace Slang.Lexer.Tokens
         {
             if (other.Type != Type)
                 return false;
-            if (text != other.text)
+            if (value != other.value)
                 return false;
             if (tokens != other.tokens) {
                 if (tokens == null || other.tokens == null)
@@ -169,7 +169,7 @@ namespace Slang.Lexer.Tokens
 
         public override int GetHashCode()
         {
-            return ((object)tokens ?? 0).GetHashCode() ^ HasSubtokens.GetHashCode() ^ ((object)text ?? "").GetHashCode() | Type.GetHashCode();
+            return ((object)tokens ?? 0).GetHashCode() ^ HasSubtokens.GetHashCode() ^ ((object)value ?? "").GetHashCode() | Type.GetHashCode();
         }
 
         public override bool Equals(object obj)

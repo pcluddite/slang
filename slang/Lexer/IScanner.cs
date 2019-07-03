@@ -4,8 +4,6 @@
  *
  *  +++====+++
 **/
-using System;
-using System.Collections.Generic;
 using Slang.Components;
 using Slang.Lexer.Tokens;
 using Slang.Runtime;
@@ -37,11 +35,11 @@ namespace Slang.Lexer
         /// Converts the current stream into tokens
         /// </summary>
         /// <returns></returns>
-        IToken[] Tokenize();
+        Token[] Tokenize();
         /// <summary>
         /// Gets the next token in the buffer
         /// </summary>
-        IToken Next();
+        Token? Next();
         /// <summary>
         /// Returns a new scanner scanning a different buffer
         /// </summary>

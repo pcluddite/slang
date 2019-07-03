@@ -47,18 +47,18 @@ namespace Slang.Lexer
 
         public bool EndOfStream => stream.Peek() == -1;
 
-        public IToken[] Tokenize()
+        public Token[] Tokenize()
         {
             if (EndOfStream)
                 throw new EndOfStreamException();
-            List<IToken> tokens = new List<IToken>();
-            IEnumerable<IToken> next;
+            List<Token> tokens = new List<Token>();
+            Token? next;
             while ((next = Next()) != null)
-                tokens.Add(next);
+                tokens.Add(next.Value);
             return tokens.ToArray();
         }
 
-        public IToken Next()
+        public Token? Next()
         {
             int c;
             while ((c = stream.Read()) != -1 && c != '\n' && char.IsWhiteSpace((char)c)) ;
@@ -67,27 +67,24 @@ namespace Slang.Lexer
                 return null;
 
             int maxRead = -1;
-            List<IToken> found = new List<IToken>(1);
+            Token? found = null;
             int pos = (int)stream.Position;
             for (int idx = 0; idx < factories.Count; ++idx) { // maximal munch
-                int read = factories[idx].MatchToken(stream, out IToken token);
+                int read = factories[idx].MatchToken(stream, out Token token);
                 if (read == 0)
                     continue;
                 stream.Position = pos;
                 if (read > maxRead) {
                     maxRead = read;
-                    found.Clear();
-                    found.Add(token);
+                    found = token;
                 }
                 else if (read == maxRead) {
-                    found.Add(token);
+                    found = new Token(found.Value.value, found.Value.Type | token.Type);
                 }
             }
-            if (found.Count == 0)
+            if (found == null)
                 throw ThrowHelper.UnknownToken(stream.ReadWord());
-            if (found.Count == 1)
-                return found[0];
-            return new AmbiguousToken(found);
+            return found;
         }
 
         public void RegisterToken<T>() where T : ITokenFactory

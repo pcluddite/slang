@@ -109,7 +109,7 @@
     <Compile Include="Errors\ThrowHelper.cs" />
     <Compile Include="Errors\UndefinedObjectException.cs" />
     <Compile Include="Components\StringStream.cs" />
-    <Compile Include="Lexer\Tokens\Identifier.cs" />
+    <Compile Include="Lexer\Tokens\IdentifierFactory.cs" />
     <Compile Include="Lexer\Tokens\Operators\BinaryOperatorFactory.cs" />
     <Compile Include="Lexer\Tokens\Operators\IOperatorFactory.cs" />
     <Compile Include="Lexer\Tokens\Operators\UnaryOperatorFactory.cs" />

@@ -6,7 +6,7 @@
 **/
 using System;
 
-namespace Slang.Lexer.Scanners
+namespace Slang.Lexer
 {
     /// <summary>
     /// Builds an operator

@@ -4,8 +4,7 @@
 *
 *  +++====+++
 **/
-
-namespace Slang.Lexer.Scanners
+namespace Slang.Lexer
 {
     internal static unsafe class MatchFast
     {

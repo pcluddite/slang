@@ -13,7 +13,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Slang.Lexer.Scanners.TBasic
+namespace Slang.Lexer.TBasic
 {<#BuildOperator("New", "new", "NEW", evaluate: false);#>
 <#BuildOperator("Positive", "positive", "+");#>
 <#BuildOperator("Negative", "negative", "-");#>

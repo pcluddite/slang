@@ -13,7 +13,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Slang.Lexer.Scanners.TBasic
+namespace Slang.Lexer.TBasic
 {<#BuildOperator("Dot", "\"property of\"", ".", 2, "Left");#>
 <#BuildOperator("Multiplication", "multiplication", "*", 5);#>
 <#BuildOperator("Division", "division", "/", 5);#>

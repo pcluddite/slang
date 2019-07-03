@@ -5,7 +5,6 @@
  *  +++====+++
 **/
 using Slang.Components;
-using Slang.Lexer.Tokens;
 using Slang.Runtime;
 
 namespace Slang.Lexer

@@ -5,7 +5,6 @@
  *  +++====+++
 **/
 using System.Collections.Generic;
-using Slang.Runtime;
 
 namespace Slang.Lexer
 {

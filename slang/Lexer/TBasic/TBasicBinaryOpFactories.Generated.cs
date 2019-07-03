@@ -1,4 +1,4 @@
-/** +++====+++
+﻿/** +++====+++
  *  
  *  Copyright (c) Timothy Baxendale
  *
@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Slang.Lexer.Scanners.TBasic
+namespace Slang.Lexer.TBasic
 {
     /// <summary>
     /// Implementation of the "property of" operator

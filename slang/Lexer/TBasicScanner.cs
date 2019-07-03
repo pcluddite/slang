@@ -11,11 +11,9 @@ using System.IO;
 using System.Reflection;
 using Slang.Components;
 using Slang.Errors;
-using Slang.Lexer;
 using Slang.Runtime;
-using Slang.Lexer.Scanners.TBasic;
 
-namespace Slang.Lexer.Scanners
+namespace Slang.Lexer
 {
     /// <summary>
     /// The default implementation of Scanner. This can be extended and modified for custom implementations.
@@ -96,7 +94,7 @@ namespace Slang.Lexer.Scanners
 
         public IScanner Scan(StringStream stream, Scope scope)
         {
-            return new DefaultScanner(stream, scope);
+            return new TBasicScanner(stream, scope);
         }
 
         public void Skip(int count)

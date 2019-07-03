@@ -7,7 +7,7 @@
 using Slang.Components;
 using System;
 
-namespace Slang.Lexer.Scanners
+namespace Slang.Lexer
 {
     /// <summary>
     /// Represents an operator that takes two operands

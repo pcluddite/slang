@@ -33,7 +33,7 @@ namespace Slang.Lexer.Tokens
             if (count == 0)
                 return 0;
 
-            token = new Token(value.Subsegment(offset, count), TokenType.IDENTIFIER);
+            token = new Token(this, value.Subsegment(offset, count), TokenType.Identifier);
             stream.Seek(count, SeekOrigin.Current);
             return count;
         }

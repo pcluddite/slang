@@ -52,7 +52,7 @@ namespace Slang.Lexer.Tokens
             }
 			if (c != open)
 	            throw ThrowHelper.UnterminatedString();
-			token = new Token(sb.ToString(0, sb.Length - 2), TokenType.String);
+			token = new Token(this, sb.ToString(0, sb.Length - 2), TokenType.String);
 			return read;
         }
     }

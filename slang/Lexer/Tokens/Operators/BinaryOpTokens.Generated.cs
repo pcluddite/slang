@@ -1,4 +1,4 @@
-/** +++====+++
+﻿/** +++====+++
  *  
  *  Copyright (c) Timothy Baxendale
  *
@@ -17,17 +17,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => ".";
+        public override string OperatorString => ".";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 2;
+        public override int Precedence => 2;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Left;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Left;
     }
 
     /// <summary>
@@ -38,17 +38,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "*";
+        public override string OperatorString => "*";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 5;
+        public override int Precedence => 5;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -59,17 +59,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "/";
+        public override string OperatorString => "/";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 5;
+        public override int Precedence => 5;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -80,17 +80,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "%";
+        public override string OperatorString => "%";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 5;
+        public override int Precedence => 5;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -101,17 +101,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "+";
+        public override string OperatorString => "+";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 6;
+        public override int Precedence => 6;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -122,17 +122,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "-";
+        public override string OperatorString => "-";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 6;
+        public override int Precedence => 6;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -143,17 +143,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => ">>";
+        public override string OperatorString => ">>";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 7;
+        public override int Precedence => 7;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -164,17 +164,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "<<";
+        public override string OperatorString => "<<";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 7;
+        public override int Precedence => 7;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -185,17 +185,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => ">";
+        public override string OperatorString => ">";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 8;
+        public override int Precedence => 8;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -206,17 +206,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "<=";
+        public override string OperatorString => "<=";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 8;
+        public override int Precedence => 8;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -227,17 +227,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "=<";
+        public override string OperatorString => "=<";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 8;
+        public override int Precedence => 8;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -248,17 +248,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => ">=";
+        public override string OperatorString => ">=";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 8;
+        public override int Precedence => 8;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -269,17 +269,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "=<";
+        public override string OperatorString => "=<";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 8;
+        public override int Precedence => 8;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -290,17 +290,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "==";
+        public override string OperatorString => "==";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 9;
+        public override int Precedence => 9;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -311,17 +311,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "~=";
+        public override string OperatorString => "~=";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 9;
+        public override int Precedence => 9;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -332,17 +332,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "!=";
+        public override string OperatorString => "!=";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 9;
+        public override int Precedence => 9;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -353,17 +353,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "<>";
+        public override string OperatorString => "<>";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 9;
+        public override int Precedence => 9;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -374,17 +374,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "&";
+        public override string OperatorString => "&";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 10;
+        public override int Precedence => 10;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -395,17 +395,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "^";
+        public override string OperatorString => "^";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 11;
+        public override int Precedence => 11;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -416,17 +416,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "|";
+        public override string OperatorString => "|";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 12;
+        public override int Precedence => 12;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -437,17 +437,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "&&";
+        public override string OperatorString => "&&";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 13;
+        public override int Precedence => 13;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -458,17 +458,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "AND";
+        public override string OperatorString => "AND";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 13;
+        public override int Precedence => 13;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -479,17 +479,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "||";
+        public override string OperatorString => "||";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 14;
+        public override int Precedence => 14;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -500,17 +500,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "OR";
+        public override string OperatorString => "OR";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 14;
+        public override int Precedence => 14;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Both;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Both;
     }
 
     /// <summary>
@@ -521,17 +521,17 @@ namespace Slang.Lexer.Tokens
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "=";
+        public override string OperatorString => "=";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => 16;
+        public override int Precedence => 16;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.Right;
+        public override OperandPosition EvaulatedOperand => OperandPosition.Right;
     }
 }
 

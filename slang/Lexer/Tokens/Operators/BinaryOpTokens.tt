@@ -54,17 +54,17 @@ void BuildOperator(string name, string strOp, int precedence, string operand = "
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public string OperatorString => "<#=strOp#>";
+        public override string OperatorString => "<#=strOp#>";
 
         /// <summary>
         /// Gets the operator precedence. Lower precedence operators are processed first
         /// </summary>
-        public int Precedence => <#=precedence#>;
+        public override int Precedence => <#=precedence#>;
 
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
-        public OperandPosition EvaulatedOperand => OperandPosition.<#=operand#>;
+        public override OperandPosition EvaulatedOperand => OperandPosition.<#=operand#>;
     }
 <#+
 }

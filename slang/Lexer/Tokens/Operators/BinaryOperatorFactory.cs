@@ -4,6 +4,7 @@
  *
  *  +++====+++
 **/
+using Slang.Components;
 using System;
 
 namespace Slang.Lexer.Tokens
@@ -13,6 +14,8 @@ namespace Slang.Lexer.Tokens
     /// </summary>
     public abstract class BinaryOperatorFactory : IOperatorFactory
     {
+        public abstract string OperatorString { get; }
+
         /// <summary>
         /// Gets which operand should be evaluated
         /// </summary>
@@ -26,10 +29,12 @@ namespace Slang.Lexer.Tokens
         public virtual int MatchToken(StringStream stream, out Token token)
         {
             int c = '\0';
+            token = default;
             for(int idx = 0; idx < OperatorString.Length && c != -1; ++idx) {
                 if (OperatorString[idx] != (c = stream.Read()))
                     return 0;
             }
+            token = new Token(this, OperatorString, TokenType.BinaryOperator);
             return OperatorString.Length;
         }
     }

@@ -9,9 +9,9 @@ using System.Text;
 using Slang.Components;
 using Slang.Errors;
 
-namespace Slang.Lexer.Tokens
+namespace Slang.Lexer.Scanners.TBasic
 {
-    public class StringLiteralFactory : ITokenFactory
+    public class TBasicStringFactory : ITokenFactory
     {
         public int MatchToken(StringStream stream, out Token token)
         {

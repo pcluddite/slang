@@ -11,21 +11,22 @@ using System.IO;
 using System.Reflection;
 using Slang.Components;
 using Slang.Errors;
-using Slang.Lexer.Tokens;
+using Slang.Lexer;
 using Slang.Runtime;
+using Slang.Lexer.Scanners.TBasic;
 
-namespace Slang.Lexer
+namespace Slang.Lexer.Scanners
 {
     /// <summary>
     /// The default implementation of Scanner. This can be extended and modified for custom implementations.
     /// </summary>
-    internal partial class DefaultScanner : IScanner
+    internal partial class TBasicScanner : IScanner
     {
         private readonly StringStream stream;
         private readonly List<ITokenFactory> factories = new List<ITokenFactory>();
         public Scope Scope { get; private set; }
 
-        public DefaultScanner(StringStream stream, Scope scope)
+        public TBasicScanner(StringStream stream, Scope scope)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -36,7 +37,7 @@ namespace Slang.Lexer
             Scope = scope;
         }
 
-        public DefaultScanner(string str, Scope scope)
+        public TBasicScanner(string str, Scope scope)
             : this(new StringStream(str), scope)
         {
         }

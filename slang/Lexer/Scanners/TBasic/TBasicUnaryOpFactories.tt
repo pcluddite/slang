@@ -13,23 +13,23 @@
 using System;
 using System.Collections.Generic;
 
-namespace Slang.Lexer.Tokens
-{<#BuildOperator("New", "NEW", evaluate: false);#>
-<#BuildOperator("Positive", "+");#>
-<#BuildOperator("Negative", "+");#>
-<#BuildOperator("Not", "NOT");#>
-<#BuildOperator("BitNot", "~");#>
+namespace Slang.Lexer.Scanners.TBasic
+{<#BuildOperator("New", "new", "NEW", evaluate: false);#>
+<#BuildOperator("Positive", "positive", "+");#>
+<#BuildOperator("Negative", "negative", "-");#>
+<#BuildOperator("Not", "boolean not", "NOT");#>
+<#BuildOperator("BitNot", "inverse bit", "~");#>
 }
 
 <#+
-void BuildOperator(string name, string strOp, bool evaluate = true)
+void BuildOperator(string name, string friendly, string strOp, bool evaluate = true)
 {
 #>
 
     /// <summary>
-    /// Implementation of the <#=name#>Operator
+    /// Implementation of the <#=friendly#> operator
     /// </summary>
-    public partial class <#=name#>Operator : UnaryOperatorFactory
+    public class TBasic<#=name#>Operator : UnaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator

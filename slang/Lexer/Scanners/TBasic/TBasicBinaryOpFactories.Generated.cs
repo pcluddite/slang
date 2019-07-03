@@ -1,4 +1,4 @@
-﻿/** +++====+++
+/** +++====+++
  *  
  *  Copyright (c) Timothy Baxendale
  *
@@ -7,12 +7,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace Slang.Lexer.Tokens
+namespace Slang.Lexer.Scanners.TBasic
 {
     /// <summary>
-    /// Implementation of the DotOperatorFactory
+    /// Implementation of the "property of" operator
     /// </summary>
-    public partial class DotOperatorFactory : BinaryOperatorFactory
+    public class TBasicDotOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -31,9 +31,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the MultiplicationOperatorFactory
+    /// Implementation of the multiplication operator
     /// </summary>
-    public partial class MultiplicationOperatorFactory : BinaryOperatorFactory
+    public class TBasicMultiplicationOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -52,9 +52,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the DivisionOperatorFactory
+    /// Implementation of the division operator
     /// </summary>
-    public partial class DivisionOperatorFactory : BinaryOperatorFactory
+    public class TBasicDivisionOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -73,9 +73,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the ModuloOperatorFactory
+    /// Implementation of the modulo operator
     /// </summary>
-    public partial class ModuloOperatorFactory : BinaryOperatorFactory
+    public class TBasicModuloOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -94,9 +94,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the AddOperatorFactory
+    /// Implementation of the addition operator
     /// </summary>
-    public partial class AddOperatorFactory : BinaryOperatorFactory
+    public class TBasicAddOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -115,9 +115,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the SubtractOperatorFactory
+    /// Implementation of the subtraction operator
     /// </summary>
-    public partial class SubtractOperatorFactory : BinaryOperatorFactory
+    public class TBasicSubtractOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -136,9 +136,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the ShiftRightOperatorFactory
+    /// Implementation of the right shift operator
     /// </summary>
-    public partial class ShiftRightOperatorFactory : BinaryOperatorFactory
+    public class TBasicShiftRightOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -157,9 +157,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the ShiftLeftOperatorFactory
+    /// Implementation of the left shift operator
     /// </summary>
-    public partial class ShiftLeftOperatorFactory : BinaryOperatorFactory
+    public class TBasicShiftLeftOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -178,9 +178,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the GreaterThanOperatorFactory
+    /// Implementation of the greater than operator
     /// </summary>
-    public partial class GreaterThanOperatorFactory : BinaryOperatorFactory
+    public class TBasicGreaterThanOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -199,9 +199,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the LessThanOrEqualOperatorFactory
+    /// Implementation of the less than or equal to operator
     /// </summary>
-    public partial class LessThanOrEqualOperatorFactory : BinaryOperatorFactory
+    public class TBasicLessThanOrEqualOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -220,9 +220,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the LessThanOrEqual2OperatorFactory
+    /// Implementation of the less than or equal to operator
     /// </summary>
-    public partial class LessThanOrEqual2OperatorFactory : BinaryOperatorFactory
+    public class TBasicLessThanOrEqual2OperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -241,9 +241,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the GreaterThanOrEqualOperatorFactory
+    /// Implementation of the greater than or equal to operator
     /// </summary>
-    public partial class GreaterThanOrEqualOperatorFactory : BinaryOperatorFactory
+    public class TBasicGreaterThanOrEqualOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -262,9 +262,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the GreaterThanOrEqual2OperatorFactory
+    /// Implementation of the greater than or equal to operator
     /// </summary>
-    public partial class GreaterThanOrEqual2OperatorFactory : BinaryOperatorFactory
+    public class TBasicGreaterThanOrEqual2OperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -283,9 +283,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the EqualityOperatorFactory
+    /// Implementation of the equals operator
     /// </summary>
-    public partial class EqualityOperatorFactory : BinaryOperatorFactory
+    public class TBasicEqualityOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -304,9 +304,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the SortaEqualsOperatorFactory
+    /// Implementation of the loosely equals operator
     /// </summary>
-    public partial class SortaEqualsOperatorFactory : BinaryOperatorFactory
+    public class TBasicSortaEqualsOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -325,9 +325,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the InequalityOperatorFactory
+    /// Implementation of the not equals operator
     /// </summary>
-    public partial class InequalityOperatorFactory : BinaryOperatorFactory
+    public class TBasicInequalityOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -346,9 +346,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the Inequality2OperatorFactory
+    /// Implementation of the not equals operator
     /// </summary>
-    public partial class Inequality2OperatorFactory : BinaryOperatorFactory
+    public class TBasicInequality2OperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -367,9 +367,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the BitAndOperatorFactory
+    /// Implementation of the bit and operator
     /// </summary>
-    public partial class BitAndOperatorFactory : BinaryOperatorFactory
+    public class TBasicBitAndOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -388,9 +388,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the BitXorOperatorFactory
+    /// Implementation of the bit exclusive or operator
     /// </summary>
-    public partial class BitXorOperatorFactory : BinaryOperatorFactory
+    public class TBasicBitXorOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -409,9 +409,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the BitOrOperatorFactory
+    /// Implementation of the bit or operator
     /// </summary>
-    public partial class BitOrOperatorFactory : BinaryOperatorFactory
+    public class TBasicBitOrOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -430,9 +430,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the AndOperatorFactory
+    /// Implementation of the boolean and operator
     /// </summary>
-    public partial class AndOperatorFactory : BinaryOperatorFactory
+    public class TBasicAndOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -451,9 +451,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the And2OperatorFactory
+    /// Implementation of the boolean and operator
     /// </summary>
-    public partial class And2OperatorFactory : BinaryOperatorFactory
+    public class TBasicAnd2OperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -472,9 +472,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the OrOperatorFactory
+    /// Implementation of the boolean or operator
     /// </summary>
-    public partial class OrOperatorFactory : BinaryOperatorFactory
+    public class TBasicOrOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -493,9 +493,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the Or2OperatorFactory
+    /// Implementation of the boolean or operator
     /// </summary>
-    public partial class Or2OperatorFactory : BinaryOperatorFactory
+    public class TBasicOr2OperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -514,9 +514,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the SetOperatorFactory
+    /// Implementation of the set operator
     /// </summary>
-    public partial class SetOperatorFactory : BinaryOperatorFactory
+    public class TBasicSetOperatorFactory : TBasicBinaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator

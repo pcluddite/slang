@@ -1,4 +1,4 @@
-﻿/** +++====+++
+/** +++====+++
  *  
  *  Copyright (c) Timothy Baxendale
  *
@@ -7,12 +7,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace Slang.Lexer.Tokens
+namespace Slang.Lexer.Scanners.TBasic
 {
     /// <summary>
-    /// Implementation of the NewOperator
+    /// Implementation of the new operator
     /// </summary>
-    public partial class NewOperator : UnaryOperatorFactory
+    public class TBasicNewOperator : UnaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -23,9 +23,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the PositiveOperator
+    /// Implementation of the positive operator
     /// </summary>
-    public partial class PositiveOperator : UnaryOperatorFactory
+    public class TBasicPositiveOperator : UnaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -36,22 +36,22 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the NegativeOperator
+    /// Implementation of the negative operator
     /// </summary>
-    public partial class NegativeOperator : UnaryOperatorFactory
+    public class TBasicNegativeOperator : UnaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
         /// </summary>
-        public override string OperatorString => "+";
+        public override string OperatorString => "-";
 
         public override bool EvaluateOperand => true;
     }
 
     /// <summary>
-    /// Implementation of the NotOperator
+    /// Implementation of the boolean not operator
     /// </summary>
-    public partial class NotOperator : UnaryOperatorFactory
+    public class TBasicNotOperator : UnaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator
@@ -62,9 +62,9 @@ namespace Slang.Lexer.Tokens
     }
 
     /// <summary>
-    /// Implementation of the BitNotOperator
+    /// Implementation of the inverse bit operator
     /// </summary>
-    public partial class BitNotOperator : UnaryOperatorFactory
+    public class TBasicBitNotOperator : UnaryOperatorFactory
     {
         /// <summary>
         /// Gets the string representation of the operator

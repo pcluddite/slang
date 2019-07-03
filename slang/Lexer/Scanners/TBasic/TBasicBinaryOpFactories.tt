@@ -1,0 +1,71 @@
+﻿/** +++====+++
+ *  
+ *  Copyright (c) Timothy Baxendale
+ *
+ *  +++====+++
+**/
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".Generated.cs" #>
+using System;
+using System.Collections.Generic;
+
+namespace Slang.Lexer.Scanners.TBasic
+{<#BuildOperator("Dot", "\"property of\"", ".", 2, "Left");#>
+<#BuildOperator("Multiplication", "multiplication", "*", 5);#>
+<#BuildOperator("Division", "division", "/", 5);#>
+<#BuildOperator("Modulo", "modulo", "%", 5);#>
+<#BuildOperator("Add", "addition", "+", 6);#>
+<#BuildOperator("Subtract", "subtraction", "-", 6);#>
+<#BuildOperator("ShiftRight", "right shift", ">>", 7);#>
+<#BuildOperator("ShiftLeft", "left shift", "<<", 7);#>
+<#BuildOperator("GreaterThan", "greater than", ">", 8);#>
+<#BuildOperator("LessThanOrEqual", "less than or equal to", "<=", 8);#>
+<#BuildOperator("LessThanOrEqual2", "less than or equal to", "=<", 8);#>
+<#BuildOperator("GreaterThanOrEqual", "greater than or equal to", ">=", 8);#>
+<#BuildOperator("GreaterThanOrEqual2", "greater than or equal to", "=<", 8);#>
+<#BuildOperator("Equality", "equals", "==", 9);#>
+<#BuildOperator("SortaEquals", "loosely equals", "~=", 9);#>
+<#BuildOperator("Inequality", "not equals", "!=", 9);#>
+<#BuildOperator("Inequality2", "not equals", "<>", 9);#>
+<#BuildOperator("BitAnd", "bit and", "&", 10);#>
+<#BuildOperator("BitXor", "bit exclusive or", "^", 11);#>
+<#BuildOperator("BitOr", "bit or", "|", 12);#>
+<#BuildOperator("And", "boolean and", "&&", 13);#>
+<#BuildOperator("And2", "boolean and", "AND", 13);#>
+<#BuildOperator("Or", "boolean or", "||", 14);#>
+<#BuildOperator("Or2", "boolean or", "OR", 14);#>
+<#BuildOperator("Set", "set", "=", 16, "Right");#>
+}
+
+<#+
+void BuildOperator(string name, string friendly, string strOp, int precedence, string operand = "Both")
+{
+#>
+
+    /// <summary>
+    /// Implementation of the <#=friendly#> operator
+    /// </summary>
+    public class TBasic<#=name#>OperatorFactory : TBasicBinaryOperatorFactory
+    {
+        /// <summary>
+        /// Gets the string representation of the operator
+        /// </summary>
+        public override string OperatorString => "<#=strOp#>";
+
+        /// <summary>
+        /// Gets the operator precedence. Lower precedence operators are processed first
+        /// </summary>
+        public override int Precedence => <#=precedence#>;
+
+        /// <summary>
+        /// Gets which operand should be evaluated
+        /// </summary>
+        public override OperandPosition EvaulatedOperand => OperandPosition.<#=operand#>;
+    }
+<#+
+}
+#>

@@ -6,7 +6,7 @@
 **/
 using Slang.Components;
 
-namespace Slang.Lexer.Tokens
+namespace Slang.Lexer
 {
     /// <summary>
     /// Token factories must implement a parameterless constructor

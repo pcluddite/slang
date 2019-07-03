@@ -7,9 +7,9 @@
 using System.IO;
 using Slang.Components;
 
-namespace Slang.Lexer.Tokens
+namespace Slang.Lexer.Scanners.TBasic
 {
-    public class VariableFactory : ITokenFactory
+    public class TBasicVariableFactory : ITokenFactory
     {
         public int MatchToken(StringStream stream, out Token token)
         {

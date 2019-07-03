@@ -11,9 +11,9 @@ using System.Text;
 using Slang.Components;
 using Slang.Runtime;
 
-namespace Slang.Lexer.Tokens
+namespace Slang.Lexer.Scanners.TBasic
 {
-    public class NumberLiteralFactory : ITokenFactory
+    public class TBasicNumberFactory : ITokenFactory
     {
         public int MatchToken(StringStream stream, out Token token)
         {
@@ -32,7 +32,7 @@ namespace Slang.Lexer.Tokens
             if (count == 0)
                 return 0;
 
-            token = new NumberLiteral(value.Subsegment(offset, count), TokenType.NUMBER);
+            token = new Token(this, value.Subsegment(offset, count), TokenType.Number);
             stream.Seek(count, SeekOrigin.Current);
             return count;
         }
@@ -70,34 +70,6 @@ namespace Slang.Lexer.Tokens
                 }
             }
             return index;
-        }
-    }
-
-    public struct NumberLiteral : IToken
-    {
-        private readonly StringSegment value;
-       
-        public IEnumerable<IToken> Subtokens => throw new NotImplementedException();
-        public bool HasSubtokens => false;
-        public IEnumerable<char> Text => value;
-
-        public NumberLiteral(IEnumerable<char> text)
-        {
-            string value = text as string;
-            if (text == null) {
-                StringBuilder sb = new StringBuilder();
-                foreach (char c in text)
-                    sb.Append(c);
-                this.value = new StringSegment(sb.ToString(), 0);
-            }
-            else {
-                this.value = new StringSegment(value);
-            }
-        }
-
-        internal NumberLiteral(StringSegment value)
-        {
-            this.value = value;
         }
     }
 }

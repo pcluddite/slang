@@ -8,7 +8,7 @@ using Slang.Components;
 using System;
 using System.Collections.Generic;
 
-namespace Slang.Lexer.Tokens
+namespace Slang.Lexer
 {
     /// <summary>
     /// Static class of token types. Token IDs act as flags in case a token matches multiple types.

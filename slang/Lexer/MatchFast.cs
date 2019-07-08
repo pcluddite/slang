@@ -8,6 +8,41 @@ namespace Slang.Lexer
 {
     internal static unsafe class MatchFast
     {
+        public unsafe static int MatchNumber(char* buff, int nLen)
+        {
+            int index = FindConsecutiveDigits(buff, 0, nLen);
+            if (index == 0)
+                return 0; // nothing was found
+
+            if (index >= nLen)
+                return index;
+
+            if (buff[index] == '.')
+                index = FindConsecutiveDigits(buff, ++index, nLen);
+
+            if (index >= nLen)
+                return index;
+
+            if (buff[index] == 'e' || buff[index] == 'E') {
+                if (buff[++index] == '-' || buff[index] == '+')
+                    ++index;
+                index = FindConsecutiveDigits(buff, index, nLen);
+            }
+
+            return index;
+        }
+
+        private static unsafe int FindConsecutiveDigits(char* buff, int start, int nLen)
+        {
+            int index = start;
+            for (; index < nLen; ++index) {
+                if (!char.IsDigit(buff[index])) {
+                    return index;
+                }
+            }
+            return index;
+        }
+
         public static int MatchHex(string buff)
         {
             int end = 0;

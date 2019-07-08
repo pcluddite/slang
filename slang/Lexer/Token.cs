@@ -61,7 +61,6 @@ namespace Slang.Lexer
         public bool HasSubtokens => tokens != null;
         public IEnumerable<char> Text => value;
         public TokenType Type { get; private set; }
-        public ITokenFactory Factory { get; private set; }
 
         public bool Ambiguous => !Enum.IsDefined(typeof(TokenType), Type);
 
@@ -81,27 +80,7 @@ namespace Slang.Lexer
         }
 
         public Token(string str, TokenType type, Token[] subtokens)
-            : this(null, str, type, subtokens)
-        {
-        }
-
-        public Token(ITokenFactory factory, string str)
-            : this(factory, str, TokenType.None)
-        {
-        }
-
-        public Token(ITokenFactory factory, string str, TokenType type)
-            : this(factory, str, type, null)
-        {
-        }
-
-        public Token(ITokenFactory factory, string str, Token[] subtokens)
-            : this(factory, str, TokenType.None, subtokens)
-        {
-        }
-
-        public Token(ITokenFactory factory, string str, TokenType type, Token[] subtokens)
-            : this(factory, new StringSegment(str), type, subtokens)
+            : this(new StringSegment(str), type, subtokens)
         {
         }
 
@@ -119,30 +98,9 @@ namespace Slang.Lexer
             : this(str, TokenType.None, subtokens)
         {
         }
-
+        
         internal Token(StringSegment str, TokenType type, Token[] subtokens)
-            : this(null, str, type, subtokens)
         {
-        }
-
-        internal Token(ITokenFactory factory, StringSegment str)
-            : this(factory, str, TokenType.None)
-        {
-        }
-
-        internal Token(ITokenFactory factory, StringSegment str, TokenType type)
-            : this(factory, str, type, null)
-        {
-        }
-
-        internal Token(ITokenFactory factory, StringSegment str, Token[] subtokens)
-            : this(factory, str, TokenType.None, subtokens)
-        {
-        }
-
-        internal Token(ITokenFactory factory, StringSegment str, TokenType type, Token[] subtokens)
-        {
-            Factory = factory;
             value = str;
             Type = type;
             tokens = subtokens;

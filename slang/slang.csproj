@@ -119,15 +119,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TBasicBinaryOpFactories.tt</DependentUpon>
     </Compile>
-    <Compile Include="Lexer\TBasic\TBasicIdentifierFactory.cs" />
-    <Compile Include="Lexer\TBasic\TBasicNumberFactory.cs" />
-    <Compile Include="Lexer\TBasic\TBasicStringFactory.cs" />
     <Compile Include="Lexer\TBasic\TBasicUnaryOpFactories.Generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TBasicUnaryOpFactories.tt</DependentUpon>
     </Compile>
-    <Compile Include="Lexer\TBasic\TBasicVariableFactory.cs" />
     <Compile Include="Lexer\TerminalScanner.cs" />
     <Compile Include="Lexer\UnaryOperatorFactory.cs" />
     <Compile Include="Lexer\Token.cs" />

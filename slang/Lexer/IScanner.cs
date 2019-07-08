@@ -47,9 +47,5 @@ namespace Slang.Lexer
         /// Advances the scanner a given number of characters
         /// </summary>
         void Skip(int count);
-        /// <summary>
-        /// Registers a token factory for parsing tokens
-        /// </summary>
-        void RegisterToken<T>() where T : ITokenFactory;
     }
 }

@@ -9,7 +9,7 @@ using System.Text;
 using Slang.Components;
 using Slang.Errors;
 
-namespace Slang.Lexer.Scanners.TBasic
+namespace Slang.Lexer.TBasic
 {
     public class TBasicStringFactory : ITokenFactory
     {

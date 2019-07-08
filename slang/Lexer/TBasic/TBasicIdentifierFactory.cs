@@ -10,7 +10,7 @@ using System.IO;
 using System.Text;
 using Slang.Components;
 
-namespace Slang.Lexer.Scanners.TBasic
+namespace Slang.Lexer.TBasic
 {
     public class TBasicIdentifierFactory : ITokenFactory
     {

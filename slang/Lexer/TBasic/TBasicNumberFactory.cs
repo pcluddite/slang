@@ -11,7 +11,7 @@ using System.Text;
 using Slang.Components;
 using Slang.Runtime;
 
-namespace Slang.Lexer.Scanners.TBasic
+namespace Slang.Lexer.TBasic
 {
     public class TBasicNumberFactory : ITokenFactory
     {
